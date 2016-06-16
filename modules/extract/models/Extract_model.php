@@ -15,7 +15,9 @@ class Extract_model extends CI_Model {
     public function xml($table){
 
     		
-    		$xml = new DomDocument("1.0","ISO-8859-7");
+    		$xml = new DomDocument("1.0","UTF-8");//ISO-8859-7
+
+
 
     		$products = $xml->createElement('products');
     		$products = $xml->appendChild($products);
@@ -32,7 +34,7 @@ class Extract_model extends CI_Model {
 
     			foreach($columns as $key => $value){
     				if($key!='id' && $key!='description' ){
-    				$item = $xml->createElement($key, htmlentities($value));
+    				$item = $xml->createElement($key, trim(htmlspecialchars($value)));
     				$item = $product->appendChild($item);	
 					}
     			}

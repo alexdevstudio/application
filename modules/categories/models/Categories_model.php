@@ -43,8 +43,18 @@ class Categories_model extends CI_Model {
 
 
     	return false;
+ 
+    }
+
+
+    public function updateItem($table, $categoryData){
+
+///Continue here
 
     }
+
+
+
 
    
 

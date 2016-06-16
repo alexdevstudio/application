@@ -7,7 +7,7 @@ class Extract extends MX_Controller {
 
 	public function xml($table=null)
 	{	
-		if(!$table){redirect('https://etd.gr/','refresh');}
+		//if(!$table){redirect('https://etd.gr/','refresh');}
 
 		$this->load->model('extract_model');
 		
@@ -16,7 +16,11 @@ class Extract extends MX_Controller {
 			
 			echo '<a class="btn btn-block btn-success btn-md"
 			 target="_blank" href="https://etd.gr/xml/files/'.$table.'.xml">Προβολή</a>';
+		}else{
+			echo 'Σφάλμα';
 		}
+
+
 
 			
 	

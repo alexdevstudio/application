@@ -1,8 +1,11 @@
+<?php
+$tables = Modules::run('categories/categoriesArray');
 
+?>
 <div class="sections col-xs-12">
 <section class="content-header">
       <h1>
-        Ενημέρωση αποθήκης TEST 
+        Ενημέρωση αποθήκης 
       </h1>  
       <br>	   
     </section> 
@@ -55,7 +58,7 @@
 
                   <?php
 
-	$tables = Modules::run('categories/categoriesArray');
+	
 foreach($tables as $table){
 	?>
 
@@ -94,7 +97,7 @@ function linkGenerator(a){
 	$("#xmltitle").html('Loading...'); 
 	
 
-	var url = "<?= base_url()?>/extract/xml/"+a;
+	var url = "<?= base_url()?>extract/xml/"+a;
 	
 
 	
@@ -120,12 +123,12 @@ function linkGenerator(a){
                   <label>Επιλέξτε τη κατηγορία των προϊόντων που θέλετε να ενημερώσετε</label>
 
 
-                  <form class="" id="charUpdate" method="post" action="<?= base_url()?>/home/xmlUploadUpdate">
+                  <form class="" id="charUpdate" method="post" action="<?= base_url()?>home/xmlUploadUpdate">
                   <select id="categories" name="categories" name="categories" class="form-control">
                   <option value=''>Κατηγορίες</option>
                   <?php
 
-	$tables = Modules::run('categories/categoriesArray');
+	
 foreach($tables as $table){
 	?>
 
@@ -137,6 +140,7 @@ foreach($tables as $table){
 	<?php
 
 }
+
                   ?>
                    
                   </select>
@@ -146,7 +150,7 @@ foreach($tables as $table){
     
 
 <?php
-
+//print_r($tables);
 /*$fields = $this->db->list_fields('laptops');
 foreach ($fields as $field)
 {

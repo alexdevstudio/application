@@ -35,14 +35,20 @@ class Categories extends MX_Controller {
 
 	}
 
-			
+	 public function categoriesArray(){
+    	$array = array('desktops','laptops','printers', 'multifunction_printers',
+    		'monitors','servers','ups','tablets','smartphones');
 
+    	return $array;
+    }
 
-			
-			
+ 
+     public function updateItem($c, $xml){
 
-		
-	
+     	$this->load->model('categories_model');
+     	echo $this->categories_model->updateItem($c, $xml);
+
+     }
 
 
 
