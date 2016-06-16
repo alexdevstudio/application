@@ -2,19 +2,19 @@
 <div class="sections col-xs-12">
 <section class="content-header">
       <h1>
-        Ενημέρωση αποθήκης
-      </h1>
-      <br>	
-    </section>
+        Ενημέρωση αποθήκης TEST 
+      </h1>  
+      <br>	   
+    </section> 
 
 <div class="col-sm-4 col-md-2">
-
+ 
 		<div class="color-palette-set text-center">
 			<div class="bg-orange-active color-palette ">
 
 				<a href="./live/index/oktabit" style="color:#fff;display:block">
 					<br />
-					<span >Oktabit</span>
+					<span >Oktabit</span> 
 					<br />
 					<br />
 				</a>
