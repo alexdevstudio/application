@@ -13,15 +13,10 @@ class Live_model extends CI_Model {
 
     private function xml($url){
 
-
-    	//$str = (string) file_get_contents($url);
-
 		$xml=simplexml_load_file($url) or die("Error: Cannot create object");
 
     	return $xml;
-
     }
-
 
 
     public function oktabit(){
@@ -34,6 +29,7 @@ class Live_model extends CI_Model {
 				
 					$this->db->where('supplier','oktabit');
 					$this->db->delete('live');
+
 				}
 				else{
 					die("Characteristics XML from Oktabit can not be loaded.");
@@ -63,6 +59,12 @@ class Live_model extends CI_Model {
 			//$catArray = array();
 			//$catExists = FALSE;
 
+			$brand = (string) trim($product->brand);
+			if ($brand == 'VERO' || $brand == 'MAXBALL' || $brand == 'LEXMARK')
+			{
+				$cat = '';
+			}
+
 			switch ($cat) {
 				case 'Mobile Computers':
 					if (strpos($sc, 'Notebooks up to') !== false)
@@ -71,114 +73,85 @@ class Live_model extends CI_Model {
 					}elseif($sc == 'Carrying Cases'){
 						$c = 'carrying_cases';
 					}
-
-
-					
 					break;
 				case 'Computers':
-
 					if($sc == 'Advanced PC' || $sc == 'All In One PC' || $sc == 'Business PC' || $sc == 'Workstations')
 					{
 						$c = 'desktops';
 							
 					}
-
 					break;
-					case 'Energy':
-					
+				case 'Energy':
 					if($sc == 'Power Bank')
 					{
 						$c = 'power_bank';
 							
 					}
 					break;
-					case 'Monitors':
+				case 'Monitors':
 					if($sc == 'LCD-TFT PC Monitors')
 					{
 						$c = 'monitors';
-							
-					}
-
-					
-					break;
-					case 'Energy':
-					
-					if($sc == 'Power Bank')
-					{
-						$c = 'power_bank';
-							
 					}
 					break;
-					case 'Networking':
-					
+				case 'Networking':
 					if($sc == 'Routers')
 					{
 						$c = 'routers';
-							
-					}elseif($sc == 'Switches'){
+					}
+					elseif($sc == 'Switches'){
 						$c = 'switches';
 					}
 					break;
-					case 'Power Protection':
-					
+				case 'Power Protection':
 					if($sc == 'Line Interactive UPS' || $sc == 'On Line UPS'  || $sc == 'Standby UPS')
 					{
 						$c = 'ups';
-							
 					}
 					break;
-					case 'Printers':
-					
+				case 'Printers':
 					if($sc == 'Color Laser Printers' || $sc == 'Inkjet Printers' )
 					{
-						$c = 'printers';
-							
-					}elseif($sc == 'Multifunction Printers'){
+						$c = 'printers';	
+					}
+					elseif($sc == 'Multifunction Printers'){
 						$c = 'multifunction_printers';
 					}
 					break;
-					case 'Servers':
-					
+				case 'Servers':
 					if($sc == 'Rackmount Systems' )
 					{
 						$c = 'servers';
-							
 					}
 					break;
-					case 'Entertainment':
-					
+				case 'Entertainment':
 					if($sc == 'Speakers' )
 					{
 						$c = 'speakers';
-							
 					}
 					break;
-					case 'Storage':
-					
+				case 'Storage':
 					if($sc == 'External Hard Drives' )
 					{
 						$c = 'external_hard_drives';
 							
-					}elseif($sc == 'Sata Hard Drives' )
+					}
+					elseif($sc == 'Sata Hard Drives' )
 					{
 						$c = 'sata_hard_drives';
 							
-					}elseif($sc == 'Solid State Drives' )
+					}
+					elseif($sc == 'Solid State Drives' )
 					{
 						$c = 'ssd';
-							
 					}
 					break;
-					case 'Cases-Peripherals':
-					
+				case 'Cases-Peripherals':
 					if($sc == 'Combo' || $sc == 'Keyboard' || $sc == 'Mouse')
 					{
 						$c = 'keyboard_mouse';
-							
 					}
 					break;
-
-
 
 				default:
 					$c = $cat;
@@ -195,66 +168,22 @@ class Live_model extends CI_Model {
 				$brand = (string) trim($product->brand);
 				$title = (string) trim($product->titlos);
 				$product_url = "";
-				//$code = (string) trim($product->code);
+				$code = (string) trim($product->code);
 
-				$okt_prd_code = (string) trim($product->code);
-
+				// Get The Description
 				foreach($desc_xml->children() as $perigrafes) {
 					$okt_desc_code = (string) trim($perigrafes->code);
 					
-					if($okt_prd_code == $okt_desc_code)
+					if($code == $okt_desc_code)
 					{
 						$description = (string) trim($perigrafes->perigrafi);
+						break;
 					}
 				}
-				if ($c == 'carrying_cases'){
 
-					$chars_array = array(
-						'brand'=>"",
-						'type'=>"",
-						'size'=>"",
-						'material'=>"",
-						'colour'=>"",
-						'dimensions'=>""
-						);
+				// Get the characteristics
+				$chars_array = $this->addProductChars($c, $code, $char_xml);
 
-					foreach($char_xml->children() as $chars){
-
-						$okt_chars_code = (string) trim($chars->product[0]);
-
-						if($okt_prd_code == $okt_chars_code)
-						{
-							echo "in<br><br><br>";
-							$chars_title = (string) trim($chars->atribute[0]);
-							$chars_value = (string) trim($chars->value[0]);
-
-							switch ($chars_title) {
-								case 'Κατασκευαστής':
-									$chars_array['brand'] = $chars_value;
-									break;
-								case 'Τύπος':
-									$chars_array['type']=$chars_value;
-									break;
-								case 'Μέγεθος οθόνης':
-									$chars_array['size']=$chars_value;
-									break;
-								case 'Υλικό κατασκευής':
-									$chars_array['material']=$chars_value;
-									break;
-								case 'Χρώμα':
-									$chars_array['colour']=$chars_value;
-									break;
-								case 'Διαστάσεις (πλάτος x ύψος x πάχος, σε mm)':
-									$chars_array['dimensions']=$chars_value;
-									break;
-								default :
-
-									break;
-							}
-							print_r($chars_array);
-						}
-					}
-				}
 				//1. Live
 
 				if($this->checkLiveProduct($pn, $net_price)){
@@ -272,16 +201,26 @@ class Live_model extends CI_Model {
 					unset($live);
 				}
 
+				$okt_product = array(
+					'category' => (string) trim($c),
+					'product_number' => $pn,
+					'description' => $description,
+					'brand' => $brand,
+					'title' => $title,
+					'product_url' => $product_url,
+					'code' => $code
+				);
+
 				//2. New products for charateristics tables that load Sku module
-				$this->AddProduct ($c, $pn, $description, $brand, $title, $product_url, $newProducts, $i, $f, 'oktabit');
+				$this->addProduct ($okt_product, $chars_array, $newProducts, $i, $f, 'oktabit');
 			}//if $c==$cat
 				
 			$f=0;
 		
 		}//end foreach
 
-		echo '<p style="color:green">Finished</p><br />';
-		//redirect('https://etd.gr/xml/');
+		//echo '<p style="color:green">Finished</p><br />';
+/*		redirect('https://etd.gr/xml/');
 		
 		if (!empty($newProducts))//Send Mail Check
 		{
@@ -293,7 +232,7 @@ class Live_model extends CI_Model {
 
 			Modules::run('emails/send','Νέα προϊόντα',$message);
 		}
-
+*/
     }
 
     public function logicom(){
@@ -315,7 +254,7 @@ class Live_model extends CI_Model {
 		$newProducts = array();
 		$i=0;
 		//$f=0;
-		//echo '<p style="color:red">Running Logicom Insertion</p><br />';
+		echo '<p style="color:red">Running Logicom Insertion</p><br />';
 
 		foreach($xml->children()->children()->children() as $product) {
 			
@@ -353,11 +292,9 @@ class Live_model extends CI_Model {
 					break;*/
 				case 'Consumables- / Inkjet Cartridges - / HP':
 					$c = 'cartridges';
-					//<ManufacturerList Name="CONSUMABLES- / XEROX- / LASERJET CARTRIDGE" />
 					break;
 				case 'Consumables- / Laserjet Cartridges- / HP':
 					$c = 'toners';
-					//<ManufacturerList Name="CONSUMABLES- / XEROX- / LASERJET CARTRIDGE" />
 					break;
 				/*case 'Networking- / Routing':
 					$c = 'routers';
@@ -436,8 +373,18 @@ class Live_model extends CI_Model {
 					unset($live);
 				}
 
+				$log_product = array(
+					'category' => $c,
+					'product_number' => $pn,
+					'description' => $description,
+					'brand' => $brand,
+					'title' => $title,
+					'product_url' => $product_url,
+				);
+
 				//2. New products for charateristics tables that load Sku module
-				$this->AddProduct ($c, $pn, $description, $brand, $title, $product_url, $newProducts, $i, $imageUrl, 'logicom');
+				//$this->AddProduct ($c, $pn, $description, $brand, $title, $product_url, $newProducts, $i, $imageUrl, 'logicom');
+				$this->addProduct ($log_product, null, $newProducts, $i, $f, 'logicom');
 
 			}//if $c==$cat
 		
@@ -458,6 +405,7 @@ class Live_model extends CI_Model {
 		}
 		
     }
+
 
     private function checkLiveProduct($pn, $price){
 
@@ -486,7 +434,6 @@ class Live_model extends CI_Model {
 	}//private function checkLiveProduct($pn, $price){
 
 
-
 	private function insertProductCategory($table, $pn, $data){
 
 		echo $table.'<br />';
@@ -510,38 +457,55 @@ class Live_model extends CI_Model {
     }//private function insertProductCategory(){
 
 
+    private function addProduct($product, $chars_array=null, $newProducts, $i, $f ,$supplier){
 
-    private function AddProduct($c, $pn, $description, $brand, $title, $product_url, $newProducts, $i, $f ,$supplier){
-    							
 		$skuArray = array(
-			'category'=> $c,
-			'product_number' => $pn,
+			'category'=> $product['category'],
+			'product_number' => $product['product_number'],
 			);
 
+		/*		
+		// Only For Update
+
+		if($product['category']=='ups')
+		{
+			//$chars_array = array_merge($chars_array, array("description"=>$product['description']));
+			$chars_array = array("description"=>$product['description']);
+			$this->updateProduct($product['category'], $chars_array, $product['product_number']);
+		}
+		// End Only for Update
+		*/
+		
 		if($sku = Modules::run('sku/checkSku',$skuArray)){
 
-			if($c == 'cartridges' || $c == 'toners'){
+			if($product['category'] == 'cartridges' || $product['category'] == 'toners'){
 				$categoryData = array(
-				'brand'=> $brand, 
+				'brand'=> $product['brand'], 
 				'sku'=> $sku,
-				'product_number'=> $pn,
-				'title'=> $title,
-				'supplier_product_url'=> $product_url
+				'product_number'=> $product['product_number'],
+				'title'=> $product['title'],
+				'supplier_product_url'=> $product['product_url']
 				);
 			}
 			else
 			{
 				$categoryData = array(
-				'brand'=> $brand, 
+				'brand'=> $product['brand'],
 				'sku'=> $sku,
-				'product_number'=> $pn,
-				'title'=> $title,
-				'description'=> $description,
-				'supplier_product_url'=> $product_url
+				'product_number'=> $product['product_number'],
+				'title'=> $product['title'],
+				'description'=> $product['description'],
+				'supplier_product_url'=> $product['product_url']
 				);
+				if($chars_array)
+				{
+					$categoryData = array_merge($categoryData, $chars_array);
+				}
+				
 			}
 
-			if(Modules::run("categories/insert", $c, $categoryData)){
+
+			if(Modules::run("categories/insert", $product['category'], $categoryData)){
 
 				if(isset($newProducts[$i]['Κατηγορία'])){
 
@@ -568,12 +532,14 @@ class Live_model extends CI_Model {
 
 			
 			//3. Add Product Images
-			$this->AddProductImages($f, $supplier, $sku, $brand, $pn);
+			$this->AddProductImages($product, $f, $supplier, $sku);
 			
 		}//if($sku = Modules::run('sku/checkSku',$skuArray)){
+			
     }
 
-    private function AddProductImages($f, $supplier, $sku, $brand, $pn){
+
+    private function AddProductImages($product, $f, $supplier, $sku){
 
     	if ($supplier == 'oktabit')
     	{
@@ -586,10 +552,10 @@ class Live_model extends CI_Model {
 				}
 
 				$imageData = array(
-					'src' => "http://oktabit.gr/images/photos/".$product->code."".$tail.".jpg",
+					'src' => "http://oktabit.gr/images/photos/".$product['code']."".$tail.".jpg",
 					'sku' => $sku ,
-					'brand' => $brand ,
-					'part_number' => $pn ,
+					'brand' => $product['brand'] ,
+					'part_number' => $product['product_number'] ,
 					'tail' => $tail
 				);
 				//echo Modules::run('images/imageUrlExists',$imageData['src']);
@@ -608,8 +574,8 @@ class Live_model extends CI_Model {
     		$imageData = array(
 					'src' => $f,
 					'sku' => $sku ,
-					'brand' => $brand ,
-					'part_number' => $pn ,
+					'brand' => $product['brand'] ,
+					'part_number' => $product['product_number'] ,
 					'tail' => ""
 				);
 				
@@ -617,5 +583,536 @@ class Live_model extends CI_Model {
     	}
     }
 
+
+    private function addProductChars($category, $product_code, $char_xml){
+
+    	$is_found = false;
+
+		if ($category == 'carrying_cases'){
+
+			$chars_array = array(
+				'type'=>"",
+				'size'=>"",
+				'material'=>"",
+				'colour'=>"",
+				'dimensions'=>""
+			);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					switch ($chars_title) {
+						case 'Τύπος':
+							$chars_array['type']=$chars_value;
+							break;
+						case 'Μέγεθος οθόνης':
+							$chars_array['size']=$chars_value;
+							break;
+						case 'Υλικό κατασκευής':
+							$chars_array['material']=$chars_value;
+							break;
+						case 'Χρώμα':
+							$chars_array['colour']=$chars_value;
+							break;
+						case 'Διαστάσεις (πλάτος x ύψος x πάχος, σε mm)':
+							$chars_array['dimensions']=$chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					break;
+				}
+			}
+			return $chars_array;
+		}
+		else if ($category == 'power_bank'){
+
+			$chars_array = array(
+				'battery_capacity' => "",
+				'recharge_time' => "",
+				'charging_output' => "",
+				'dimensions' => "",
+				'warranty' => ""
+			);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					switch ($chars_title) {
+						case 'Χωρητικότητα Μπαταρίας':
+							$chars_array['battery_capacity']=$chars_value;
+							break;
+						case 'Χρόνος επαναφόρτισης ως το 90-100% (ώρες)':
+							$chars_array['recharge_time']=$chars_value;
+							break;
+						case 'Έξοδος φόρτισης':
+							$chars_array['charging_output']=$chars_value;
+							break;
+						case 'Διαστάσεις (πλάτος x ύψος x βάθος, σε mm)':
+							$chars_array['dimensions']=$chars_value;
+							break;
+						case 'Εγγύηση (μήνες)':
+							$chars_array['warranty']=$chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					break;
+				}
+			}
+			return $chars_array;
+		}
+		else if ($category == 'routers'){
+
+			$chars_array = array(
+				'type' => "",
+				'wireless' => "",
+				'line_type' => "",
+				'lan_ports' => "",
+				'wan_ports' => "",
+				'supported_protocols' => "",
+				'vpn' => "",
+				'removable_antenna' => "",
+				'warranty' => ""
+			);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					switch ($chars_title) {
+						case 'Τύπος':
+							$chars_array['type']=$chars_value;
+							break;
+						case 'Wireless':
+							$chars_array['wireless']=$chars_value;
+							break;
+						case 'Τύπος γραμμής':
+							$chars_array['line_type']=$chars_value;
+							break;
+						case 'Θύρες LAN':
+							$chars_array['lan_ports']=$chars_value;
+							break;
+						case 'Θύρες WAN':
+							$chars_array['wan_ports']=$chars_value;
+							break;
+						case 'Υποστηριζόμενα πρωτόκολλα':
+							$chars_array['supported_protocols']=$chars_value;
+							break;
+						case 'VPN':
+							$chars_array['vpn']=$chars_value;
+							break;
+						case 'Αποσπώμενη κεραία':
+							$chars_array['removable_antenna']=$chars_value;
+							break;
+						case 'Εγγύηση (μήνες)':
+							$chars_array['warranty']=$chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					break;
+				}
+			}
+			return $chars_array;
+		}
+		else if ($category == 'switches'){
+
+			$chars_array = array(
+				'ports' => "",
+				'network_speed' => "",
+				'sfp_ports' => "",
+				'manage' => "",
+				'poe' => "",
+				'layer' => "",
+				'rackmount' => "",
+				'warranty' => ""
+			);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					switch ($chars_title) {
+						case 'Θύρες':
+							$chars_array['ports']=$chars_value;
+							break;
+						case 'Ταχύτητα Δικτύου':
+							$chars_array['network_speed']=$chars_value;
+							break;
+						case 'SFP θύρες':
+							$chars_array['sfp_ports']=$chars_value;
+							break;
+						case 'Manage':
+							$chars_array['manage']=$chars_value;
+							break;
+						case 'POE':
+							$chars_array['poe']=$chars_value;
+							break;
+						case 'Layer':
+							$chars_array['layer']=$chars_value;
+							break;
+						case 'RackMount':
+							$chars_array['rackmount']=$chars_value;
+							break;
+						case 'Εγγύηση (μήνες)':
+							$chars_array['warranty']=$chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					break;
+				}
+			}
+			return $chars_array;
+		}
+		else if ($category == 'speakers'){
+
+			$chars_array = array(
+				'type' => "",
+				'watt' => "",
+				'dolby_digital_decoding' => "",
+				'headphones_input' => "",
+				'input' => "",
+				'warranty' => ""
+			);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					switch ($chars_title) {
+						case 'Τύπος ηχείων':
+							$chars_array['type']=$chars_value;
+							break;
+						case 'Ισχύς Watt (RMS)':
+							$chars_array['watt']=$chars_value;
+							break;
+						case 'Dolby Digital Decoding':
+							$chars_array['dolby_digital_decoding']=$chars_value;
+							break;
+						case 'Είσοδος ακουστικών':
+							$chars_array['headphones_input']=$chars_value;
+							break;
+						case 'Είσοδος':
+							$chars_array['input']=$chars_value;
+							break;
+						case 'Εγγύηση (μήνες)':
+							$chars_array['warranty']=$chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					break;
+				}
+			}
+			return $chars_array;
+		}
+		else if ($category == 'external_hard_drives'){
+
+			$chars_array = array(
+				'capacity' => "",
+				'connection' => "",
+				'size' => "",
+				'cache' => "",
+				'rpm' => "",
+				'colour' => "",
+				'weight' => "",
+				'warranty' => ""
+			);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					switch ($chars_title) {
+						case 'Χωρητικότητα':
+							$chars_array['capacity']=$chars_value;
+							break;
+						case 'Σύνδεση':
+							$chars_array['connection']=$chars_value;
+							break;
+						case 'Διάσταση':
+							$chars_array['size']=$chars_value;
+							break;
+						case 'Cache':
+							$chars_array['cache']=$chars_value;
+							break;
+						case 'Στροφές λειτουργίας':
+							$chars_array['rpm']=$chars_value;
+							break;
+						case 'Χρώμα':
+							$chars_array['colour']=$chars_value;
+							break;
+						case 'Βάρος (γραμμάρια)':
+							$chars_array['weight']=$chars_value;
+							break;
+						case 'Εγγύηση (μήνες)':
+							$chars_array['warranty']=$chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					break;
+				}
+			}
+			return $chars_array;
+		}
+		else if ($category == 'sata_hard_drives'){
+
+			$chars_array = array(
+				'capacity' => "",
+				'connection' => "",
+				'size' => "",
+				'cache' => "",
+				'rpm' => "",
+				'colour' => "",
+				'weight' => "",
+				'warranty' => ""
+			);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					switch ($chars_title) {
+						case 'Χωρητικότητα':
+							$chars_array['capacity']=$chars_value;
+							break;
+						case 'Σύνδεση':
+							$chars_array['connection']=$chars_value;
+							break;
+						case 'Διάσταση':
+							$chars_array['size']=$chars_value;
+							break;
+						case 'Cache':
+							$chars_array['cache']=$chars_value;
+							break;
+						case 'Στροφές λειτουργίας':
+							$chars_array['rpm']=$chars_value;
+							break;
+						case 'Συσκευασία':
+							$chars_array['packaging']=$chars_value;
+							break;
+						case 'Εγγύηση (μήνες)':
+							$chars_array['warranty']=$chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					break;
+				}
+			}
+			return $chars_array;
+		}
+		else if ($category == 'ssd'){
+
+			$chars_array = array(
+				'capacity_from_to' => "",
+				'capacity' => "",
+				'connection' => "",
+				'size' => "",
+				'read_speed' => "",
+				'write_speed' => "",
+				'manufacture_technology' => "",
+				'mtbf' => "",
+				'packaging' => "",
+				'warranty' => ""
+			);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					switch ($chars_title) {
+						case 'Χωρητικότητα (Από εώς)':
+							$chars_array['capacity_from_to']=$chars_value;
+							break;
+						case 'Χωρητικότητα':
+							$chars_array['capacity']=$chars_value;
+							break;
+						case 'Σύνδεση':
+							$chars_array['connection']=$chars_value;
+							break;
+						case 'Διάσταση':
+							$chars_array['size']=$chars_value;
+							break;
+						case 'Ταχύτητα ανάγνωσης (MB/s)':
+							$chars_array['read_speed']=$chars_value;
+							break;
+						case 'Ταχύτητα εγγραφής (MB/s)':
+							$chars_array['write_speed']=$chars_value;
+							break;
+						case 'Τεχνολογία κατασκευής':
+							$chars_array['manufacture_technology']=$chars_value;
+							break;
+						case 'MTBF (ώρες)':
+							$chars_array['mtbf']=$chars_value;
+							break;
+						case 'Συσκευασία':
+							$chars_array['packaging']=$chars_value;
+							break;
+						case 'Εγγύηση (μήνες)':
+							$chars_array['warranty']=$chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					break;
+				}
+			}
+			return $chars_array;
+		}
+		else if ($category == 'keyboard_mouse'){
+
+			$chars_array = array(
+				'type' => "",
+				'usage' => "",
+				'connection' => "",
+				'dpi' => "",
+				'mouse_buttons' => "",
+				'technology' => "",
+				'language' => "",
+				'programmable_buttons' => "",
+				'multimedia_buttons' => "",
+				'warranty' => ""
+			);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					switch ($chars_title) {
+						case 'Τύπος συσκευής':
+							$chars_array['type']=$chars_value;
+							break;
+						case 'Χρήση':
+							$chars_array['usage']=$chars_value;
+							break;
+						case 'Σύνδεση':
+							$chars_array['connection']=$chars_value;
+							break;
+						case 'Ανάλυση DPI':
+							$chars_array['dpi']=$chars_value;
+							break;
+						case 'Κουμπιά mouse':
+							$chars_array['mouse_buttons']=$chars_value;
+							break;
+						case 'Τεχνολογία':
+							$chars_array['technology']=$chars_value;
+							break;
+						case 'Γλώσσα πληκτρολογίου':
+							$chars_array['language']=$chars_value;
+							break;
+						case 'Προγραμματιζόμενα πλήκτρα':
+							$chars_array['programmable_buttons']=$chars_value;
+							break;
+						case 'Multimedia πλήκτρα':
+							$chars_array['multimedia_buttons']=$chars_value;
+							break;
+						case 'Εγγύηση (μήνες)':
+							$chars_array['warranty']=$chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					break;
+				}
+			}
+			return $chars_array;
+		}
+
+    }
+
+    private function updateProduct($table, $data, $product_number){
+
+    	$this->db->where('product_number', $product_number);
+    	$this->db->set($data);
+    	$this->db->update($table);
+    	echo 'update '.$product_number.' in table: '.$table.'<br>';
+    }
 
 }
