@@ -1,5 +1,4 @@
 <?php
-
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
@@ -28,13 +27,21 @@ class Live_model extends CI_Model {
     public function oktabit(){
 
 		if($xml = $this->xml("http://www.oktabit.gr/times_pelatwn/prices_xml.asp?customercode=012348&logi=evansmour")){
-			
-			$images = array();
-			
+			if($desc_xml = $this->xml("http://www.oktabit.gr/times_pelatwn/perigrafes_xml.asp?customercode=012348&logi=evansmour")){
+				if($char_xml = $this->xml("http://www.oktabit.gr/times_pelatwn/chars_xml.asp?customercode=012348&logi=evansmour")){
 
-			$this->db->where('supplier','oktabit');
-			$this->db->delete('live');
-
+					$images = array();
+				
+					$this->db->where('supplier','oktabit');
+					$this->db->delete('live');
+				}
+				else{
+					die("Characteristics XML from Oktabit can not be loaded.");
+				}
+			}
+			else{
+				die("Description XML from Oktabit can not be loaded.");
+			}
 		}else{
 			die("XML from Oktabit can not be loaded.");
 		}
@@ -42,7 +49,7 @@ class Live_model extends CI_Model {
 		$newProducts = array();
 		$i=0;
 		$f=0;
-		echo '<p style="color:red">Running Oktabit Insertion</p><br />';
+		//echo '<p style="color:red">Running Oktabit Insertion</p><br />';
 
 		foreach($xml->children() as $product) {
 			
@@ -188,31 +195,85 @@ class Live_model extends CI_Model {
 				$brand = (string) trim($product->brand);
 				$title = (string) trim($product->titlos);
 				$product_url = "";
-				$code = (string) trim($product->code);
-				
+				//$code = (string) trim($product->code);
 
+				$okt_prd_code = (string) trim($product->code);
 
+				foreach($desc_xml->children() as $perigrafes) {
+					$okt_desc_code = (string) trim($perigrafes->code);
+					
+					if($okt_prd_code == $okt_desc_code)
+					{
+						$description = (string) trim($perigrafes->perigrafi);
+					}
+				}
+				if ($c == 'carrying_cases'){
+
+					$chars_array = array(
+						'brand'=>"",
+						'type'=>"",
+						'size'=>"",
+						'material'=>"",
+						'colour'=>"",
+						'dimensions'=>""
+						);
+
+					foreach($char_xml->children() as $chars){
+
+						$okt_chars_code = (string) trim($chars->product[0]);
+
+						if($okt_prd_code == $okt_chars_code)
+						{
+							echo "in<br><br><br>";
+							$chars_title = (string) trim($chars->atribute[0]);
+							$chars_value = (string) trim($chars->value[0]);
+
+							switch ($chars_title) {
+								case 'Κατασκευαστής':
+									$chars_array['brand'] = $chars_value;
+									break;
+								case 'Τύπος':
+									$chars_array['type']=$chars_value;
+									break;
+								case 'Μέγεθος οθόνης':
+									$chars_array['size']=$chars_value;
+									break;
+								case 'Υλικό κατασκευής':
+									$chars_array['material']=$chars_value;
+									break;
+								case 'Χρώμα':
+									$chars_array['colour']=$chars_value;
+									break;
+								case 'Διαστάσεις (πλάτος x ύψος x πάχος, σε mm)':
+									$chars_array['dimensions']=$chars_value;
+									break;
+								default :
+
+									break;
+							}
+							print_r($chars_array);
+						}
+					}
+				}
 				//1. Live
 
 				if($this->checkLiveProduct($pn, $net_price)){
 
-				$live = array(
-					'category'=>(string) trim($c) ,
-					'product_number'=>$pn ,
-					'net_price'=>(string) trim($net_price) ,
-					'availability'=>(string) trim($product->availability) ,
-					'recycle_tax'=>(string) trim($recycle_tax) ,
-					'supplier' =>(string) 'oktabit'
-					);
+					$live = array(
+						'category'=>(string) trim($c) ,
+						'product_number'=>$pn ,
+						'net_price'=>(string) trim($net_price) ,
+						'availability'=>(string) trim($product->availability) ,
+						'recycle_tax'=>(string) trim($recycle_tax) ,
+						'supplier' =>(string) 'oktabit'
+						);
 
-				$this->db->insert('live', $live);
-				unset($live);
-
+					$this->db->insert('live', $live);
+					unset($live);
 				}
 
 				//2. New products for charateristics tables that load Sku module
 				$this->AddProduct ($c, $pn, $description, $brand, $title, $product_url, $newProducts, $i, $f, 'oktabit');
-				
 			}//if $c==$cat
 				
 			$f=0;
@@ -220,8 +281,8 @@ class Live_model extends CI_Model {
 		}//end foreach
 
 		echo '<p style="color:green">Finished</p><br />';
-
-
+		//redirect('https://etd.gr/xml/');
+		
 		if (!empty($newProducts))//Send Mail Check
 		{
 			$message='<h2>Νέα προϊόντα</h2>';
@@ -232,12 +293,17 @@ class Live_model extends CI_Model {
 
 			Modules::run('emails/send','Νέα προϊόντα',$message);
 		}
-		
+
     }
 
-	public function logicom(){
+    public function logicom(){
 
-		if($xml = $this->xml('./files/suppliers/logicom.xml')){
+    	$this->load->view('upload_xml', array('error' => ' ' ));
+    }
+
+	public function import_logicom($path){
+
+		if($xml = $this->xml($path)){
 			
 			$images = array();
 			
@@ -249,7 +315,7 @@ class Live_model extends CI_Model {
 		$newProducts = array();
 		$i=0;
 		//$f=0;
-		echo '<p style="color:red">Running Logicom Insertion</p><br />';
+		//echo '<p style="color:red">Running Logicom Insertion</p><br />';
 
 		foreach($xml->children()->children()->children() as $product) {
 			
@@ -357,18 +423,17 @@ class Live_model extends CI_Model {
 
 				if($this->checkLiveProduct($pn, $net_price)){
 
-				$live = array(
-					'category'=>$c ,
-					'product_number'=>$pn ,
-					'net_price'=>$net_price ,
-					'availability'=>$availability ,
-					'recycle_tax'=>$recycle_tax ,
-					'supplier' =>(string) 'logicom'
-					);
+					$live = array(
+						'category'=>$c ,
+						'product_number'=>$pn ,
+						'net_price'=>$net_price ,
+						'availability'=>$availability ,
+						'recycle_tax'=>$recycle_tax ,
+						'supplier' =>(string) 'logicom'
+						);
 
-				$this->db->insert('live', $live);
-				unset($live);
-
+					$this->db->insert('live', $live);
+					unset($live);
 				}
 
 				//2. New products for charateristics tables that load Sku module
@@ -378,8 +443,8 @@ class Live_model extends CI_Model {
 		
 		}//end foreach
 
-		echo '<p style="color:green">Finished</p><br />';
-
+		//echo '<p style="color:green">Finished</p><br />';
+		redirect('https://etd.gr/xml/');
 
 		if (!empty($newProducts))//Send Mail Check
 		{
@@ -472,8 +537,7 @@ class Live_model extends CI_Model {
 				'product_number'=> $pn,
 				'title'=> $title,
 				'description'=> $description,
-				'supplier_product_url'=> $product_url,
-				'code'=> $code
+				'supplier_product_url'=> $product_url
 				);
 			}
 
@@ -502,10 +566,10 @@ class Live_model extends CI_Model {
 				echo 'issue';
 			}
 
-			/*
+			
 			//3. Add Product Images
 			$this->AddProductImages($f, $supplier, $sku, $brand, $pn);
-			*/
+			
 		}//if($sku = Modules::run('sku/checkSku',$skuArray)){
     }
 
@@ -553,6 +617,5 @@ class Live_model extends CI_Model {
     	}
     }
 
-  
 
 }
