@@ -33,7 +33,7 @@ class Categories extends MX_Controller {
 		print_r($categoryData);
 		return false;
  
-	}
+	} 
 
 	 public function categoriesArray(){
     	$array = array('desktops','laptops','printers', 'multifunction_printers',
