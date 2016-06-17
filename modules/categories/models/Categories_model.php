@@ -47,9 +47,48 @@ class Categories_model extends CI_Model {
     }
 
 
-    public function updateItem($table, $categoryData){
+    public function updateItem($filename, $table){
 
-///Continue here
+
+    		$xml=simplexml_load_file("./files/uploads/".$filename) or die("Error: Cannot find uploaded XML file");
+    		$message = '';
+
+    		foreach ($xml->children() as $product) {
+
+    			foreach ($product as $key => $value) {
+    				
+    				if($key != 'description'){
+
+    					$data[$key]=$value;
+
+    				}
+
+
+    			}
+
+    				$sku = $data['sku'];
+
+    				$data['new_item']=0;
+					
+					$this->db->where('sku',$sku );
+					$query = $this->db->get($table);
+
+					if($query->num_rows()>0){
+						$this->db->where('sku',$sku);
+						$this->db->update($table, $data);
+					}else{
+						$message.="SKU: $sku δεν βρέθηκε στην κατηγορία $table \n";
+
+						exit($message);
+
+					}
+
+
+    		}
+
+    		$message = 'Η ενημέρωση των '.$table.' ολοκληρώθηκε με επιτυχία.';
+    		echo $message;
+
 
     }
 

@@ -22,11 +22,11 @@ class Home extends MX_Controller {
 	public function dashboard($pass=null){
 
 
-		if($pass!='efi' && $pass!='george' && $pass!='alex' && $pass!='evans'){
+		/*if($pass!='efi' && $pass!='george' && $pass!='alex' && $pass!='evans'){
 
 			die("<a href='https://www.etd.gr'>Welcome, Click Here Please</a>");
 			
-		}
+		}*/
 
 		$data['title'] = 'Dashboard';
 
@@ -56,10 +56,12 @@ class Home extends MX_Controller {
 		    mkdir('files/uploads', 0777, true);
 			}	
 
+
 		if($this->upload->do_upload('file')){
 
 
 			$data = $this->upload->data();
+			
 			$filename = $data['file_name'];
 
 			//$table =  $_POST['cat'];
