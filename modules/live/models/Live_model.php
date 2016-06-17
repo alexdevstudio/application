@@ -15,7 +15,6 @@ class Live_model extends CI_Model {
 
 		$xml=simplexml_load_file($url) or die("Error: Cannot create object");
 
-
     	return $xml;
     }
 
