@@ -32,7 +32,7 @@ class Categories extends MX_Controller {
 		echo '<pre>';
 		print_r($categoryData);
 		return false;
-
+ 
 	}
 
 	 public function categoriesArray(){
