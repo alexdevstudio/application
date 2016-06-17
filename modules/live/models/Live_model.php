@@ -188,11 +188,18 @@ class Live_model extends CI_Model {
 
 				if($this->checkLiveProduct($pn, $net_price)){
 
+					$availability = $this->makeAvailability((string) trim($product->availability), 'oktabit');
+
+					if(!$availability){
+						$f=0;
+						break;
+					}
+
 					$live = array(
 						'category'=>(string) trim($c) ,
 						'product_number'=>$pn ,
 						'net_price'=>(string) trim($net_price) ,
-						'availability'=>(string) trim($product->availability) ,
+						'availability'=>$availability,
 						'recycle_tax'=>(string) trim($recycle_tax) ,
 						'supplier' =>(string) 'oktabit'
 						);
@@ -200,6 +207,10 @@ class Live_model extends CI_Model {
 					$this->db->insert('live', $live);
 					unset($live);
 				}
+
+
+
+				//Array for categories table
 
 				$okt_product = array(
 					'category' => (string) trim($c),
@@ -220,19 +231,19 @@ class Live_model extends CI_Model {
 		}//end foreach
 
 		//echo '<p style="color:green">Finished</p><br />';
-/*		redirect('https://etd.gr/xml/');
+		redirect(base_url());
 		
 		if (!empty($newProducts))//Send Mail Check
 		{
 			$message='<h2>Νέα προϊόντα</h2>';
 		
 			foreach ($newProducts as $newProduct){
-				$message .= $newProduct['Κατηγορία'].' : '.$newProduct['Νέα προϊόντα'].' (<a href="https://etd.gr/xml/extract/xml/'.$newProduct['Κατηγορία'].'/new">Προβολή XML)</a><br>';
+				$message .= $newProduct['Κατηγορία'].' : '.$newProduct['Νέα προϊόντα'].' (<a href="'.base_url().'/extract/xml/'.$newProduct['Κατηγορία'].'/new">Προβολή XML)</a><br>';
 			}
 
 			Modules::run('emails/send','Νέα προϊόντα',$message);
 		}
-*/
+
     }
 
     public function logicom(){
@@ -328,14 +339,30 @@ class Live_model extends CI_Model {
 
 			if($c!=$cat){
 
-	    		$prd = $product->attributes();   
+
+	    		$prd = $product->attributes();  
+
+
+					$availability = $this->makeAvailability((string) trim($prd["Availability"]), 'logicom');
+
+						if(!$availability){
+							break;
+						}
+
+
 	    		$pn = (string) trim($prd["SKU"]);
 	    		$title = (string) trim($prd["Name"]);
 	    		$description = (string) trim($prd["Description"]);
 	    		$net_price = $prd["Price"];
-	    		$availability = (string) trim($prd["Availability"]);
+	    		$availability = $availability;
 	    		$recycle_tax = $prd["RT"];
 	    		$ManufacturerList = (string) trim($product->Details->ManufacturerList->attributes()->{'Name'});
+
+
+	    		if(strpos($title, 'Ent') && $c == 'multifunction_printers')
+	    			break;	
+	    		 
+
 	    		if($c == 'cartridges' || $c == 'toners')
 	    		{
 	    			$brand = explode('- /',trim($ManufacturerList))[1];
@@ -384,21 +411,21 @@ class Live_model extends CI_Model {
 
 				//2. New products for charateristics tables that load Sku module
 				//$this->AddProduct ($c, $pn, $description, $brand, $title, $product_url, $newProducts, $i, $imageUrl, 'logicom');
-				$this->addProduct ($log_product, null, $newProducts, $i, $f, 'logicom');
+				$this->addProduct ($log_product, null, $newProducts, $i, $imageUrl, 'logicom');
 
 			}//if $c==$cat
 		
 		}//end foreach
 
 		//echo '<p style="color:green">Finished</p><br />';
-		redirect('https://etd.gr/xml/');
+		redirect(base_url());
 
 		if (!empty($newProducts))//Send Mail Check
 		{
 			$message='<h2>Νέα προϊόντα</h2>';
 		
 			foreach ($newProducts as $newProduct){
-				$message .= $newProduct['Κατηγορία'].' : '.$newProduct['Νέα προϊόντα'].' (<a href="https://etd.gr/xml/extract/xml/'.$newProduct['Κατηγορία'].'/new">Προβολή XML)</a><br>';
+				$message .= $newProduct['Κατηγορία'].' : '.$newProduct['Νέα προϊόντα'].' (<a href="'.base_url().'/extract/xml/'.$newProduct['Κατηγορία'].'/new">Προβολή XML)</a><br>';
 			}
 
 			Modules::run('emails/send','Νέα προϊόντα',$message);
@@ -494,7 +521,7 @@ class Live_model extends CI_Model {
 				'sku'=> $sku,
 				'product_number'=> $product['product_number'],
 				'title'=> $product['title'],
-				'description'=> $product['description'],
+				'description'=> strip_tags($product['description']),
 				'supplier_product_url'=> $product['product_url']
 				);
 				if($chars_array)
@@ -1114,5 +1141,76 @@ class Live_model extends CI_Model {
     	$this->db->update($table);
     	echo 'update '.$product_number.' in table: '.$table.'<br>';
     }
+
+
+    private function makeAvailability($availability, $supplier){
+
+    	if($supplier == 'oktabit'){
+
+/*
+1.Διαθεσιμο 
+2.Οριακο (λιγα κομματια ακομη στις αποθηκες Oktabit) 
+3 και 4   Αναμενεται    (μηδεν διαθεσιμο αλλα το εχουμε παραγγειλει στον προμηθευτη) 
+5. Κατοπιν παραγγελιας (μηδεν διαθεσιμο και το παραγγελνουμε στον προμηθευτη εφοσον το παραγγειλετε σε εμας) 
+6. NOT AVAILABLE
+*/
+
+	    	switch ($availability) {
+	    		case '1':
+	    			$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
+	    			break;
+	    		case '2':
+	    			$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
+	    			break;
+	    		case '3':
+	    			$av = 'Αναμονή παραλαβής';
+	    			break;
+	    		case '4':
+	    			$av = 'Αναμονή παραλαβής';
+	    			break;
+	    		case '5':
+	    			$av = 'Κατόπιν παραγγελίας χωρίς διαθεσιμότητα';
+	    			break;
+	    		case '6':
+	    			return false;
+	    			break;
+
+	    		
+	    		default:
+	    			return false;
+	    			break;
+	    	}
+
+	    	return $av;
+
+    	}elseif($supplier == 'logicom'){
+
+    		switch ($availability) {
+    			case 'Normal':
+    			case 'Limited':
+    				
+    				$av="Κατόπιν παραγγελίας σε 1 εργάσιμη";
+    				
+    				break;
+    			case 'PreOrder':
+    				$av="Αναμονή παραλαβής";
+    				break;
+    			default:
+    				return false;
+    				break;
+    		}
+
+    		return $av;
+
+    	}
+    }
+
+
+    private function makeShippingClass($product){
+
+    }
+
+
+
 
 }

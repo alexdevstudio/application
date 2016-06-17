@@ -26,6 +26,11 @@ class Extract extends MX_Controller {
 	
 	}
 
+
+	public function exportLiveXml(){
+		
+	}
+
 	
 }
 
