@@ -1,0 +1,57 @@
+﻿Tsest message!!!!!Alex
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch is up-to-date with 'origin/master'.
+#
+# Changes to be committed:
+#	new file:   modules/COPY/controllers/Import.php
+#	new file:   modules/COPY/models/Import_model.php
+#	new file:   modules/categories/controllers/Categories.php
+#	new file:   modules/categories/models/Categories_model.php
+#	new file:   modules/emails/controllers/Emails.php
+#	new file:   modules/emails/models/Emails_model.php
+#	new file:   modules/extract/controllers/Extract.php
+#	new file:   modules/extract/models/Extract_model.php
+#	new file:   modules/home/controllers/Home.php
+#	new file:   modules/home/views/home.php
+#	new file:   modules/images/controllers/Images.php
+#	new file:   modules/images/models/Images_model.php
+#	new file:   modules/laptops/controllers/Laptops.php
+#	new file:   modules/laptops/models/Laptops_model.php
+#	new file:   modules/live/controllers/Live.php
+#	new file:   modules/live/models/Live_model.php
+#	new file:   modules/login/controllers/Login.php
+#	new file:   modules/login/models/mdl_login.php
+#	new file:   modules/login/views/change_email_address.php
+#	new file:   modules/login/views/forgot_username.php
+#	new file:   modules/login/views/login_default.php
+#	new file:   modules/login/views/login_register.php
+#	new file:   modules/login/views/new_verify_email.php
+#	new file:   modules/login/views/reset_password.php
+#	new file:   modules/login/views/reset_password_form.php
+#	new file:   modules/login/views/verify_email.php
+#	new file:   modules/sku/controllers/Sku.php
+#	new file:   modules/sku/models/Sku_model.php
+#	new file:   modules/templates/views/footer
+#	new file:   modules/templates/views/footer.php
+#	new file:   modules/templates/views/header.php
+#
+# Untracked files:
+#	.htaccess
+#	cache/
+#	config/
+#	controllers/
+#	core/
+#	etd-xml/
+#	helpers/
+#	hooks/
+#	index.html
+#	language/
+#	libraries/
+#	logs/
+#	models/
+#	third_party/
+#	views/
+#
+
