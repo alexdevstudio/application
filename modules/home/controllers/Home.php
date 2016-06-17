@@ -61,7 +61,7 @@ class Home extends MX_Controller {
 
 
 			$data = $this->upload->data();
-			
+
 			$filename = $data['file_name'];
 
 			//$table =  $_POST['cat'];
@@ -74,6 +74,44 @@ class Home extends MX_Controller {
 
 
 	}
+
+
+
+	/*public function strip(){
+		
+		$query = $this->db->get('sku');
+		foreach($query->result() as $row){
+
+			$sku = $row->id;
+			$cat = $row->category;
+
+			$this->db->where('sku', $sku);
+			$item = $this->db->get($cat);
+
+			if($item->num_rows()>0){
+
+				if($this->db->field_exists('description', $cat)){
+
+				
+
+				$desc = $item->row()->description;
+				$desc = strip_tags($desc);
+				if($desc !=''){
+
+
+				$this->db->where('sku', $sku);
+				$this->db->set('description', $desc);
+				$this->db->update($cat);
+				}
+			}
+
+			}
+
+
+		}
+		echo 'All ok';
+	}*/
+
 
 
 
