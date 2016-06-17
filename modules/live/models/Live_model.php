@@ -237,7 +237,7 @@ class Live_model extends CI_Model {
 
     public function logicom(){
 
-    	$this->load->view('upload_xml', array('error' => ' ' ));
+    	$this->load->view('upload_logicom_xml', array('error' => ' ' ));
     }
 
 	public function import_logicom($path){
@@ -384,7 +384,7 @@ class Live_model extends CI_Model {
 
 				//2. New products for charateristics tables that load Sku module
 				//$this->AddProduct ($c, $pn, $description, $brand, $title, $product_url, $newProducts, $i, $imageUrl, 'logicom');
-				$this->addProduct ($log_product, null, $newProducts, $i, $f, 'logicom');
+				$this->addProduct ($log_product, null, $newProducts, $i, $imageUrl, 'logicom');
 
 			}//if $c==$cat
 		
