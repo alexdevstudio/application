@@ -26,10 +26,10 @@ class Live_model extends CI_Model {
 				if($char_xml = $this->xml("http://www.oktabit.gr/times_pelatwn/chars_xml.asp?customercode=012348&logi=evansmour")){
 
 					$images = array();
-				
-					$this->db->where('supplier','oktabit');
-					$this->db->delete('live');
 
+					$this->updateLive('oktabit');
+				
+					
 				}
 				else{
 					die("Characteristics XML from Oktabit can not be loaded.");
@@ -202,10 +202,17 @@ class Live_model extends CI_Model {
 						'net_price'=>$net_price ,
 						'availability'=>$availability,
 						'recycle_tax'=>(string) trim($recycle_tax) ,
-						'supplier' =>'oktabit'
+						'supplier' =>'oktabit',
+						'status' => 'published',
+						'delete_flag'=>0
 						);
 
+					$this->db->where('product_number', $pn);
+					$this->db->where('supplier', 'oktabit');
+					$this->db->delete('live', $live);
+
 					$this->db->insert('live', $live);
+
 					unset($live);
 				}
 
@@ -248,7 +255,7 @@ class Live_model extends CI_Model {
 			Modules::run('emails/send','Νέα προϊόντα',$message);
 		}
 
-		
+		 echo "Finnished Oktabit";
 
     }
 
@@ -263,8 +270,7 @@ class Live_model extends CI_Model {
 			
 			$images = array();
 			
-			$this->db->where('supplier','logicom');
-			$this->db->delete('live');
+			$this->updateLive('logicom');
 
 		}
 
@@ -272,7 +278,7 @@ class Live_model extends CI_Model {
 		$i=0;
 		$k=0;
 		//$f=0;
-		echo '<p style="color:red">Running Logicom Insertion</p><br />';
+		
 
 		foreach($xml->children()->children()->children() as $product) {
 			
@@ -402,10 +408,18 @@ class Live_model extends CI_Model {
 						'net_price'=>$net_price ,
 						'availability'=>$availability ,
 						'recycle_tax'=>$recycle_tax ,
-						'supplier' =>(string) 'logicom'
+						'supplier' =>'logicom',
+						'status' => 'published',
+						'delete_flag'=>0
 						);
 
-					$this->db->insert('live', $live);
+					$this->db->where('product_number', $pn);
+					$this->db->where('supplier', 'logicom');
+					//$this->db->delete('live', $live);
+
+					//$this->db->insert('live', $live);
+					
+					$this->db->replace('live', $live);
 					unset($live);
 				}
 
@@ -440,6 +454,8 @@ class Live_model extends CI_Model {
 
 			Modules::run('emails/send','Νέα προϊόντα',$message);
 		}
+
+		echo "Finnished updating Logicom-Enet.";
 		
     }
 
@@ -454,7 +470,7 @@ class Live_model extends CI_Model {
 				{
 					$price = (float) $price;
 				        
-				    if($row->net_price > $price ){
+				    if($row->net_price >= $price ){
 				        $this->db->where('id',$row->id);
 				        $this->db->delete('live');
 				        return true;
@@ -566,11 +582,13 @@ class Live_model extends CI_Model {
 			}
 			else
 			{
+				$shipping_class = '';
 				if($c == "carrying_cases" || $c == "external_hard_drives" ||
 				 $c == "sata_hard_drives" || $c == "ssd" || $c == "speakers" || 
 				 $c == "power_banks" || $c == "keyboard_mouse"  || 
-				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c == "tablets"  || $c == "smartphones")
+				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c == "tablets"  || $c == "smartphones")		
 				$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
+
 
 				$categoryData = array(
 				'brand'=> $product['brand'],
@@ -640,6 +658,8 @@ class Live_model extends CI_Model {
 
 		}	
     }
+
+
     }
 
 
@@ -1281,6 +1301,41 @@ class Live_model extends CI_Model {
 
     	}
     }
+
+	private function updateLive($supplier){
+
+		
+		//1. Delete old trashed entries
+		
+		$this->db->where('supplier', $supplier);
+		$this->db->where('status', 'trash');
+		$this->db->where('delete_flag', 3);
+		$this->db->delete('live');
+
+
+		//2. Update all entries to set status=trash and delete_flag +1
+
+		$this->db->where('supplier', $supplier);
+		$products = $this->db->get('live');
+
+			foreach ($products->result() as $row) {
+
+				$id = $row->id;
+				$flag = $row->delete_flag;
+				$flag ++;
+
+				$this->db->where('id', $id);
+				$this->db->set('delete_flag',$flag);
+				$this->db->set('status','trash');
+				$this->db->update('live');
+
+				
+				
+			}
+
+
+		return true;
+	}
 
 
 
