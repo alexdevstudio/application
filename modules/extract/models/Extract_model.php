@@ -23,7 +23,7 @@ class Extract_model extends CI_Model {
     		$products = $xml->appendChild($products);
 
             //$this->db->where("new_item", "1");
-    		$query = $this->db->query("SELECT * FROM $table WHERE new_item=1 ");
+    		$query = $this->db->query("SELECT * FROM $table ");
             $i=0;
             $prod = $query->result_array();
             foreach($prod as $columns){

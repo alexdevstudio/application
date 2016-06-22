@@ -52,10 +52,11 @@ class Categories_model extends CI_Model {
 
     		$xml=simplexml_load_file("./files/uploads/".$filename) or die("Error: Cannot find uploaded XML file");
     		$message = '';
-
+$asd = 0;
     		foreach ($xml->children() as $product) {
-
+    			$data=array();
     			foreach ($product as $key => $value) {
+    				
     				
     				if($key != 'description' && $key!='shipping_class'){
 
@@ -65,6 +66,7 @@ class Categories_model extends CI_Model {
 
 
     			}
+				
 
     			$sku = $data['sku'];
 
@@ -78,6 +80,7 @@ class Categories_model extends CI_Model {
 				if($query->num_rows()>0){
 					$this->db->where('sku',$sku);
 					$this->db->update($table, $data);
+
 				}else{
 					$message.="SKU: $sku δεν βρέθηκε στην κατηγορία $table \n";
 					exit($message);
