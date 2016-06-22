@@ -27,7 +27,12 @@ class Extract extends MX_Controller {
 	}
 
 
-	public function exportLiveXml(){
+	public function allImport($table){
+
+		 $this->load->model('extract_model');
+		 echo $this->extract_model->allImport($table);
+
+		 
 		
 	}
 

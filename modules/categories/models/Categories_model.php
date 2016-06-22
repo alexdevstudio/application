@@ -66,25 +66,22 @@ class Categories_model extends CI_Model {
 
     			}
 
-    				$sku = $data['sku'];
+    			$sku = $data['sku'];
 
-    				$data['new_item']=0;
-    				$data['shipping_class'] = $this->makeShippingClass($data, $table);
+    			$data['new_item']=0;
+    			if($table=="desktops" || $table == "monitors" || $table == "ups")
+    			$data['shipping_class'] = $this->makeShippingClass($data, $table);
 					
-					$this->db->where('sku',$sku );
-					$query = $this->db->get($table);
+				$this->db->where('sku', $sku );
+				$query = $this->db->get($table);
 
-					if($query->num_rows()>0){
-						$this->db->where('sku',$sku);
-						$this->db->update($table, $data);
-					}else{
-						$message.="SKU: $sku δεν βρέθηκε στην κατηγορία $table \n";
-
-						exit($message);
-
-					}
-
-
+				if($query->num_rows()>0){
+					$this->db->where('sku',$sku);
+					$this->db->update($table, $data);
+				}else{
+					$message.="SKU: $sku δεν βρέθηκε στην κατηγορία $table \n";
+					exit($message);
+				}
     		}
 
     		$message = 'Η ενημέρωση των '.$table.' ολοκληρώθηκε με επιτυχία.';
@@ -95,8 +92,7 @@ class Categories_model extends CI_Model {
 
 
 
-private function makeShippingClass($data, $cat, $dynamic = null){
-
+public function makeShippingClass($data, $cat, $dynamic = null){
 
 	if($dynamic){
 		
@@ -130,6 +126,9 @@ private function makeShippingClass($data, $cat, $dynamic = null){
 							$shipping_class= 4679;
 						else
 							$shipping_class= 4678;
+						break;
+				default:
+						return false;
 						break;
 			
 		}								
@@ -230,13 +229,14 @@ private function makeShippingClass($data, $cat, $dynamic = null){
 					$shipping_class= 4663;
 					break;
 			default:
-				# code...
+				return false;
 				break;
 	
 			}
 	
 		}
-    
+     
+      return $shipping_class;
     }
    
 

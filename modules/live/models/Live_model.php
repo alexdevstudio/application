@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
@@ -26,10 +26,10 @@ class Live_model extends CI_Model {
 				if($char_xml = $this->xml("http://www.oktabit.gr/times_pelatwn/chars_xml.asp?customercode=012348&logi=evansmour")){
 
 					$images = array();
-				
-					$this->db->where('supplier','oktabit');
-					$this->db->delete('live');
 
+					$this->updateLive('oktabit');
+				
+					
 				}
 				else{
 					die("Characteristics XML from Oktabit can not be loaded.");
@@ -45,19 +45,17 @@ class Live_model extends CI_Model {
 		$newProducts = array();
 		$i=0;
 		$f=0;
-		//echo '<p style="color:red">Running Oktabit Insertion</p><br />';
 
 		foreach($xml->children() as $product) {
 			
 			set_time_limit(50);
 			//Rename categories for ETD.gr
 
-			$cat = (string) $product->category;
+			$cat = (string) trim($product->category);
 			$sc = trim((string)$product->subcategory);
 
 			$c = $cat;
-			//$catArray = array();
-			//$catExists = FALSE;
+			
 
 			$brand = (string) trim($product->brand);
 			if ($brand == 'VERO' || $brand == 'MAXBALL' || $brand == 'LEXMARK')
@@ -110,7 +108,7 @@ class Live_model extends CI_Model {
 					}
 					break;
 				case 'Printers':
-					if($sc == 'Color Laser Printers' || $sc == 'Inkjet Printers' )
+					if($sc == 'Color Laser Printers' || $sc == 'Inkjet Printers' || $sc == 'B-W Laser Printers' )
 					{
 						$c = 'printers';	
 					}
@@ -161,9 +159,12 @@ class Live_model extends CI_Model {
 			if($c!=$cat){
 
 				$net_price = str_replace(",", ".", $product->timi);
+				$net_price = (string) trim($net_price);
+
 				$recycle_tax = str_replace(",", ".", $product->anakykl);
 				$pn = (string) trim($product->part_no);
 				$pn = ($pn == '') ? (string) trim($product->code): $pn;
+
 				$description = "";
 				$brand = (string) trim($product->brand);
 				$title = (string) trim($product->titlos);
@@ -176,8 +177,8 @@ class Live_model extends CI_Model {
 					
 					if($code == $okt_desc_code)
 					{
-						$description = (string) trim($perigrafes->perigrafi);
-						break;
+						$description = strip_tags((string) (trim($perigrafes->perigrafi)));
+						continue;
 					}
 				}
 
@@ -192,19 +193,26 @@ class Live_model extends CI_Model {
 
 					if(!$availability){
 						$f=0;
-						break;
+						continue;
 					}
 
 					$live = array(
-						'category'=>(string) trim($c) ,
+						'category'=>$c,
 						'product_number'=>$pn ,
-						'net_price'=>(string) trim($net_price) ,
+						'net_price'=>$net_price ,
 						'availability'=>$availability,
 						'recycle_tax'=>(string) trim($recycle_tax) ,
-						'supplier' =>(string) 'oktabit'
+						'supplier' =>'oktabit',
+						'status' => 'published',
+						'delete_flag'=>0
 						);
 
+					$this->db->where('product_number', $pn);
+					$this->db->where('supplier', 'oktabit');
+					$this->db->delete('live', $live);
+
 					$this->db->insert('live', $live);
+
 					unset($live);
 				}
 
@@ -213,25 +221,28 @@ class Live_model extends CI_Model {
 				//Array for categories table
 
 				$okt_product = array(
-					'category' => (string) trim($c),
+					'category' => $c,
 					'product_number' => $pn,
 					'description' => $description,
 					'brand' => $brand,
 					'title' => $title,
 					'product_url' => $product_url,
-					'code' => $code
+					'code' => $code,
+					'net_price'=>$net_price
 				);
 
 				//2. New products for charateristics tables that load Sku module
+
+				
 				$this->addProduct ($okt_product, $chars_array, $newProducts, $i, $f, 'oktabit');
-			}//if $c==$cat
+			}//if $c!=$cat
 				
 			$f=0;
 		
 		}//end foreach
 
 		//echo '<p style="color:green">Finished</p><br />';
-		redirect(base_url());
+		//redirect(base_url());
 		
 		if (!empty($newProducts))//Send Mail Check
 		{
@@ -243,6 +254,8 @@ class Live_model extends CI_Model {
 
 			Modules::run('emails/send','Νέα προϊόντα',$message);
 		}
+
+		 echo "Finnished Oktabit";
 
     }
 
@@ -257,15 +270,15 @@ class Live_model extends CI_Model {
 			
 			$images = array();
 			
-			$this->db->where('supplier','logicom');
-			$this->db->delete('live');
+			$this->updateLive('logicom');
 
 		}
 
 		$newProducts = array();
 		$i=0;
+		$k=0;
 		//$f=0;
-		echo '<p style="color:red">Running Logicom Insertion</p><br />';
+		
 
 		foreach($xml->children()->children()->children() as $product) {
 			
@@ -340,13 +353,14 @@ class Live_model extends CI_Model {
 			if($c!=$cat){
 
 
+
 	    		$prd = $product->attributes();  
 
 
 					$availability = $this->makeAvailability((string) trim($prd["Availability"]), 'logicom');
 
 						if(!$availability){
-							break;
+							continue;
 						}
 
 
@@ -359,8 +373,9 @@ class Live_model extends CI_Model {
 	    		$ManufacturerList = (string) trim($product->Details->ManufacturerList->attributes()->{'Name'});
 
 
-	    		if(strpos($title, 'Ent') && $c == 'multifunction_printers')
-	    			break;	
+	    		if(strpos($title, 'Ent') && $c == 'multifunction_printers'){
+	    			continue;	
+	    		}
 	    		 
 
 	    		if($c == 'cartridges' || $c == 'toners')
@@ -393,10 +408,18 @@ class Live_model extends CI_Model {
 						'net_price'=>$net_price ,
 						'availability'=>$availability ,
 						'recycle_tax'=>$recycle_tax ,
-						'supplier' =>(string) 'logicom'
+						'supplier' =>'logicom',
+						'status' => 'published',
+						'delete_flag'=>0
 						);
 
-					$this->db->insert('live', $live);
+					$this->db->where('product_number', $pn);
+					$this->db->where('supplier', 'logicom');
+					//$this->db->delete('live', $live);
+
+					//$this->db->insert('live', $live);
+					
+					$this->db->replace('live', $live);
 					unset($live);
 				}
 
@@ -407,18 +430,19 @@ class Live_model extends CI_Model {
 					'brand' => $brand,
 					'title' => $title,
 					'product_url' => $product_url,
+					'net_price'=>$net_price
 				);
 
 				//2. New products for charateristics tables that load Sku module
 				//$this->AddProduct ($c, $pn, $description, $brand, $title, $product_url, $newProducts, $i, $imageUrl, 'logicom');
-				$this->addProduct ($log_product, null, $newProducts, $i, $imageUrl, 'logicom');
+				$this->addProduct ($log_product, array(), $newProducts, $i, $imageUrl, 'logicom');
 
 			}//if $c==$cat
 		
 		}//end foreach
 
 		//echo '<p style="color:green">Finished</p><br />';
-		redirect(base_url());
+		//redirect(base_url());
 
 		if (!empty($newProducts))//Send Mail Check
 		{
@@ -430,6 +454,8 @@ class Live_model extends CI_Model {
 
 			Modules::run('emails/send','Νέα προϊόντα',$message);
 		}
+
+		echo "Finnished updating Logicom-Enet.";
 		
     }
 
@@ -444,7 +470,7 @@ class Live_model extends CI_Model {
 				{
 					$price = (float) $price;
 				        
-				    if($row->net_price > $price ){
+				    if($row->net_price >= $price ){
 				        $this->db->where('id',$row->id);
 				        $this->db->delete('live');
 				        return true;
@@ -461,7 +487,7 @@ class Live_model extends CI_Model {
 	}//private function checkLiveProduct($pn, $price){
 
 
-	private function insertProductCategory($table, $pn, $data){
+	/*private function insertProductCategory($table, $pn, $data){
 
 		echo $table.'<br />';
 
@@ -481,58 +507,109 @@ class Live_model extends CI_Model {
 
 		} 	
 		return false;
-    }//private function insertProductCategory(){
+    }//private function insertProductCategory(){*/
 
 
-    private function addProduct($product, $chars_array=null, $newProducts, $i, $f ,$supplier){
+    private function addProduct($product, $chars_array, $newProducts, $i, $f ,$supplier){
+
+    	$c = $product['category'];
 
 		$skuArray = array(
-			'category'=> $product['category'],
+			'category'=> $c,
 			'product_number' => $product['product_number'],
 			);
 
-		/*		
+				
 		// Only For Update
 
-		if($product['category']=='ups')
+		/*
+		if($c == "carrying_cases" || $c == "external_hard_drives" ||
+				 $c == "sata_hard_drives" || $c == "ssd" || $c == "speakers" || 
+				 $c == "power_banks" || $c == "keyboard_mouse"  || 
+				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c == "tablets"  || $c == "smartphones" )
 		{
-			//$chars_array = array_merge($chars_array, array("description"=>$product['description']));
-			$chars_array = array("description"=>$product['description']);
-			$this->updateProduct($product['category'], $chars_array, $product['product_number']);
-		}
-		// End Only for Update
-		*/
-		
-		if($sku = Modules::run('sku/checkSku',$skuArray)){
+			
+		if(!$chars_array){
+			$chars_array=array();
+}
 
-			if($product['category'] == 'cartridges' || $product['category'] == 'toners'){
+
+			$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
+			$chars_array = array_merge($chars_array, array("shipping_class"=>$shipping_class));
+			$chars_array = array_merge($chars_array, array("description"=>$product['description']));
+			$this->updateProduct($c, $chars_array, $product['product_number']);
+			
+		}
+		*/
+		// End Only for Update
+		
+		$newSku = Modules::run('sku/checkSku',$skuArray);
+		$sku = $newSku['sku'];
+
+
+
+
+
+		if($newSku['new']){
+
+			
+			if($c == 'cartridges' || $c == 'toners'){
+				$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
+
 				$categoryData = array(
 				'brand'=> $product['brand'], 
 				'sku'=> $sku,
 				'product_number'=> $product['product_number'],
 				'title'=> $product['title'],
-				'supplier_product_url'=> $product['product_url']
+				'supplier_product_url'=> $product['product_url'],
+				'shipping_class' => $shipping_class
+
 				);
-			}
-			else
-			{
+			}elseif($c == 'printers' || $c == 'multifunction_printers'){
+				
+				$price = array('price'=>$product['net_price']);
+				
+				$shipping_class  = Modules::run('categories/makeShippingClass',$price, $c, true);
 				$categoryData = array(
 				'brand'=> $product['brand'],
 				'sku'=> $sku,
 				'product_number'=> $product['product_number'],
 				'title'=> $product['title'],
 				'description'=> strip_tags($product['description']),
-				'supplier_product_url'=> $product['product_url']
+				'supplier_product_url'=> $product['product_url'],
+				'shipping_class' => $shipping_class
+				);
+			}
+			else
+			{
+				$shipping_class = '';
+				if($c == "carrying_cases" || $c == "external_hard_drives" ||
+				 $c == "sata_hard_drives" || $c == "ssd" || $c == "speakers" || 
+				 $c == "power_banks" || $c == "keyboard_mouse"  || 
+				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c == "tablets"  || $c == "smartphones")		
+				$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
+
+
+				$categoryData = array(
+				'brand'=> $product['brand'],
+				'sku'=> $sku,
+				'product_number'=> $product['product_number'],
+				'title'=> $product['title'],
+				'description'=> strip_tags($product['description']),
+				'supplier_product_url'=> $product['product_url'],
+				'shipping_class' => $shipping_class
 				);
 				if($chars_array)
 				{
 					$categoryData = array_merge($categoryData, $chars_array);
 				}
+
+				
 				
 			}
 
 
-			if(Modules::run("categories/insert", $product['category'], $categoryData)){
+			if(Modules::run("categories/insert", $c, $categoryData)){
 
 				if(isset($newProducts[$i]['Κατηγορία'])){
 
@@ -562,7 +639,27 @@ class Live_model extends CI_Model {
 			$this->AddProductImages($product, $f, $supplier, $sku);
 			
 		}//if($sku = Modules::run('sku/checkSku',$skuArray)){
-			
+
+
+		else
+		{
+
+			if($c == 'printers' || $c == 'multifunction_printers'){
+				$price = array('price'=>(float)$product['net_price']);
+				//print_r($price['price']);
+				$shipping_class  = Modules::run('categories/makeShippingClass',$price, $c, true);
+					
+				
+					
+
+				$this->db->set('shipping_class',$shipping_class);
+				$this->db->where('sku',$sku);
+				$this->db->update($c);
+
+		}	
+    }
+
+
     }
 
 
@@ -657,7 +754,7 @@ class Live_model extends CI_Model {
 					}
 				}
 				else if ($is_found){
-					break;
+					continue;
 				}
 			}
 			return $chars_array;
@@ -704,7 +801,7 @@ class Live_model extends CI_Model {
 					}
 				}
 				else if ($is_found){
-					break;
+					continue;
 				}
 			}
 			return $chars_array;
@@ -767,7 +864,7 @@ class Live_model extends CI_Model {
 					}
 				}
 				else if ($is_found){
-					break;
+					continue;
 				}
 			}
 			return $chars_array;
@@ -826,7 +923,7 @@ class Live_model extends CI_Model {
 					}
 				}
 				else if ($is_found){
-					break;
+					continue;
 				}
 			}
 			return $chars_array;
@@ -877,7 +974,7 @@ class Live_model extends CI_Model {
 					}
 				}
 				else if ($is_found){
-					break;
+					continue;
 				}
 			}
 			return $chars_array;
@@ -936,7 +1033,7 @@ class Live_model extends CI_Model {
 					}
 				}
 				else if ($is_found){
-					break;
+					continue;
 				}
 			}
 			return $chars_array;
@@ -992,7 +1089,7 @@ class Live_model extends CI_Model {
 					}
 				}
 				else if ($is_found){
-					break;
+					continue;
 				}
 			}
 			return $chars_array;
@@ -1059,7 +1156,7 @@ class Live_model extends CI_Model {
 					}
 				}
 				else if ($is_found){
-					break;
+					continue;
 				}
 			}
 			return $chars_array;
@@ -1126,7 +1223,7 @@ class Live_model extends CI_Model {
 					}
 				}
 				else if ($is_found){
-					break;
+					continue;
 				}
 			}
 			return $chars_array;
@@ -1205,12 +1302,46 @@ class Live_model extends CI_Model {
     	}
     }
 
+	private function updateLive($supplier){
 
-    private function makeShippingClass($product){
+		
+		//1. Delete old trashed entries
+		
+		$this->db->where('supplier', $supplier);
+		$this->db->where('status', 'trash');
+		$this->db->where('delete_flag', 3);
+		$this->db->delete('live');
 
-    }
+
+		//2. Update all entries to set status=trash and delete_flag +1
+
+		$this->db->where('supplier', $supplier);
+		$products = $this->db->get('live');
+
+			foreach ($products->result() as $row) {
+
+				$id = $row->id;
+				$flag = $row->delete_flag;
+				$flag ++;
+
+				$this->db->where('id', $id);
+				$this->db->set('delete_flag',$flag);
+				$this->db->set('status','trash');
+				$this->db->update('live');
+
+				
+				
+			}
+
+
+		return true;
+	}
+
+
 
 
 
 
 }
+
+?>
