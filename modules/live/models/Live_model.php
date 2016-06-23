@@ -475,12 +475,12 @@ class Live_model extends CI_Model {
 		$newProducts = array();
 		$i=0;
 		$length = 0;
-		$sc = $cable_cat = $dimensions = '';
+		$sc = $cable_cat = $dimensions = $size = $ports = $patch_type = '';
 
 		foreach($xml->children() as $product) {
 
 			$length = 0;
-			$sc = $cable_cat = $dimensions = '';
+			$sc = $cable_cat = $dimensions = $size = $ports = $patch_type = '';
 
 			$c = $cat = $product->category->attributes()->{'name'};
 
@@ -645,40 +645,136 @@ class Live_model extends CI_Model {
 			    		$image_array[$i]=(string) trim($prd[$image_nr]);
 			    }
 
+			    //Change the category for some products
+			    if ($c == 'racks'){
+			    	if(strpos($title, 'Patch Panel'))
+			    		$c = 'patch_panels';
+			    }
+			    
 			    // Make the characteristics
-			    if ($sc == 'Καλώδια Εγκατάστασης Χαλκού')
-			    {
-			    	if (strpos( $title, 'Installation Cable '))
-			    		$whereIs = strpos( $title, 'Installation Cable ') + strlen('Installation Cable ');
-			    	else
-			    		$whereIs = strpos( $title, 'Patch Cable ') + strlen('Patch Cable ');
+			    if ($c == 'cables' && $length < 0.1){
 
-			    	$length = substr($title, $whereIs);
-			    	$length = substr($length, 0, strpos( $length, 'm '));
+			    	$whereIs = 0;
+			    	if ($sc =='Καλώδια Patch' && $length == -1 )
+				    {
+				    	if(strpos( $title, '0m '))
+				    		$whereIs = strpos( $title, '0m ')+1;
+				    	elseif(strpos( $title, 'm '))
+				    		$whereIs = strpos( $title, 'm ');
+				    	$length = substr($title, 0, $whereIs);
+				    	$length = substr($length, strrpos( $length, ' '));
+				    }
+				    else{
 
-			    }
-			    else if ($sc =='Καλώδια Patch' && $length == -1 )
-			    {
-			    	$length = substr($title, 0, strpos( $title, '0m ')+1);
-			    	echo $length.'<br>';
-			    }
+				    	if (strpos( $title, 'Cable '))
+				   			$whereIs = strpos( $title, 'Cable ') + strlen('Cable ');
+
+				    	$length = substr($title, $whereIs);
+
+				   		if(strpos( $length, 'm '))
+				   			$whereIs = strpos( $length, 'm ');
+				   		elseif(strpos( $length, 'm,'))
+				   			$whereIs = strpos( $length, 'm,');
+				    	elseif(strpos( $length, ' Meter'))
+				    		$whereIs = strpos( $length, ' Meter');
+
+					   	$length = substr($length, 0, $whereIs);
+
+				   		if(strlen($length) > 3)
+				   			$length = substr($length, strrpos( $length, ' '));
+				    }
+				    $length = str_replace(",",".",$length);
+				    $length = (float)$length;
+				}
+				elseif($c == 'patch_panels'){
+					if($cable_cat == ''){
+						if(strpos($title, 'Cat')){
+							$cable_cat = substr($title, strpos($title, 'Cat'));
+							$cable_cat = substr($cable_cat, 0, strpos( $cable_cat, ' '));
+						}
+					}
+
+					if(strpos($title, 'port')){
+						$ports = substr($title, 0, strpos($title, 'port'));
+						$ports = substr($ports, strrpos( $ports, ' ')+1);
+					}
+					elseif(strpos($title, '-Port')){
+						$ports = substr($title, 0, strpos($title, '-Port'));
+						$ports = substr($ports, strrpos( $ports, ' ')+1);
+					}
+					elseif(strpos($title, 'xRJ45')){
+						$ports = substr($title, 0, strpos($title, 'xRJ45'));
+						$ports = substr($ports, strrpos( $ports, ' ')+1);
+					}
+
+					if(strpos($title, '"')){
+						$size = substr($title, 0, strpos($title, '"'));
+						$size = substr($size, strrpos( $size, ' ')+1);
+					}
+					elseif(strpos($title, '\'')){
+						$size = substr($title, 0, strpos($title, '\''));
+						$size = substr($size, strrpos( $size, ' ')+1);
+					}
+					elseif(strpos($title, ' inch')){
+						$size = substr($title, 0, strpos($title, ' inch'));
+						$size = substr($size, strrpos( $size, ' ')+1);
+					}
+
+
+
+
+
+					if(strpos($title, 'Unshielded'))
+						$patch_type = 'Unshielded';
+					elseif(strpos($title, 'Shielded'))
+						$patch_type = 'Shielded';
+
+				}
 
 				$chars_array = array(); 
-					if($sc)
-						$chars_array['subcategory'] = $sc;
-					if($length > 0)
-						$chars_array['length'] = $length;
-					if($cable_cat)
-						$chars_array['cable_cat'] = $cable_cat;
-					if($dimensions)
-						$chars_array['dimensions'] = $dimensions;
+				
+				if($sc)
+					$chars_array['subcategory'] = $sc;
+				if($length)
+					$chars_array['length'] = number_format((float)$length, 2, '.', '');
+				if($cable_cat)
+					$chars_array['cable_cat'] = $cable_cat;
+				if($dimensions)
+					$chars_array['dimensions'] = $dimensions;
+				if($size)
+					$chars_array['size'] = $size;
+				if($ports)
+					$chars_array['ports'] = $ports;
+				if($patch_type)
+					$chars_array['patch_type'] = $patch_type;
 
-/*				if($c == 'cables'){
-									echo $title.'<br>';
-									echo $product->category->attributes()->{'name'}.'<pre>';
-									print_r($chars_array);
-									echo '<br>';
-								}*/
+				// End Of Characteristics
+				/*if($c == 'cables' ){
+					echo $title.'<br>';
+					echo 'Length: '.$length.'<br>';
+					echo 'Length: '.$chars_array['length'].'<br>';
+					if ($length == $chars_array['length'])
+						echo '<p style="color:green">OK</p><br>';
+					else
+						echo '<p style="color:red">NOT OK</p><br>';
+
+
+					echo '____________________________________<br>';
+					echo $title.'<br>';
+					echo 'Length: '.$length.'<br>';
+					echo 'Category: '.$product->category->attributes()->{'name'}.'<pre>';
+					print_r($chars_array);
+					echo '____________________________________<br>';
+					echo '<br>';
+				}*/
+				if($c == 'racks' ){
+					echo '____________________________________<br>';
+					echo $title.'<br>';
+					echo 'Category: '.$product->category->attributes()->{'name'}.'<pre>';
+					print_r($chars_array);
+					echo '____________________________________<br>';
+					echo '<br>';
+				}
 			    /////////////////////
 			    //1. Live
 
