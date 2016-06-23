@@ -6,9 +6,9 @@
 
 <?php echo $error;?>
 
-<?php echo form_open_multipart('live/upload_logicom_xml');?>
+<?php echo form_open_multipart('live/upload_ddc_xml');?>
 
-    Select File To Upload For Logicom -Enet import:<br />
+    Select File To Upload for Digital Data Communication import:<br />
     <input type="file" name="userfile"  />
     <br /><br />
     <input type="submit" name="submit" value="Upload" class="btn btn-success" />
