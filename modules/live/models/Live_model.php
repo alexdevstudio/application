@@ -415,11 +415,10 @@ class Live_model extends CI_Model {
 
 					$this->db->where('product_number', $pn);
 					$this->db->where('supplier', 'logicom');
-					//$this->db->delete('live', $live);
+					$this->db->delete('live', $live);
 
-					//$this->db->insert('live', $live);
-					
-					$this->db->replace('live', $live);
+					$this->db->insert('live', $live);
+
 					unset($live);
 				}
 
@@ -554,8 +553,8 @@ class Live_model extends CI_Model {
 
 			
 			if($c == 'cartridges' || $c == 'toners'){
-				$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
-
+				$shipping_class = Modules::run('categories/makeShippingClass', $product, $c);
+				
 				$categoryData = array(
 				'brand'=> $product['brand'], 
 				'sku'=> $sku,
