@@ -241,7 +241,7 @@ function linkGenerator(a){
 <div class="sections col-xs-12">
 <section class="content-header">
       <h1>
-        Δημιουργία XML με νέα προϊόντα 
+        Δημιουργία XML για All Import
       </h1>
       <br>	
     </section>

@@ -23,7 +23,11 @@ class Extract_model extends CI_Model {
     		$products = $xml->appendChild($products);
 
             //$this->db->where("new_item", "1");
-    		$query = $this->db->query("SELECT * FROM $table ");
+    		//$query = $this->db->query("SELECT * FROM $table");
+
+            $this->db->where('new_item', 1);
+            $query = $this->db->get($table);
+
             $i=0;
             $prod = $query->result_array();
             foreach($prod as $columns){
@@ -67,21 +71,65 @@ class Extract_model extends CI_Model {
         public function allImport($table){
 //
             $query = $this->db->query("
-                 SELECT l.product_number, l.category, l.net_price, l.recycle_tax, l.availability, l.supplier, t.*
+                 SELECT l.product_number, l.category, l.net_price, l.recycle_tax, l.availability, l.supplier, l.status, l.delete_flag, t.*
 
                  FROM live l
 
                  INNER JOIN {$table} t ON l.product_number = t.product_number
                  
-
-
-                 WHERE l.status = 'published' AND l.category = '{$table}' AND t.new_item = 0
-
+                 WHERE l.category = '{$table}' AND t.new_item = 0
                  
                 ");
            $i=1;
            $products = array();
            foreach ($query->result_array() as $product) {
+
+             //Price 
+
+                $net_price = $product['net_price'] + $product['recycle_tax'];
+
+                $etd_price = $net_price*1.06;
+
+                $price_tax = $etd_price*1.24;
+
+                $product['price_tax'] = number_format((float)$price_tax, 2, '.', '');
+
+
+            // Title for Skroutz and for ETD.gr
+            
+            switch ($table) {
+                    case 'laptops':
+                    $cpu =   str_replace(' ','',$product['cpu_model']); 
+                    $ram =   str_replace(' ','',$product['memory_size']);   
+                    $disk =  str_replace(' ','',$product['hdd']); 
+                    $os = str_replace(' ','',$product['skroutz_operating_system']); 
+                    $color = str_replace(' ','',$product['color']); 
+                    $model = trim($product['model']);
+                    $pn = str_replace(' ','',$product['product_number']);
+
+                    if($color=='')
+                        $color=" ";
+                    else
+                        $color=" $color ";
+
+                    
+                    $skroutz_title = $model.$color.$cpu.'/'.$ram.'/'.$disk.'/'.$os;
+                    $etd_title = $model.$color." ($pn)";
+
+                        break;
+                    
+                    default:
+                        $etd_title = $product['title'];
+                        $skroutz_title = $product['title'];
+                        break;
+                }    
+
+
+                $product['etd_title'] =  $etd_title;
+                $product['skroutz_title'] =  $skroutz_title;
+
+
+
                 $i=1;
                 $this->db->where('item_sku', $product['sku']);
                 $images = $this->db->get('images');
@@ -91,15 +139,6 @@ class Extract_model extends CI_Model {
                     $i++;
                 }
 
-                //Price 
-
-                $net_price = $product['net_price'] + $product['recycle_tax'];
-
-                $etd_price = $net_price*1.06;
-
-                $price_tax = $etd_price*1.24;
-
-                $product['price_tax'] = number_format((float)$price_tax, 2, '.', '');
 
                 $products[]=$product;
 

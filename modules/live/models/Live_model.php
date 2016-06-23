@@ -203,7 +203,7 @@ class Live_model extends CI_Model {
 						'availability'=>$availability,
 						'recycle_tax'=>(string) trim($recycle_tax) ,
 						'supplier' =>'oktabit',
-						'status' => 'published',
+						'status' => 'publish',
 						'delete_flag'=>0
 						);
 
@@ -409,7 +409,7 @@ class Live_model extends CI_Model {
 						'availability'=>$availability ,
 						'recycle_tax'=>$recycle_tax ,
 						'supplier' =>'logicom',
-						'status' => 'published',
+						'status' => 'publish',
 						'delete_flag'=>0
 						);
 
