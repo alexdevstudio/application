@@ -261,7 +261,7 @@ class Live_model extends CI_Model {
 
     public function logicom(){
 
-    	$this->load->view('upload_xml', array('error' => ' ' ));
+    	$this->load->view('upload_logicom_xml', array('error' => ' ' ));
     }
 
 	public function import_logicom($path){
@@ -351,8 +351,6 @@ class Live_model extends CI_Model {
 			}
 
 			if($c!=$cat){
-
-
 
 	    		$prd = $product->attributes();  
 
@@ -457,6 +455,287 @@ class Live_model extends CI_Model {
 		echo "Finnished updating Logicom-Enet.";
 		
     }
+
+
+    public function ddc(){
+
+    	$this->load->view('upload_ddc_xml', array('error' => ' ' ));
+    }
+
+	public function import_ddc($path){
+
+		if($xml = $this->xml($path)){
+			
+			$images = array();
+			
+			$this->updateLive('ddc');
+
+		}
+
+		$newProducts = array();
+		$i=0;
+		$length = 0;
+		$sc = $cable_cat = $dimensions = '';
+
+		foreach($xml->children() as $product) {
+
+			$length = 0;
+			$sc = $cable_cat = $dimensions = '';
+
+			$c = $cat = $product->category->attributes()->{'name'};
+
+			switch ($cat) {
+				case 'LC / LC SingleMode':
+				case 'LC / SC MultiMode':
+				case 'LC / SC SingleMode':
+				case 'LC / ST MultiMode':
+				case 'LC / ST SingleMode':
+				case 'ST / SC MultiMode':
+				case 'ST / SC SingleMode':
+				case 'ST / ST MultiMode':
+					$c = 'cables';
+					$sc = 'Καλώδια Οπτικής ΄Ινας';
+					break;
+				case '0,25m':
+					$c = 'cables';
+					$sc = 'Καλώδια Patch';
+					$length = 0.25;
+					break;
+				case '0,50m':
+					$c = 'cables';
+					$sc = 'Καλώδια Patch';
+					$length = 0.50;
+					break;
+				case '1,00m':
+					$c = 'cables';
+					$sc = 'Καλώδια Patch';
+					$length = 1.00;
+					break;
+				case '2,00m':
+					$c = 'cables';
+					$sc = 'Καλώδια Patch';
+					$length = 2.00;
+					break;
+				case '3,00m':
+					$c = 'cables';
+					$sc = 'Καλώδια Patch';
+					$length = 3.00;
+					break;
+				case '5,00m':
+					$c = 'cables';
+					$sc = 'Καλώδια Patch';
+					$length = 5.00;
+					break;
+				case '7,50m':
+					$c = 'cables';
+					$sc = 'Καλώδια Patch';
+					$length = 7.50;
+					break;
+				case '10,00m':
+					$c = 'cables';
+					$sc = 'Καλώδια Patch';
+					$length = 10.00;
+					break;
+				case '15,00m':
+					$c = 'cables';
+					$sc = 'Καλώδια Patch';
+					$length = 15.00;
+					break;
+				case '20,00m':
+					$c = 'cables';
+					$sc = 'Καλώδια Patch';
+					$length = 20.00;
+					break;
+				case '15,00 / 20,00m':
+				case '15,00m / 20.00m / 30.00m':
+				case '30,00m / 40,00m / 50,00m':
+					$c = 'cables';
+					$sc = 'Καλώδια Patch';
+					$length = -1;
+					break;
+				case 'Cat.7 S/FTP':
+					$c = 'cables';
+					$sc = 'Καλώδια Εγκατάστασης Χαλκού';
+					$cable_cat = 'Cat.7';
+					break;
+				case 'Cat..5e':
+					$c = 'cables';
+					$sc = 'Καλώδια Εγκατάστασης Χαλκού';
+					$cable_cat = 'Cat.5e';
+					break;
+				case 'Cat..6/6A':
+					$c = 'cables';
+					$sc = 'Καλώδια Εγκατάστασης Χαλκού';
+					$cable_cat = 'Cat.6 / 6a';
+					break;
+				case 'Cat. 3 Patch Panels / Outlet':
+					$c = 'patch_panels';
+					$cable_cat = 'Cat.3';
+					break;
+				case 'Cat..5e Patch Panel':
+					$c = 'patch_panels';
+					$cable_cat = 'Cat.5e';
+					break;
+				case 'Cat..6/6A Patch Panel':
+					$c = 'patch_panels';
+					$cable_cat = 'Cat.6 / 6a';
+					break;
+				case 'Patch Panel':
+					$c = 'patch_panels';
+					break;
+				case '10” Cabinets – Accessories':
+					$c = 'racks';
+					break;
+				case 'DELTA S 600x1000':
+					$c = 'racks';
+					$dimensions = '600x1000';
+					break;
+				case 'DELTA S 600x600':
+					$c = 'racks';
+					$dimensions = '600x600';
+					break;
+				case 'DELTA S 600x800':
+					$c = 'racks';
+					$dimensions = '600x800';
+					break;
+				case 'DELTA S 600x900':
+					$c = 'racks';
+					$dimensions = '600x900';
+					break;
+				case 'DELTA S 800x1000':
+					$c = 'racks';
+					$dimensions = '800x1000';
+					break;
+				case 'DELTA S 800x800':
+					$c = 'racks';
+					$dimensions = '800x800';
+					break;
+				case 'DELTA S 800x900':
+					$c = 'racks';
+					$dimensions = '800x900';
+					break;
+				case 'Base / Castors':
+					$c = 'racks';
+					break;
+				default:
+					$c = $cat;
+					break;
+			}
+
+			if($c!=$cat){
+
+				$prd = $product->attributes();
+				$pn = (string) trim($prd['code']);
+			    $title = (string) trim($prd['name']);
+			    $brand = (string) trim($prd['brand']);
+			    //$prd['price'];
+			    $net_price = (string) trim($prd['finalPrice']);
+			    $color = (string) trim($prd['colors']);
+			    $product_url = (string) trim($prd['attachment1']);
+			    //$prd['attachment2'];
+				$description = strip_tags((string) trim($product->description)); //to check if image exist in description
+			    $availability = $this->makeAvailability((string) trim($prd['stock']), 'ddc');
+
+			    $image_array = array(); 
+
+			    for ($i = 0; $i < 4; $i ++)
+			    {
+			    	$image_nr = 'image'.$i;
+			    	if ($prd[$image_nr])
+			    		$image_array[$i]=(string) trim($prd[$image_nr]);
+			    }
+
+			    // Make the characteristics
+			    if ($sc == 'Καλώδια Εγκατάστασης Χαλκού')
+			    {
+			    	if (strpos( $title, 'Installation Cable '))
+			    		$whereIs = strpos( $title, 'Installation Cable ') + strlen('Installation Cable ');
+			    	else
+			    		$whereIs = strpos( $title, 'Patch Cable ') + strlen('Patch Cable ');
+
+			    	$length = substr($title, $whereIs);
+			    	$length = substr($length, 0, strpos( $length, 'm '));
+
+			    }
+			    else if ($sc =='Καλώδια Patch' && $length == -1 )
+			    {
+			    	$length = substr($title, 0, strpos( $title, '0m ')+1);
+			    	echo $length.'<br>';
+			    }
+
+				$chars_array = array(); 
+					if($sc)
+						$chars_array['subcategory'] = $sc;
+					if($length > 0)
+						$chars_array['length'] = $length;
+					if($cable_cat)
+						$chars_array['cable_cat'] = $cable_cat;
+					if($dimensions)
+						$chars_array['dimensions'] = $dimensions;
+
+/*				if($c == 'cables'){
+									echo $title.'<br>';
+									echo $product->category->attributes()->{'name'}.'<pre>';
+									print_r($chars_array);
+									echo '<br>';
+								}*/
+			    /////////////////////
+			    //1. Live
+
+				if($this->checkLiveProduct($pn, $net_price)){
+
+					$live = array(
+						'category'=>$c ,
+						'product_number'=>$pn ,
+						'net_price'=>$net_price ,
+						'availability'=>$availability ,
+						'recycle_tax'=>'' ,
+						'supplier' =>'ddc',
+						'status' => 'published',
+						'delete_flag'=>0
+						);
+
+					$this->db->where('product_number', $pn);
+					$this->db->where('supplier', 'ddc');
+					$this->db->delete('live', $live);
+					$this->db->insert('live', $live);
+
+					unset($live);
+				}
+
+				$ddc_product = array(
+					'category' => $c,
+					'product_number' => $pn,
+					'description' => $description,
+					'brand' => $brand,
+					'title' => $title,
+					'product_url' => $product_url,
+					'net_price'=>$net_price
+				);
+
+			//	echo '<br>';
+			//	print_r($ddc_product);
+
+				//2. New products for charateristics tables that load Sku module
+			//	$this->addProduct ($ddc_product, array(), $newProducts, $i, $image_array, 'ddc');
+			}
+		    
+		}
+/*
+		if (!empty($newProducts))//Send Mail Check
+		{
+			$message='<h2>Νέα προϊόντα</h2>';
+		
+			foreach ($newProducts as $newProduct){
+				$message .= $newProduct['Κατηγορία'].' : '.$newProduct['Νέα προϊόντα'].' (<a href="'.base_url().'/extract/xml/'.$newProduct['Κατηγορία'].'/new">Προβολή XML)</a><br>';
+			}
+
+			Modules::run('emails/send','Νέα προϊόντα',$message);
+		}
+*/
+		echo "Finnished updating Digital Data Communication.";
+
+	}
 
 
     private function checkLiveProduct($pn, $price){
@@ -703,6 +982,26 @@ class Live_model extends CI_Model {
 				);
 				
 				Modules::run('images/getImage',$imageData);
+    	}
+    	else if ($supplier == 'ddc')
+    	{
+    		$image_size = count($f);
+    		print_r($f);
+			/*
+    		for ($i =0; $i < $image_size; $i++)
+    		{
+    			$imageData = array(
+					'src' => $f[$i],
+					'sku' => $sku ,
+					'brand' => $product['brand'] ,
+					'part_number' => $product['product_number'] ,
+					'tail' => ""
+				);
+
+				Modules::run('images/getImage',$imageData);
+    		}
+    		*/
+
     	}
     }
 
@@ -1298,6 +1597,21 @@ class Live_model extends CI_Model {
 
     		return $av;
 
+    	}elseif($supplier == 'ddc'){
+
+    		switch ($availability) {
+	    		case '0':
+	    			$av = 'Αναμονή παραλαβής';
+	    			break;
+	    		case '1':
+	    			$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
+	    			break;
+	    		default:
+	    			return false;
+	    			break;
+	    	}
+
+	    	return $av;
     	}
     }
 
