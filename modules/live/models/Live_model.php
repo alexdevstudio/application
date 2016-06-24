@@ -830,6 +830,12 @@ class Live_model extends CI_Model {
 
 				//2. New products for charateristics tables that load Sku module
 				$this->addProduct ($ddc_product, $chars_array, $newProducts, $i, $image_array, 'ddc');
+/*				echo '__________________________________________________________';
+				echo $title.'<br>';
+				echo '<pre>';
+				print_r($image_array);
+				echo '__________________________________________________________<br>';
+*/
 			}
 		    
 		}
@@ -937,9 +943,6 @@ class Live_model extends CI_Model {
 		$sku = $newSku['sku'];
 
 
-
-
-
 		if($newSku['new']){
 
 			
@@ -976,7 +979,8 @@ class Live_model extends CI_Model {
 				if($c == "carrying_cases" || $c == "external_hard_drives" ||
 				 $c == "sata_hard_drives" || $c == "ssd" || $c == "speakers" || 
 				 $c == "power_banks" || $c == "keyboard_mouse"  || 
-				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c == "tablets"  || $c == "smartphones")		
+				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c == "tablets"  || $c == "smartphones" ||
+				 $c == "cables" || $c == "patch_panels" || $c == "racks")		
 				$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
 
 
@@ -1027,11 +1031,8 @@ class Live_model extends CI_Model {
 			$this->AddProductImages($product, $f, $supplier, $sku);
 			
 		}//if($sku = Modules::run('sku/checkSku',$skuArray)){
-
-
 		else
 		{
-
 			if($c == 'printers' || $c == 'multifunction_printers'){
 				$price = array('price'=>(float)$product['net_price']);
 				//print_r($price['price']);
@@ -1040,11 +1041,8 @@ class Live_model extends CI_Model {
 				$this->db->set('shipping_class',$shipping_class);
 				$this->db->where('sku',$sku);
 				$this->db->update($c);
-
-		}	
-    }
-
-
+			}	
+    	}
     }
 
 
@@ -1092,12 +1090,12 @@ class Live_model extends CI_Model {
     	}
     	else if ($supplier == 'ddc')
     	{
+
     		$image_size = count($f);
-			$i =0;
-    		for ($i = 0; $i < $image_size; $i++)
-    		{
-    			$imageData = array(
-					'src' => $f[$i],
+	    	for ($i = 0; $i < $image_size; $i++)
+	    	{
+	    		$imageData = array(
+					'src' => $f[$i+1],
 					'sku' => $sku ,
 					'brand' => $product['brand'] ,
 					'part_number' => $product['product_number'] ,
