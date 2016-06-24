@@ -100,7 +100,16 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 	if($dynamic){
 		
 		switch ($cat) {
-			
+
+			case 'cables':
+						$shipping_class= 4644;
+						break;
+			case 'patch_panels':
+						$shipping_class= 4675;
+						break;
+			case 'racks':
+						$shipping_class= 4682;
+						break;
 			case 'printers':
 						
 						$price = (float) $data['price'];

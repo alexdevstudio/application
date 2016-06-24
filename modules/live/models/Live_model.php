@@ -780,7 +780,7 @@ class Live_model extends CI_Model {
 				if($length)
 					$chars_array['length'] = number_format((float)$length, 2, '.', '');
 				if($cable_cat)
-					$chars_array['cable_cat'] = $cable_cat;
+					$chars_array['cable_category'] = $cable_cat;
 				if($dimensions)
 					$chars_array['dimensions'] = $dimensions;
 				if($size)
@@ -828,15 +828,12 @@ class Live_model extends CI_Model {
 					'net_price'=>$net_price
 				);
 
-			//	echo '<br>';
-			//	print_r($ddc_product);
-
 				//2. New products for charateristics tables that load Sku module
-			//	$this->addProduct ($ddc_product, array(), $newProducts, $i, $image_array, 'ddc');
+				$this->addProduct ($ddc_product, $chars_array, $newProducts, $i, $image_array, 'ddc');
 			}
 		    
 		}
-/*
+
 		if (!empty($newProducts))//Send Mail Check
 		{
 			$message='<h2>Νέα προϊόντα</h2>';
@@ -847,7 +844,7 @@ class Live_model extends CI_Model {
 
 			Modules::run('emails/send','Νέα προϊόντα',$message);
 		}
-*/
+
 		echo "Finnished updating Digital Data Communication.";
 
 	}
@@ -997,8 +994,6 @@ class Live_model extends CI_Model {
 					$categoryData = array_merge($categoryData, $chars_array);
 				}
 
-				
-				
 			}
 
 
@@ -1042,9 +1037,6 @@ class Live_model extends CI_Model {
 				//print_r($price['price']);
 				$shipping_class  = Modules::run('categories/makeShippingClass',$price, $c, true);
 					
-				
-					
-
 				$this->db->set('shipping_class',$shipping_class);
 				$this->db->where('sku',$sku);
 				$this->db->update($c);
@@ -1101,9 +1093,8 @@ class Live_model extends CI_Model {
     	else if ($supplier == 'ddc')
     	{
     		$image_size = count($f);
-    		print_r($f);
-			/*
-    		for ($i =0; $i < $image_size; $i++)
+			$i =0;
+    		for ($i = 0; $i < $image_size; $i++)
     		{
     			$imageData = array(
 					'src' => $f[$i],
@@ -1112,11 +1103,8 @@ class Live_model extends CI_Model {
 					'part_number' => $product['product_number'] ,
 					'tail' => ""
 				);
-
 				Modules::run('images/getImage',$imageData);
     		}
-    		*/
-
     	}
     }
 
