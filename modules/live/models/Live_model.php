@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
@@ -475,12 +475,12 @@ class Live_model extends CI_Model {
 		$newProducts = array();
 		$i=0;
 		$length = 0;
-		$sc = $cable_cat = $dimensions = $size = $ports = $patch_type = '';
+		$sc = $cable_cat = $dimensions = $size = $height = $ports = $patch_type = '';
 
 		foreach($xml->children() as $product) {
 
 			$length = 0;
-			$sc = $cable_cat = $dimensions = $size = $ports = $patch_type = '';
+			$sc = $cable_cat = $dimensions = $size = $height = $ports = $patch_type = '';
 
 			$c = $cat = $product->category->attributes()->{'name'};
 
@@ -583,39 +583,55 @@ class Live_model extends CI_Model {
 				case 'Patch Panel':
 					$c = 'patch_panels';
 					break;
-				case '10” Cabinets – Accessories':
+				/*case '10” Cabinets – Accessories':
 					$c = 'racks';
-					break;
+					break;*/
 				case 'DELTA S 600x1000':
 					$c = 'racks';
+					$sc = 'Free Standing';
 					$dimensions = '600x1000';
 					break;
 				case 'DELTA S 600x600':
 					$c = 'racks';
+					$sc = 'Free Standing';
 					$dimensions = '600x600';
 					break;
 				case 'DELTA S 600x800':
 					$c = 'racks';
+					$sc = 'Free Standing';
 					$dimensions = '600x800';
 					break;
 				case 'DELTA S 600x900':
 					$c = 'racks';
+					$sc = 'Free Standing';
 					$dimensions = '600x900';
 					break;
 				case 'DELTA S 800x1000':
 					$c = 'racks';
+					$sc = 'Free Standing';
 					$dimensions = '800x1000';
 					break;
 				case 'DELTA S 800x800':
 					$c = 'racks';
+					$sc = 'Free Standing';
 					$dimensions = '800x800';
 					break;
 				case 'DELTA S 800x900':
 					$c = 'racks';
+					$sc = 'Free Standing';
 					$dimensions = '800x900';
 					break;
 				case 'Base / Castors':
 					$c = 'racks';
+					$sc = 'Base / Castors';
+					break;
+				case 'Flat pack':
+					$c = 'racks';
+					$sc = 'Wall Mount';
+					break;
+				case 'One-sectioned':
+					$c = 'racks';
+					$sc = 'Wall Mount';
 					break;
 				default:
 					$c = $cat;
@@ -650,7 +666,7 @@ class Live_model extends CI_Model {
 			    	if(strpos($title, 'Patch Panel'))
 			    		$c = 'patch_panels';
 			    }
-			    
+
 			    // Make the characteristics
 			    if ($c == 'cables' && $length < 0.1){
 
@@ -720,15 +736,41 @@ class Live_model extends CI_Model {
 						$size = substr($size, strrpos( $size, ' ')+1);
 					}
 
-
-
-
-
 					if(strpos($title, 'Unshielded'))
 						$patch_type = 'Unshielded';
 					elseif(strpos($title, 'Shielded'))
 						$patch_type = 'Shielded';
+				}
+				elseif($c == 'racks' ){
 
+					if ($sc != 'Base / Castors')
+					{
+						$size = 19;
+					
+						if(strpos($title, 'U'))
+						{
+							$height = substr($title, 0, strpos($title, 'U')+1);
+							$height = substr($height, strrpos( $height, ' ')+1);
+						}
+					}
+
+					if($dimensions =='')
+					{
+						if(strpos($title, '0x'))
+						{
+							$dimensions = substr($title, strpos($title, '0x')-3);
+							$dimensions = trim($dimensions);
+
+							$space_where = $comma_where = 1000;
+							if($space_where = strpos( $dimensions, ' ')+1)
+							if($comma_where = strpos( $dimensions, ','))
+
+							$where_is = min($space_where, $comma_where);
+							$dimensions = substr($dimensions, 0, $where_is);
+
+							$dimensions = trim($dimensions);
+						}
+					}
 				}
 
 				$chars_array = array(); 
@@ -743,38 +785,15 @@ class Live_model extends CI_Model {
 					$chars_array['dimensions'] = $dimensions;
 				if($size)
 					$chars_array['size'] = $size;
+				if($height)
+					$chars_array['height'] = $height;
 				if($ports)
 					$chars_array['ports'] = $ports;
 				if($patch_type)
 					$chars_array['patch_type'] = $patch_type;
 
 				// End Of Characteristics
-				/*if($c == 'cables' ){
-					echo $title.'<br>';
-					echo 'Length: '.$length.'<br>';
-					echo 'Length: '.$chars_array['length'].'<br>';
-					if ($length == $chars_array['length'])
-						echo '<p style="color:green">OK</p><br>';
-					else
-						echo '<p style="color:red">NOT OK</p><br>';
 
-
-					echo '____________________________________<br>';
-					echo $title.'<br>';
-					echo 'Length: '.$length.'<br>';
-					echo 'Category: '.$product->category->attributes()->{'name'}.'<pre>';
-					print_r($chars_array);
-					echo '____________________________________<br>';
-					echo '<br>';
-				}*/
-				if($c == 'racks' ){
-					echo '____________________________________<br>';
-					echo $title.'<br>';
-					echo 'Category: '.$product->category->attributes()->{'name'}.'<pre>';
-					print_r($chars_array);
-					echo '____________________________________<br>';
-					echo '<br>';
-				}
 			    /////////////////////
 			    //1. Live
 
