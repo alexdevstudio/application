@@ -43,7 +43,6 @@ class Live_model extends CI_Model {
 		}
 
 		$newProducts = array();
-		$i=0;
 		$f=0;
 
 		foreach($xml->children() as $product) {
@@ -216,8 +215,6 @@ class Live_model extends CI_Model {
 					unset($live);
 				}
 
-
-
 				//Array for categories table
 
 				$okt_product = array(
@@ -234,26 +231,23 @@ class Live_model extends CI_Model {
 				//2. New products for charateristics tables that load Sku module
 
 				
-				$this->addProduct ($okt_product, $chars_array, $newProducts, $i, $f, 'oktabit');
+				$insert = $this->addProduct ($okt_product, $chars_array, $f, 'oktabit');
+
+				if ($insert)
+				{
+					if(isset ($newProducts[$c]))
+						$newProducts[$c] = $newProducts[$c]+1;
+					else
+						$newProducts[$c] = 1;
+				}
+
 			}//if $c!=$cat
 				
 			$f=0;
 		
 		}//end foreach
-
-		//echo '<p style="color:green">Finished</p><br />';
-		//redirect(base_url());
 		
-		if (!empty($newProducts))//Send Mail Check
-		{
-			$message='<h2>Νέα προϊόντα</h2>';
-		
-			foreach ($newProducts as $newProduct){
-				$message .= $newProduct['Κατηγορία'].' : '.$newProduct['Νέα προϊόντα'].' (<a href="'.base_url().'/extract/xml/'.$newProduct['Κατηγορία'].'/new">Προβολή XML)</a><br>';
-			}
-
-			Modules::run('emails/send','Νέα προϊόντα',$message);
-		}
+		$this->sendImportedProductsByMail($newProducts);
 
 		 echo "Finnished Oktabit";
 
@@ -432,25 +426,21 @@ class Live_model extends CI_Model {
 
 				//2. New products for charateristics tables that load Sku module
 				//$this->AddProduct ($c, $pn, $description, $brand, $title, $product_url, $newProducts, $i, $imageUrl, 'logicom');
-				$this->addProduct ($log_product, array(), $newProducts, $i, $imageUrl, 'logicom');
+				$insert = $this->addProduct ($log_product, array(), $imageUrl, 'logicom');
+
+				if ($insert)
+				{
+					if(isset ($newProducts[$c]))
+						$newProducts[$c] = $newProducts[$c]+1;
+					else
+						$newProducts[$c] = 1;
+				}
 
 			}//if $c==$cat
 		
 		}//end foreach
 
-		//echo '<p style="color:green">Finished</p><br />';
-		//redirect(base_url());
-
-		if (!empty($newProducts))//Send Mail Check
-		{
-			$message='<h2>Νέα προϊόντα</h2>';
-		
-			foreach ($newProducts as $newProduct){
-				$message .= $newProduct['Κατηγορία'].' : '.$newProduct['Νέα προϊόντα'].' (<a href="'.base_url().'/extract/xml/'.$newProduct['Κατηγορία'].'/new">Προβολή XML)</a><br>';
-			}
-
-			Modules::run('emails/send','Νέα προϊόντα',$message);
-		}
+		$this->sendImportedProductsByMail($newProducts);
 
 		echo "Finnished updating Logicom-Enet.";
 		
@@ -829,31 +819,151 @@ class Live_model extends CI_Model {
 				);
 
 				//2. New products for charateristics tables that load Sku module
-				$this->addProduct ($ddc_product, $chars_array, $newProducts, $i, $image_array, 'ddc');
-/*				echo '__________________________________________________________';
-				echo $title.'<br>';
-				echo '<pre>';
-				print_r($image_array);
-				echo '__________________________________________________________<br>';
-*/
+				$insert = $this->addProduct ($ddc_product, $chars_array, $image_array, 'ddc');
+
+				if ($insert)
+				{
+					if(isset ($newProducts[$c]))
+						$newProducts[$c] = $newProducts[$c]+1;
+					else
+						$newProducts[$c] = 1;
+				}
 			}
-		    
 		}
 
-		if (!empty($newProducts))//Send Mail Check
-		{
-			$message='<h2>Νέα προϊόντα</h2>';
-		
-			foreach ($newProducts as $newProduct){
-				$message .= $newProduct['Κατηγορία'].' : '.$newProduct['Νέα προϊόντα'].' (<a href="'.base_url().'/extract/xml/'.$newProduct['Κατηγορία'].'/new">Προβολή XML)</a><br>';
-			}
-
-			Modules::run('emails/send','Νέα προϊόντα',$message);
-		}
+		$this->sendImportedProductsByMail($newProducts);
 
 		echo "Finnished updating Digital Data Communication.";
 
 	}
+
+	public function braintrust(){
+
+    	$this->load->view('upload_braintrust_xml', array('error' => ' ' ));
+    }
+
+    public function import_braintrust($path){
+
+    	if($xml = $this->xml($path)){
+			
+			$images = array();
+			
+			$this->updateLive('braintrust');
+
+		}
+
+		$newProducts = array();
+		$i=0;
+
+
+		foreach($xml->children() as $product) {
+
+			set_time_limit(50);
+			//Rename categories for ETD.gr
+
+			$cat = (string) trim($product->Category);
+			$sc = trim((string)$product->MainCategory);
+
+			$c = $cat;
+			
+			$brand = (string) trim($product->Supplier);
+
+			switch ($cat) {
+				case 'Notebook':
+					if($brand == 'MSI')
+						$c = 'laptops';
+					else
+						$c = $cat;
+				break;
+				default :
+					$c = $cat;
+				break;
+			}
+
+			if($c!=$cat){
+
+				//$code = (string) trim($product->code);
+				//$code = (string) trim($product->SKU);
+				$description = (string) trim($product->Description);
+				$title = substr($description, strpos($description, 'NB '), strpos($description, ', '));
+				$title = "MSI ".$title;
+				$net_price = (string) trim($product->timi);
+				$availability = (string) trim($product->availability);
+				$pn = (string) trim($product->SKU);
+				$imageUrl = (string) trim($product->Image);
+				$brand = (string) trim($product->Supplier);
+
+				//1. Live
+
+				if($this->checkLiveProduct($pn, $net_price)){
+
+					$availability = $this->makeAvailability((string) trim($product->availability), 'braintrust');
+
+					$live = array(
+						'category'=>$c,
+						'product_number'=>$pn ,
+						'net_price'=>$net_price ,
+						'availability'=>$availability,
+						'supplier' =>'braintrust',
+						'status' => 'publish',
+						'delete_flag'=>0
+						);
+
+					$this->db->where('product_number', $pn);
+					$this->db->where('supplier', 'braintrust');
+					$this->db->delete('live', $live);
+
+					$this->db->insert('live', $live);
+
+					unset($live);
+				}
+
+				//Array for categories table
+
+				$braintrust_product = array(
+					'category' => $c,
+					'product_number' => $pn,
+					'description' => $description,
+					'brand' => $brand,
+					'title' => $title,
+					'product_url' => '',
+					'net_price'=>$net_price
+				);
+
+				//2. New products for charateristics tables that load Sku module
+
+				$insert = $this->addProduct ($braintrust_product, array(), $imageUrl, 'braintrust');
+
+				if ($insert)
+				{
+					if(isset ($newProducts[$c]))
+						$newProducts[$c] = $newProducts[$c]+1;
+					else
+						$newProducts[$c] = 1;
+				}
+			} 		
+		} //end foreach
+
+		$this->sendImportedProductsByMail($newProducts);
+
+		echo "Finnished updating Braintrust.";
+    }
+
+
+    private function sendImportedProductsByMail($newProducts){
+
+    	if (!empty($newProducts))//Send Mail Check
+		{
+			$message='<h2>Νέα προϊόντα</h2>';
+		
+			foreach ($newProducts as $key => $value){
+				$message .= $key.' : '.$value.' (<a href="'.base_url().'/extract/xml/'.$key.'/new">Προβολή XML)</a><br>';
+			}
+
+			Modules::run('emails/send','Νέα προϊόντα',$message);
+		}
+    }
+
 
 
     private function checkLiveProduct($pn, $price){
@@ -906,8 +1016,9 @@ class Live_model extends CI_Model {
     }//private function insertProductCategory(){*/
 
 
-    private function addProduct($product, $chars_array, $newProducts, $i, $f ,$supplier){
+    private function addProduct($product, $chars_array, $f ,$supplier){
 
+    	$insert = false;
     	$c = $product['category'];
 
 		$skuArray = array(
@@ -997,12 +1108,10 @@ class Live_model extends CI_Model {
 				{
 					$categoryData = array_merge($categoryData, $chars_array);
 				}
-
 			}
 
-
 			if(Modules::run("categories/insert", $c, $categoryData)){
-
+				/*
 				if(isset($newProducts[$i]['Κατηγορία'])){
 
 					if($newProducts[$i]['Κατηγορία'] == $c){
@@ -1021,8 +1130,10 @@ class Live_model extends CI_Model {
 				}else{
 					$newProducts[$i]['Κατηγορία'] = $c;
 					$newProducts[$i]['Νέα προϊόντα'] = 1;
-				}
-			}else{
+				}*/
+				$insert = true;
+			}
+			else{
 				echo 'issue';
 			}
 
@@ -1043,6 +1154,7 @@ class Live_model extends CI_Model {
 				$this->db->update($c);
 			}	
     	}
+    	return $insert;
     }
 
 
@@ -1076,7 +1188,7 @@ class Live_model extends CI_Model {
 				}
 			}
     	}
-    	else if ($supplier == 'logicom')
+    	else if ($supplier == 'logicom' || $supplier == 'braintrust')
     	{
     		$imageData = array(
 					'src' => $f,
