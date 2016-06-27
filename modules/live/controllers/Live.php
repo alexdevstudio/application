@@ -21,6 +21,9 @@ class Live extends MX_Controller {
 			case 'ddc':
 				$this->live_model->ddc();
 			break;
+			case 'braintrust':
+				$this->live_model->braintrust();
+			break;
 			
 			default:
 				die('Δεν υπάρχει ο προμηθευτής');
@@ -65,6 +68,26 @@ class Live extends MX_Controller {
 			$path = './files/suppliers/'.$data['upload_data']['file_name'];
 			$this->load->model('live_model');
 			$this->live_model->import_ddc($path);
+		}
+	}
+
+	public function upload_braintrust_xml()
+	{
+		$config['upload_path'] = './files/suppliers/';
+		$config['allowed_types'] = 'xml';
+		$config['max_size']	= '10000';
+		$this->load->library('upload', $config);
+		if ( ! $this->upload->do_upload())
+		{
+			$error = array('error' => $this->upload->display_errors());
+			$this->load->view('upload_braintrust_xml', $error);
+		}
+		else
+		{
+			$data = array('upload_data' => $this->upload->data());
+			$path = './files/suppliers/'.$data['upload_data']['file_name'];
+			$this->load->model('live_model');
+			$this->live_model->import_braintrust($path);
 		}
 	}
 }
