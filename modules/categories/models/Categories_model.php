@@ -101,15 +101,6 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 		
 		switch ($cat) {
 
-			case 'cables':
-						$shipping_class= 4644;
-						break;
-			case 'patch_panels':
-						$shipping_class= 4675;
-						break;
-			case 'racks':
-						$shipping_class= 4682;
-						break;
 			case 'printers':
 						
 						$price = (float) $data['price'];
@@ -147,6 +138,7 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 	}else{
 
 		switch ($cat) {
+
 			case 'laptops':
 					$shipping_class= 4636;
 					break;
@@ -239,6 +231,16 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					break;
 			case 'smartphones':
 					$shipping_class= 4663;
+					break;
+
+			case 'cables':
+					$shipping_class= 4644;
+					break;
+			case 'patch_panels':
+					$shipping_class= 4675;
+					break;
+			case 'racks':
+					$shipping_class= 4682;
 					break;
 			default:
 				return false;
