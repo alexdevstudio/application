@@ -1016,7 +1016,7 @@ class Live_model extends CI_Model {
     }//private function insertProductCategory(){*/
 
 
-    private function addProduct($product, $chars_array, $f ,$supplier){
+    private function addProduct($product, $chars_array, $f , $supplier){
 
     	$insert = false;
     	$c = $product['category'];
@@ -1130,7 +1130,8 @@ class Live_model extends CI_Model {
 				}else{
 					$newProducts[$i]['Κατηγορία'] = $c;
 					$newProducts[$i]['Νέα προϊόντα'] = 1;
-				}*/
+				}
+				delete this after 30 July 2016 if no proble was occured*/
 				$insert = true;
 			}
 			else{

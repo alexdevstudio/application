@@ -42,13 +42,12 @@ class Insert extends MX_Controller {
 			$description = trim(strip_tags($_POST['description']));
 
 			$data = array(
+				'category' => $cat,
 				'product_number'=> $product_number,
 				'title' => $title,
 				'brand' => $brand,
 				'description' => $description
 				);
-
-
 
 
 			echo 'ok';
