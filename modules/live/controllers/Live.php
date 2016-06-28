@@ -90,6 +90,15 @@ class Live extends MX_Controller {
 			$this->live_model->import_braintrust($path);
 		}
 	}
+
+
+	public function addProduct($a,$b,$c,$d){
+		$this->load->model('live_model');
+		if($this->live_model->addProduct($a,$b,$c,$d)){
+			return true;
+		}
+
+	}
 }
 
 

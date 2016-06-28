@@ -1016,7 +1016,7 @@ class Live_model extends CI_Model {
     }//private function insertProductCategory(){*/
 
 
-    private function addProduct($product, $chars_array, $f ,$supplier){
+    public function addProduct($product, $chars_array, $f , $supplier){
 
     	$insert = false;
     	$c = $product['category'];
@@ -1111,6 +1111,10 @@ class Live_model extends CI_Model {
 			}
 
 			if(Modules::run("categories/insert", $c, $categoryData)){
+				
+				$insert = true;
+
+
 				/*
 				if(isset($newProducts[$i]['Κατηγορία'])){
 
@@ -1130,8 +1134,8 @@ class Live_model extends CI_Model {
 				}else{
 					$newProducts[$i]['Κατηγορία'] = $c;
 					$newProducts[$i]['Νέα προϊόντα'] = 1;
-				}*/
-				$insert = true;
+				}
+				delete this after 30 July 2016 if no proble was occured*/
 			}
 			else{
 				echo 'issue';
@@ -1160,7 +1164,9 @@ class Live_model extends CI_Model {
 
     private function AddProductImages($product, $f, $supplier, $sku){
 
-    	if ($supplier == 'oktabit')
+    	
+
+    	if ($supplier == 'oktabit' )
     	{
     		while($f < 5){ // because we want to get max 5 images
 
@@ -1177,10 +1183,8 @@ class Live_model extends CI_Model {
 					'part_number' => $product['product_number'] ,
 					'tail' => $tail
 				);
-				//echo Modules::run('images/imageUrlExists',$imageData['src']);
-				//echo '<br/>';
+				
 				if(!$exists=Modules::run('images/getImage',$imageData)){
-					//echo Modules::run('images/imageUrlExists',$imageData['src']);
 					$f=5;
 				}else{
 					
@@ -1216,6 +1220,34 @@ class Live_model extends CI_Model {
 				Modules::run('images/getImage',$imageData);
     		}
     	}
+    	elseif( $supplier == 'etd')
+    	{
+    		$i=0;
+    		foreach($f as $image){
+		    				
+
+						if($i=="0"){
+							$tail='';
+						}else{
+							$tail = '_'.$i;
+						}
+
+						$imageData = array(
+							'src' => $image,
+							'sku' => $sku ,
+							'brand' => $product['brand'] ,
+							'part_number' => $product['product_number'] ,
+							'tail' => $tail
+						);
+						
+						
+						if(!$exists=Modules::run('images/getImage',$imageData)){
+							break;
+						}
+
+					$i++;
+    		}//foreach($f as $image){
+    	}//elseif( $supplier == 'etd')
     }
 
 

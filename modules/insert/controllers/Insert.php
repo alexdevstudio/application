@@ -32,6 +32,7 @@ class Insert extends MX_Controller {
 
 		if(!$_POST['cat']){
 			echo 'no post';
+			exit();
   
 		}else{
 
@@ -40,18 +41,37 @@ class Insert extends MX_Controller {
 			$title = trim(strip_tags($_POST['title']));
 			$brand = trim(strip_tags($_POST['brand']));
 			$description = trim(strip_tags($_POST['description']));
+			$image1=trim($_POST['image1']);
+			$image2=trim($_POST['image2']);
+			$image3=trim($_POST['image3']);
+			$image4=trim($_POST['image4']);
+			$image5=trim($_POST['image5']);
 
-			$data = array(
+			$product = array(
+				'category' => $cat,
 				'product_number'=> $product_number,
 				'title' => $title,
 				'brand' => $brand,
-				'description' => $description
+				'description' => $description,
+				'product_url'=>''
 				);
 
 
 
 
-			echo 'ok';
+			$images=array($image1,$image2,$image3,$image4,$image5);
+
+
+
+			$chars = array();
+
+			if(Modules::run("live/addProduct", $product, $chars, $images , 'etd'))
+				echo 'ok';
+
+
+
+
+
 		}
 
 	}
