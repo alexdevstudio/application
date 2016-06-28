@@ -1811,7 +1811,7 @@ class Live_model extends CI_Model {
 
     		return $av;
 
-    	}elseif($supplier == 'ddc'){
+    	}elseif($supplier == 'ddc' || $supplier == 'braintrust'){
 
     		switch ($availability) {
 	    		case '0':
