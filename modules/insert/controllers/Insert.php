@@ -32,7 +32,7 @@ class Insert extends MX_Controller {
 
 		if(!$_POST['cat']){
 			echo 'no post';
-
+  
 		}else{
 
 			$cat = trim(strip_tags($_POST['cat']));
@@ -47,6 +47,9 @@ class Insert extends MX_Controller {
 				'brand' => $brand,
 				'description' => $description
 				);
+
+
+
 
 			echo 'ok';
 		}
