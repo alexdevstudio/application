@@ -64,8 +64,7 @@ class Extract_model extends CI_Model {
 			}
 				return false;
 
-
-		}
+            }
         //, i.item_sku, i.image_src
 //INNER JOIN images i ON t.sku = i.item_sku
         public function allImport($table){

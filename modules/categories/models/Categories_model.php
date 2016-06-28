@@ -52,9 +52,9 @@ class Categories_model extends CI_Model {
 
     		$xml=simplexml_load_file("./files/uploads/".$filename) or die("Error: Cannot find uploaded XML file");
     		$message = '';
-$asd = 0;
+//$asd = 0;
     		foreach ($xml->children() as $product) {
-    			$data=array();
+    			//$data=array();
     			foreach ($product as $key => $value) {
     				
     				
@@ -68,23 +68,36 @@ $asd = 0;
     			}
 				
 
-    			$sku = $data['sku'];
 
+    			$sku = $data['sku'];
+    				/*if($sku == '1313329'){
+    					echo "<pre />";
+    						print_r($data);
+    						exit();
+    				}*/
     			$data['new_item']=0;
     			if($table=="desktops" || $table == "monitors" || $table == "ups")
     			$data['shipping_class'] = $this->makeShippingClass($data, $table);
 					
 				$this->db->where('sku', $sku );
 				$query = $this->db->get($table);
-
+//test sku 1313329
 				if($query->num_rows()>0){
 					$this->db->where('sku',$sku);
 					$this->db->update($table, $data);
+					//unset($data);
 
 				}else{
 					$message.="SKU: $sku δεν βρέθηκε στην κατηγορία $table \n";
 					exit($message);
 				}
+
+
+
+				foreach ($data as $key => $value) {
+					$data[$key] = '';
+				}
+
     		}
 
     		$message = 'Η ενημέρωση των '.$table.' ολοκληρώθηκε με επιτυχία.';
