@@ -5,7 +5,7 @@ $tables = Modules::run('categories/categoriesArray');
 <div class="sections col-xs-12">
 <section class="content-header">
       <h1>
-        Ενημέρωση αποθήκης 
+      1. Ενημέρωση αποθήκης 
       </h1>  
       <br>	   
     </section> 
@@ -47,7 +47,7 @@ $tables = Modules::run('categories/categoriesArray');
 
 				<a href="./live/index/ddc" style="color:#fff;display:block">
 					<br />
-					<span >Digital Data Communication</span>
+					<span >Digital Data</span>
 					<br />
 					<br />
 				</a>
@@ -71,11 +71,33 @@ $tables = Modules::run('categories/categoriesArray');
 		</div>
 </div> 
 </div> 
+<div class="sections col-xs-12">
+<section class="content-header">
+      <h3>
+     Εισαγωγή προιόντος μη αυτόματα
+      </h3>  
+      <br>	   
+    </section> 
 
+<div class="col-sm-4 col-md-2">
+ 
+		<div class="color-palette-set text-center">
+			<div class="bg-orange-active color-palette ">
+
+				<a href="./live/index/oktabit" style="color:#fff;display:block">
+					<br />
+					<span >Εισαγωγή</span> 
+					<br />
+					<br />
+				</a>
+			
+			</div>
+		</div>
+</div>
 <div class="sections col-xs-12">
 <section class="content-header">
       <h1>
-        Δημιουργία XML με νέα προϊόντα 
+      2. Δημιουργία XML με νέα προϊόντα 
       </h1>
       <br>	
     </section>
@@ -146,7 +168,8 @@ function linkGenerator(a){
 <div class="col-sm-6 col-md-6">
 	<div class="sections col-xs-12">
 			<section class="row content-header">
-			      <h1>Ενημέρωση Χαρακτηριστικών
+			      <h1>
+			      3. Ενημέρωση Χαρακτηριστικών
 			      </h1>
 			      <br>	
 			</section>
@@ -271,7 +294,7 @@ function linkGenerator(a){
 <div class="sections col-xs-12">
 <section class="content-header">
       <h1>
-        Δημιουργία XML για All Import
+        4. Δημιουργία XML για All Import
       </h1>
       <br>	
     </section>
