@@ -41,6 +41,8 @@ class Insert extends MX_Controller {
 			$title = trim(strip_tags($_POST['title']));
 			$brand = trim(strip_tags($_POST['brand']));
 			$description = trim(strip_tags($_POST['description']));
+			$net_price = trim(strip_tags($_POST['price']));
+			$availability = trim(strip_tags($_POST['av']));
 			$image1=trim($_POST['image1']);
 			$image2=trim($_POST['image2']);
 			$image3=trim($_POST['image3']);
@@ -57,22 +59,55 @@ class Insert extends MX_Controller {
 				);
 
 
+			//Add to live table
+			
+			if($_POST['av']=='1' &&  is_numeric ( $net_price )){
+
+				if(Modules::run("live/checkLiveProduct", $product_number, $net_price)){
+				//if($this->checkLiveProduct($product_number, $net_price)){
+
+					$live = array(
+						'category'=>$cat,
+						'product_number'=>$product_number ,
+						'net_price'=>$net_price,
+						'recycle_tax'=>0 ,
+						'availability'=>$availability,
+						'supplier' =>'etd',
+						'status' => 'publish',
+						'delete_flag'=>0
+						);
+
+					$this->db->where('product_number', $product_number);
+					$this->db->where('supplier', 'etd');
+					$this->db->delete('live', $live);
+
+					$this->db->insert('live', $live);
+
+					unset($live);
+				}else{
+				 	echo "Το προϊόν υπάρχει ήδη στη βάση. Και έχει χαμηλότερη τιμή.";
+				}
 
 
-			$images = array($image1,$image2,$image3,$image4,$image5);
+				//Create SKU if Not existing, add to categories table, upload images
+
+				$images = array($image1,$image2,$image3,$image4,$image5);
 
 
 
-			$chars = array();
+				$chars = array();
 
-			if(Modules::run("live/addProduct", $product, $chars, $images , 'etd'))
-				echo 'ok';
-
-
-
+				$newProduct = Modules::run("live/addProduct", $product, $chars, $images , 'etd');
+				if()
+					echo 'ok';
 
 
-		}
+
+
+
+			}
+
+		
 
 	}
 

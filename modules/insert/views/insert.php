@@ -5,13 +5,13 @@ $tables = Modules::run('categories/categoriesArray');
 <div class="sections col-xs-12">
 <section class="content-header">
       <h1>
-      Ενημέρωση αποθήκης
+      Εισαγωγή νέου προϊόντος
       </h1>  
       <br>	   
     </section> 
 <form id='insert' method="POST" action="<?= base_url(); ?>insert/doInsert">
 
-<div class="col-sm-4 col-md-4">
+<div class="col-sm-6 col-md-3">
 
 			<div class="form-group">
 	                  	
@@ -35,9 +35,7 @@ $tables = Modules::run('categories/categoriesArray');
 		                  </select>
 	        </div>
 	</div>
-	<div class="row"></div>
-
-	<div class="col-sm-4 col-md-4">
+	<div class="col-sm-6 col-md-3">
 
 			<div class="form-group">
 	                  	
@@ -50,8 +48,7 @@ $tables = Modules::run('categories/categoriesArray');
 	        </div>
 
 	</div>
-	<div class="row"></div>
-	<div class="col-sm-4 col-md-4">
+	<div class="col-sm-6 col-md-3">
 
 			<div class="form-group">
 	                  	
@@ -67,26 +64,33 @@ $tables = Modules::run('categories/categoriesArray');
 	        </div>
 
 	</div>
-<div class="row"></div>
-		<div class="col-sm-4 col-md-4">
+	<div class="col-sm-6 col-md-3">
 
 			<div class="form-group">
 	                  	
 	                  	<label>4. Διαθεσιμότητα</label>
 	                  	
-	                  		  <select class='form-control' name="av" id="av">
-	                  		  	<option value="">----</option>
-	                  		  	<option value="1">Διαθέσιμο στο κατάστημα</option>
-	                  		  	<option value="0">Μη διαθέσιμο στο κατάστημα / Διαθέσιμο στον προμηθευτή</option>
-	                  		  </select>
+	              		  <select class='form-control' name="av" id="av">
+	              		  	<option value="">----</option>
+	              		  	<option value="1">Διαθέσιμο στο κατάστημα</option>
+	              		  	<option value="0">Μη διαθέσιμο στο κατάστημα / Διαθέσιμο στον προμηθευτή</option>
+	              		  </select>
 
 	                  	
           
 	        </div>
+	        <div style="display:none;" class="form-group">
+	                  	
+	                  	<label>5. Τιμή χονδρικής Χωρίς ΦΠΑ (με τελεία για διαχωριστικό των δεκαδικών.)</label>
+	                  	<input type="text" class="form-control" value="" placeholder="ΠΧ 125.35" id="price" name="price"/>
+	                  	
+	        </div>
 
 	</div>
+	
+		
 	<div class="row"></div>
-	<div class="col-sm-4 col-md-4">
+	<div class="col-sm-6 col-md-3">
 
 			<div class="form-group">
 	                  	
@@ -98,7 +102,7 @@ $tables = Modules::run('categories/categoriesArray');
 	</form>
 		<div class="row"></div>
 
-	<div class="col-sm-4 col-md-4">
+	<div class="col-sm-6 col-md-3">
 	<div id='error' class='callout' ></div>
 	</div>
 	
@@ -123,6 +127,7 @@ $tables = Modules::run('categories/categoriesArray');
 					var image4 = $('#image4').val();
 					var image5 = $('#image5').val();
 					var av = $('#av').val();
+					var price = $('#price').val();
 					
 					if($.trim(title)=='' || $.trim(cat)=='' || 
 						$.trim(description)=='' || $.trim(product_number)=='' ||
@@ -130,10 +135,20 @@ $tables = Modules::run('categories/categoriesArray');
 						$.trim(image2)==''  || $.trim(image3)==''  || 
 						$.trim(image4)==''  || $.trim(image5)==''  || $.trim(av)=='' )
 					{
-						$('#error').html('<i class="icon fa fa-ban"></i> TEst:Κάποια πεδία είναι κενά').removeClass('callout-success').addClass('callout-danger');
+
+						$('#error').html('<i class="icon fa fa-ban"></i> Κάποια πεδία είναι κενά').removeClass('callout-success').addClass('callout-danger');
 						return false;
 					}
 
+					if(av == "1" && price == ""){
+						$('#error').html('<i class="icon fa fa-ban"></i> Εισάγετε τη τιμή').removeClass('callout-success').addClass('callout-danger');
+						return false;
+					}
+					if( !$.isNumeric(price))
+					{
+						$('#error').html('<i class="icon fa fa-ban"></i> Η τιμή είναι λάθος.').removeClass('callout-success').addClass('callout-danger');
+						return false;
+					}
 							var formData = new FormData();
 							
 							formData.append('cat', cat);
@@ -147,6 +162,7 @@ $tables = Modules::run('categories/categoriesArray');
 							formData.append('image4', image4);
 							formData.append('image5', image5);
 							formData.append('av', av);
+							formData.append('price', price);
 
 							$.ajax({
 
@@ -160,7 +176,7 @@ $tables = Modules::run('categories/categoriesArray');
 										$('#error').html('<i class="icon fa fa-check"></i> Το προϊόν καταχωρήθηκε').removeClass('callout-danger').addClass('callout-success');
 										resetFields();
 									}else{
-						$('#error').html('<i class="icon fa fa-ban"> False:'+data).removeClass('callout-success').addClass('callout-danger');
+						$('#error').html('<i class="icon fa fa-ban"> '+data).removeClass('callout-success').addClass('callout-danger');
 										
 									}
 								}

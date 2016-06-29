@@ -99,6 +99,11 @@ class Live extends MX_Controller {
 		}
 
 	}
+	public function checkLiveProduct($a,$b){
+		$this->load->model('live_model');
+		return $this->live_model->checkLiveProduct($a,$b);
+
+	}
 }
 
 

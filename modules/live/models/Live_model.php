@@ -157,6 +157,13 @@ class Live_model extends CI_Model {
 
 			if($c!=$cat){
 
+				$availability = $this->makeAvailability((string) trim($product->availability), 'oktabit');
+
+				if(!$availability){
+					$f=0;
+					continue;
+				}
+
 				$net_price = str_replace(",", ".", $product->timi);
 				$net_price = (string) trim($net_price);
 
@@ -188,12 +195,7 @@ class Live_model extends CI_Model {
 
 				if($this->checkLiveProduct($pn, $net_price)){
 
-					$availability = $this->makeAvailability((string) trim($product->availability), 'oktabit');
-
-					if(!$availability){
-						$f=0;
-						continue;
-					}
+					
 
 					$live = array(
 						'category'=>$c,
@@ -348,13 +350,11 @@ class Live_model extends CI_Model {
 
 	    		$prd = $product->attributes();  
 
+				$availability = $this->makeAvailability((string) trim($prd["Availability"]), 'logicom');
 
-					$availability = $this->makeAvailability((string) trim($prd["Availability"]), 'logicom');
-
-						if(!$availability){
-							continue;
-						}
-
+				if(!$availability){
+					continue;
+				}
 
 	    		$pn = (string) trim($prd["SKU"]);
 	    		$title = (string) trim($prd["Name"]);
@@ -631,6 +631,13 @@ class Live_model extends CI_Model {
 			if($c!=$cat){
 
 				$prd = $product->attributes();
+
+				$availability = $this->makeAvailability((string) trim($prd['stock']), 'ddc');
+
+			    if(!$availability){
+					continue;
+				}
+
 				$pn = (string) trim($prd['code']);
 			    $title = (string) trim($prd['name']);
 			    $brand = (string) trim($prd['brand']);
@@ -640,8 +647,7 @@ class Live_model extends CI_Model {
 			    $product_url = (string) trim($prd['attachment1']);
 			    //$prd['attachment2'];
 				$description = strip_tags((string) trim($product->description)); //to check if image exist in description
-			    $availability = $this->makeAvailability((string) trim($prd['stock']), 'ddc');
-
+			    
 			    $image_array = array(); 
 
 			    for ($i = 0; $i < 4; $i ++)
@@ -796,7 +802,7 @@ class Live_model extends CI_Model {
 						'availability'=>$availability ,
 						'recycle_tax'=>'' ,
 						'supplier' =>'ddc',
-						'status' => 'published',
+						'status' => 'publish',
 						'delete_flag'=>0
 						);
 
@@ -857,7 +863,7 @@ class Live_model extends CI_Model {
 
 
 		foreach($xml->children() as $product) {
-
+			$availability=false;
 			set_time_limit(50);
 			//Rename categories for ETD.gr
 
@@ -882,13 +888,19 @@ class Live_model extends CI_Model {
 
 			if($c!=$cat){
 
+				$availability = $this->makeAvailability((string) trim($product->availability), 'braintrust');
+
+				if(!$availability){
+					continue;
+				}
+
 				//$code = (string) trim($product->code);
 				//$code = (string) trim($product->SKU);
 				$description = (string) trim($product->Description);
 				$title = substr($description, strpos($description, 'NB '), strpos($description, ', '));
 				$title = "MSI ".$title;
 				$net_price = (string) trim($product->timi);
-				$availability = (string) trim($product->availability);
+				$availability = $availability;
 				$pn = (string) trim($product->SKU);
 				$imageUrl = (string) trim($product->Image);
 				$brand = (string) trim($product->Supplier);
@@ -897,12 +909,11 @@ class Live_model extends CI_Model {
 
 				if($this->checkLiveProduct($pn, $net_price)){
 
-					$availability = $this->makeAvailability((string) trim($product->availability), 'braintrust');
-
 					$live = array(
 						'category'=>$c,
 						'product_number'=>$pn ,
 						'net_price'=>$net_price ,
+						'recycle_tax'=>0 ,
 						'availability'=>$availability,
 						'supplier' =>'braintrust',
 						'status' => 'publish',
@@ -1116,28 +1127,6 @@ class Live_model extends CI_Model {
 				
 				$insert = true;
 
-
-				/*
-				if(isset($newProducts[$i]['Κατηγορία'])){
-
-					if($newProducts[$i]['Κατηγορία'] == $c){
-
-					$newProducts[$i]['Νέα προϊόντα']=$newProducts[$i]['Νέα προϊόντα']+1;
-
-					}else{
-
-						$i++;
-					
-						$newProducts[$i]['Κατηγορία'] = $c;
-						$newProducts[$i]['Νέα προϊόντα'] = 1;
-
-					}
-
-				}else{
-					$newProducts[$i]['Κατηγορία'] = $c;
-					$newProducts[$i]['Νέα προϊόντα'] = 1;
-				}
-				delete this after 30 July 2016 if no proble was occured*/
 
 			}
 			else{
@@ -1806,13 +1795,13 @@ class Live_model extends CI_Model {
 	    			$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
 	    			break;
 	    		case '3':
-	    			$av = 'Αναμονή παραλαβής';
-	    			break;
 	    		case '4':
 	    			$av = 'Αναμονή παραλαβής';
+	    			return false;
 	    			break;
 	    		case '5':
 	    			$av = 'Κατόπιν παραγγελίας χωρίς διαθεσιμότητα';
+	    			return false;
 	    			break;
 	    		case '6':
 	    			return false;
@@ -1837,6 +1826,7 @@ class Live_model extends CI_Model {
     				break;
     			case 'PreOrder':
     				$av="Αναμονή παραλαβής";
+    				return false;
     				break;
     			default:
     				return false;
@@ -1850,6 +1840,7 @@ class Live_model extends CI_Model {
     		switch ($availability) {
 	    		case '0':
 	    			$av = 'Αναμονή παραλαβής';
+	    			return false;
 	    			break;
 	    		case '1':
 	    			$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
@@ -1870,7 +1861,7 @@ class Live_model extends CI_Model {
 		
 		$this->db->where('supplier', $supplier);
 		$this->db->where('status', 'trash');
-		$this->db->where('delete_flag', 3);
+		$this->db->where('delete_flag', 10);
 		$this->db->delete('live');
 
 
