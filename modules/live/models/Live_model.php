@@ -1016,11 +1016,9 @@ class Live_model extends CI_Model {
     }//private function insertProductCategory(){*/
 
 
-<<<<<<< HEAD
-    private function addProduct($product, $chars_array, $f , $supplier){
-=======
+
     public function addProduct($product, $chars_array, $f , $supplier){
->>>>>>> instock_import
+
 
     	$insert = false;
     	$c = $product['category'];
@@ -1140,10 +1138,7 @@ class Live_model extends CI_Model {
 					$newProducts[$i]['Νέα προϊόντα'] = 1;
 				}
 				delete this after 30 July 2016 if no proble was occured*/
-<<<<<<< HEAD
-				$insert = true;
-=======
->>>>>>> instock_import
+
 			}
 			else{
 				echo 'issue';
