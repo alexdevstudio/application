@@ -70,7 +70,7 @@ class Extract_model extends CI_Model {
         public function allImport($table){
 //
             $query = $this->db->query("
-                 SELECT l.product_number, l.category, l.net_price, l.recycle_tax, l.availability, l.supplier, l.status, l.delete_flag, t.*
+                 SELECT l.product_number, l.category, l.net_price, l.recycle_tax,l.price_tax, l.availability, l.supplier, l.status, l.delete_flag, t.*
 
                  FROM live l
 
@@ -84,14 +84,18 @@ class Extract_model extends CI_Model {
            foreach ($query->result_array() as $product) {
 
              //Price 
+                if($product['price_tax']=='' ||  $product['price_tax'] === NULL  ||  $product['price_tax'] == '0.00' ){
+                  
+                    $net_price = $product['net_price'] + $product['recycle_tax'];
 
-                $net_price = $product['net_price'] + $product['recycle_tax'];
+                    $etd_price = $net_price*1.06;
 
-                $etd_price = $net_price*1.06;
+                    $price_tax = $etd_price*1.24;
 
-                $price_tax = $etd_price*1.24;
+                    $product['price_tax'] = number_format((float)$price_tax, 2, '.', '');
 
-                $product['price_tax'] = number_format((float)$price_tax, 2, '.', '');
+                }
+                
 
 
             // Title for Skroutz and for ETD.gr

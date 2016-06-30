@@ -93,7 +93,7 @@ $tables = Modules::run('categories/categoriesArray');
 	<div class="col-sm-6 col-md-3">
 
 			<div class="form-group">
-	                  	
+	                  	<?= base_url(); ?>
 	                  <br /><input type="button" class="btn btn-success btn-md" value="Εισαγωγή"  id="submit" />
           
 	        </div>
@@ -106,93 +106,3 @@ $tables = Modules::run('categories/categoriesArray');
 	<div id='error' class='callout' ></div>
 	</div>
 	
-<script type="text/javascript">
-
-				
-				$(function(){
-
-
-				var url = $('#insert').attr('action');
-
-				$('#submit').on('click',function(event){
-
-					var cat = $('#categories').val();
-					var brand = $('#brand').val();
-					var product_number = $('#product_number').val();
-					var title = $('#title').val();
-					var description = $('#description').val();
-					var image1 = $('#image1').val();
-					var image2 = $('#image2').val();
-					var image3 = $('#image3').val();
-					var image4 = $('#image4').val();
-					var image5 = $('#image5').val();
-					var av = $('#av').val();
-					var price = $('#price').val();
-					
-					if($.trim(title)=='' || $.trim(cat)=='' || 
-						$.trim(description)=='' || $.trim(product_number)=='' ||
-						$.trim(brand)==''  || $.trim(image1)==''  || 
-						$.trim(image2)==''  || $.trim(image3)==''  || 
-						$.trim(image4)==''  || $.trim(image5)==''  || $.trim(av)=='' )
-					{
-
-						$('#error').html('<i class="icon fa fa-ban"></i> Κάποια πεδία είναι κενά').removeClass('callout-success').addClass('callout-danger');
-						return false;
-					}
-
-					if(av == "1" && price == ""){
-						$('#error').html('<i class="icon fa fa-ban"></i> Εισάγετε τη τιμή').removeClass('callout-success').addClass('callout-danger');
-						return false;
-					}
-					if( !$.isNumeric(price))
-					{
-						$('#error').html('<i class="icon fa fa-ban"></i> Η τιμή είναι λάθος.').removeClass('callout-success').addClass('callout-danger');
-						return false;
-					}
-							var formData = new FormData();
-							
-							formData.append('cat', cat);
-							formData.append('product_number', product_number);
-							formData.append('title', title);
-							formData.append('brand', brand);
-							formData.append('description', description);
-							formData.append('image1', image1);
-							formData.append('image2', image2);
-							formData.append('image3', image3);
-							formData.append('image4', image4);
-							formData.append('image5', image5);
-							formData.append('av', av);
-							formData.append('price', price);
-
-							$.ajax({
-
-								url: url,
-								type: 'post',
-								data: formData,
-								processData:false,
-								contentType:false,
-								success: function(data){
-									if($.trim(data)=='ok'){
-										$('#error').html('<i class="icon fa fa-check"></i> Το προϊόν καταχωρήθηκε').removeClass('callout-danger').addClass('callout-success');
-										resetFields();
-									}else{
-						$('#error').html('<i class="icon fa fa-ban"> '+data).removeClass('callout-success').addClass('callout-danger');
-										
-									}
-								}
-							});
-
-
-			});
-
-		});
-
-
-		function resetFields(){
-			//$('input').val('');
-
-			alert('ok recieved');
-			
-		}
-			
-		</script>

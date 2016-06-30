@@ -104,6 +104,11 @@ class Live extends MX_Controller {
 		return $this->live_model->checkLiveProduct($a,$b);
 
 	}
+
+	public function getAvailability($availability, $supplier){
+		$this->load->model('live_model');
+		return $this->live_model->makeAvailability($availability, $supplier);
+	}
 }
 
 

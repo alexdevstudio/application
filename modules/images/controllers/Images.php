@@ -32,6 +32,32 @@ class Images extends MX_Controller {
 	}
 
 
+	public function getFirstImage($sku, $html=false){
+
+		$filename = './images/'.$sku;
+
+			if (file_exists($filename)) {
+			   $files = scandir ($filename);
+			   $firstFile =$files[2];// because [0] = "." [1] = ".." 
+
+			   if(!$html)
+			   	return $firstFile;
+
+			   $src = $filename.'/'.$firstFile;
+			   $src = "http://etd.gr/xml".ltrim($src,".");
+
+			   $output ="<img  src='$src' />";
+			   return $output;
+
+			} else {
+			    return false;
+			}
+
+
+	}
+
+
+
 
 
 

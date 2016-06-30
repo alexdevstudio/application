@@ -41,6 +41,12 @@
   <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
+<script>
+
+      
+      
+    </script>
+
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -320,15 +326,50 @@
         </div>
       </div>
       <!-- search form -->
-      <form action="#" method="get" class="sidebar-form">
+      <form action="<?= base_url(); ?>search" id="search-form-sidebar" class="sidebar-form">
         <div class="input-group">
-          <input type="text" name="q" class="form-control" placeholder="Search...">
+          <input type="text" name="search-box" id='search-box' class="form-control" placeholder="Search...">
               <span class="input-group-btn">
-                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                <button type="button" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
                 </button>
               </span>
         </div>
       </form>
+      <div class="box box-solid search-result bg-light-blue-gradient">
+            <div class="box-header">
+              <!-- tools box -->
+              <div class="pull-right box-tools">
+                
+                <button type="button" class="btn btn-primary btn-sm pull-right" data-widget="collapse" data-toggle="tooltip" title="Collapse" style="margin-right: 5px;">
+                  <i class="fa fa-minus"></i></button>
+              </div>
+              <!-- /. tools -->
+
+              <i class="fa fa-search"></i>
+
+              <h3 class="box-title"></h3>
+            </div>
+            <div class="box-body">
+              <div id="world-map" style=" width: 100%;"></div>
+            </div>
+            <!-- /.box-body-->
+            <div class="box-footer no-border">
+              <div class="row">
+               
+                <!-- ./col -->
+                <div class="col-xs-6 search-btn text-center">
+                  <div id="sparkline-3"></div>
+                  <div class="knob-label success-btn" ><a href="#" id='edit-link'>Επεξεργασία</a></div>
+                </div>
+                <div class="col-xs-6 search-btn text-center">
+                  <div id="sparkline-3"></div>
+                  <div onclick="hideItem('.search-result');"  class="knob-label cancel-btn">Άκυρο</div>
+                </div>
+                <!-- ./col -->
+              </div>
+              <!-- /.row -->
+            </div>
+          </div>
       <!-- /.search form -->
       <!-- sidebar menu: : style can be found in sidebar.less -->
        <ul class="sidebar-menu">
@@ -341,7 +382,7 @@
           
         </li>
          <li class="">
-            <a href="<?php echo base_url();?>/insert">
+            <a href="<?php echo base_url();?>insert">
               <i class="fa fa-edit"></i> <span>ΠΡΟΙΟΝ</span>
             </a>
          </li>

@@ -5,6 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = 'home/dashboard/';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
+$route['edit/(:any)/(:any)'] = "edit/index/$1/$2";
 //$route['(:any)'] = 'live/live/index/$1';
 //$route['live/(:any)'] = 'modules/live/index/$1';
 

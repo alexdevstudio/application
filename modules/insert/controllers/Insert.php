@@ -18,10 +18,10 @@ class Insert extends MX_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
-	
-
+	 
+ 
 	public function index()//$s stands for supplier
-	{	
+	{	 
 		$data['title'] = 'Εισαγωγή Προϊόντος';
 		$this->load->view('templates/header' ,$data);
 		$this->load->view('insert');
@@ -98,7 +98,7 @@ class Insert extends MX_Controller {
 				$chars = array();
 
 				$newProduct = Modules::run("live/addProduct", $product, $chars, $images , 'etd');
-				if()
+				
 					echo 'ok';
 
 
@@ -109,15 +109,14 @@ class Insert extends MX_Controller {
 
 		
 
+		}
+
+
+
+
+
 	}
-
-
-
-
-
 }
-
-
 
 
 ?> 

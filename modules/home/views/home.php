@@ -71,29 +71,7 @@ $tables = Modules::run('categories/categoriesArray');
 		</div>
 </div> 
 </div> 
-<div class="sections col-xs-12">
-<section class="content-header">
-      <h3>
-     Εισαγωγή προιόντος μη αυτόματα
-      </h3>  
-      <br>	   
-    </section> 
 
-<div class="col-sm-4 col-md-2">
- 
-		<div class="color-palette-set text-center">
-			<div class="bg-orange-active color-palette ">
-
-				<a href="./live/index/oktabit" style="color:#fff;display:block">
-					<br />
-					<span >Εισαγωγή</span> 
-					<br />
-					<br />
-				</a>
-			
-			</div>
-		</div>
-</div>
 <div class="sections col-xs-12">
 <section class="content-header">
       <h1>
@@ -213,7 +191,7 @@ function linkGenerator(a){
 
 		</form>
 		</div><!-- <div class="form-group"> -->
-		<script type="text/javascript">
+		<script>
 
 				function category(){
 					return $('#categories').val();
