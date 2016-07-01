@@ -34,7 +34,7 @@ $image = Modules::run("images/getFirstImage",$sku,true);
               <i class="ion ion-stats-bars"></i>
             </div>
             
-          </div>
+          </div> 
         </div>
 
         <div class="">

@@ -64,7 +64,7 @@ $tables = Modules::run('categories/categoriesArray');
 	        </div>
 
 	</div>
-	<div class="col-sm-6 col-md-3">
+	<!-- <div class="col-sm-6 col-md-3">
 
 			<div class="form-group">
 	                  	
@@ -86,14 +86,13 @@ $tables = Modules::run('categories/categoriesArray');
 	                  	
 	        </div>
 
-	</div>
+	</div> -->
 	
 		
 	<div class="row"></div>
 	<div class="col-sm-6 col-md-3">
 
 			<div class="form-group">
-	                  	<?= base_url(); ?>
 	                  <br /><input type="button" class="btn btn-success btn-md" value="Εισαγωγή"  id="submit" />
           
 	        </div>

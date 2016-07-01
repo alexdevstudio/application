@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Edit extends MX_Controller {
 
 	public function index($category, $sku)
-	{
+	{ 
 
 		$item = Modules::run('crud/get',$category, array('sku'=>$sku));
 		
