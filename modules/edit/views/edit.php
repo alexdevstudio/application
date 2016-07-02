@@ -80,6 +80,10 @@ if($itemLive){
 
 
 ?>
+<input class='form-control' type="hidden" name='product_number' value='<?= $pn; ?>'>
+<input class='form-control' type="hidden" name='category' value='<?= $category; ?>'>
+<input class='form-control' type="hidden" name='delete_flag' value='0'>
+
 <input class='form-control' name='price_tax' value='<?= $price; ?>'>
 
 <div class="form-group">
@@ -122,6 +126,7 @@ if($itemLive){
 		<label><?= ucfirst($key); ?></label>
 		</div>
 		<div class="col-xs-12 col-md-8">
+<input class='form-control' type="hidden" name='new_item' value='0'>
 
 		<input type="text" name="<?= $key; ?>" class="form-control edit-form-etd" value="<?php if(isset($_POST[$key])){ echo $_POST[$key]; }else{echo $value; } ?>" /></div>
 		</div>

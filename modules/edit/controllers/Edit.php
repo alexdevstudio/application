@@ -6,6 +6,7 @@ class Edit extends MX_Controller {
 	public function index($category, $sku)
 	{ 
 
+
 		$item = Modules::run('crud/get',$category, array('sku'=>$sku));
 		
 		if($post = $this->input->post()){
@@ -14,11 +15,28 @@ class Edit extends MX_Controller {
 
 				$av = Modules::run("live/getAvailability",$post['availability'],'etd');
 				$post['availability']=$av;
+				$post['status']='publish';
+				$post['supplier']='etd';
+
+
 				$where = array('product_number'=>$item->row()->product_number);
-				echo $item->row()->product_number.'this ios id';
-				$update = Modules::run('crud/update','live',$where,$post);
+
+				//First check if item exists
+
+				$exists = Modules::run("crud/get","live",$where);
+
+				if($exists){
+					$update = Modules::run('crud/update','live',$where,$post);
+				}else{
+					$update = Modules::run('crud/insert','live', $post);
+				}
+
+
+
+				
 
 			}else{
+				
 
 				$where = array('sku'=>$sku);
 				$update = Modules::run('crud/update',$category,$where,$post);
@@ -36,8 +54,9 @@ class Edit extends MX_Controller {
 			 if($item){
 
 			 	//Check if item is Live
-			 	$data['itemLive']= Modules::run('crud/get','live', array('product_number'=>$item->row()->product_number));
 
+			 	$data['itemLive'] = Modules::run('crud/get','live', array('product_number'=>$item->row()->product_number));
+			 	$data['category'] = $category;
 			 	$data['title'] = 'Επεξεργασία προϊόντος';
 			 	$data['item'] = $item;
 
