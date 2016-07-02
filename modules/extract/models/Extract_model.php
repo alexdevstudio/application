@@ -120,13 +120,36 @@ class Extract_model extends CI_Model {
                     $etd_title = $model.$color." ($pn)";
 
                         break;
+                     case 'desktops':
+                    $cpu =   str_replace(' ','',$product['cpu_model']); 
+                    $ram =   str_replace(' ','',$product['memory_size']);   
+                    $disk =  str_replace(' ','',$product['hdd']); 
+                    $os = str_replace(' ','',$product['skroutz_operating_system']); 
+                    $model = trim($product['model']);
+                    $pn = str_replace(' ','',$product['product_number']);
+
+                    //for NUC some title modifications
+                    if(strtoupper($product['brand'])=="INTEL"){
+                         $skroutz_title = $model." $pn (".$cpu."/".$ram."/".$disk."/".$os.")";
+                    }else{
+                         $skroutz_title = $model.' '.$cpu.'/'.$ram.'/'.$disk.'/'.$os;
+                    }
                     
+                   
+                    
+                    $etd_title = $model." ($pn)";
+
+                        break;
                     default:
                         $etd_title = $product['title'];
                         $skroutz_title = $product['title'];
                         break;
                 }    
 
+                $skroutz_title = str_replace('//', '/', $skroutz_title);
+                $skroutz_title = str_replace('//', '/', $skroutz_title);
+                $skroutz_title = str_replace('//)', ')', $skroutz_title);
+                $skroutz_title = str_replace('/)', ')', $skroutz_title);
 
                 $product['etd_title'] =  $etd_title;
                 $product['skroutz_title'] =  $skroutz_title;
