@@ -55,7 +55,7 @@ class Extract_model extends CI_Model {
 		    mkdir('files', 0777, true);
 			}
 
-            $file = "./files/".$table.".xml";
+            $file = "./files/".$table."_new_items.xml";
 
             if (file_exists($file)) { unlink ($file); }
 
@@ -209,12 +209,12 @@ class Extract_model extends CI_Model {
             mkdir('files/updates', 0777, true);
             }
 
-            $file = "./files/updates/".$table.".xml";
+            $file = "./files/updates/".$table."_ALL_IMPORT.xml";
 
             if (file_exists($file)) { unlink ($file); }
 
             if($xml->save($file)){
-                echo "<a class='btn btn-md btn-success  btn-block text-center' href='".base_url()."/files/updates/".$table.".xml"."' download target='_blank'>Λήψη XML</a>";
+                echo "<a class='btn btn-md btn-success  btn-block text-center' href='".base_url()."/files/updates/".$table."_ALL_IMPORT.xml"."' download target='_blank'>Λήψη XML</a>";
             }
                 return false;
 
