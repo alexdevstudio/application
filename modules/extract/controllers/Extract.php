@@ -15,7 +15,7 @@ class Extract extends MX_Controller {
 
 			
 			echo '<a class="btn btn-block btn-success btn-md"
-			 target="_blank" href="'.base_url().'/files/'.$table.'.xml" download>Λήψη</a>';
+			 target="_blank" href="'.base_url().'/files/'.$table.'_new_items.xml" download>Λήψη</a>';
 		}else{
 			echo 'Σφάλμα';
 		}
