@@ -140,11 +140,33 @@ class Extract_model extends CI_Model {
                     $etd_title = $model." ($pn)";
 
                         break;
+                        case 'monitors':
+                    
+                    $title =   str_replace(' ','',$product['title']); 
+                    $brand =   str_replace(' ','',$product['brand']);   
+                    $inches =  str_replace(',','.',$product['screen_size']); 
+                    $technology = str_replace(' ','',$product['monitor_technology']); 
+                    $pn = str_replace(' ','',$product['product_number']);
+                    $ips = '';
+
+                        if (strpos($title, 'IPS') !== false) {
+                            $ips = ' IPS ';
+                        }
+
+                    
+                    $skroutz_title = $brand.' '.$inches.'  '.$pn;
+                    $etd_title = $brand.' '.$inches.' ιντσών '.$technology.' '.$ips.' ('.$pn.')';
+
+                        break;
+                        
                     default:
                         $etd_title = $product['title'];
                         $skroutz_title = $product['title'];
                         break;
                 }    
+
+                $etd_title = str_replace('  ', ' ', $etd_title);
+                $etd_title = str_replace('  ', ' ', $etd_title);
 
                 $skroutz_title = str_replace('//', '/', $skroutz_title);
                 $skroutz_title = str_replace('//', '/', $skroutz_title);
