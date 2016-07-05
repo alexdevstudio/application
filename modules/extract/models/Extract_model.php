@@ -68,7 +68,7 @@ class Extract_model extends CI_Model {
         //, i.item_sku, i.image_src
 //INNER JOIN images i ON t.sku = i.item_sku
         public function allImport($table){
-//
+//          
             $query = $this->db->query("
                  SELECT l.product_number, l.category, l.net_price, l.recycle_tax,l.price_tax, l.availability, l.supplier, l.status, l.delete_flag, t.*
 
@@ -94,6 +94,12 @@ class Extract_model extends CI_Model {
 
                     $product['price_tax'] = number_format((float)$price_tax, 2, '.', '');
 
+                }
+
+                // Check if Etd product is trashed to increment the delete flag.
+                if($product['supplier']=='etd' && $product['status']=='trash')
+                {
+                    Modules::run('live/updateLive', 'etd');
                 }
                 
 

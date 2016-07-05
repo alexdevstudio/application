@@ -31,6 +31,11 @@ class Live extends MX_Controller {
 		}
 	}
 
+	public function updateLive($supplier){
+		$this->load->model('live_model');
+		$this->live_model->updateLive($supplier);
+	}
+
 	public function upload_logicom_xml()
 	{
 		$config['upload_path'] = './files/suppliers/';

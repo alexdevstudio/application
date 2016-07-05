@@ -1960,9 +1960,8 @@ class Live_model extends CI_Model {
     	}
     }
 
-	private function updateLive($supplier){
+	public function updateLive($supplier){
 
-		
 		//1. Delete old trashed entries
 		
 		$this->db->where('supplier', $supplier);
@@ -1985,12 +1984,8 @@ class Live_model extends CI_Model {
 				$this->db->where('id', $id);
 				$this->db->set('delete_flag',$flag);
 				$this->db->set('status','trash');
-				$this->db->update('live');
-
-				
-				
+				$this->db->update('live');				
 			}
-
 
 		return true;
 	}

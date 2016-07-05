@@ -20,6 +20,11 @@ class Crud_model extends CI_Model {
 
   }
 
+  public function delete($table, $where){
+        
+        $this->db->where($where);
+        return $this->db->delete($table);
+  }
 
   public function get($category, $where){
 
