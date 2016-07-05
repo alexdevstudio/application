@@ -986,6 +986,7 @@ class Live_model extends CI_Model {
     		foreach ($query->result() as $row)
 				{
 					$price = (float) $price;
+					// Check if product has lower price from a product already is stock and supplier = etd.
 				        
 				    if($row->net_price >= $price ){
 				        $this->db->where('id',$row->id);
@@ -1763,6 +1764,95 @@ class Live_model extends CI_Model {
 			}
 			return $chars_array;
 		}
+		else if ($category == 'servers'){
+
+			$chars_array = array(
+				'form_factor' => "",
+				'server_size' => "",
+				'power_supply' => "",
+				'cpu' => "",
+				'cpu_generation' => "",
+				'cpu_model' => "",
+				'cpu_frequency' => "",
+				'cpu_cores	' => "",
+				'cpu_cache' => "",
+				'memory_size' => "",
+				'memory_type' => "",
+				'memory_frequency' => "",
+				'hdd' => "",
+				'hdd_type' => "",
+				'controller_raid' => "",
+				'ethernet' => "",
+				'multimedia' => "",
+				'warranty' => "",
+				'year_warranty' => ""
+				);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					switch ($chars_title) {
+						case 'Τύπος θήκης':
+							$chars_array['form_factor'] = $chars_value;
+							break;
+						case 'Rack height':
+							$chars_array['server_size'] = $chars_value;
+							break;
+						case 'Κατασκευαστής επεξεργαστή':
+							$chars_array['cpu'] = ucfirst($chars_value);
+							break;
+						case 'Επεξεργαστής':
+							$chars_array['cpu_generation']=$chars_value;
+								break;
+						case 'Τύπος μνήμης':
+							$chars_array['memory_type']=$chars_value;
+								break;
+						case 'Χωρητικότητα μνήμης':
+							$chars_array['memory_size']=$chars_value;
+							break;
+						case 'Σκληρός δίσκος (χωρητικότητα / στροφές λειτουργίας)':
+							$chars_array['hdd']=$chars_value;
+								break;
+						case 'Τύπος σκληρών δίσκων':
+							$chars_array['hdd_type']=$chars_value;
+							break;
+						case 'RAID':
+							$chars_array['controller_raid']=$chars_value;
+								break;
+						case 'Οπτικά μέσα':
+							$chars_array['multimedia']=$chars_value;
+							break;
+						case 'Δίκτυο  ':
+							$chars_array['ethernet']=$chars_value;
+							break;
+						case 'Τροφοδοτικό':
+							$chars_array['power_supply']=$chars_value;
+							break;
+						case 'Εγγύηση (μήνες)':
+							$chars_array['year_warranty']=(string)($chars_value/60).' έτη';
+							break;
+						case 'Τύπος εγγύησης':
+							$chars_array['warranty']=$chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					continue;
+				}
+			}
+			return $chars_array;
+		}
+		/////////////
 
     }
 
