@@ -185,12 +185,28 @@ class Extract_model extends CI_Model {
                     $etd_title = $brand.' '.$inches.' ιντσών '.$technology.' '.$ips.' ('.$pn.')';
 
                         break;
-                        
+                        case 'printers':
+                        case 'multifunction_printers':
+                    
+                    $title =  $product['title']; 
+                    $model =  $product['model'];   
+                    $pn    =  $product['product_number'];
+                    
+
+                    
+                    $skroutz_title = $model;
+                    $etd_title = "$model ($pn)";
+
+                        break;    
                     default:
                         $etd_title = $product['title'];
                         $skroutz_title = $product['title'];
                         break;
                 }    
+
+
+
+
 
                 $etd_title = str_replace('  ', ' ', $etd_title);
                 $etd_title = str_replace('  ', ' ', $etd_title);
