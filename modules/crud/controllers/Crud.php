@@ -39,7 +39,13 @@ class Crud extends MX_Controller {
 		return $this->crud_model->get($table, $where);
     }
 
+    public function insert($table, $data){
 
+    	$this->load->model('crud_model');
+		return $this->crud_model->insert($table, $data);
+
+
+    }
 
 
 

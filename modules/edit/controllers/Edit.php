@@ -12,6 +12,7 @@ class Edit extends MX_Controller {
 		if($post = $this->input->post()){
 
 			if(isset($post['status'])){
+
 				if($post['status']=='delete')
 				{
 					unset ($post['status']);
@@ -27,7 +28,8 @@ class Edit extends MX_Controller {
 				}
 				else if($post['status']=='add')
 				{
-					//unset ($post['status']);
+					unset ($post['status']);
+
 					$av = Modules::run("live/getAvailability",$post['availability'],'etd');
 
 					if (!$av)
@@ -48,7 +50,9 @@ class Edit extends MX_Controller {
 					if($exists){
 						$update = Modules::run('crud/update','live',$where,$post);
 					}else{
+
 						$update = Modules::run('crud/insert','live', $post);
+						
 					}
 				}
 				else if($post['status']=='update')
