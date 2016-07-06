@@ -28,8 +28,8 @@ class Edit extends MX_Controller {
 				}
 				else if($post['status']=='add')
 				{
-
 					unset ($post['status']);
+
 					$av = Modules::run("live/getAvailability",$post['availability'],'etd');
 
 					if (!$av)
@@ -52,7 +52,7 @@ class Edit extends MX_Controller {
 					}else{
 
 						$update = Modules::run('crud/insert','live', $post);
-						
+
 						
 					}
 				}
