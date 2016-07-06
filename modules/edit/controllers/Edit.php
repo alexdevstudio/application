@@ -52,9 +52,7 @@ class Edit extends MX_Controller {
 					}else{
 
 						$update = Modules::run('crud/insert','live', $post);
-						if($update){
-							echo $post['status'];
-						}
+						
 						
 					}
 				}
