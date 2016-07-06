@@ -99,19 +99,18 @@ class Extract_model extends CI_Model {
                 // Check if Etd product is trashed to increment the delete flag.
                 if($product['supplier']=='etd' && $product['status']=='trash')
                 {
-                    //1. Delete old trashed entries if delete_flag >=10
+                    
                     $flag = $product['delete_flag'];
 
-                    if ($flag >= 10)
+                    if ($flag >= 10) //1. Delete old trashed entries if delete_flag >=10
                     {
                         $this->db->where('supplier', 'etd');
                         $this->db->where('status', 'trash');
                         $this->db->where('delete_flag', 10);
                         $this->db->delete('live');
                     }
-
-                    //2. Update all entries to set status=trash and delete_flag +1
-                    else{
+                    else //2. Update all entries to set status=trash and delete_flag +1
+                    {
 
                         $pn = $product['product_number'];
                         $flag ++;
