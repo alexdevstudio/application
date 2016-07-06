@@ -99,10 +99,31 @@ class Extract_model extends CI_Model {
                 // Check if Etd product is trashed to increment the delete flag.
                 if($product['supplier']=='etd' && $product['status']=='trash')
                 {
-                    Modules::run('live/updateLive', 'etd');
+                    //1. Delete old trashed entries if delete_flag >=10
+                    $flag = $product['delete_flag'];
+
+                    if ($flag >= 10)
+                    {
+                        $this->db->where('supplier', 'etd');
+                        $this->db->where('status', 'trash');
+                        $this->db->where('delete_flag', 10);
+                        $this->db->delete('live');
+                    }
+
+                    //2. Update all entries to set status=trash and delete_flag +1
+                    else{
+
+                        $pn = $product['product_number'];
+                        $flag ++;
+
+                        $this->db->where('supplier', 'etd');
+                        $this->db->where('product_number', $pn);
+                        $this->db->where('status', 'trash');
+                        $this->db->set('delete_flag',$flag);
+                        $this->db->update('live');
+                    }
                 }
                 
-
 
             // Title for Skroutz and for ETD.gr
             
