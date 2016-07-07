@@ -1783,7 +1783,7 @@ class Live_model extends CI_Model {
 				'hdd_type' => "",
 				'controller_raid' => "",
 				'ethernet' => "",
-				'multimedia' => "",
+				'optical_drive' => "",
 				'warranty' => "",
 				'year_warranty' => ""
 				);
@@ -1827,7 +1827,7 @@ class Live_model extends CI_Model {
 							$chars_array['controller_raid']=$chars_value;
 								break;
 						case 'Οπτικά μέσα':
-							$chars_array['multimedia']=$chars_value;
+							$chars_array['optical_drive']=$chars_value;
 							break;
 						case 'Δίκτυο  ':
 							$chars_array['ethernet']=$chars_value;
