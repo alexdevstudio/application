@@ -1121,13 +1121,21 @@ class Live_model extends CI_Model {
 				);
 
 				if($c == "cables" || $c == "patch_panels" || $c == "racks"){
-					
-					$etd_product_url_pdf = 'https://etd.gr/wp-content/uploads/'.$sku;
-			    	copy ($product['product_url'], $etd_product_url_pdf);
+
+					$etd_product_url_pdf = '../wp-content/uploads/'.$sku.'.pdf';
+
+					if (!file_exists($etd_product_url_pdf) && $product['product_url']!='')
+					{
+			    		if(!copy ($product['product_url'], $etd_product_url_pdf))
+			    			echo $etd_product_url_pdf.'file not saved';
+			    		else
+			    		{
+			    			$etd_product_url_pdf = 'https://etd.gr/wp-content/uploads/'.$sku.'.pdf';
+							$categoryData['product_url_pdf'] = $etd_product_url_pdf;
+			    		}
+					}
 
 			    	unset($categoryData['supplier_product_url']);
-
-					$categoryData['product_url_pdf'] = $etd_product_url_pdf;
 				}
 
 				if($chars_array)
