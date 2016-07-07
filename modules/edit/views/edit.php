@@ -134,15 +134,32 @@ if($itemLive){
 		<div class="col-xs-12 col-md-5">
 
 		<div class="col-xs-12 col-md-4">
-		<label><?= ucfirst($key); ?></label>
+		<label><?= ucfirst(str_replace('_', ' ', $key));  ?></label>
 		</div>
 		<div class="col-xs-12 col-md-8">
 			<input class='form-control' type="hidden" name='new_item' value='0'>
 			<input class='form-control' type="hidden" name='status' value='update'>
+			<?php 
 
+			if($key == 'description'){
+
+?>
+<textarea  name="<?= $key; ?>" class="form-control edit-form-etd" value="" >
+<?php if(isset($_POST[$key])){ echo $_POST[$key]; }else{echo $value; } ?>
+</textarea>
+</div>
+<?php
+}else{
+			?>
 			<input type="text" name="<?= $key; ?>" class="form-control edit-form-etd" value="<?php if(isset($_POST[$key])){ echo $_POST[$key]; }else{echo $value; } ?>" /></div>
-		</div>
 		
+		
+		<?php
+		}
+		?>
+
+		</div>
+
 		<?php
 	}
 	?>
