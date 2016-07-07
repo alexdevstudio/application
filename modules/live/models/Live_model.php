@@ -645,6 +645,7 @@ class Live_model extends CI_Model {
 			    $net_price = (string) trim($prd['finalPrice']);
 			    $color = (string) trim($prd['colors']);
 			    $product_url = (string) trim($prd['attachment1']);
+
 			    //$prd['attachment2'];
 				$description = strip_tags((string) trim($product->description)); //to check if image exist in description
 			    
@@ -1118,6 +1119,25 @@ class Live_model extends CI_Model {
 				'supplier_product_url'=> $product['product_url'],
 				'shipping_class' => $shipping_class
 				);
+
+				if($c == "cables" || $c == "patch_panels" || $c == "racks"){
+
+					$etd_product_url_pdf = '../wp-content/uploads/'.$sku.'.pdf';
+
+					if (!file_exists($etd_product_url_pdf) && $product['product_url']!='')
+					{
+			    		if(!copy ($product['product_url'], $etd_product_url_pdf))
+			    			echo $etd_product_url_pdf.'file not saved';
+			    		else
+			    		{
+			    			$etd_product_url_pdf = 'https://etd.gr/wp-content/uploads/'.$sku.'.pdf';
+							$categoryData['product_url_pdf'] = $etd_product_url_pdf;
+			    		}
+					}
+
+			    	unset($categoryData['supplier_product_url']);
+				}
+
 				if($chars_array)
 				{
 					$categoryData = array_merge($categoryData, $chars_array);
