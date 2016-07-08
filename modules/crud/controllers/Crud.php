@@ -20,29 +20,32 @@ class Crud extends MX_Controller {
 	 */
 	
 
-	public function update($table, $where, $data)//$s stands for supplier
+	public function update($table, $where, $data)
 	{	
-
 		$this->load->model('crud_model');
 		return $this->crud_model->update($table, $where, $data);
-		
-			
-
-		
 	}
 
+
+	public function delete($table, $where)
+	{
+        $this->load->model('crud_model');
+        return $this->crud_model->delete($table, $where);
+  	}
 
 	public function get($table, $where){
 
     	$this->load->model('crud_model');
 		return $this->crud_model->get($table, $where);
+    }
 
-    	
+    public function insert($table, $data){
+
+    	$this->load->model('crud_model');
+		return $this->crud_model->insert($table, $data);
 
 
     }
-
-
 
 
 

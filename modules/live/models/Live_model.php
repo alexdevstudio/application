@@ -645,6 +645,7 @@ class Live_model extends CI_Model {
 			    $net_price = (string) trim($prd['finalPrice']);
 			    $color = (string) trim($prd['colors']);
 			    $product_url = (string) trim($prd['attachment1']);
+
 			    //$prd['attachment2'];
 				$description = strip_tags((string) trim($product->description)); //to check if image exist in description
 			    
@@ -1118,6 +1119,25 @@ class Live_model extends CI_Model {
 				'supplier_product_url'=> $product['product_url'],
 				'shipping_class' => $shipping_class
 				);
+
+				if($c == "cables" || $c == "patch_panels" || $c == "racks"){
+
+					$etd_product_url_pdf = '../wp-content/uploads/'.$sku.'.pdf';
+
+					if (!file_exists($etd_product_url_pdf) && $product['product_url']!='')
+					{
+			    		if(!copy ($product['product_url'], $etd_product_url_pdf))
+			    			echo $etd_product_url_pdf.'file not saved';
+			    		else
+			    		{
+			    			$etd_product_url_pdf = 'https://etd.gr/wp-content/uploads/'.$sku.'.pdf';
+							$categoryData['product_url_pdf'] = $etd_product_url_pdf;
+			    		}
+					}
+
+			    	unset($categoryData['supplier_product_url']);
+				}
+
 				if($chars_array)
 				{
 					$categoryData = array_merge($categoryData, $chars_array);
@@ -1783,7 +1803,7 @@ class Live_model extends CI_Model {
 				'hdd_type' => "",
 				'controller_raid' => "",
 				'ethernet' => "",
-				'multimedia' => "",
+				'optical_drive' => "",
 				'warranty' => "",
 				'year_warranty' => ""
 				);
@@ -1827,7 +1847,7 @@ class Live_model extends CI_Model {
 							$chars_array['controller_raid']=$chars_value;
 								break;
 						case 'Οπτικά μέσα':
-							$chars_array['multimedia']=$chars_value;
+							$chars_array['optical_drive']=$chars_value;
 							break;
 						case 'Δίκτυο  ':
 							$chars_array['ethernet']=$chars_value;
@@ -1960,9 +1980,8 @@ class Live_model extends CI_Model {
     	}
     }
 
-	private function updateLive($supplier){
+	public function updateLive($supplier){
 
-		
 		//1. Delete old trashed entries
 		
 		$this->db->where('supplier', $supplier);
@@ -1985,12 +2004,8 @@ class Live_model extends CI_Model {
 				$this->db->where('id', $id);
 				$this->db->set('delete_flag',$flag);
 				$this->db->set('status','trash');
-				$this->db->update('live');
-
-				
-				
+				$this->db->update('live');				
 			}
-
 
 		return true;
 	}

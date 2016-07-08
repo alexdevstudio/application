@@ -42,6 +42,13 @@ class Categories extends MX_Controller {
     	return $array;
     }
 
+    public function fullCategoriesArray(){
+    	$array = array('cables','carrying_cases','cartridges','desktops','external_hard_drives','keyboard_mouse','laptops','monitors','multifunction_printers','patch_panels','power_bank','printers','racks','routers','sata_hard_drives',
+    		'servers','smartphones','speakers','ssd','switches','tablets','ups');
+
+    	return $array;
+    }
+
  
      public function updateItem($c, $xml){
 

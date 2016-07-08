@@ -20,21 +20,42 @@ class Crud_model extends CI_Model {
 
   }
 
+  public function delete($table, $where){
+        
+        $this->db->where($where);
+        return $this->db->delete($table);
+  }
 
   public function get($category, $where){
 
-    	$this->db->where($where);
+      $this->db->where($where);
         $item = $this->db->get($category);
 
         if($item->num_rows()<1){
-        	return false;
+          return false;
         }
         else
         {
-        	return $item;
+          return $item;
         }
 
-    	
+      
+
+
+    }
+    public function insert($table, $data){
+
+        $item = $this->db->insert($table, $data);
+
+        if($this->db->affected_rows()>0){
+          return $item;
+        }
+        else
+        {
+          return false;
+        }
+
+      
 
 
     }
