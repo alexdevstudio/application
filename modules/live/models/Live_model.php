@@ -50,7 +50,7 @@ class Live_model extends CI_Model {
 			set_time_limit(50);
 			//Rename categories for ETD.gr
 
-			$model='';
+			$dist_type='';
 			$cat = (string) trim($product->category);
 			$sc = trim((string)$product->subcategory);
 
@@ -129,7 +129,7 @@ class Live_model extends CI_Model {
 					break;
 
 				case 'Software DSP':
-					$model = 'DSP';
+					$dist_type = 'DSP';
 
 					if($sc == 'DSP Licensing (CAL)' || $sc == 'DSP Server Software'){
 						$c = 'software';
@@ -146,7 +146,7 @@ class Live_model extends CI_Model {
 					{
 						$c = 'servers';
 					}
-					break;
+					break;dist_type
 				case 'Entertainment':
 					if($sc == 'Speakers' )
 					{
@@ -256,13 +256,13 @@ class Live_model extends CI_Model {
 				if ($c=='software')
 				{
 					$okt_product['type'] = $sc;
-					$okt_product['model'] = $model;
+					$okt_product['dist_type'] = $dist_type;
 					$okt_product['shipping_class'] = 4644;
 
 					if (strstr ($title,'DSP'))
-						$okt_product['model'] = 'DSP';
+						$okt_product['dist_type'] = 'DSP';
 					elseif(strstr ($title,'Reseller Option Kit') || strstr ($title,'ROK'))
-						$okt_product['model'] = 'ROK';
+						$okt_product['dist_type'] = 'ROK';
 				}
 
 				//2. New products for charateristics tables that load Sku module
@@ -474,16 +474,12 @@ class Live_model extends CI_Model {
 					$log_product['type'] = $sc;
 					$log_product['shipping_class'] = 4644;
 					if (strstr ($title,'DSP'))
-						$log_product['model'] = 'DSP';
+						$log_product['dist_type'] = 'DSP';
 					elseif(strstr ($title,'Reseller Option Kit') || strstr ($title,'ROK'))
-						$log_product['model'] = 'ROK';
+						$log_product['dist_type'] = 'ROK';
 					else
-						$log_product['model'] = '';
+						$log_product['dist_type'] = '';
 
-					if(strstr ($title,'INTEL'))
-					{
-						
-					}
 				}
 
 				//2. New products for charateristics tables that load Sku module
@@ -1177,7 +1173,7 @@ class Live_model extends CI_Model {
 				'product_number'=> $product['product_number'],
 				'title'=> $product['title'],
 				'type'=> $product['type'],
-				'model'=> $product['model'],
+				'dist_type'=> $product['dist_type'],
 				'description'=> strip_tags($product['description']),
 				'supplier_product_url'=> $product['product_url'],
 				'shipping_class' => $product['shipping_class']
