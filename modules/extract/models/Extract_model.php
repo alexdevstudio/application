@@ -14,16 +14,16 @@ class Extract_model extends CI_Model {
 
     public function xml($table){
 
-    		
-    		$xml = new DomDocument("1.0","UTF-8");//ISO-8859-7
+            
+            $xml = new DomDocument("1.0","UTF-8");//ISO-8859-7
 
 
 
-    		$products = $xml->createElement('products');
-    		$products = $xml->appendChild($products);
+            $products = $xml->createElement('products');
+            $products = $xml->appendChild($products);
 
             //$this->db->where("new_item", "1");
-    		//$query = $this->db->query("SELECT * FROM $table");
+            //$query = $this->db->query("SELECT * FROM $table");
 
             $this->db->where('new_item', 1);
             $query = $this->db->get($table); 
@@ -32,37 +32,37 @@ class Extract_model extends CI_Model {
             $prod = $query->result_array();
             foreach($prod as $columns){
 
-    			
-    			$product = $xml->createElement('product');
-    			$product = $products->appendChild($product);
+                
+                $product = $xml->createElement('product');
+                $product = $products->appendChild($product);
 
-    			foreach($columns as $key => $value){
-    				if($key!='id' && $key!='description' && $key!='new_item' ){
-    				$item = $xml->createElement($key, trim(htmlspecialchars($value)));
-    				$item = $product->appendChild($item);	
-					}
-    			}
+                foreach($columns as $key => $value){
+                    if($key!='id' && $key!='description' && $key!='new_item' ){
+                    $item = $xml->createElement($key, trim(htmlspecialchars($value)));
+                    $item = $product->appendChild($item);   
+                    }
+                }
 
 
-    		}
+            }
 
             //print_r($query->result_array());
 
-			$xml->FormatOutput = true;
-			$string_value = $xml->saveXML(); 
+            $xml->FormatOutput = true;
+            $string_value = $xml->saveXML(); 
 
-			if (!file_exists('files')) {
-		    mkdir('files', 0777, true);
-			}
+            if (!file_exists('files')) {
+            mkdir('files', 0777, true);
+            }
 
             $file = "./files/".$table."_new_items.xml";
 
             if (file_exists($file)) { unlink ($file); }
 
-			if($xml->save($file)){
-				return true;
-			}
-				return false;
+            if($xml->save($file)){
+                return true;
+            }
+                return false;
 
             }
         //, i.item_sku, i.image_src
@@ -243,10 +243,45 @@ class Extract_model extends CI_Model {
                             
                         }
                         
-                       
-                        
 
                             break;    
+                            case 'servers':
+                        
+                        $title =  $product['title']; 
+                        $model =  $product['model'];   
+                        $cpu =  $product['cpu'];   
+                        $cpu_generation =  $product['cpu_generation'];  
+                        $cpu_generation = rtrim($cpu_generation, " E3"); 
+                        $cpu_generation = rtrim($cpu_generation, " E5"); 
+                        $cpu_model =  $product['cpu_model'];  
+                        $pn    =  $product['product_number'];
+                        
+                         if($etd_title == '')                            
+                             $etd_title = "$model $cpu $cpu_generation  $cpu_model ($pn)";
+                        
+
+                        if($skroutz_title == '')                             
+                             $skroutz_title = "$model $cpu $cpu_generation  $cpu_model ($pn)";
+
+                           break;
+                        case 'cartridges':
+                        case 'toners':
+                        
+                        $title =  $product['title']; 
+                        $model =  $product['model'];   
+                        $pn    =  $product['product_number'];
+
+                        if($model=='')
+                            $title = ltrim($title, 'Cartridge ' );
+                                              
+                         if($etd_title == '')                            
+                             $etd_title = "$title ($pn)";
+                        
+
+                        if($skroutz_title == '')                             
+                             $skroutz_title = "$title ($pn)";
+
+                           break;
                         default:
                             $etd_title = $product['title'];
                             $skroutz_title = $product['title'];

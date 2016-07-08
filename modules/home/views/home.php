@@ -1,5 +1,5 @@
 <?php
-$tables = Modules::run('categories/categoriesArray');
+$tables = Modules::run('categories/fullCategoriesArray');
 
 ?>
 <div class="sections col-xs-12">
@@ -43,21 +43,6 @@ $tables = Modules::run('categories/categoriesArray');
 <div class="col-sm-4 col-md-2">
 
 		<div class="color-palette-set text-center">
-			<div class="bg-red color-palette ">
-
-				<a href="./live/index/ddc" style="color:#fff;display:block">
-					<br />
-					<span >Digital Data</span>
-					<br />
-					<br />
-				</a>
-			
-			</div>
-		</div>
-</div> 
-<div class="col-sm-4 col-md-2">
-
-		<div class="color-palette-set text-center">
 			<div class="bg-green color-palette ">
 
 				<a href="./live/index/braintrust" style="color:#fff;display:block">
@@ -70,6 +55,22 @@ $tables = Modules::run('categories/categoriesArray');
 			</div>
 		</div>
 </div> 
+<div class="col-sm-4 col-md-2">
+
+		<div class="color-palette-set text-center">
+			<div class="bg-red color-palette ">
+
+				<a href="./live/index/ddc" style="color:#fff;display:block">
+					<br />
+					<span >Digital Data</span>
+					<br />
+					<br />
+				</a>
+			
+			</div>
+		</div>
+</div> 
+
 </div> 
 
 <div class="sections col-xs-12">

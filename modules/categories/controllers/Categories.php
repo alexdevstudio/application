@@ -37,14 +37,14 @@ class Categories extends MX_Controller {
 
 	 public function categoriesArray(){
     	$array = array('desktops','laptops','printers', 'multifunction_printers',
-    		'monitors','servers','ups','tablets','smartphones');
+    		'monitors','servers','ups','tablets','smartphones','software');
 
     	return $array;
     }
 
     public function fullCategoriesArray(){
     	$array = array('cables','carrying_cases','cartridges','desktops','external_hard_drives','keyboard_mouse','laptops','monitors','multifunction_printers','patch_panels','power_bank','printers','racks','routers','sata_hard_drives',
-    		'servers','smartphones','speakers','ssd','switches','tablets','ups');
+    		'servers','smartphones','speakers','ssd','switches','software','tablets','toners', 'ups');
 
     	return $array;
     }
