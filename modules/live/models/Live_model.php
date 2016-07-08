@@ -282,6 +282,7 @@ class Live_model extends CI_Model {
 			//Rename categories for ETD.gr
 
 			$c = $cat = $product->Details->CategoryList->attributes()->{'Name'};
+			$sc = '';
 
 			switch ($cat) {
 
@@ -303,13 +304,22 @@ class Live_model extends CI_Model {
 				case 'Computers- / Servers- / Server':
 					$c = 'servers';
 					break;
-				/*case 'Computers- / Software  /  Security- / Antivirus Solutions':
+				case 'Computers- / Software  /  Security- / Antivirus Solutions':
+					$c = 'software';
+					$sc = 'Antivirus';
+					break;
 				case 'Computers- / Software  /  Security- / Applications':
-				case 'Computers- / Software  /  Security- / Applications':
+					$c = 'software';
+					$sc = 'Εφαρμογές γραφείου';
+					break;
 				case 'Computers- / Software  /  Security- / Operating Systems':
+					$c = 'software';
+					$sc = 'Λειτουργικά Συστήματα';
+					break;
 				case 'Computers- / Software  /  Security- / Server Software':
 					$c = 'software';
-					break;*/
+					$sc = 'Λογισμικό Server';
+					break;
 				case 'Consumables- / Inkjet Cartridges - / HP':
 					$c = 'cartridges';
 					break;
@@ -381,6 +391,7 @@ class Live_model extends CI_Model {
 	    		{
 	    			$brand = explode('- /',trim($ManufacturerList))[0];
 	    		}
+
 	    		
 	    		// IMAGE
 	    		$imageUrl = $product->Details->Images->Image[2]->attributes()->{'URL'};
@@ -420,9 +431,15 @@ class Live_model extends CI_Model {
 					'description' => $description,
 					'brand' => $brand,
 					'title' => $title,
-					'product_url' => $product_url,
+					'product_url' => (string) trim($product_url),
 					'net_price'=>$net_price
 				);
+
+				if ($c == 'software')
+				{
+					$log_product['type'] = $sc;
+					$log_product['shipping_class'] = 4644;
+				}
 
 				//2. New products for charateristics tables that load Sku module
 				//$this->AddProduct ($c, $pn, $description, $brand, $title, $product_url, $newProducts, $i, $imageUrl, 'logicom');
@@ -484,78 +501,78 @@ class Live_model extends CI_Model {
 				case 'ST / SC SingleMode':
 				case 'ST / ST MultiMode':
 					$c = 'cables';
-					$sc = 'Καλώδια Οπτικής ΄Ινας';
+					$sc = 'Οπτική ΄Ινα';
 					break;
 				case '0,25m':
 					$c = 'cables';
-					$sc = 'Καλώδια Patch';
+					$sc = 'Patch Cord';
 					$length = 0.25;
 					break;
 				case '0,50m':
 					$c = 'cables';
-					$sc = 'Καλώδια Patch';
+					$sc = 'Patch Cord';
 					$length = 0.50;
 					break;
 				case '1,00m':
 					$c = 'cables';
-					$sc = 'Καλώδια Patch';
+					$sc = 'Patch Cord';
 					$length = 1.00;
 					break;
 				case '2,00m':
 					$c = 'cables';
-					$sc = 'Καλώδια Patch';
+					$sc = 'Patch Cord';
 					$length = 2.00;
 					break;
 				case '3,00m':
 					$c = 'cables';
-					$sc = 'Καλώδια Patch';
+					$sc = 'Patch Cord';
 					$length = 3.00;
 					break;
 				case '5,00m':
 					$c = 'cables';
-					$sc = 'Καλώδια Patch';
+					$sc = 'Patch Cord';
 					$length = 5.00;
 					break;
 				case '7,50m':
 					$c = 'cables';
-					$sc = 'Καλώδια Patch';
+					$sc = 'Patch Cord';
 					$length = 7.50;
 					break;
 				case '10,00m':
 					$c = 'cables';
-					$sc = 'Καλώδια Patch';
+					$sc = 'Patch Cord';
 					$length = 10.00;
 					break;
 				case '15,00m':
 					$c = 'cables';
-					$sc = 'Καλώδια Patch';
+					$sc = 'Patch Cord';
 					$length = 15.00;
 					break;
 				case '20,00m':
 					$c = 'cables';
-					$sc = 'Καλώδια Patch';
+					$sc = 'Patch Cord';
 					$length = 20.00;
 					break;
 				case '15,00 / 20,00m':
 				case '15,00m / 20.00m / 30.00m':
 				case '30,00m / 40,00m / 50,00m':
 					$c = 'cables';
-					$sc = 'Καλώδια Patch';
+					$sc = 'Patch Cord';
 					$length = -1;
 					break;
 				case 'Cat.7 S/FTP':
 					$c = 'cables';
-					$sc = 'Καλώδια Εγκατάστασης Χαλκού';
+					$sc = 'Καλώδιο Εγκατάστασης (Κουλούρα)';
 					$cable_cat = 'Cat.7';
 					break;
 				case 'Cat..5e':
 					$c = 'cables';
-					$sc = 'Καλώδια Εγκατάστασης Χαλκού';
+					$sc = 'Καλώδιο Εγκατάστασης (Κουλούρα)';
 					$cable_cat = 'Cat.5e';
 					break;
 				case 'Cat..6/6A':
 					$c = 'cables';
-					$sc = 'Καλώδια Εγκατάστασης Χαλκού';
+					$sc = 'Καλώδιο Εγκατάστασης (Κουλούρα)';
 					$cable_cat = 'Cat.6 / 6a';
 					break;
 				case 'Cat. 3 Patch Panels / Outlet':
@@ -664,11 +681,18 @@ class Live_model extends CI_Model {
 			    		$c = 'patch_panels';
 			    }
 
+			    //Start Of Fix title
+				$trimmed_pn = ltrim($pn, "LL-");
+				$trimmed_pn = ltrim($pn, "0");
+
+				$title = ltrim($title, $trimmed_pn);
+		    	// End of Fix Title
+
 			    // Make the characteristics
 			    if ($c == 'cables' && $length < 0.1){
 
 			    	$whereIs = 0;
-			    	if ($sc =='Καλώδια Patch' && $length == -1 )
+			    	if ($sc =='Patch Cord' && $length == -1 ) //length
 				    {
 				    	if(strpos( $title, '0m '))
 				    		$whereIs = strpos( $title, '0m ')+1;
@@ -1098,6 +1122,20 @@ class Live_model extends CI_Model {
 				'supplier_product_url'=> $product['product_url'],
 				'shipping_class' => $shipping_class
 				);
+			}
+			elseif($c == 'software'){
+
+				$categoryData = array(
+				'brand'=> $product['brand'],
+				'sku'=> $sku,
+				'product_number'=> $product['product_number'],
+				'title'=> $product['title'],
+				'type'=> $product['type'],
+				'description'=> strip_tags($product['description']),
+				'supplier_product_url'=> $product['product_url'],
+				'shipping_class' => $product['shipping_class']
+				);
+
 			}
 			else
 			{
