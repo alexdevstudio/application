@@ -119,9 +119,11 @@ class Live_model extends CI_Model {
 
 				case 'Software':
 					if($sc == 'OEM ROK Server'){
+						$c = 'software';
 						$sc = 'Λογισμικό Server';
 					}
 					elseif($sc == 'Software Applications'){
+						$c = 'software';
 						$sc = 'Εφαρμογές γραφείου';
 					}
 					break;
@@ -130,9 +132,11 @@ class Live_model extends CI_Model {
 					$model = 'DSP';
 
 					if($sc == 'DSP Licensing (CAL)' || $sc == 'DSP Server Software'){
+						$c = 'software';
 						$sc = 'Λογισμικό Server';
 					}
 					elseif($sc == 'DSP Operating Systems'){
+						$c = 'software';
 						$sc = 'Λειτουργικά Συστήματα';
 					}
 					break;
@@ -192,7 +196,6 @@ class Live_model extends CI_Model {
 				$recycle_tax = str_replace(",", ".", $product->anakykl);
 				$pn = (string) trim($product->part_no);
 				$pn = ($pn == '') ? (string) trim($product->code): $pn;
-
 				$description = "";
 				$brand = (string) trim($product->brand);
 				$title = (string) trim($product->titlos);
@@ -216,8 +219,6 @@ class Live_model extends CI_Model {
 				//1. Live
 
 				if($this->checkLiveProduct($pn, $net_price)){
-
-					
 
 					$live = array(
 						'category'=>$c,
@@ -252,9 +253,20 @@ class Live_model extends CI_Model {
 					'net_price'=>$net_price
 				);
 
+				if ($c=='software')
+				{
+					$okt_product['type'] = $sc;
+					$okt_product['model'] = $model;
+					$okt_product['shipping_class'] = 4644;
+
+					if (strstr ($title,'DSP'))
+						$okt_product['model'] = 'DSP';
+					elseif(strstr ($title,'Reseller Option Kit') || strstr ($title,'ROK'))
+						$okt_product['model'] = 'ROK';
+				}
+
 				//2. New products for charateristics tables that load Sku module
 
-				
 				$insert = $this->addProduct ($okt_product, $chars_array, $f, 'oktabit');
 
 				if ($insert)
@@ -461,6 +473,17 @@ class Live_model extends CI_Model {
 				{
 					$log_product['type'] = $sc;
 					$log_product['shipping_class'] = 4644;
+					if (strstr ($title,'DSP'))
+						$log_product['model'] = 'DSP';
+					elseif(strstr ($title,'Reseller Option Kit') || strstr ($title,'ROK'))
+						$log_product['model'] = 'ROK';
+					else
+						$log_product['model'] = '';
+
+					if(strstr ($title,'INTEL'))
+					{
+						
+					}
 				}
 
 				//2. New products for charateristics tables that load Sku module
@@ -1032,10 +1055,11 @@ class Live_model extends CI_Model {
 
     		foreach ($query->result() as $row)
 				{
+					
 					$price = (float) $price;
 					// Check if product has lower price from a product already is stock and supplier = etd.
-				        
-				    if($row->net_price >= $price ){
+
+				    if($row->net_price > $price ){
 				        $this->db->where('id',$row->id);
 				        $this->db->delete('live');
 				        return true;
@@ -1153,6 +1177,7 @@ class Live_model extends CI_Model {
 				'product_number'=> $product['product_number'],
 				'title'=> $product['title'],
 				'type'=> $product['type'],
+				'model'=> $product['model'],
 				'description'=> strip_tags($product['description']),
 				'supplier_product_url'=> $product['product_url'],
 				'shipping_class' => $product['shipping_class']
