@@ -1059,7 +1059,7 @@ class Live_model extends CI_Model {
 					$price = (float) $price;
 					// Check if product has lower price from a product already is stock and supplier = etd.
 
-				    if($row->net_price > $price ){
+				    if($row->net_price >= $price ){
 				        $this->db->where('id',$row->id);
 				        $this->db->delete('live');
 				        return true;
@@ -2020,8 +2020,9 @@ class Live_model extends CI_Model {
     				
     				break;
     			case 'PreOrder':
-    				$av="Αναμονή παραλαβής";
-    				return false;
+    				//$av="Αναμονή παραλαβής";
+    				$av= false;
+    				//return false;
     				break;
     			default:
     				return false;
