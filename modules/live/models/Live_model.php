@@ -192,8 +192,8 @@ class Live_model extends CI_Model {
 				$chars_array = $this->addProductChars($c, $code, $char_xml);
 
 				//1. Live
-
-				if($this->checkLiveProduct($pn, $net_price)){
+				$supplier = 'oktabit';
+				if($this->checkLiveProduct($pn, $net_price, $supplier)){
 
 					
 
@@ -391,8 +391,8 @@ class Live_model extends CI_Model {
 	    		$product_url = $product->Details->ProductURL->attributes()->{'URL'};
 				
 				//1. Live
-
-				if($this->checkLiveProduct($pn, $net_price)){
+	    		$supplier = 'logicom';
+				if($this->checkLiveProduct($pn, $net_price, $supplier)){
 
 					$live = array(
 						'category'=>$c ,
@@ -793,8 +793,8 @@ class Live_model extends CI_Model {
 
 			    /////////////////////
 			    //1. Live
-
-				if($this->checkLiveProduct($pn, $net_price)){
+				$supplier = 'ddc';
+				if($this->checkLiveProduct($pn, $net_price, $supplier)){
 
 					$live = array(
 						'category'=>$c ,
@@ -907,8 +907,8 @@ class Live_model extends CI_Model {
 				$brand = (string) trim($product->Supplier);
 
 				//1. Live
-
-				if($this->checkLiveProduct($pn, $net_price)){
+				$supplier = 'braintrust';
+				if($this->checkLiveProduct($pn, $net_price, $supplier)){
 
 					$live = array(
 						'category'=>$c,
@@ -978,7 +978,7 @@ class Live_model extends CI_Model {
 
 
 
-    private function checkLiveProduct($pn, $price){
+    private function checkLiveProduct($pn, $price, $supplier){
 
     	$query = $this->db->get_where('live', array('product_number' => $pn), 1, 0);
 
@@ -989,7 +989,7 @@ class Live_model extends CI_Model {
 					$price = (float) $price;
 					// Check if product has lower price from a product already is stock and supplier = etd.
 				        
-				    if($row->net_price >= $price ){
+				    if($row->net_price >= $price || $row->supplier == $supplier){
 				        $this->db->where('id',$row->id);
 				        $this->db->delete('live');
 				        return true;
