@@ -50,6 +50,7 @@ class Live_model extends CI_Model {
 			set_time_limit(50);
 			//Rename categories for ETD.gr
 
+			$model='';
 			$cat = (string) trim($product->category);
 			$sc = trim((string)$product->subcategory);
 
@@ -115,6 +116,27 @@ class Live_model extends CI_Model {
 						$c = 'multifunction_printers';
 					}
 					break;
+
+				case 'Software':
+					if($sc == 'OEM ROK Server'){
+						$sc = 'Λογισμικό Server';
+					}
+					elseif($sc == 'Software Applications'){
+						$sc = 'Εφαρμογές γραφείου';
+					}
+					break;
+
+				case 'Software DSP':
+					$model = 'DSP';
+
+					if($sc == 'DSP Licensing (CAL)' || $sc == 'DSP Server Software'){
+						$sc = 'Λογισμικό Server';
+					}
+					elseif($sc == 'DSP Operating Systems'){
+						$sc = 'Λειτουργικά Συστήματα';
+					}
+					break;
+
 				case 'Servers':
 					if($sc == 'Rackmount Systems' )
 					{
