@@ -9,7 +9,7 @@ class Emails extends MX_Controller {
 	{	
 		if(!$to){
 
-			$to = "alex@etd.gr";
+			$to = "eshop@etd.gr";
 
 		}		
 				$config = Array(       
