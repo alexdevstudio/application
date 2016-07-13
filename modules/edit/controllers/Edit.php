@@ -15,13 +15,16 @@ class Edit extends MX_Controller {
 
 				if($post['status']=='delete')
 				{
-					unset ($post['status']);
+					$post['status'] = 'trash';
+					$post['delete_flag'] = 100;
+					$post['price_tax'] = NULL;
+					$post['availability'] = 0;
 					$where = array('product_number'=>$post['product_number'], 'category'=>$post['category']);
 					$exists = Modules::run('crud/get','live',$where);
 					if($exists)
 					{
 						//$update = Modules::run('crud/delete','live',$where);
-						$update = Modules::run('crud/update','live', $where, array('status'=>'trash'));
+						$update = Modules::run('crud/update','live', $where, $post);
 					}
 					else
 						echo "Το προϊόν δεν βρέθηκε στο STOCK.";
