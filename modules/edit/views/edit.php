@@ -112,6 +112,7 @@ if($itemLive){
 	 			<input class='form-control' type="hidden" name='product_number' value='<?= $pn; ?>'>
 	 			<input class='form-control' type="hidden" name='category' value='<?= $category; ?>'>
 	 			<input class='form-control' type="hidden" name='status' value='delete'>
+	 			<input class='form-control' type="hidden" name='supplier' value='out'>
 
 	 			<button type="submit" class="btn btn-block btn-danger">Aφαίρεση από STOCK</button>
 	 		</form>
