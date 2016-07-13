@@ -1050,7 +1050,10 @@ class Live_model extends CI_Model {
     	if($query->num_rows()>0){
 
     		foreach ($query->result() as $row)
-				{
+				{	
+					if($row->supplier == 'etd'){
+						return false;
+					}
 					
 					$price = (float) $price;
 					// Check if product has lower price from a product already is stock and supplier = etd.
