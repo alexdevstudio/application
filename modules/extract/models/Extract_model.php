@@ -97,16 +97,28 @@ class Extract_model extends CI_Model {
                $products = array();
                foreach ($query->result_array() as $product) {
 
+                $cat = $product['category'];
+                $supplier = $product['supplier'];
+                $pn = $product['product_number'];
+                $sku = $product['sku'];
+
                  //Price 
                     if($product['price_tax']=='' ||  $product['price_tax'] === NULL  ||  $product['price_tax'] == '0.00' ){
                       
-                        $net_price = $product['net_price'] + $product['recycle_tax'];
+                        $product['price_tax'] = $this->priceTax($product['net_price'],$product['recycle_tax']);
 
-                        $etd_price = $net_price*1.06;
+                        if($supplier=='braintrust' && $cat == 'laptops'){
+                            $msi = Modules::run("crud/get",'msi_price',array('sku'=>$sku));
+                            $msi_price = $msi->row()->price;
+                            if($msi_price!='0.00' && $msi_price!=''){
+                                $product['price_tax'] = $msi_price;
+                            }
+                            
+                        }
+                        
 
-                        $price_tax = $etd_price*1.24;
-
-                        $product['price_tax'] = number_format((float)$price_tax, 2, '.', '');
+                       
+                       
 
                     }
 
@@ -137,6 +149,8 @@ class Extract_model extends CI_Model {
                         }
                     }
                     
+
+
 
                 // Title for Skroutz and for ETD.gr
 
@@ -375,6 +389,18 @@ class Extract_model extends CI_Model {
 
             }
 
+        }
+
+
+        private function priceTax($net, $recycle)
+        {
+             $net_price = $net + $recycle;
+
+             $etd_price = $net_price*1.06;
+
+             $price_tax = $etd_price*1.24;
+
+             return number_format((float)$price_tax, 2, '.', '');
         }
 
     }

@@ -26,9 +26,12 @@ class Crud_model extends CI_Model {
         return $this->db->delete($table);
   }
 
-  public function get($category, $where){
+  public function get($category, $where=null){
 
+      if($where)
+      {
       $this->db->where($where);
+      }
         $item = $this->db->get($category);
 
         if($item->num_rows()<1){
@@ -58,6 +61,19 @@ class Crud_model extends CI_Model {
       
 
 
+    }
+
+
+    public function join($table, $join_table, $join)
+    {
+       
+      $this->db->select('*');
+      $this->db->from($table);
+      $this->db->join($join_table, $join);
+     
+      $result = $this->db->get();
+
+      return $result;
     }
 
 }

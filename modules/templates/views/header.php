@@ -386,7 +386,11 @@
               <i class="fa fa-edit"></i> <span>ΠΡΟΙΟΝ</span>
             </a>
          </li>
-        
+         <li class="">
+            <a href="<?php echo base_url();?>msi_price">
+              <i class="fa fa-laptop"></i> <span>MSI ΤΙΜΕΣ</span>
+            </a>
+         </li>
         <li class="header">LABELS</li>
         <li><a href="#"><i class="fa fa-circle-o text-red"></i> <span>Important</span></a></li>
         <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> <span>Warning</span></a></li>
@@ -418,11 +422,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Dashboard
-        <small>Control panel</small>
+        <?= $title; ?>
+        
       </h1>
       <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Dashboard</li>
+        <li><a href="#"><i class="fa fa-dashboard"></i>Αρχική</a></li>
+        <li class="active"><?= $title; ?></li>
       </ol>
     </section>

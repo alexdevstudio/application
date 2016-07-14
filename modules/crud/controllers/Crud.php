@@ -33,7 +33,7 @@ class Crud extends MX_Controller {
         return $this->crud_model->delete($table, $where);
   	}
 
-	public function get($table, $where){
+	public function get($table, $where=null){
 
     	$this->load->model('crud_model');
 		return $this->crud_model->get($table, $where);
@@ -47,7 +47,11 @@ class Crud extends MX_Controller {
 
     }
 
-
+	public function join($table, $join_table, $join)
+	{
+		$this->load->model('crud_model');
+		return $this->crud_model->join($table, $join_table, $join);
+	}
 
 }
 
