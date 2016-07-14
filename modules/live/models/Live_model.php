@@ -1051,16 +1051,16 @@ class Live_model extends CI_Model {
 
     		foreach ($query->result() as $row)
 				{
+					if( $row->supplier == 'etd'){
+						return false;
+					}
 					
 					$price = (float) $price;
 					// Check if product has lower price from a product already is stock and supplier = etd.
-<<<<<<< HEAD
 
-				    if($row->net_price >= $price ){
-=======
 				        
 				    if($row->net_price >= $price || $row->supplier == $supplier){
->>>>>>> EXPORT_FOR_ALL_IMPORT
+
 				        $this->db->where('id',$row->id);
 				        $this->db->delete('live');
 				        return true;
