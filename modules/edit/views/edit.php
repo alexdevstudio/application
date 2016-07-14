@@ -142,7 +142,7 @@ if($itemLive){
 			<input class='form-control' type="hidden" name='status' value='update'>
 			<?php 
 
-			if($key == 'description'){
+			if($key == 'description' || $key == 'bonus') {
 
 ?>
 <textarea  name="<?= $key; ?>" class="form-control edit-form-etd" value="" >
