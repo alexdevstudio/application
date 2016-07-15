@@ -69,9 +69,12 @@ class Extract_model extends CI_Model {
 //INNER JOIN images i ON t.sku = i.item_sku
         public function allImport($table){
 
+            $action = '';
+            $allProds = array();
             if($table == 'all'){
-
+                $action = 'all';
                 $tables = Modules::run('categories/fullCategoriesArray');
+                
 
             }else{
 
@@ -95,6 +98,9 @@ class Extract_model extends CI_Model {
                     ");
                $i=1;
                $products = array();
+
+               
+
                foreach ($query->result_array() as $product) {
 
                 $cat = $product['category'];
@@ -103,7 +109,7 @@ class Extract_model extends CI_Model {
                 $sku = $product['sku'];
 
                  //Price 
-                    if($product['price_tax']=='' ||  $product['price_tax'] === NULL  ||  $product['price_tax'] == '0.00' ){
+                    if($product['price_tax'] == '' ||  $product['price_tax'] === NULL  ||  $product['price_tax'] == '0.00' ){
                       
                         $product['price_tax'] = $this->priceTax($product['net_price'],$product['recycle_tax']);
 
@@ -363,6 +369,10 @@ class Extract_model extends CI_Model {
 
                 }
 
+
+                $allProds = array_merge($allProds, $products);
+
+
                 //print_r($query->result_array());
 
                 $xml->FormatOutput = true;
@@ -387,6 +397,47 @@ class Extract_model extends CI_Model {
               */
 
 
+            }
+
+            if($action == 'all'){
+                $xml = new DomDocument("1.0","UTF-8");//ISO-8859-7
+
+
+
+                $items = $xml->createElement('items');
+                $items = $xml->appendChild($items);
+
+                //$this->db->where("new_item", "1");
+                //$query = $this->db->query("SELECT * FROM $table WHERE new_item=1 ");
+                $i=0;
+                
+                
+                foreach($allProds as $product){
+
+                    
+                    $item = $xml->createElement('item');
+                    $item = $items->appendChild($item);
+
+                    foreach($product as $key => $value){
+                        if($key=='sku' || $key=='availability' || $key=='price_tax' || $key=='product_number' || $key=='status' ){
+                            $attr = $xml->createElement($key, trim(htmlspecialchars(strip_tags($value))));
+                            $attr = $item->appendChild($attr);   
+                        }
+                    }
+
+
+                }
+
+                //print_r($query->result_array());
+
+                $xml->FormatOutput = true;
+                $string_value = $xml->saveXML(); 
+
+                $file = "./files/updates/general_ALL_IMPORT.xml";
+
+                if (file_exists($file)) { unlink ($file); }
+
+                $xml->save($file);
             }
 
         }
