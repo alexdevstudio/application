@@ -168,13 +168,56 @@ class Live_model extends CI_Model {
 					{
 						$c = 'ssd';
 					}
+					/*elseif($sc == 'DVD-RW Drives' )
+					{
+						$c = 'dvd_drives';
+					}
+					elseif($sc == 'Card Reader' )
+					{
+						$c = 'card_readers';
+					}
+					elseif($sc == 'USB Memory Sticks' )
+					{
+						$c = 'flash_drives';
+					}*/
 					break;
 				case 'Cases-Peripherals':
 					if($sc == 'Combo' || $sc == 'Keyboard' || $sc == 'Mouse')
 					{
 						$c = 'keyboard_mouse';
 					}
+					/*elseif($sc == 'Power Supplies')
+					{
+						$c = 'power_supplies';
+					}
+					elseif($sc == 'PC Cases')
+					{
+						$c = 'cases';
+					}
+					elseif($sc == 'PC Cases Options')
+					{
+						$c = 'coolers';
+					}*/
 					break;
+				/*case 'Components':
+					if($sc == 'Motherboard for Intel')
+					{
+						$c = 'motherboards';
+					}
+					elseif($sc == 'VGA ATI' || $sc == 'VGA Nvidia')
+					{
+						$c = 'graphic_cards';
+					}
+					elseif($sc == 'CPU Intel')
+					{
+						$c = 'cpu';
+					}
+					elseif($sc == 'Memory Modules')
+					{
+						$c = 'memories';
+					}
+					break;
+					*/
 
 				default:
 					$c = $cat;
