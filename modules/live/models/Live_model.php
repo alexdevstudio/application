@@ -53,6 +53,7 @@ class Live_model extends CI_Model {
 			$dist_type='';
 			$cat = (string) trim($product->category);
 			$sc = trim((string)$product->subcategory);
+			$B2b_sc = trim((string)$product->B2b_subcat);
 
 			$c = $cat;
 			
@@ -116,7 +117,6 @@ class Live_model extends CI_Model {
 						$c = 'multifunction_printers';
 					}
 					break;
-
 				case 'Software':
 					if($sc == 'OEM ROK Server'){
 						$c = 'software';
@@ -127,7 +127,6 @@ class Live_model extends CI_Model {
 						$sc = 'Εφαρμογές γραφείου';
 					}
 					break;
-
 				case 'Software DSP':
 					$dist_type = 'DSP';
 
@@ -140,7 +139,6 @@ class Live_model extends CI_Model {
 						$sc = 'Λειτουργικά Συστήματα';
 					}
 					break;
-
 				case 'Servers':
 					if($sc == 'Rackmount Systems' )
 					{
@@ -170,7 +168,7 @@ class Live_model extends CI_Model {
 					}
 					/*elseif($sc == 'DVD-RW Drives' )
 					{
-						$c = 'dvd_drives';
+						$c = 'optical_drives';
 					}
 					elseif($sc == 'Card Reader' )
 					{
@@ -194,9 +192,9 @@ class Live_model extends CI_Model {
 					{
 						$c = 'cases';
 					}
-					elseif($sc == 'PC Cases Options')
+					elseif($sc == 'PC Cases Options' && $B2b_sc == 'Συστήματα Ψύξης')
 					{
-						$c = 'coolers';
+						$c = 'fans';
 					}*/
 					break;
 				/*case 'Components':
@@ -212,13 +210,11 @@ class Live_model extends CI_Model {
 					{
 						$c = 'cpu';
 					}
-					elseif($sc == 'Memory Modules')
+					elseif($sc == 'Memory Modules' )
 					{
 						$c = 'memories';
 					}
-					break;
-					*/
-
+					break;*/
 				default:
 					$c = $cat;
 					break;
@@ -306,6 +302,11 @@ class Live_model extends CI_Model {
 						$okt_product['dist_type'] = 'DSP';
 					elseif(strstr ($title,'Reseller Option Kit') || strstr ($title,'ROK'))
 						$okt_product['dist_type'] = 'ROK';
+				}
+
+				if ($c == 'memories' && $B2b_sc == 'Εξαρτήματα Servers')
+				{
+					$okt_product['description'] = 'Εξαρτήματα Servers';
 				}
 
 				//2. New products for charateristics tables that load Sku module
@@ -2005,6 +2006,661 @@ class Live_model extends CI_Model {
 			}
 			return $chars_array;
 		}
+		else if ($category == 'optical_drives')
+		{
+			$chars_array = array(
+				'device' => "",
+				'type' => "",
+				'connection' => "",
+				'write_speed' => "",
+				'read_speed' => "",
+				'color' => ""
+				);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					switch ($chars_title) {
+						case 'Συσκευή':
+							$chars_array['device'] = $chars_value;
+							break;
+						case 'Τύπος':
+							$chars_array['type'] = $chars_value;
+							break;
+						case 'Σύνδεση':
+							$chars_array['connection'] = $chars_value;
+							break;
+						case 'Ταχύτητα εγγραφής':
+							$chars_array['write_speed'] = $chars_value;
+							break;
+						case 'Ταχύτητα ανάγνωσης':
+							$chars_array['read_speed'] = $chars_value;
+							break;
+						case 'Χρώμα':
+							$chars_array['color'] = $chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					continue;
+				}
+			}
+			return $chars_array;
+		}
+		else if ($category == 'card_readers')
+		{
+			$chars_array = array(
+				'device_type' => "",
+				'card_types' => ""
+				);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					switch ($chars_title) {
+						case 'Τύπος συσκευής':
+							$chars_array['device_type'] = $chars_value;
+							break;
+						case 'Υποστήριξη τύπων μνήμης':
+							$chars_array['card_types'] = $chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					continue;
+				}
+			}
+			return $chars_array;
+		}
+		else if ($category == 'flash_drives')
+		{
+			$chars_array = array(
+				'capacity' => "",
+				'connection' => "",
+				'security' => "",
+				'read_speed' => "",
+				'write_speed' => "",
+				'color' => "",
+				'closing_type' => ""
+				);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					switch ($chars_title) {
+						case 'Χωρητικότητα':
+							$chars_array['capacity'] = $chars_value;
+							break;
+						case 'Σύνδεση':
+							$chars_array['connection'] = $chars_value;
+							break;
+						case 'Ασφάλεια':
+							$chars_array['security'] = $chars_value;
+							break;
+						case 'Ταχύτητα ανάγνωσης (MB/sec)':
+							$chars_array['read_speed'] = $chars_value;
+							break;
+						case 'Ταχύτητα εγγραφής (MB/sec)':
+							$chars_array['write_speed'] = $chars_value;
+							break;
+						case 'Χρώμα':
+							$chars_array['color'] = $chars_value;
+							break;
+						case 'Τύπος κλεισίματος':
+							$chars_array['closing_type'] = $chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					continue;
+				}
+			}
+			return $chars_array;
+		}
+		else if ($category == 'power_supplies')
+		{
+			$chars_array = array(
+				'type' => "",
+				'power' => "",
+				'energy_efficiency' => "",
+				'fan_size' => "",
+				'output_connectors' => "",
+				'pfc' => "",
+				'dimensions' => ""
+				);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					switch ($chars_title) {
+						case 'Τύπος':
+							$chars_array['type'] = $chars_value;
+							break;
+						case 'Ισχύς (Watt)':
+							$chars_array['power'] = $chars_value;
+							break;
+						case 'Energy-Efficient':
+							$chars_array['energy_efficiency'] = $chars_value;
+							break;
+						case 'Ανεμιστήρας':
+							$chars_array['fan_size'] = $chars_value;
+							break;
+						case 'Υποδοχές εξόδου':
+							$chars_array['output_connectors'] = $chars_value;
+							break;
+						case 'PFC':
+							$chars_array['pfc'] = $chars_value;
+							break;
+						case 'Διαστάσεις (πλάτος x ύψος x βάθος, σε mm)': 
+							$chars_array['dimensions'] = $chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					continue;
+				}
+			}
+			return $chars_array;
+		}
+		else if ($category == 'cases')
+		{
+			$chars_array = array(
+				'type' => "",
+				'motherboard_size' => "",
+				'color' => "",
+				'external_5_25' => "",
+				'external_3_5' => "",
+				'internal_5_25' => "",
+				'internal_3_5' => "",
+				'hdd_dock' => "",
+				'installed_fans' => "",
+				'side_window' => "",
+				'dimensions' => "",
+				'weight' => "",
+				'power_supply' => ""
+				);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					switch ($chars_title) {
+						case 'Τύπος':
+							$chars_array['type'] = $chars_value;
+							break;
+						case 'Υποστήριξη μητρικής':
+							$chars_array['motherboard_size'] = $chars_value;
+							break;
+						case 'Χρώμα':
+							$chars_array['color'] = $chars_value;
+							break;
+						case 'Εξωτερικές Θέσεις 5,25"':
+							$chars_array['external_5_25'] = $chars_value;
+							break;
+						case 'Εξωτερικές Θέσεις 3,5"':
+							$chars_array['external_3_5'] = $chars_value;
+							break;
+						case 'Εσωτερικές Θέσεις 3,5"':
+							$chars_array['internal_5_25'] = $chars_value;
+							break;
+						case 'Εσωτερικές Θέσεις 2,5"':
+							$chars_array['internal_3_5'] = $chars_value;
+							break;
+						case 'Docking σκληρού δίσκου':
+							$chars_array['hdd_dock'] = $chars_value;
+							break;
+						case 'Εγκατεστημένοι ανεμιστήρες':
+							$chars_array['installed_fans'] = $chars_value;
+							break;
+						case 'Πλαϊνό Παράθυρο':
+							$chars_array['side_window'] = $chars_value;
+							break;
+						case 'Διαστάσεις (πλάτος x ύψος x βάθος, σε mm)':
+							$chars_array['dimensions'] = $chars_value;
+							break;
+						case 'Βάρος (κιλά)':
+							$chars_array['weight'] = $chars_value;
+							break;
+						case 'Τροφοδοτικό':
+							$chars_array['power_supply'] = $chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					continue;
+				}
+			}
+			return $chars_array;
+		}
+		else if ($category == 'fans')
+		{
+			$chars_array = array(
+				'heat_sink_type' => "",
+				'fan_diameter' => "",
+				'fan_number' => "",
+				'compatibility' => "",
+				'dimensions' => ""
+				);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					switch ($chars_title) {
+						case 'Τύπος Ψύκτρας':
+							$chars_array['heat_sink_type'] = $chars_value;
+							break;
+						case 'Μέγεθος ανεμιστήρα (mm)':
+							$chars_array['fan_diameter'] = $chars_value;
+							break;
+						case 'Αριθμός ανεμιστήρων':
+							$chars_array['fan_number'] = $chars_value;
+							break;
+						case 'Συμβατότητα':
+							$chars_array['compatibility'] = $chars_value;
+							break;
+						case 'Διαστάσεις (μήκος x πλάτος x ύψος, σε mm)':
+							$chars_array['dimensions'] = $chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					continue;
+				}
+			}
+			return $chars_array;
+		}
+		else if ($category == 'motherboards')
+		{
+			$chars_array = array(
+				'cpu_brand' => "",
+				'socket' => "",
+				'chipset' => "",
+				'integrated_cpu' => "",
+				'type' => "",
+				'ram_type' => "",
+				'max_ram' => "",
+				'integrated_graphics' => "",
+				'crossfire_x' => "",
+				'sli' => "",
+				'sound' => "",
+				'sata_2' => "",
+				'sata_3' => "",
+				'raid' => "",
+				'pci_express_x8_16' => "",
+				'pci_express_x1_4' => "",
+				'pci' => "",
+				'usb_2' => "",
+				'usb_3' => "",
+				'usb_3_1' => "",
+				'firewire' => "",
+				'e_sata' => "",
+				'network' => "",
+				'serial' => "",
+				'parallel' => ""
+				);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					switch ($chars_title) {
+						case 'Κατασκευαστής επεξεργαστή':
+							$chars_array['cpu_brand'] = $chars_value;
+							break;						
+						case 'Socket':
+							$chars_array['socket'] = $chars_value;
+							break;						
+						case 'Chipset':
+							$chars_array['chipset'] = $chars_value;
+							break;						
+						case 'Ενσωματωμένος επεξεργαστής':
+							$chars_array['integrated_cpu'] = $chars_value;
+							break;						
+						case 'Τύπος μητρικής':
+							$chars_array['type'] = $chars_value;
+							break;						
+						case 'Υποστηριζόμενη μνήμη':
+							$chars_array['ram_type'] = $chars_value;
+							break;						
+						case 'Μέγιστο μέγεθος μνήμης':
+							$chars_array['max_ram'] = $chars_value;
+							break;						
+						case 'Ενσωματωμένη κάρτα γραφικών':
+							$chars_array['integrated_graphics'] = $chars_value;
+							break;						
+						case 'Υποστήριξη CrossfireX ':
+							$chars_array['crossfire_x'] = $chars_value;
+							break;						
+						case 'Υποστήριξη SLI':
+							$chars_array['sli'] = $chars_value;
+							break;						
+						case 'Ήχος':
+							$chars_array['sound'] = $chars_value;
+							break;						
+						case 'SATA 3Gb/s':
+							$chars_array['sata_2'] = $chars_value;
+							break;						
+						case 'SATA 6Gb/s':
+							$chars_array['sata_3'] = $chars_value;
+							break;						
+						case 'Raid':
+							$chars_array['raid'] = $chars_value;
+							break;						
+						case 'PCI Express (x16, x8)':
+							$chars_array['pci_express_x8_16'] = $chars_value;
+							break;						
+						case 'PCI Express (x1, x4)':
+							$chars_array['pci_express_x1_4'] = $chars_value;
+							break;						
+						case 'PCI':
+							$chars_array['pci'] = $chars_value;
+							break;						
+						case 'USB 2.0':
+							$chars_array['usb_2'] = $chars_value;
+							break;						
+						case 'USB 3.0':
+							$chars_array['usb_3'] = $chars_value;
+							break;						
+						case 'USB 3.1':
+							$chars_array['usb_3_1'] = $chars_value;
+							break;						
+						case 'Firewire':
+							$chars_array['firewire'] = $chars_value;
+							break;						
+						case 'eSATA':
+							$chars_array['e_sata'] = $chars_value;
+							break;						
+						case 'Δίκτυο':
+							$chars_array['network'] = $chars_value;
+							break;						
+						case 'Σειριακή θύρα':
+							$chars_array['serial'] = $chars_value;
+							break;						
+						case 'Παράλληλη θύρα':
+							$chars_array['parallel'] = $chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					continue;
+				}
+			}
+			return $chars_array;
+		}
+		else if ($category == 'graphic_cards')
+		{
+			$chars_array = array(
+				'chip_brand' => "",
+				'gpu' => "",
+				'core_frequency' => "",
+				'manufacturer_technology' => "",
+				'ram_size' => "",
+				'ram_type' => "",
+				'ram_frequency' => "",
+				'ram_channel' => "",
+				'connection' => "",
+				'direct_x' => "",
+				'output_ports' =>""
+				);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					switch ($chars_title) {
+						case 'Κατασκευαστής chip':
+							$chars_array['chip_brand'] = $chars_value;
+							break;
+						case 'Επεξεργαστής γραφικών':
+							$chars_array['gpu'] = $chars_value;
+							break;
+						case 'Συχνότητα πυρήνα (MHz)':
+							$chars_array['core_frequency'] = $chars_value;
+							break;
+						case 'Τεχνολογία κατασκευής':
+							$chars_array['manufacturer_technology'] = $chars_value;
+							break;
+						case 'Μέγεθος μνήμης		':
+							$chars_array['ram_size'] = $chars_value;
+							break;
+						case 'Τύπος μνήμης		':
+							$chars_array['ram_type'] = $chars_value;
+							break;
+						case 'Συχνότητα μνήμης (MHz)':
+							$chars_array['ram_frequency'] = $chars_value;
+							break;
+						case 'Δίαυλος μνήμης':
+							$chars_array['ram_channel'] = $chars_value;
+							break;
+						case 'Σύνδεση':					
+							$chars_array['connection'] = $chars_value;
+							break;
+						case 'DirectX':					
+							$chars_array['direct_x'] = $chars_value;
+							break;
+						case 'Θύρες εξόδου':
+							$chars_array['output_ports'] = $chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					continue;
+				}
+			}
+			return $chars_array;
+		}
+		else if ($category == 'cpu')
+		{
+			$chars_array = array(
+				'family' => "",
+				'cpu_model' => "",
+				'frequency' => "",
+				'turbo_core' => "",
+				'turbo_boost' => "",
+				'socket' => "",
+				'thermal_design_power' => "",
+				'cache' => "",
+				'construction_technology' => "",
+				'core_num' => "",
+				'threads' => "",
+				'integrated_graphic' => "",
+				'heat_sink' => "",
+				'packaging' => ""
+				);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					switch ($chars_title) {
+						case 'Οικογένεια επεξεργαστή':
+							$chars_array['family'] = $chars_value;
+							break;
+						case 'Μοντέλο επεξεργαστή':
+							$chars_array['cpu_model'] = $chars_value;
+							break;
+						case 'Συχνότητα':
+							$chars_array['frequency'] = $chars_value;
+							break;
+						case 'Turbo Core':
+							$chars_array['turbo_core'] = $chars_value;
+							break;
+						case 'Turbo Boost':
+							$chars_array['turbo_boost'] = $chars_value;
+							break;
+						case 'Socket':
+							$chars_array['socket'] = $chars_value;
+							break;
+						case 'Thermal Design Power':
+							$chars_array['thermal_design_power'] = $chars_value;
+							break;
+						case 'Συνολική Μνήμη Cache (L2 + L3)':
+							$chars_array['cache'] = $chars_value;
+							break;
+						case 'Τεχνολογία κατασκευής':
+							$chars_array['construction_technology'] = $chars_value;
+							break;
+						case 'Αριθμός πυρήνων':
+							$chars_array['core_num'] = $chars_value;
+							break;
+						case 'Threads':
+							$chars_array['threads'] = $chars_value;
+							break;
+						case 'Ενσωματωμένη κάρτα/chip γραφικών':
+							$chars_array['integrated_graphic'] = $chars_value;
+							break;
+						case 'Ψύκτρα':
+							$chars_array['heat_sink'] = $chars_value;
+							break;
+						case 'Συσκευασία':
+							$chars_array['packaging'] = $chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					continue;
+				}
+			}
+			return $chars_array;
+		}
+		else if ($category == 'memories')
+		{
+			$chars_array = array(
+				'type' => "",
+				'capacity' => "",
+				'quantity' => "",
+				'frequency' => "",
+				'cas_latency' => "",
+				'voltage' => ""
+				);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					switch ($chars_title) {
+						case 'Τύπος μνήμης':
+							$chars_array['type'] = $chars_value;
+							break;
+						case 'Χωρητικότητα μνήμης':
+							$chars_array['capacity'] = $chars_value;
+							break;
+						case 'Τεμάχια':
+							$chars_array['quantity'] = $chars_value;
+							break;
+						case 'Συχνότητα λειτουργίας':
+							$chars_array['frequency'] = $chars_value;
+							break;
+						case 'CAS Latency':
+							$chars_array['cas_latency'] = $chars_value;
+							break;
+						case 'Τάση λειτουργίας':
+							$chars_array['voltage'] = $chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					continue;
+				}
+			}
+			return $chars_array;
+		}
+
 		/////////////
 
     }
