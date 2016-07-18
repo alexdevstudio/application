@@ -43,8 +43,8 @@ class Categories extends MX_Controller {
     }
 
     public function fullCategoriesArray(){
-    	$array = array('cables','carrying_cases','cartridges','desktops','external_hard_drives','keyboard_mouse','laptops','monitors','multifunction_printers','patch_panels','power_bank','printers','racks','routers','sata_hard_drives',
-    		'servers','smartphones','speakers','ssd','switches','software','tablets','toners', 'ups');
+    	$array = array('cables','card_readers','carrying_cases','cartridges','cases','cpu','desktops','external_hard_drives','fans','flash_drives','graphic_cards','keyboard_mouse','laptops','memories','monitors','motherboards','multifunction_printers','optical_drives','patch_panels','power_bank','printers','racks','routers','sata_hard_drives',
+    		'servers','smartphones','software','speakers','ssd','switches','tablets','toners', 'ups');
 
     	return $array;
     }
