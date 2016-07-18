@@ -166,7 +166,7 @@ class Live_model extends CI_Model {
 					{
 						$c = 'ssd';
 					}
-					/*elseif($sc == 'DVD-RW Drives' )
+					elseif($sc == 'DVD-RW Drives' )
 					{
 						$c = 'optical_drives';
 					}
@@ -177,14 +177,14 @@ class Live_model extends CI_Model {
 					elseif($sc == 'USB Memory Sticks' )
 					{
 						$c = 'flash_drives';
-					}*/
+					}
 					break;
 				case 'Cases-Peripherals':
 					if($sc == 'Combo' || $sc == 'Keyboard' || $sc == 'Mouse')
 					{
 						$c = 'keyboard_mouse';
 					}
-					/*elseif($sc == 'Power Supplies')
+					elseif($sc == 'Power Supplies')
 					{
 						$c = 'power_supplies';
 					}
@@ -195,9 +195,9 @@ class Live_model extends CI_Model {
 					elseif($sc == 'PC Cases Options' && $B2b_sc == 'Συστήματα Ψύξης')
 					{
 						$c = 'fans';
-					}*/
+					}
 					break;
-				/*case 'Components':
+				case 'Components':
 					if($sc == 'Motherboard for Intel')
 					{
 						$c = 'motherboards';
@@ -214,7 +214,7 @@ class Live_model extends CI_Model {
 					{
 						$c = 'memories';
 					}
-					break;*/
+					break;
 				default:
 					$c = $cat;
 					break;
@@ -1240,7 +1240,9 @@ class Live_model extends CI_Model {
 				 $c == "sata_hard_drives" || $c == "ssd" || $c == "speakers" || 
 				 $c == "power_banks" || $c == "keyboard_mouse"  || 
 				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c == "tablets"  || $c == "smartphones" ||
-				 $c == "cables" || $c == "patch_panels" || $c == "racks")		
+				 $c == "cables" || $c == "patch_panels" || $c == "racks" || $c =="optical_drives" || $c == "card_readers" || $c == "flash_drives" || 
+				 $c == "power_supplies" || $c == "cases" || $c == "fans" || $c == "motherboards" || $c == "graphic_cards" || $c == "cpu" || 
+				 $c == "memories")		
 				$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
 
 
@@ -2393,11 +2395,23 @@ class Live_model extends CI_Model {
 						case 'Ενσωματωμένη κάρτα γραφικών':
 							$chars_array['integrated_graphics'] = $chars_value;
 							break;						
-						case 'Υποστήριξη CrossfireX ':
-							$chars_array['crossfire_x'] = $chars_value;
-							break;						
-						case 'Υποστήριξη SLI':
-							$chars_array['sli'] = $chars_value;
+						case 'Υποστήριξη CrossfireX / SLI':
+
+							if($whereIs = strpos( $chars_value, '/'))
+							{
+								$etd_crossfire_x = trim(substr($chars_value, 0, $whereIs));
+								$etd_sli = trim(substr($chars_value, $whereIs+1, strlen($chars_value)));
+
+								if($etd_crossfire_x == 'No')
+									$chars_array['crossfire_x'] = 'ΟΧΙ';
+								elseif($etd_crossfire_x == 'Yes')
+									$chars_array['crossfire_x'] = 'ΝΑΙ';
+
+								if($etd_sli == 'No')
+									$chars_array['sli'] = 'ΟΧΙ';
+								elseif($etd_sli == 'Yes')
+									$chars_array['sli'] = 'ΝΑΙ';
+							}
 							break;						
 						case 'Ήχος':
 							$chars_array['sound'] = $chars_value;
@@ -2429,21 +2443,47 @@ class Live_model extends CI_Model {
 						case 'USB 3.1':
 							$chars_array['usb_3_1'] = $chars_value;
 							break;						
-						case 'Firewire':
-							$chars_array['firewire'] = $chars_value;
-							break;						
-						case 'eSATA':
-							$chars_array['e_sata'] = $chars_value;
+						case 'Firewire / eSATA':
+
+							if($whereIs = strpos( $chars_value, '/'))
+							{
+								$etd_firewire = trim(substr($chars_value, 0, $whereIs));
+								$etd_e_sata = trim(substr($chars_value, $whereIs+1, strlen($chars_value)));
+
+								if($etd_firewire == 'No')
+									$chars_array['firewire'] = 'ΟΧΙ';
+								elseif($etd_crossfire_x == 'Yes')
+									$chars_array['firewire'] = 'ΝΑΙ';
+
+								if($etd_e_sata == 'No')
+									$chars_array['e_sata'] = 'ΟΧΙ';
+								elseif($etd_e_sata == 'Yes')
+									$chars_array['e_sata'] = 'ΝΑΙ';
+							}
+
 							break;						
 						case 'Δίκτυο':
 							$chars_array['network'] = $chars_value;
 							break;						
-						case 'Σειριακή θύρα':
-							$chars_array['serial'] = $chars_value;
+						case 'Σειριακή θύρα / Παράλληλη θύρα':
+
+							if($whereIs = strpos( $chars_value, '/'))
+							{
+								$etd_serial = trim(substr($chars_value, 0, $whereIs));
+								$etd_parallel = trim(substr($chars_value, $whereIs+1, strlen($chars_value)));
+
+								if($etd_serial == 'No')
+									$chars_array['serial'] = 'ΟΧΙ';
+								elseif($etd_serial == 'Yes')
+									$chars_array['serial'] = 'ΝΑΙ';
+
+								if($etd_parallel == 'No')
+									$chars_array['parallel'] = 'ΟΧΙ';
+								elseif($etd_parallel == 'Yes')
+									$chars_array['parallel'] = 'ΝΑΙ';
+							}
+
 							break;						
-						case 'Παράλληλη θύρα':
-							$chars_array['parallel'] = $chars_value;
-							break;
 						default :
 
 							break;
@@ -2494,10 +2534,10 @@ class Live_model extends CI_Model {
 						case 'Τεχνολογία κατασκευής':
 							$chars_array['manufacturer_technology'] = $chars_value;
 							break;
-						case 'Μέγεθος μνήμης		':
+						case 'Μέγεθος μνήμης':
 							$chars_array['ram_size'] = $chars_value;
 							break;
-						case 'Τύπος μνήμης		':
+						case 'Τύπος μνήμης':
 							$chars_array['ram_type'] = $chars_value;
 							break;
 						case 'Συχνότητα μνήμης (MHz)':
