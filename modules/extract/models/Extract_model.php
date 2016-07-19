@@ -177,7 +177,8 @@ class Extract_model extends CI_Model {
 
                         if ($bonus != '')
                         {
-                            $description = '<span style="color: red;">'.$bonus.'</span><br/>'.$description;
+                            $description = "<div style='color: red;'>".$bonus."</div><div>".$description."</div>";
+
                             $product['description'] = $description;
                         }
 
@@ -370,7 +371,7 @@ class Extract_model extends CI_Model {
                     foreach($product as $key => $value){
                         if($key!='id' && $key!='new_item' ){
 
-                            if($key=='description' && $table =='laptops') // for insert the description without stip_tags
+                            if($key == 'description' && $table == 'laptops')// for insert the description without stip_tags
                                 $attr = $xml->createElement($key, trim(htmlspecialchars($value)));
                             else
                                 $attr = $xml->createElement($key, trim(htmlspecialchars(strip_tags($value))));
