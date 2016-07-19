@@ -369,7 +369,12 @@ class Extract_model extends CI_Model {
 
                     foreach($product as $key => $value){
                         if($key!='id' && $key!='new_item' ){
-                            $attr = $xml->createElement($key, trim(htmlspecialchars(strip_tags($value))));
+
+                            if($key == 'description' && $table == 'laptops')
+                                $attr = $xml->createElement($key, trim(htmlspecialchars($value)));
+                            else
+                                $attr = $xml->createElement($key, trim(htmlspecialchars(strip_tags($value))));
+
                             $attr = $item->appendChild($attr);   
                         }
                     }
