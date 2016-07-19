@@ -177,7 +177,7 @@ class Extract_model extends CI_Model {
 
                         if ($bonus != '')
                         {
-                            $description = "<div style='color: red;'>".$bonus."</div><div>".$description."</div>";
+                            $description = "<div style='color: red;'>ΔΩΡΟ: ".$bonus."</div><div>".$description."</div>";
 
                             $product['description'] = $description;
                         }
