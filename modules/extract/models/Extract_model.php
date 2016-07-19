@@ -172,6 +172,15 @@ class Extract_model extends CI_Model {
                         $color = str_replace(' ','',$product['color']); 
                         $model = trim($product['model']);
                         $pn = str_replace(' ','',$product['product_number']);
+                        $description = trim(strip_tags($product['description']));
+                        $bonus = trim(strip_tags($product['bonus']));
+
+                        if ($bonus == '')
+                        {
+                            $bonus = '<span style="color: red;">'.$bonus.'</span>';
+                            $description = $bonus.'<br/>'.$description;
+                            $product['description'] = $description;
+                        }
 
                         if($color=='')
                             $color=" ";
