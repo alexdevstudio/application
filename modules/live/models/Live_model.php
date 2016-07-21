@@ -1771,7 +1771,10 @@ class Live_model extends CI_Model {
 							$chars_array['colour']=$chars_value;
 							break;
 						case 'Βάρος (γραμμάρια)':
-							$chars_array['weight']=(string)$chars_value.' gr.';
+							if($chars_value != '')
+								$chars_array['weight']=(string)$chars_value.' gr.';
+							else
+								$chars_array['weight']=$chars_value;
 							break;
 						case 'Εγγύηση (μήνες)':
 							if($chars_value/12 >=1)
