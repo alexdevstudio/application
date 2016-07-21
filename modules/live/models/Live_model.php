@@ -1302,7 +1302,7 @@ class Live_model extends CI_Model {
 				$this->db->set('shipping_class',$shipping_class);
 				$this->db->where('sku',$sku);
 				$this->db->update($c);
-			}	
+			}
     	}
     	return $insert;
     }

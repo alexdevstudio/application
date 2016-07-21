@@ -33,8 +33,6 @@ class Images_model extends CI_Model {
 
 			$newFileName = $brand.'_'.$pn.''.$tail;
 			
-			$newFileName = $brand.'_'.$pn.''.$tail;
-			
 		    $target_path = './images/'.$sku.'/'.$newFileName.'.jpg';
 			
 			
