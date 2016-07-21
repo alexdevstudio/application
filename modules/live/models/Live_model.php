@@ -1162,27 +1162,24 @@ class Live_model extends CI_Model {
 
 				
 		// Only For Update
+/*
+		
+		if($c == "power_bank" || $c == "routers" ||$c == "switches" ||$c == "speakers" ||$c == "external_hard_drives" ||$c == "sata_hard_drives" ||$c == "ssd" ||$c == "keyboard_mouse" ||$c == "optical_drives" ||$c == "card_readers" ||$c == "flash_drives" ||$c == "power_supplies" ||$c == "cases" ||$c == "fans" ||$c == "motherboards" ||$c == "graphic_cards" ||$c == "cpu" ||$c == "memories")
 
-		/*
-		if($c == "carrying_cases" || $c == "external_hard_drives" ||
-				 $c == "sata_hard_drives" || $c == "ssd" || $c == "speakers" || 
-				 $c == "power_banks" || $c == "keyboard_mouse"  || 
-				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c == "tablets"  || $c == "smartphones" )
 		{
 			
-		if(!$chars_array){
+			if(!$chars_array){
 			$chars_array=array();
-}
+			}
 
 
-			$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
-			$chars_array = array_merge($chars_array, array("shipping_class"=>$shipping_class));
-			$chars_array = array_merge($chars_array, array("description"=>$product['description']));
+			//$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
+			//$chars_array = array_merge($chars_array, array("shipping_class"=>$shipping_class));
+			//$chars_array = array_merge($chars_array, array("description"=>$product['description']));
 			$this->updateProduct($c, $chars_array, $product['product_number']);
 			
-		}
-		*/
-		// End Only for Update
+		}*/
+				// End Only for Update
 		
 		$newSku = Modules::run('sku/checkSku',$skuArray);
 		$sku = $newSku['sku'];
@@ -1471,6 +1468,11 @@ class Live_model extends CI_Model {
 					$chars_title = (string) trim($chars->atribute[0]);
 					$chars_value = (string) trim($chars->value[0]);
 
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
+
 					switch ($chars_title) {
 						case 'Χωρητικότητα Μπαταρίας':
 							$chars_array['battery_capacity']=$chars_value;
@@ -1485,7 +1487,15 @@ class Live_model extends CI_Model {
 							$chars_array['dimensions']=$chars_value;
 							break;
 						case 'Εγγύηση (μήνες)':
-							$chars_array['warranty']=$chars_value;
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
 							break;
 						default :
 
@@ -1521,6 +1531,10 @@ class Live_model extends CI_Model {
 					$is_found = true;
 					$chars_title = (string) trim($chars->atribute[0]);
 					$chars_value = (string) trim($chars->value[0]);
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
 
 					switch ($chars_title) {
 						case 'Τύπος':
@@ -1548,7 +1562,15 @@ class Live_model extends CI_Model {
 							$chars_array['removable_antenna']=$chars_value;
 							break;
 						case 'Εγγύηση (μήνες)':
-							$chars_array['warranty']=$chars_value;
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
 							break;
 						default :
 
@@ -1584,6 +1606,11 @@ class Live_model extends CI_Model {
 					$chars_title = (string) trim($chars->atribute[0]);
 					$chars_value = (string) trim($chars->value[0]);
 
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
+
 					switch ($chars_title) {
 						case 'Θύρες':
 							$chars_array['ports']=$chars_value;
@@ -1607,7 +1634,15 @@ class Live_model extends CI_Model {
 							$chars_array['rackmount']=$chars_value;
 							break;
 						case 'Εγγύηση (μήνες)':
-							$chars_array['warranty']=$chars_value;
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
 							break;
 						default :
 
@@ -1641,6 +1676,12 @@ class Live_model extends CI_Model {
 					$chars_title = (string) trim($chars->atribute[0]);
 					$chars_value = (string) trim($chars->value[0]);
 
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
+
+
 					switch ($chars_title) {
 						case 'Τύπος ηχείων':
 							$chars_array['type']=$chars_value;
@@ -1658,7 +1699,15 @@ class Live_model extends CI_Model {
 							$chars_array['input']=$chars_value;
 							break;
 						case 'Εγγύηση (μήνες)':
-							$chars_array['warranty']=$chars_value;
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
 							break;
 						default :
 
@@ -1694,6 +1743,14 @@ class Live_model extends CI_Model {
 					$chars_title = (string) trim($chars->atribute[0]);
 					$chars_value = (string) trim($chars->value[0]);
 
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
+
+					if (strpos($chars_value, '"'))
+						$chars_value = str_replace('"', '', $chars_value);
+
 					switch ($chars_title) {
 						case 'Χωρητικότητα':
 							$chars_array['capacity']=$chars_value;
@@ -1714,10 +1771,18 @@ class Live_model extends CI_Model {
 							$chars_array['colour']=$chars_value;
 							break;
 						case 'Βάρος (γραμμάρια)':
-							$chars_array['weight']=$chars_value;
+							$chars_array['weight']=(string)$chars_value.' gr.';
 							break;
 						case 'Εγγύηση (μήνες)':
-							$chars_array['warranty']=$chars_value;
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
 							break;
 						default :
 
@@ -1753,6 +1818,14 @@ class Live_model extends CI_Model {
 					$chars_title = (string) trim($chars->atribute[0]);
 					$chars_value = (string) trim($chars->value[0]);
 
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
+
+					if (strpos($chars_value, '"'))
+						$chars_value = str_replace('"', '', $chars_value);
+
 					switch ($chars_title) {
 						case 'Χωρητικότητα':
 							$chars_array['capacity']=$chars_value;
@@ -1773,7 +1846,15 @@ class Live_model extends CI_Model {
 							$chars_array['packaging']=$chars_value;
 							break;
 						case 'Εγγύηση (μήνες)':
-							$chars_array['warranty']=$chars_value;
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
 							break;
 						default :
 
@@ -1811,6 +1892,14 @@ class Live_model extends CI_Model {
 					$chars_title = (string) trim($chars->atribute[0]);
 					$chars_value = (string) trim($chars->value[0]);
 
+					if (strpos($chars_value, '"'))
+						$chars_value = str_replace('"', '', $chars_value);
+
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
+
 					switch ($chars_title) {
 						case 'Χωρητικότητα (Από εώς)':
 							$chars_array['capacity_from_to']=$chars_value;
@@ -1840,7 +1929,15 @@ class Live_model extends CI_Model {
 							$chars_array['packaging']=$chars_value;
 							break;
 						case 'Εγγύηση (μήνες)':
-							$chars_array['warranty']=$chars_value;
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
 							break;
 						default :
 
@@ -1878,6 +1975,11 @@ class Live_model extends CI_Model {
 					$chars_title = (string) trim($chars->atribute[0]);
 					$chars_value = (string) trim($chars->value[0]);
 
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
+
 					switch ($chars_title) {
 						case 'Τύπος συσκευής':
 							$chars_array['type']=$chars_value;
@@ -1907,7 +2009,15 @@ class Live_model extends CI_Model {
 							$chars_array['multimedia_buttons']=$chars_value;
 							break;
 						case 'Εγγύηση (μήνες)':
-							$chars_array['warranty']=$chars_value;
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
 							break;
 						default :
 
@@ -1954,6 +2064,11 @@ class Live_model extends CI_Model {
 					$chars_title = (string) trim($chars->atribute[0]);
 					$chars_value = (string) trim($chars->value[0]);
 
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
+
 					switch ($chars_title) {
 						case 'Τύπος θήκης':
 							$chars_array['form_factor'] = $chars_value;
@@ -1992,7 +2107,15 @@ class Live_model extends CI_Model {
 							$chars_array['power_supply']=$chars_value;
 							break;
 						case 'Εγγύηση (μήνες)':
-							$chars_array['year_warranty']=(string)($chars_value/60).' έτη';
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['year_warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['year_warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['year_warranty'] = $chars_value;
 							break;
 						case 'Τύπος εγγύησης':
 							$chars_array['warranty']=$chars_value;
@@ -2016,7 +2139,8 @@ class Live_model extends CI_Model {
 				'connection' => "",
 				'write_speed' => "",
 				'read_speed' => "",
-				'color' => ""
+				'color' => "",
+				'warranty' => ""
 				);
 
 			foreach($char_xml->children() as $chars){
@@ -2028,6 +2152,11 @@ class Live_model extends CI_Model {
 					$is_found = true;
 					$chars_title = (string) trim($chars->atribute[0]);
 					$chars_value = (string) trim($chars->value[0]);
+
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
 
 					switch ($chars_title) {
 						case 'Συσκευή':
@@ -2048,6 +2177,17 @@ class Live_model extends CI_Model {
 						case 'Χρώμα':
 							$chars_array['color'] = $chars_value;
 							break;
+						case 'Εγγύηση (μήνες)':
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
+							break;
 						default :
 
 							break;
@@ -2063,7 +2203,8 @@ class Live_model extends CI_Model {
 		{
 			$chars_array = array(
 				'device_type' => "",
-				'card_types' => ""
+				'card_types' => "",
+				'warranty' => ""
 				);
 
 			foreach($char_xml->children() as $chars){
@@ -2076,12 +2217,28 @@ class Live_model extends CI_Model {
 					$chars_title = (string) trim($chars->atribute[0]);
 					$chars_value = (string) trim($chars->value[0]);
 
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
+
 					switch ($chars_title) {
 						case 'Τύπος συσκευής':
 							$chars_array['device_type'] = $chars_value;
 							break;
 						case 'Υποστήριξη τύπων μνήμης':
 							$chars_array['card_types'] = $chars_value;
+							break;
+						case 'Εγγύηση (μήνες)':
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
 							break;
 						default :
 
@@ -2103,7 +2260,8 @@ class Live_model extends CI_Model {
 				'read_speed' => "",
 				'write_speed' => "",
 				'color' => "",
-				'closing_type' => ""
+				'closing_type' => "",
+				'warranty' => ""
 				);
 
 			foreach($char_xml->children() as $chars){
@@ -2115,6 +2273,11 @@ class Live_model extends CI_Model {
 					$is_found = true;
 					$chars_title = (string) trim($chars->atribute[0]);
 					$chars_value = (string) trim($chars->value[0]);
+
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
 
 					switch ($chars_title) {
 						case 'Χωρητικότητα':
@@ -2138,6 +2301,17 @@ class Live_model extends CI_Model {
 						case 'Τύπος κλεισίματος':
 							$chars_array['closing_type'] = $chars_value;
 							break;
+						case 'Εγγύηση (μήνες)':
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
+							break;
 						default :
 
 							break;
@@ -2158,7 +2332,8 @@ class Live_model extends CI_Model {
 				'fan_size' => "",
 				'output_connectors' => "",
 				'pfc' => "",
-				'dimensions' => ""
+				'dimensions' => "",
+				'warranty' => ""
 				);
 
 			foreach($char_xml->children() as $chars){
@@ -2170,6 +2345,11 @@ class Live_model extends CI_Model {
 					$is_found = true;
 					$chars_title = (string) trim($chars->atribute[0]);
 					$chars_value = (string) trim($chars->value[0]);
+
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
 
 					switch ($chars_title) {
 						case 'Τύπος':
@@ -2192,6 +2372,17 @@ class Live_model extends CI_Model {
 							break;
 						case 'Διαστάσεις (πλάτος x ύψος x βάθος, σε mm)': 
 							$chars_array['dimensions'] = $chars_value;
+							break;
+						case 'Εγγύηση (μήνες)':
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
 							break;
 						default :
 
@@ -2219,7 +2410,8 @@ class Live_model extends CI_Model {
 				'side_window' => "",
 				'dimensions' => "",
 				'weight' => "",
-				'power_supply' => ""
+				'power_supply' => "",
+				'warranty' => ""
 				);
 
 			foreach($char_xml->children() as $chars){
@@ -2231,6 +2423,11 @@ class Live_model extends CI_Model {
 					$is_found = true;
 					$chars_title = (string) trim($chars->atribute[0]);
 					$chars_value = (string) trim($chars->value[0]);
+
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
 
 					switch ($chars_title) {
 						case 'Τύπος':
@@ -2272,6 +2469,17 @@ class Live_model extends CI_Model {
 						case 'Τροφοδοτικό':
 							$chars_array['power_supply'] = $chars_value;
 							break;
+						case 'Εγγύηση (μήνες)':
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
+							break;
 						default :
 
 							break;
@@ -2290,7 +2498,8 @@ class Live_model extends CI_Model {
 				'fan_diameter' => "",
 				'fan_number' => "",
 				'compatibility' => "",
-				'dimensions' => ""
+				'dimensions' => "",
+				'warranty' => ""
 				);
 
 			foreach($char_xml->children() as $chars){
@@ -2302,6 +2511,11 @@ class Live_model extends CI_Model {
 					$is_found = true;
 					$chars_title = (string) trim($chars->atribute[0]);
 					$chars_value = (string) trim($chars->value[0]);
+
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
 
 					switch ($chars_title) {
 						case 'Τύπος Ψύκτρας':
@@ -2318,6 +2532,17 @@ class Live_model extends CI_Model {
 							break;
 						case 'Διαστάσεις (μήκος x πλάτος x ύψος, σε mm)':
 							$chars_array['dimensions'] = $chars_value;
+							break;
+						case 'Εγγύηση (μήνες)':
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
 							break;
 						default :
 
@@ -2357,7 +2582,8 @@ class Live_model extends CI_Model {
 				'e_sata' => "",
 				'network' => "",
 				'serial' => "",
-				'parallel' => ""
+				'parallel' => "",
+				'warranty' => ""
 				);
 
 			foreach($char_xml->children() as $chars){
@@ -2369,6 +2595,11 @@ class Live_model extends CI_Model {
 					$is_found = true;
 					$chars_title = (string) trim($chars->atribute[0]);
 					$chars_value = (string) trim($chars->value[0]);
+
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
 
 					switch ($chars_title) {
 						case 'Κατασκευαστής επεξεργαστή':
@@ -2483,7 +2714,18 @@ class Live_model extends CI_Model {
 									$chars_array['parallel'] = 'ΝΑΙ';
 							}
 
-							break;						
+							break;
+						case 'Εγγύηση (μήνες)':
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
+							break;					
 						default :
 
 							break;
@@ -2508,7 +2750,8 @@ class Live_model extends CI_Model {
 				'ram_channel' => "",
 				'connection' => "",
 				'direct_x' => "",
-				'output_ports' =>""
+				'output_ports' => "",
+				'warranty' => ""
 				);
 
 			foreach($char_xml->children() as $chars){
@@ -2520,6 +2763,11 @@ class Live_model extends CI_Model {
 					$is_found = true;
 					$chars_title = (string) trim($chars->atribute[0]);
 					$chars_value = (string) trim($chars->value[0]);
+
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
 
 					switch ($chars_title) {
 						case 'Κατασκευαστής chip':
@@ -2555,6 +2803,17 @@ class Live_model extends CI_Model {
 						case 'Θύρες εξόδου':
 							$chars_array['output_ports'] = $chars_value;
 							break;
+						case 'Εγγύηση (μήνες)':
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
+							break;
 						default :
 
 							break;
@@ -2582,7 +2841,8 @@ class Live_model extends CI_Model {
 				'threads' => "",
 				'integrated_graphic' => "",
 				'heat_sink' => "",
-				'packaging' => ""
+				'packaging' => "",
+				'warranty' => ""
 				);
 
 			foreach($char_xml->children() as $chars){
@@ -2594,6 +2854,11 @@ class Live_model extends CI_Model {
 					$is_found = true;
 					$chars_title = (string) trim($chars->atribute[0]);
 					$chars_value = (string) trim($chars->value[0]);
+
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
 
 					switch ($chars_title) {
 						case 'Οικογένεια επεξεργαστή':
@@ -2630,13 +2895,24 @@ class Live_model extends CI_Model {
 							$chars_array['threads'] = $chars_value;
 							break;
 						case 'Ενσωματωμένη κάρτα/chip γραφικών':
-							$chars_array['integrated_graphic'] = $chars_value;
+								$chars_array['integrated_graphic'] = $chars_value;
 							break;
 						case 'Ψύκτρα':
-							$chars_array['heat_sink'] = $chars_value;
+								$chars_array['heat_sink'] = $chars_value;
 							break;
 						case 'Συσκευασία':
 							$chars_array['packaging'] = $chars_value;
+							break;
+						case 'Εγγύηση (μήνες)':
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
 							break;
 						default :
 
@@ -2657,7 +2933,8 @@ class Live_model extends CI_Model {
 				'quantity' => "",
 				'frequency' => "",
 				'cas_latency' => "",
-				'voltage' => ""
+				'voltage' => "",
+				'warranty' => ""
 				);
 
 			foreach($char_xml->children() as $chars){
@@ -2669,6 +2946,11 @@ class Live_model extends CI_Model {
 					$is_found = true;
 					$chars_title = (string) trim($chars->atribute[0]);
 					$chars_value = (string) trim($chars->value[0]);
+
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
 
 					switch ($chars_title) {
 						case 'Τύπος μνήμης':
@@ -2688,6 +2970,17 @@ class Live_model extends CI_Model {
 							break;
 						case 'Τάση λειτουργίας':
 							$chars_array['voltage'] = $chars_value;
+							break;
+						case 'Εγγύηση (μήνες)':
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
 							break;
 						default :
 
