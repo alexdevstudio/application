@@ -1303,7 +1303,12 @@ class Live_model extends CI_Model {
 				$this->db->where('sku',$sku);
 				$this->db->update($c);
 			}
+			/*else if($c == 'memories') //Fix for updating image 
+			{
+				$mem_images = $this->AddProductImages($product, $f, $supplier, $sku);
+			}*/
     	}
+
     	return $insert;
     }
 
