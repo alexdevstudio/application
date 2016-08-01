@@ -69,6 +69,7 @@ class Extract_model extends CI_Model {
 //INNER JOIN images i ON t.sku = i.item_sku
         public function allImport($table){
 
+
             $action = '';
             $allProds = array();
             if($table == 'all'){
@@ -84,7 +85,7 @@ class Extract_model extends CI_Model {
             $f = 0;
             foreach ($tables as $table) {
 
-            
+           
 
                 $query = $this->db->query("
                      SELECT l.product_number, l.category, l.net_price, l.recycle_tax,l.price_tax, l.availability, l.supplier, l.status, l.delete_flag, t.*
@@ -361,7 +362,7 @@ class Extract_model extends CI_Model {
                 //$query = $this->db->query("SELECT * FROM $table WHERE new_item=1 ");
                 $i=0;
                 
-
+ 
                 foreach($products as $product){
 
                     
@@ -383,6 +384,11 @@ class Extract_model extends CI_Model {
 
                 }
 
+                $item = $xml->createElement('item');
+                $item = $items->appendChild($item);
+
+
+
 
                 $allProds = array_merge($allProds, $products);
 
@@ -401,6 +407,7 @@ class Extract_model extends CI_Model {
                 if (file_exists($file)) { unlink ($file); }
 
                 if($xml->save($file)){
+                   if($action != 'all')
                     echo "<a class='btn btn-md btn-success  btn-block text-center' href='".base_url()."/files/updates/".$table."_ALL_IMPORT.xml"."' download target='_blank'>Λήψη XML</a>";
                 }
                   //  return false;
@@ -412,7 +419,7 @@ class Extract_model extends CI_Model {
 
 
             }
-
+$products_count = 0;
             if($action == 'all'){
                 $xml = new DomDocument("1.0","UTF-8");//ISO-8859-7
 
@@ -439,9 +446,40 @@ class Extract_model extends CI_Model {
                         }
                     }
 
+                    $sku = $product['sku'];
 
+                    $where = array('sku'=>$sku);
+                    $data = array('new_item'=>0);
+                    Modules::run("crud/update",$table, $where, $data); 
+
+                    $where = array('meta_value'=>$sku,"meta_key"=>"_sku");
+                    $post_id = Modules::run("crud/getWp","wp_postmeta", $where);
+                    if(!is_bool($post_id)){
+                        $post_id = $post_id->result();
+                        $post_id = $post_id[0]->post_id;
+
+                        $where = array('post_id'=>$post_id,'meta_key'=>'_regular_price');
+                        $data = array('meta_value'=>$product['price_tax']);                   
+                        Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
+                        $where = array('post_id'=>$post_id,'meta_key'=>'_price');
+                        $data = array('meta_value'=>$product['price_tax']);                   
+                        Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
+                        $where = array('ID'=>$post_id);
+                        $data = array('post_title'=>$product['etd_title'],"post_status"=>$product['status']);                   
+                        Modules::run("crud/updateWp","wp_posts",  $where, $data);
+
+                       // exit($product['price_tax']); 
+
+                        echo  $products_count++;
+                        echo ":$sku:".$product['status']."<br />";  
+                    }
+                    
+
+                    
                 }
 
+                $item = $xml->createElement('item');
+                $item = $items->appendChild($item);
                 //print_r($query->result_array());
 
                 $xml->FormatOutput = true;
@@ -453,7 +491,8 @@ class Extract_model extends CI_Model {
 
                 $xml->save($file);
             }
-
+ 
+         
         }
 
 

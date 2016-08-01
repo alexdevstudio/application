@@ -20,19 +20,49 @@ class Crud_model extends CI_Model {
 
   }
 
+   public function updateWp($table, $where, $data){
+    $wpdb = $this->load->database('wordpress', TRUE);
+    $wpdb->where($where);
+    $wpdb->set($data);
+    return $wpdb->update($table);
+
+  }
+
+
   public function delete($table, $where){
         
         $this->db->where($where);
         return $this->db->delete($table);
   }
 
+  
+
   public function get($category, $where=null){
+
+        if($where)
+        {
+        $this->db->where($where);
+        }
+          $item = $this->db->get($category);
+
+          if($item->num_rows()<1){
+            return false;
+          }
+          else
+          {
+            return $item;
+          }
+      }
+
+      public function getWp($category, $where=null){
+
+      $wpdb = $this->load->database('wordpress', TRUE);
 
       if($where)
       {
-      $this->db->where($where);
+      $wpdb->where($where);
       }
-        $item = $this->db->get($category);
+        $item = $wpdb->get($category);
 
         if($item->num_rows()<1){
           return false;
@@ -42,7 +72,6 @@ class Crud_model extends CI_Model {
           return $item;
         }
 
-      
 
 
     }
@@ -62,7 +91,23 @@ class Crud_model extends CI_Model {
 
 
     }
+public function insertWp($table, $data){
+      $wpdb = $this->load->database('wordpress', TRUE);
 
+        $item = $wpdb->insert($table, $data);
+
+        if($wpdb->affected_rows()>0){
+          return $item;
+        }
+        else
+        {
+          return false;
+        }
+
+      
+
+
+    }
 
     public function join($table, $join_table, $join)
     {
