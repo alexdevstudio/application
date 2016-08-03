@@ -45,7 +45,8 @@ class Extract_model extends CI_Model {
 
 
             }
-
+            $product = $xml->createElement('product');
+            $product = $products->appendChild($product);
             //print_r($query->result_array());
 
             $xml->FormatOutput = true;
