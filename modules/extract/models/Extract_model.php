@@ -25,7 +25,7 @@ class Extract_model extends CI_Model {
             //$this->db->where("new_item", "1");
             //$query = $this->db->query("SELECT * FROM $table");
 
-            $this->db->where('new_item', 1);
+            $this->db->where('new_item', 0);
             $query = $this->db->get($table); 
 
             $i=0;
