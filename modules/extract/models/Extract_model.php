@@ -182,7 +182,7 @@ class Extract_model extends CI_Model {
 
                         if($shared_graphics != "ΝΑΙ" && $shared_graphics != "NAI" )
                         {
-                            $vga = '/' . trim(strip_tags($product['graphics'])) . ' ' . trim(strip_tags($product['graphics_memory'])) . ' ' . trim(strip_tags($product['grpahics_memory_type']));
+                            $vga = '/' . trim(strip_tags($product['graphics'])) . ' ' . trim(strip_tags($product['graphics_memory'])) . ' ' . trim(strip_tags($product['graphics_memory_type']));
                         }
 
                         if ($bonus != '')
