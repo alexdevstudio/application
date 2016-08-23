@@ -313,6 +313,23 @@ class Extract_model extends CI_Model {
                              $skroutz_title = "$title ($pn)";
 
                            break;
+                           case 'smartphones':
+                        
+                        $color =  $product['color']; 
+                        $model =  $product['model'];   
+                        $pn    =  $product['product_number'];
+
+                        if($model=='')
+                            $model = ltrim($title, 'Smartphone ' );
+                                              
+                         if($etd_title == '')                            
+                             $etd_title = "$model $color ($pn)";
+                        
+
+                        if($skroutz_title == '')                             
+                             $skroutz_title = "$model  $color ($pn)";
+
+                           break;
                         default:
                             $etd_title = $product['title'];
                             $skroutz_title = $product['title'];
