@@ -1070,6 +1070,135 @@ class Live_model extends CI_Model {
 		echo "Finnished updating Braintrust.";
     }
 
+    public function aci(){
+    	$this->load->view('upload_aci_xml', array('error' => ' ' ));
+    }
+
+    public function import_aci($path){
+
+		if($xml = $this->xml($path)){
+			
+			$images = array();
+			
+			$this->updateLive('aci');
+
+		}
+
+		$newProducts = array();
+		$i=0;
+
+
+		foreach($xml->children() as $product) {
+			$availability=false;
+			set_time_limit(50);
+			
+			//Rename categories for ETD.gr
+
+			$cat = (string) trim($product->Category);
+			$c = $cat;
+
+			switch ($cat) {
+				case 'Μελάνια για inkjet εκτυπωτές':
+					$c = 'cartridges';
+					break;
+				case 'Τόνερ':
+					$c = 'toners';
+					break;
+				default :
+					$c = $cat;
+					break;
+			}
+
+			if($c!=$cat){
+
+				$availability = $this->makeAvailability((string) trim($product->Availability), 'aci');
+
+				if(!$availability){
+					continue;
+				}
+				$code = (string) trim($product->Code);
+				$pn = (string) trim($product->OEM);
+				$title = (string) trim($product->Item);
+				$net_price = (string) trim($product->Price);
+				$availability = $availability;
+
+				$arr = explode(" ", $title, 2);
+				$brand = $arr[0];
+
+				$i++;
+				if($i>20)
+					continue;
+
+				$imageUrl = 'http://www.acihellas.gr/images/products/originals/' . $pn . '.jpg';
+				$content = @file_get_contents($imageUrl);
+				if ($content === false) 
+					{ 
+						echo "NOT";
+						//return false; 
+					}
+					else 
+					{
+						echo "YES";
+						//return true;
+					}
+
+				/*
+				if (get_headers($imageUrl)[0]!='HTTP/1.1 200 OK')
+				{
+					$imageUrl = 'http://www.acihellas.gr/images/products/originals/' . $code . '.jpg';
+					if (get_headers($imageUrl)[0]!='HTTP/1.1 200 OK')
+						$imageUrl = '';
+				}
+				*/
+				echo $imageUrl.'<br>';
+
+				//1. Live
+				$supplier = 'aci';
+
+	/*			if($this->checkLiveProduct($pn, $net_price, $supplier)){
+
+					$live = array(
+						'category'=>$c ,
+						'product_number'=>$pn ,
+						'net_price'=>$net_price ,
+						'availability'=>$availability ,
+						'recycle_tax'=>'' ,
+						'supplier' =>'aci',
+						'status' => 'publish',
+						'delete_flag'=>0
+						);
+
+					$this->db->where('product_number', $pn);
+					$this->db->where('supplier', 'aci');
+					$this->db->delete('live', $live);
+					$this->db->insert('live', $live);
+
+					unset($live);
+				}
+
+				//Array for categories table
+				$aci_product = array(
+					'category' => $c,
+					'product_number' => $pn,
+					'brand' => $brand,
+					'title' => $title,
+					'net_price'=>$net_price,
+				);
+
+				//2. New products for charateristics tables that load Sku module
+				$insert = $this->addProduct ($aci_product, array(), $imageUrl, 'aci');
+
+				if ($insert)
+				{
+					if(isset ($newProducts[$c]))
+						$newProducts[$c] = $newProducts[$c]+1;
+					else
+						$newProducts[$c] = 1;
+				}
+*/
+			}
+		}
+    }
 
     private function sendImportedProductsByMail($newProducts){
 
@@ -3108,6 +3237,25 @@ class Live_model extends CI_Model {
 
 	    	return $av;
 
+    	}elseif($supplier == 'aci'){
+
+    		switch ($availability) {
+				case 'Διαθέσιμο':
+				case 'Περιορισμένη Διαθ.':
+					$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
+					break;
+				case 'Κατόπιν Παραγγελίας':
+					$av = 'Κατόπιν παραγγελίας χωρίς διαθεσιμότητα';
+					break;
+				case 'Μη Διαθέσιμο':
+					$av = false;
+					break;
+				default:
+	    			return false;
+	    			break;
+    		}
+
+    		return $av;
     	}
     }
 
@@ -3140,12 +3288,6 @@ class Live_model extends CI_Model {
 
 		return true;
 	}
-
-
-
-
-
-
 }
 
 ?>

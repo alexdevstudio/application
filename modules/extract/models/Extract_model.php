@@ -177,6 +177,14 @@ class Extract_model extends CI_Model {
                         $description = trim(strip_tags($product['description']));
                         $bonus = trim(strip_tags($product['bonus']));
 
+                        $vga = '';
+                        $shared_graphics = trim(strip_tags($product['shared_graphics']));
+
+                        if($shared_graphics != "ΝΑΙ" && $shared_graphics != "NAI" )
+                        {
+                            $vga = '/' . trim(strip_tags($product['graphics'])) . ' ' . trim(strip_tags($product['graphics_memory'])) . ' ' . trim(strip_tags($product['graphics_memory_type']));
+                        }
+
                         if ($bonus != '')
                         {
                             $description = "<div style='color: red;'>ΔΩΡΟ: ".$bonus."</div><div>".$description."</div>";
@@ -195,7 +203,7 @@ class Extract_model extends CI_Model {
                         }
 
                         if($skroutz_title == ''){
-                            $skroutz_title = $model.$color.$cpu.'/'.$ram.'/'.$disk.'/'.$os;
+                            $skroutz_title = $model.$color.$cpu.'/'.$ram.'/'.$disk. $vga.'/'.$os;
 
                         }
 
