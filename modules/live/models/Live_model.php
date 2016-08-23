@@ -1200,6 +1200,289 @@ class Live_model extends CI_Model {
 		}
     }
 
+    public function copiers(){
+    	$this->load->view('upload_copiers', array('error' => ' ' ));
+    }
+
+    public function import_copiers($path){
+
+		if($xml = $this->xml($path)){
+			
+			$images = array();
+			
+			$this->updateLive('konica');
+
+		}
+
+		$newProducts = array();
+		$i=0;
+
+
+		foreach($xml->children() as $product) {
+			$availability=false;
+			set_time_limit(50);
+			
+			//Rename categories for ETD.gr
+
+			
+			$c = 'copiers';
+
+			
+
+			if($c){
+
+				//$availability = $this->makeAvailability((string) trim($product->Availability), 'aci');
+				$availability = "Κατόπιν παραγγελίας χωρίς διαθεσιμότητα";
+
+				if(!$availability){
+					continue;
+				}
+
+				
+
+				$Name = (string) trim($product->Name);
+				$Image = (string) trim($product->Image);
+				$PRODUCT_URL = (string) trim($product->PRODUCT_URL);
+				$PRODUCT_URL_PDF = (string) trim($product->PRODUCT_URL_PDF);
+				$URL_SUPPORT = (string) trim($product->URL_SUPPORT);
+				$THL__SUPPORT = (string) trim($product->THL__SUPPORT);
+				$Brand = (string) trim($product->Brand);
+				$copying_process = (string) trim($product->copying_process);
+				$Toner_Writing_System = (string) trim($product->Toner_Writing_System);
+				$Colour = (string) trim($product->Colour);
+				$Speed_Copy_Print_A4_Monochrome = (string) trim($product->Speed_Copy_Print_A4_Monochrome);
+				$Speed_Copy_Print_A4_Colour = (string) trim($product->Speed_Copy_Print_A4_Colour);
+				$Speed_Copy_Print_A3_Monochrome = (string) trim($product->Speed_Copy_Print_A3_Monochrome);
+				$Speed_Copy_Print_A3_Colour = (string) trim($product->Speed_Copy_Print_A3_Colour);
+				$Duplex_A4 = (string) trim($product->Duplex_A4);
+				$Duplex_A4_Colour = (string) trim($product->Duplex_A4_Colour);
+				$First_copy_time_sec_ = (string) trim($product->First_copy_time_sec_);
+				$First_copy_time_sec__Colour = (string) trim($product->First_copy_time_sec__Colour);
+				$Warm_up_time_sec_ = (string) trim($product->Warm_up_time_sec_);
+				$Copy_resolution_dpi = (string) trim($product->Copy_resolution_dpi);
+				$graduations = (string) trim($product->graduations);
+				$Multi_copy = (string) trim($product->Multi_copy);
+				$original_Size = (string) trim($product->original_Size);
+				$A3_Support = (string) trim($product->A3_Support);
+				$magnification = (string) trim($product->magnification);
+				$copy_features = (string) trim($product->copy_features);
+				$Resolution_dpi = (string) trim($product->Resolution_dpi);
+				$print_Processor = (string) trim($product->print_Processor);
+				$Page_Description_Language = (string) trim($product->Page_Description_Language);
+				$Operating_Systems = (string) trim($product->Operating_Systems);
+				$fonts_printer = (string) trim($product->fonts_printer);
+				$print_features = (string) trim($product->print_features);
+				$Mobile_printing = (string) trim($product->Mobile_printing);
+				$Scan_Speed_scans___min_Colour = (string) trim($product->Scan_Speed_scans___min_Colour);
+				$Scan_Speed_scans___min_M_C = (string) trim($product->Scan_Speed_scans___min_M_C);
+				$Scan_Resolution_dpi = (string) trim($product->Scan_Resolution_dpi);
+				$scanning_Methods = (string) trim($product->scanning_Methods);
+				$file_Types = (string) trim($product->file_Types);
+				$scan_destinations = (string) trim($product->scan_destinations);
+				$Scan_operations = (string) trim($product->Scan_operations);
+				$standard_Fax = (string) trim($product->standard_Fax);
+				$Fax_Broadcast = (string) trim($product->Fax_Broadcast);
+				$Fax_Resolution_dpi = (string) trim($product->Fax_Resolution_dpi);
+				$Compression_methods_Fax = (string) trim($product->Compression_methods_Fax);
+				$Fax_modem_Kvps = (string) trim($product->Fax_modem_Kvps);
+				$Fax_Destinations = (string) trim($product->Fax_Destinations);
+				$Fax_functions = (string) trim($product->Fax_functions);
+				$box_mode = (string) trim($product->box_mode);
+				$Max__user_boxes = (string) trim($product->Max__user_boxes);
+				$Type_box_s_system = (string) trim($product->Type_box_s_system);
+				$User_Box_Functions = (string) trim($product->User_Box_Functions);
+				$Systems_Memory_MB = (string) trim($product->Systems_Memory_MB);
+				$Systems_Memory_MB_optionally = (string) trim($product->Systems_Memory_MB_optionally);
+				$HDD_GB = (string) trim($product->HDD_GB);
+				$Interfaces_standard = (string) trim($product->Interfaces_standard);
+				$Interfaces_optionally = (string) trim($product->Interfaces_optionally);
+				$network_Protocols = (string) trim($product->network_Protocols);
+				$Frame_types = (string) trim($product->Frame_types);
+				$Automatic_document_feeder = (string) trim($product->Automatic_document_feeder);
+				$paper_Size = (string) trim($product->paper_Size);
+				$Printable_paper_weight = (string) trim($product->Printable_paper_weight);
+				$Paper_input_capacity = (string) trim($product->Paper_input_capacity);
+				$Standard_paper_cassettes = (string) trim($product->Standard_paper_cassettes);
+				$Standard_paper_cassettes_optionally = (string) trim($product->Standard_paper_cassettes_optionally);
+				$Automatic_duplexing = (string) trim($product->Automatic_duplexing);
+				$Finishing_modes_optional = (string) trim($product->Finishing_modes_optional);
+				$Output_capacity_with_finisher = (string) trim($product->Output_capacity_with_finisher);
+				$Output_capacity_without_finisher = (string) trim($product->Output_capacity_without_finisher);
+				$Staple = (string) trim($product->Staple);
+				$Stapling_output_capacity = (string) trim($product->Stapling_output_capacity);
+				$Letter_fold = (string) trim($product->Letter_fold);
+				$Letter_fold_capacity = (string) trim($product->Letter_fold_capacity);
+				$Booklet = (string) trim($product->Booklet);
+				$Booklet_output_capacity = (string) trim($product->Booklet_output_capacity);
+				$Monthly_production_volume = (string) trim($product->Monthly_production_volume);
+				$Max_Monthly_production_volume = (string) trim($product->Max_Monthly_production_volume);
+				$Lifetime_Toner_Black = (string) trim($product->Lifetime_Toner_Black);
+				$Lifetime_Toner_CMY = (string) trim($product->Lifetime_Toner_CMY);
+				$Developer_lifetime_Black = (string) trim($product->Developer_lifetime_Black);
+				$Developer_lifetime_CMY = (string) trim($product->Developer_lifetime_CMY);
+				$Drum_lifetime_Black = (string) trim($product->Drum_lifetime_Black);
+				$Drum_lifetime_CMY = (string) trim($product->Drum_lifetime_CMY);
+				$Lifetime_Imaging_Unit_Black = (string) trim($product->Lifetime_Imaging_Unit_Black);
+				$Lifetime_Imaging_Unit_CMY = (string) trim($product->Lifetime_Imaging_Unit_CMY);
+				$power_consumption = (string) trim($product->power_consumption);
+				$Dimensions = (string) trim($product->Dimensions);
+				$System_weight_kg = (string) trim($product->System_weight_kg);
+				$Safety = (string) trim($product->Safety);
+				$Accounts = (string) trim($product->Accounts);
+				$Accounts_Software  = (string) trim($product->Accounts_Software);
+				$System_weight_kg = (string) trim($product->System_weight_kg);
+				$Safety = (string) trim($product->Safety);
+				$Accounts = (string) trim($product->Accounts);
+				$Accounts_Software = (string) trim($product->Accounts_Software);
+
+
+				$pn = (string) trim($product->product_number);
+
+				
+
+				$imageUrl = $Image;
+				
+
+				
+				//1. Live
+				$supplier = 'konica';
+
+				if($this->checkLiveProduct($pn, '', $supplier)){
+
+					$live = array(
+						'category'=>$c ,
+						'product_number'=>$pn ,
+						'net_price'=>'' ,
+						'availability'=>$availability ,
+						'recycle_tax'=>'' ,
+						'supplier' =>$supplier ,
+						'status' => 'publish',
+						'delete_flag'=>0
+						);
+
+					$this->db->where('product_number', $pn);
+					$this->db->where('supplier', $supplier);
+					$this->db->delete('live', $live);
+					$this->db->insert('live', $live);
+
+					unset($live);
+				}
+
+				//Array for categories table
+				$copiers_product = array(
+					'category' => $c,
+					'product_number'=>$pn ,
+					'Name' => $Name ,
+					'PRODUCT_URL' => $PRODUCT_URL ,
+					'PRODUCT_URL_PDF' => $PRODUCT_URL_PDF ,
+					'URL_SUPPORT' => $URL_SUPPORT ,
+					'THL__SUPPORT' => $THL__SUPPORT ,
+					'Brand' => $Brand ,
+					'copying_process' => $copying_process ,
+					'Toner_Writing_System' => $Toner_Writing_System ,
+					'Colour' => $Colour ,
+					'Speed_Copy_Print_A4_Monochrome' => $Speed_Copy_Print_A4_Monochrome ,
+					'Speed_Copy_Print_A4_Colour' => $Speed_Copy_Print_A4_Colour ,
+					'Speed_Copy_Print_A3_Monochrome' => $Speed_Copy_Print_A3_Monochrome ,
+					'Speed_Copy_Print_A3_Colour' => $Speed_Copy_Print_A3_Colour ,
+					'Duplex_A4' => $Duplex_A4 ,
+					'Duplex_A4_Colour' => $Duplex_A4_Colour ,
+					'First_copy_time_sec_' => $First_copy_time_sec_ ,
+					'First_copy_time_sec__Colour' => $First_copy_time_sec__Colour ,
+					'Warm_up_time_sec_' => $Warm_up_time_sec_ ,
+					'Copy_resolution_dpi' => $Copy_resolution_dpi ,
+					'graduations' => $graduations ,
+					'Multi_copy' => $Multi_copy ,
+					'original_Size' => $original_Size ,
+					'A3_Support' => $A3_Support ,
+					'magnification' => $magnification ,
+					'copy_features' => $copy_features ,
+					'Resolution_dpi' => $Resolution_dpi ,
+					'print_Processor' => $print_Processor ,
+					'Page_Description_Language' => $Page_Description_Language ,
+					'Operating_Systems' => $Operating_Systems ,
+					'fonts_printer' => $fonts_printer ,
+					'print_features' => $print_features ,
+					'Mobile_printing' => $Mobile_printing ,
+					'Scan_Speed_scans___min_Colour' => $Scan_Speed_scans___min_Colour ,
+					'Scan_Speed_scans___min_M_C' => $Scan_Speed_scans___min_M_C ,
+					'Scan_Resolution_dpi' => $Scan_Resolution_dpi ,
+					'scanning_Methods' => $scanning_Methods ,
+					'file_Types' => $file_Types ,
+					'scan_destinations' => $scan_destinations ,
+					'Scan_operations' => $Scan_operations ,
+					'standard_Fax' => $standard_Fax ,
+					'Fax_Broadcast' => $Fax_Broadcast ,
+					'Fax_Resolution_dpi' => $Fax_Resolution_dpi ,
+					'Compression_methods_Fax' => $Compression_methods_Fax ,
+					'Fax_modem_Kvps' => $Fax_modem_Kvps ,
+					'Fax_Destinations' => $Fax_Destinations ,
+					'Fax_functions' => $Fax_functions ,
+					'box_mode' => $box_mode ,
+					'Max__user_boxes' => $Max__user_boxes ,
+					'Type_box_s_system' => $Type_box_s_system ,
+					'User_Box_Functions' => $User_Box_Functions ,
+					'Systems_Memory_MB' => $Systems_Memory_MB ,
+					'Systems_Memory_MB_optionally' => $Systems_Memory_MB_optionally ,
+					'HDD_GB' => $HDD_GB ,
+					'Interfaces_standard' => $Interfaces_standard ,
+					'Interfaces_optionally' => $Interfaces_optionally ,
+					'network_Protocols' => $network_Protocols ,
+					'Frame_types' => $Frame_types ,
+					'Automatic_document_feeder' => $Automatic_document_feeder ,
+					'paper_Size' => $paper_Size ,
+					'Printable_paper_weight' => $Printable_paper_weight ,
+					'Paper_input_capacity' => $Paper_input_capacity ,
+					'Standard_paper_cassettes' => $Standard_paper_cassettes ,
+					'Standard_paper_cassettes_optionally' => $Standard_paper_cassettes_optionally ,
+					'Automatic_duplexing' => $Automatic_duplexing ,
+					'Finishing_modes_optional' => $Finishing_modes_optional ,
+					'Output_capacity_with_finisher' => $Output_capacity_with_finisher ,
+					'Output_capacity_without_finisher' => $Output_capacity_without_finisher ,
+					'Staple' => $Staple ,
+					'Stapling_output_capacity' => $Stapling_output_capacity ,
+					'Letter_fold' => $Letter_fold ,
+					'Letter_fold_capacity' => $Letter_fold_capacity ,
+					'Booklet' => $Booklet ,
+					'Booklet_output_capacity' => $Booklet_output_capacity ,
+					'Monthly_production_volume' => $Monthly_production_volume ,
+					'Max_Monthly_production_volume' => $Max_Monthly_production_volume ,
+					'Lifetime_Toner_Black' => $Lifetime_Toner_Black ,
+					'Lifetime_Toner_CMY' => $Lifetime_Toner_CMY ,
+					'Developer_lifetime_Black' => $Developer_lifetime_Black ,
+					'Developer_lifetime_CMY' => $Developer_lifetime_CMY ,
+					'Drum_lifetime_Black' => $Drum_lifetime_Black ,
+					'Drum_lifetime_CMY' => $Drum_lifetime_CMY ,
+					'Lifetime_Imaging_Unit_Black' => $Lifetime_Imaging_Unit_Black ,
+					'Lifetime_Imaging_Unit_CMY' => $Lifetime_Imaging_Unit_CMY ,
+					'power_consumption' => $power_consumption ,
+					'Dimensions' => $Dimensions ,
+					'System_weight_kg' => $System_weight_kg ,
+					'Safety' => $Safety ,
+					'Accounts' => $Accounts ,
+					'Accounts_Software ' => $Accounts_Software  ,
+					'System_weight_kg' => $System_weight_kg ,
+					'Safety' => $Safety ,
+					'Accounts' => $Accounts ,
+					'Accounts_Software' => $Accounts_Software,
+					'shipping_class' => 4682
+				);
+
+				//2. New products for charateristics tables that load Sku module
+				$insert = $this->addProduct ($copiers_product, array(), $imageUrl, $supplier);
+
+				if ($insert)
+				{
+					if(isset ($newProducts[$c]))
+						$newProducts[$c] = $newProducts[$c]+1;
+					else
+						$newProducts[$c] = 1;
+				}
+
+			}
+		}
+    }
+
     private function sendImportedProductsByMail($newProducts){
 
     	if (!empty($newProducts))//Send Mail Check
@@ -1314,7 +1597,7 @@ class Live_model extends CI_Model {
 		$sku = $newSku['sku'];
 
 
-		if($newSku['new']){
+		if($sku){
 
 			
 			if($c == 'cartridges' || $c == 'toners'){
@@ -1358,6 +1641,11 @@ class Live_model extends CI_Model {
 				'shipping_class' => $product['shipping_class']
 				);
 
+			}elseif($c == "copiers"){
+				unset($product['category']);
+				$product['sku'] = $sku;
+
+				$categoryData = $product;
 			}
 			else
 			{
@@ -1527,6 +1815,19 @@ class Live_model extends CI_Model {
 
 					$i++;
     		}//foreach($f as $image){
+    	}//elseif( $supplier == 'etd')
+    	elseif( $supplier == 'konica')
+    	{
+    		$imageData = array(
+							'src' => $f,
+							'sku' => $sku ,
+							'brand' => $product['Brand'] ,
+							'part_number' => $product['product_number'] ,
+							'tail' => ''
+						);
+						
+						
+						Modules::run('images/getImage',$imageData);
     	}//elseif( $supplier == 'etd')
     }
 
