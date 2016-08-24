@@ -1597,7 +1597,7 @@ class Live_model extends CI_Model {
 		$sku = $newSku['sku'];
 
 
-		if($sku){
+		if($newSku['new']){
 
 			
 			if($c == 'cartridges' || $c == 'toners'){
