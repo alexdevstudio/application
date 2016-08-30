@@ -7,9 +7,11 @@ class Home extends MX_Controller {
     {
         parent::__construct();
 
+
         if($_SERVER['REMOTE_ADDR']!='85.72.61.177'){
 
         	die('Page does not exist');
+
         }
     }
 
@@ -31,10 +33,16 @@ class Home extends MX_Controller {
 		$this->load->view('templates/header',$data);
 		$this->load->view('home', $data);
 		$this->load->view('templates/footer',$data);
+
+			
+
+		
 	}
 
 
 	public function xmlUploadUpdate(){
+
+
 
 		$config["upload_path"]="./files/uploads";
 		$config["allowed_types"]="xml";
@@ -62,7 +70,12 @@ class Home extends MX_Controller {
 		}else{
 			echo 'Πρόβλημα με το αρχείο. Δοκιμάστε Ξανά.';
 		}
+
+
+
 	}
+
+
 
 	/*public function strip(){
 		
@@ -99,5 +112,14 @@ class Home extends MX_Controller {
 		echo 'All ok';
 	}*/
 
+
+
+
+
+
 }
+
+
+
+
 ?>

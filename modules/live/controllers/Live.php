@@ -14,18 +14,19 @@ class Live extends MX_Controller {
 		switch ($s) {
 			case 'oktabit':
 				$this->live_model->oktabit();
-				break;
+			break;
 			case 'logicom':
 				$this->live_model->logicom();
-				break;
+			break;
 			case 'ddc':
 				$this->live_model->ddc();
-				break;
+			break;
 			case 'braintrust':
 				$this->live_model->braintrust();
-				break;
+			break;
 			case 'aci':
 				$this->live_model->aci();
+<<<<<<< HEAD
 
 				break;
 			case 'copiers':
@@ -37,6 +38,12 @@ class Live extends MX_Controller {
 
 			
 			
+=======
+			break;
+			case 'copiers':
+				$this->live_model->copiers();
+			break;
+>>>>>>> parent of 6ad90b3... Finish importing CPI
 
 			default:
 				die('Δεν υπάρχει ο προμηθευτής');
@@ -147,26 +154,6 @@ class Live extends MX_Controller {
 			$path = './files/suppliers/'.$data['upload_data']['file_name'];
 			$this->load->model('live_model');
 			$this->live_model->import_copiers($path);
-		}
-	}
-
-	public function upload_cpi_xml()
-	{
-		$config['upload_path'] = './files/suppliers/';
-		$config['allowed_types'] = 'xml';
-		$config['max_size']	= '10000';
-		$this->load->library('upload', $config);
-		if ( ! $this->upload->do_upload())
-		{
-			$error = array('error' => $this->upload->display_errors());
-			$this->load->view('upload_cpi_xml', $error);
-		}
-		else
-		{
-			$data = array('upload_data' => $this->upload->data());
-			$path = './files/suppliers/'.$data['upload_data']['file_name'];
-			$this->load->model('live_model');
-			$this->live_model->import_cpi($path);
 		}
 	}
 

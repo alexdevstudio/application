@@ -26,7 +26,10 @@ class Live_model extends CI_Model {
 				if($char_xml = $this->xml("http://www.oktabit.gr/times_pelatwn/chars_xml.asp?customercode=012348&logi=evansmour")){
  
 					$images = array();
+
 					$this->updateLive('oktabit');
+				
+					
 				}
 				else{
 					die("Characteristics XML from Oktabit can not be loaded.");
@@ -53,6 +56,7 @@ class Live_model extends CI_Model {
 			$B2b_sc = trim((string)$product->B2b_subcat);
 
 			$c = $cat;
+			
 
 			$brand = (string) trim($product->brand);
 			if ($brand == 'VERO' || $brand == 'MAXBALL' || $brand == 'LEXMARK')
@@ -269,6 +273,7 @@ class Live_model extends CI_Model {
 					$this->db->where('product_number', $pn);
 					$this->db->where('supplier', 'oktabit');
 					$this->db->delete('live', $live);
+
 					$this->db->insert('live', $live);
 
 					unset($live);
@@ -305,6 +310,7 @@ class Live_model extends CI_Model {
 				}
 
 				//2. New products for charateristics tables that load Sku module
+
 				$insert = $this->addProduct ($okt_product, $chars_array, $f, 'oktabit');
 
 				if ($insert)
@@ -314,14 +320,17 @@ class Live_model extends CI_Model {
 					else
 						$newProducts[$c] = 1;
 				}
+
 			}//if $c!=$cat
 				
 			$f=0;
+		
 		}//end foreach
 		
 		$this->sendImportedProductsByMail($newProducts);
 
 		 echo "Finnished Oktabit";
+
     }
 
     public function logicom(){
@@ -334,16 +343,21 @@ class Live_model extends CI_Model {
 		if($xml = $this->xml($path)){
 			
 			$images = array();
+			
 			$this->updateLive('logicom');
+
 		}
 
 		$newProducts = array();
 		$i=0;
 		$k=0;
+		//$f=0;
+		
 
 		foreach($xml->children()->children()->children() as $product) {
 			
 			set_time_limit(50);
+			//Rename categories for ETD.gr
 
 			$c = $cat = $product->Details->CategoryList->attributes()->{'Name'};
 			$sc = '';
@@ -438,10 +452,12 @@ class Live_model extends CI_Model {
 	    		$recycle_tax = $prd["RT"];
 	    		$ManufacturerList = (string) trim($product->Details->ManufacturerList->attributes()->{'Name'});
 
+
 	    		if(strpos($title, 'Ent') && $c == 'multifunction_printers'){
 	    			continue;	
 	    		}
 	    		 
+
 	    		if($c == 'cartridges' || $c == 'toners')
 	    		{
 	    			$brand = explode('- /',trim($ManufacturerList))[1];
@@ -454,6 +470,7 @@ class Live_model extends CI_Model {
 	    			$brand = explode('- /',trim($ManufacturerList))[0];
 	    		}
 
+	    		
 	    		// IMAGE
 	    		$imageUrl = $product->Details->Images->Image[2]->attributes()->{'URL'};
 	    		if($imageUrl == "")
@@ -480,6 +497,7 @@ class Live_model extends CI_Model {
 					$this->db->where('product_number', $pn);
 					$this->db->where('supplier', 'logicom');
 					$this->db->delete('live', $live);
+
 					$this->db->insert('live', $live);
 
 					unset($live);
@@ -505,6 +523,7 @@ class Live_model extends CI_Model {
 						$log_product['dist_type'] = 'ROK';
 					else
 						$log_product['dist_type'] = '';
+
 				}
 
 				//2. New products for charateristics tables that load Sku module
@@ -518,6 +537,7 @@ class Live_model extends CI_Model {
 					else
 						$newProducts[$c] = 1;
 				}
+
 			}//if $c==$cat
 		
 		}//end foreach
@@ -525,6 +545,7 @@ class Live_model extends CI_Model {
 		$this->sendImportedProductsByMail($newProducts);
 
 		echo "Finnished updating Logicom-Enet.";
+		
     }
 
 
@@ -538,7 +559,9 @@ class Live_model extends CI_Model {
 		if($xml = $this->xml($path)){
 			
 			$images = array();
+			
 			$this->updateLive('ddc');
+
 		}
 
 		$newProducts = array();
@@ -550,6 +573,7 @@ class Live_model extends CI_Model {
 
 			$length = 0;
 			$sc = $cable_cat = $dimensions = $size = $height = $ports = $patch_type = '';
+
 			$c = $cat = $product->category->attributes()->{'name'};
 
 			switch ($cat) {
@@ -723,6 +747,7 @@ class Live_model extends CI_Model {
 			    $net_price = (string) trim($prd['finalPrice']);
 			    $color = (string) trim($prd['colors']);
 			    $product_url = (string) trim($prd['attachment1']);
+
 			    //$prd['attachment2'];
 				$description = strip_tags((string) trim($product->description)); //to check if image exist in description
 			    
@@ -925,6 +950,7 @@ class Live_model extends CI_Model {
 		$this->sendImportedProductsByMail($newProducts);
 
 		echo "Finnished updating Digital Data Communication.";
+
 	}
 
 	public function braintrust(){
@@ -937,11 +963,14 @@ class Live_model extends CI_Model {
     	if($xml = $this->xml($path)){
 			
 			$images = array();
+			
 			$this->updateLive('braintrust');
+
 		}
 
 		$newProducts = array();
 		$i=0;
+
 
 		foreach($xml->children() as $product) {
 			$availability=false;
@@ -950,6 +979,7 @@ class Live_model extends CI_Model {
 
 			$cat = (string) trim($product->Category);
 			$sc = trim((string)$product->MainCategory);
+
 			$c = $cat;
 			
 			$brand = (string) trim($product->Supplier);
@@ -974,6 +1004,8 @@ class Live_model extends CI_Model {
 					continue;
 				}
 
+				//$code = (string) trim($product->code);
+				//$code = (string) trim($product->SKU);
 				$description = (string) trim($product->Description);
 				$title = substr($description, strpos($description, 'NB '), strpos($description, ', '));
 				$title = "MSI ".$title;
@@ -1001,12 +1033,14 @@ class Live_model extends CI_Model {
 					$this->db->where('product_number', $pn);
 					$this->db->where('supplier', 'braintrust');
 					$this->db->delete('live', $live);
+
 					$this->db->insert('live', $live);
 
 					unset($live);
 				}
 
 				//Array for categories table
+
 				$braintrust_product = array(
 					'category' => $c,
 					'product_number' => $pn,
@@ -1018,6 +1052,7 @@ class Live_model extends CI_Model {
 				);
 
 				//2. New products for charateristics tables that load Sku module
+
 				$insert = $this->addProduct ($braintrust_product, array(), $imageUrl, 'braintrust');
 
 				if ($insert)
@@ -1031,6 +1066,7 @@ class Live_model extends CI_Model {
 		} //end foreach
 
 		$this->sendImportedProductsByMail($newProducts);
+
 		echo "Finnished updating Braintrust.";
     }
 
@@ -1043,15 +1079,20 @@ class Live_model extends CI_Model {
 		if($xml = $this->xml($path)){
 			
 			$images = array();
+			
 			$this->updateLive('aci');
+
 		}
 
 		$newProducts = array();
 		$i=0;
 
+
 		foreach($xml->children() as $product) {
 			$availability=false;
 			set_time_limit(50);
+			
+			//Rename categories for ETD.gr
 
 			$cat = (string) trim($product->Category);
 			$c = $cat;
@@ -1079,31 +1120,29 @@ class Live_model extends CI_Model {
 				$pn = (string) trim($product->OEM);
 				$title = (string) trim($product->Item);
 				$net_price = (string) trim($product->Price);
-				$description = '';
+				$availability = $availability;
 
 				$arr = explode(" ", $title, 2);
 				$brand = $arr[0];
 
-				/* // JUST FOR CHECKING REASONS
 				$i++;
 				if($i>20)
 					continue;
-				*/
 
 				$imageUrl = 'http://www.acihellas.gr/images/products/originals/' . $pn . '.jpg';
 				$content = @file_get_contents($imageUrl);
 				if ($content === false) 
-				{ 
-					$imageUrl = 'http://www.acihellas.gr/images/products/originals/' . $code . '.jpg';
-					$content = @file_get_contents($imageUrl);
-					if ($content === false) 
 					{ 
-						$imageUrl='';
+						echo "NOT";
+						//return false; 
 					}
-				}
+					else 
+					{
+						echo "YES";
+						//return true;
+					}
 
-				/* // Other way for checking image existance
-				$imageUrl = 'http://www.acihellas.gr/images/products/originals/' . $pn . '.jpg';
+				/*
 				if (get_headers($imageUrl)[0]!='HTTP/1.1 200 OK')
 				{
 					$imageUrl = 'http://www.acihellas.gr/images/products/originals/' . $code . '.jpg';
@@ -1111,13 +1150,12 @@ class Live_model extends CI_Model {
 						$imageUrl = '';
 				}
 				*/
+				echo $imageUrl.'<br>';
 
 				//1. Live
 				$supplier = 'aci';
 
-				// TO UNCOMMENT IF ACI FIXES IMAGES WATERMARKS
-				/*
-				if($this->checkLiveProduct($pn, $net_price, $supplier)){
+	/*			if($this->checkLiveProduct($pn, $net_price, $supplier)){
 
 					$live = array(
 						'category'=>$c ,
@@ -1142,7 +1180,6 @@ class Live_model extends CI_Model {
 				$aci_product = array(
 					'category' => $c,
 					'product_number' => $pn,
-					'description' => $description,
 					'brand' => $brand,
 					'title' => $title,
 					'net_price'=>$net_price,
@@ -1158,12 +1195,9 @@ class Live_model extends CI_Model {
 					else
 						$newProducts[$c] = 1;
 				}
-				*/
+*/
 			}
-		} //end foreach
-
-		$this->sendImportedProductsByMail($newProducts);
-		echo "Finnished updating ACI Supplies.";
+		}
     }
 
 
@@ -1176,20 +1210,36 @@ class Live_model extends CI_Model {
 		if($xml = $this->xml($path)){
 			
 			$images = array();
+			
 			$this->updateLive('konica');
+
 		}
 
 		$newProducts = array();
 		$i=0;
 
+
 		foreach($xml->children() as $product) {
 			$availability=false;
 			set_time_limit(50);
+			
+			//Rename categories for ETD.gr
 
+			
 			$c = 'copiers';
 
+			
+
 			if($c){
+
+				//$availability = $this->makeAvailability((string) trim($product->Availability), 'aci');
 				$availability = "Κατόπιν παραγγελίας χωρίς διαθεσιμότητα";
+
+				if(!$availability){
+					continue;
+				}
+
+				
 
 				$Name = (string) trim($product->Name);
 				$Image = (string) trim($product->Image);
@@ -1286,9 +1336,14 @@ class Live_model extends CI_Model {
 				$Accounts = (string) trim($product->Accounts);
 				$Accounts_Software = (string) trim($product->Accounts_Software);
 
+
 				$pn = (string) trim($product->product_number);
 
+				
+
 				$imageUrl = $Image;
+				
+
 				
 				//1. Live
 				$supplier = 'konica';
@@ -1424,120 +1479,17 @@ class Live_model extends CI_Model {
 					else
 						$newProducts[$c] = 1;
 				}
+
 			}
-		} //end foreach
-
-		$this->sendImportedProductsByMail($newProducts);
-		echo "Finnished updating KONICA Copiers.";
-    }
-
-    public function cpi(){
-    	$this->load->view('upload_cpi_xml', array('error' => ' ' ));
-    }
-
-    public function import_cpi($path){
-
-		if($xml = $this->xml($path)){
-			
-			$images = array();
-			$this->updateLive('cpi');
 		}
-
-		$newProducts = array();
-		$i=0;
-
-		foreach($xml->children() as $product) {
-			$availability=false;
-			set_time_limit(50);
-			
-			$cat = (string) trim($product->Item);
-			if (strpos($cat, 'OKI ') !== false || strpos($cat, 'ΟΚΙ') !== false)
-				$c = 'printers';
-			elseif (strpos($cat, 'ΡRΟJΕCΤΟR ') !== false)
-				$c = 'projectors';
-			else
-				$c ='';
-
-			if($c!=''){
-
-				$availability = $this->makeAvailability((string) trim($product->Availability), 'cpi');
-
-				if(!$availability){
-					continue;
-				}
-
-				$code = (string) trim($product->Int_Code);
-				$pn = (string) trim($product->Code);
-				$title = (string) trim($product->Item);
-				$net_price = trim($product->Price);
-				$recycle_tax = trim($product->Recycle_Price);
-				$description = '';
-
-				$supplier = 'cpi';
-				// For fixing brand 
-				if (strpos($cat, 'OKI ') !== false || strpos($cat, 'ΟΚΙ') !== false)
-					$brand = 'OKI';
-				elseif (strpos($cat, 'ΡRΟJΕCΤΟR ') !== false)
-					$brand = 'BENQ';
-				else
-					$brand = '';
-				
-				//Image cannot be parsed must import it manually
-				$imageUrl = '';
-
-				//1. Live
-				if($this->checkLiveProduct($pn, $net_price, $supplier)){
-
-					$live = array(
-						'category'=>$c ,
-						'product_number'=>$pn ,
-						'net_price'=>$net_price ,
-						'availability'=>$availability ,
-						'recycle_tax'=>$recycle_tax ,
-						'supplier' =>$supplier,
-						'status' => 'publish',
-						'delete_flag'=>0
-						);
-
-					$this->db->where('product_number', $pn);
-					$this->db->where('supplier', $supplier);
-					$this->db->delete('live', $live);
-					$this->db->insert('live', $live);
-
-					unset($live);
-				}
-
-				//Array for categories table
-				$cpi_product = array(
-					'category' => $c,
-					'product_number' => $pn,
-					'brand' => $brand,
-					'title' => $title,
-					'description' => $description,
-					'product_url' => '',
-					'net_price'=>$net_price
-				);
-
-				//2. New products for charateristics tables that load Sku module
-				$insert = $this->addProduct ($cpi_product, array(), $imageUrl, $supplier);
-
-				if ($insert)
-				{
-					if(isset ($newProducts[$c]))
-						$newProducts[$c] = $newProducts[$c]+1;
-					else
-						$newProducts[$c] = 1;
-				}
-			}
-		}//end foreach
-
-		$this->sendImportedProductsByMail($newProducts);
-		echo "Finnished updating CPI.";
     }
 
+<<<<<<< HEAD
 
 =======
 >>>>>>> parent of 1ca0da7... copiers upload
+=======
+>>>>>>> parent of 6ad90b3... Finish importing CPI
     private function sendImportedProductsByMail($newProducts){
 
     	if (!empty($newProducts))//Send Mail Check
@@ -1553,6 +1505,7 @@ class Live_model extends CI_Model {
     }
 
 
+
     private function checkLiveProduct($pn, $price, $supplier){
 
     	$query = $this->db->get_where('live', array('product_number' => $pn), 1, 0);
@@ -1560,30 +1513,31 @@ class Live_model extends CI_Model {
     	if($query->num_rows()>0){
 
     		foreach ($query->result() as $row)
-			{	
-				if($row->supplier == 'etd' || $row->supplier == 'out' ){
 
-					return false;
-				} 
+				{	
 
-				$price = (float) $price;
-				// Check if product has lower price from a product already is stock and supplier = etd.
-			        
-			    if($row->net_price >= $price || $row->supplier == $supplier){
+					if($row->supplier == 'etd' || $row->supplier == 'out' ){
 
-			        $this->db->where('id',$row->id);
-			        $this->db->delete('live');
-			        return true;
-			    }
-			    else{
+						return false;
+					} 
 
-			        return false;
-			    }
-			}// end foreach
 
-    	}
-    	else{
+					
+					$price = (float) $price;
+					// Check if product has lower price from a product already is stock and supplier = etd.
+				        
+				    if($row->net_price >= $price || $row->supplier == $supplier){
 
+				        $this->db->where('id',$row->id);
+				        $this->db->delete('live');
+				        return true;
+				    }else{
+				        return false;
+				    }
+
+				}
+
+    	}else{
     		return true;
     	}
 	
@@ -1596,21 +1550,26 @@ class Live_model extends CI_Model {
 
 		if ($this->db->table_exists($table))
 		{
+
 			$query = $this->db->get_where($table, $pn);
 
 	    	if($query->num_rows()<1){
 
 	    		$this->db->insert($table, $data);
 	    		return true;
+	    		
 	    	}
 
 	    	return false;
+
 		} 	
 		return false;
     }//private function insertProductCategory(){*/
 
 
+
     public function addProduct($product, $chars_array, $f , $supplier){
+
 
     	$insert = false;
     	$c = $product['category'];
@@ -1620,30 +1579,42 @@ class Live_model extends CI_Model {
 			'product_number' => $product['product_number'],
 			);
 
+				
 		// Only For Update
-		/*
-		if($c == "power_bank" || $c == "routers" ||$c == "switches" ||$c == "speakers" ||$c == "external_hard_drives" ||$c == "sata_hard_drives" ||$c == "ssd" ||$c == "keyboard_mouse" ||$c == "optical_drives" ||$c == "card_readers" ||$c == "flash_drives" ||$c == "power_supplies" ||$c == "cases" ||$c == "fans" ||$c == "motherboards" ||$c == "graphic_cards" ||$c == "cpu" ||$c == "memories"){
+/*
+		
+		if($c == "power_bank" || $c == "routers" ||$c == "switches" ||$c == "speakers" ||$c == "external_hard_drives" ||$c == "sata_hard_drives" ||$c == "ssd" ||$c == "keyboard_mouse" ||$c == "optical_drives" ||$c == "card_readers" ||$c == "flash_drives" ||$c == "power_supplies" ||$c == "cases" ||$c == "fans" ||$c == "motherboards" ||$c == "graphic_cards" ||$c == "cpu" ||$c == "memories")
+
+		{
 			
 			if(!$chars_array){
 			$chars_array=array();
-		}
+			}
+
+
 			//$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
 			//$chars_array = array_merge($chars_array, array("shipping_class"=>$shipping_class));
 			//$chars_array = array_merge($chars_array, array("description"=>$product['description']));
 			$this->updateProduct($c, $chars_array, $product['product_number']);
 			
 		}*/
-		// End Only for Update
+				// End Only for Update
 		
 		$newSku = Modules::run('sku/checkSku',$skuArray);
 		$sku = $newSku['sku'];
 
 
+<<<<<<< HEAD
 
 		if($newSku['new']){
 
 
 
+=======
+		if($newSku['new']){
+
+			
+>>>>>>> parent of 6ad90b3... Finish importing CPI
 			if($c == 'cartridges' || $c == 'toners'){
 				$shipping_class = Modules::run('categories/makeShippingClass', $product, $c);
 				
@@ -1654,9 +1625,9 @@ class Live_model extends CI_Model {
 				'title'=> $product['title'],
 				'supplier_product_url'=> $product['product_url'],
 				'shipping_class' => $shipping_class
+
 				);
-			}
-			elseif($c == 'printers' || $c == 'multifunction_printers'){
+			}elseif($c == 'printers' || $c == 'multifunction_printers'){
 				
 				$price = array('price'=>$product['net_price']);
 				
@@ -1684,18 +1655,20 @@ class Live_model extends CI_Model {
 				'supplier_product_url'=> $product['product_url'],
 				'shipping_class' => $product['shipping_class']
 				);
-			}
-			elseif($c == "copiers"){
 
+<<<<<<< HEAD
 
+=======
+			}elseif($c == "copiers"){
+>>>>>>> parent of 6ad90b3... Finish importing CPI
 				unset($product['category']);
 				$product['sku'] = $sku;
 
 				$categoryData = $product;
 
 			}
-			else{
-
+			else
+			{
 				$shipping_class = '';
 				if($c == "carrying_cases" || $c == "external_hard_drives" ||
 				 $c == "sata_hard_drives" || $c == "ssd" || $c == "speakers" || 
@@ -1703,8 +1676,9 @@ class Live_model extends CI_Model {
 				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c == "tablets"  || $c == "smartphones" ||
 				 $c == "cables" || $c == "patch_panels" || $c == "racks" || $c =="optical_drives" || $c == "card_readers" || $c == "flash_drives" || 
 				 $c == "power_supplies" || $c == "cases" || $c == "fans" || $c == "motherboards" || $c == "graphic_cards" || $c == "cpu" || 
-				 $c == "memories" || $c == "projectors")		
-					$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
+				 $c == "memories")		
+				$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
+
 
 				$categoryData = array(
 				'brand'=> $product['brand'],
@@ -1720,12 +1694,12 @@ class Live_model extends CI_Model {
 
 					$etd_product_url_pdf = '../wp-content/uploads/'.$sku.'.pdf';
 
-					if (!file_exists($etd_product_url_pdf) && $product['product_url']!=''){
-
+					if (!file_exists($etd_product_url_pdf) && $product['product_url']!='')
+					{
 			    		if(!copy ($product['product_url'], $etd_product_url_pdf))
 			    			echo $etd_product_url_pdf.'file not saved';
-			    		else{
-
+			    		else
+			    		{
 			    			$etd_product_url_pdf = 'https://etd.gr/wp-content/uploads/'.$sku.'.pdf';
 							$categoryData['product_url_pdf'] = $etd_product_url_pdf;
 			    		}
@@ -1734,8 +1708,8 @@ class Live_model extends CI_Model {
 			    	unset($categoryData['supplier_product_url']);
 				}
 
-				if($chars_array){
-
+				if($chars_array)
+				{
 					$categoryData = array_merge($categoryData, $chars_array);
 				}
 			}
@@ -1743,17 +1717,20 @@ class Live_model extends CI_Model {
 			if(Modules::run("categories/insert", $c, $categoryData)){
 				
 				$insert = true;
+
+
 			}
 			else{
 				echo 'issue';
 			}
 
+			
 			//3. Add Product Images
-			if($f!='')
-				$this->AddProductImages($product, $f, $supplier, $sku);
+			$this->AddProductImages($product, $f, $supplier, $sku);
 			
 		}//if($sku = Modules::run('sku/checkSku',$skuArray)){
-		else{
+		else
+		{
 			if($c == 'printers' || $c == 'multifunction_printers'){
 				$price = array('price'=>(float)$product['net_price']);
 				//print_r($price['price']);
@@ -1775,14 +1752,15 @@ class Live_model extends CI_Model {
 
     private function AddProductImages($product, $f, $supplier, $sku){
 
-    	if ($supplier == 'oktabit' ){
+    	
 
+    	if ($supplier == 'oktabit' )
+    	{
     		while($f < 5){ // because we want to get max 5 images
 
 				if($f=="0"){
 					$tail='';
-				}
-				else{
+				}else{
 					$tail = '_'.$f;
 				}
 
@@ -1795,11 +1773,9 @@ class Live_model extends CI_Model {
 				);
 				
 				if(!$exists=Modules::run('images/getImage',$imageData)){
-
 					$f=5;
-				}
-				else{
-
+				}else{
+					
 					$f++;
 				}
 			}
@@ -1836,26 +1812,28 @@ class Live_model extends CI_Model {
     	{
     		$i=0;
     		foreach($f as $image){
+		    				
 
-				if($i=="0"){
-					$tail='';
-				}else{
-					$tail = '_'.$i;
-				}
+						if($i=="0"){
+							$tail='';
+						}else{
+							$tail = '_'.$i;
+						}
 
-				$imageData = array(
-					'src' => $image,
-					'sku' => $sku ,
-					'brand' => $product['brand'] ,
-					'part_number' => $product['product_number'] ,
-					'tail' => $tail
-				);
-				
-				if(!$exists=Modules::run('images/getImage',$imageData)){
-					break;
-				}
+						$imageData = array(
+							'src' => $image,
+							'sku' => $sku ,
+							'brand' => $product['brand'] ,
+							'part_number' => $product['product_number'] ,
+							'tail' => $tail
+						);
+						
+						
+						if(!$exists=Modules::run('images/getImage',$imageData)){
+							break;
+						}
 
-				$i++;
+					$i++;
     		}//foreach($f as $image){
     	}//elseif( $supplier == 'etd')
 
@@ -1869,25 +1847,17 @@ class Live_model extends CI_Model {
 							'tail' => ''
 						);
 						
-						Modules::run('images/getImage',$imageData);
-    	}
-    	/* //For cpi if image are parsable
-    	elseif( $supplier == 'cpi')
-    	{
-    		$imageData = array(
-							'src' => $f,
-							'sku' => $sku ,
-							'brand' => $product['brand'] ,
-							'part_number' => $product['product_number'] ,
-							'tail' => ''
-						);
 						
 						Modules::run('images/getImage',$imageData);
+<<<<<<< HEAD
     	}
     	*/
 
     	
 
+=======
+    	}//elseif( $supplier == 'etd')
+>>>>>>> parent of 6ad90b3... Finish importing CPI
     }
 
 
@@ -3544,8 +3514,7 @@ class Live_model extends CI_Model {
 
 	    	return $av;
 
-    	}
-    	elseif($supplier == 'logicom'){
+    	}elseif($supplier == 'logicom'){
 
     		switch ($availability) {
     			case 'Normal':
@@ -3566,8 +3535,7 @@ class Live_model extends CI_Model {
 
     		return $av;
 
-    	}
-    	elseif($supplier == 'ddc' || $supplier == 'braintrust'){
+    	}elseif($supplier == 'ddc' || $supplier == 'braintrust'){
 
     		switch ($availability) {
 	    		case '0':
@@ -3583,8 +3551,7 @@ class Live_model extends CI_Model {
 	    	}
 
 	    	return $av;
-    	}
-    	elseif($supplier == 'etd' ){
+    	}elseif($supplier == 'etd' ){
 
     		switch ($availability) {
 	    		case '0':
@@ -3600,8 +3567,7 @@ class Live_model extends CI_Model {
 
 	    	return $av;
 
-    	}
-    	elseif($supplier == 'aci'){
+    	}elseif($supplier == 'aci'){
 
     		switch ($availability) {
 				case 'Διαθέσιμο':
@@ -3618,16 +3584,6 @@ class Live_model extends CI_Model {
 	    			return false;
 	    			break;
     		}
-
-    		return $av;
-
-    	}
-    	elseif($supplier == 'cpi'){
-
-    		if ($availability >= 1)
-    			$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
-    		else
-    			$av = false;
 
     		return $av;
     	}
