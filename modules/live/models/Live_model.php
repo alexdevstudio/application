@@ -1635,7 +1635,10 @@ class Live_model extends CI_Model {
 		$newSku = Modules::run('sku/checkSku',$skuArray);
 		$sku = $newSku['sku'];
 
+
+
 		if($newSku['new']){
+
 
 			if($c == 'cartridges' || $c == 'toners'){
 				$shipping_class = Modules::run('categories/makeShippingClass', $product, $c);
