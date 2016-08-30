@@ -502,7 +502,6 @@ class Live_model extends CI_Model {
 
 					unset($live);
 				}
-
 				$log_product = array(
 					'category' => $c,
 					'product_number' => $pn,
@@ -530,12 +529,17 @@ class Live_model extends CI_Model {
 				//$this->AddProduct ($c, $pn, $description, $brand, $title, $product_url, $newProducts, $i, $imageUrl, 'logicom');
 				$insert = $this->addProduct ($log_product, array(), $imageUrl, 'logicom');
 
+
 				if ($insert)
 				{
-					if(isset ($newProducts[$c]))
-						$newProducts[$c] = $newProducts[$c]+1;
-					else
+
+
+					if(isset ($newProducts[$c])){
+						$newProducts[$c] = $newProducts[$c]+1; 
+					}
+					else{
 						$newProducts[$c] = 1;
+					}
 				}
 
 			}//if $c==$cat
@@ -1562,8 +1566,7 @@ class Live_model extends CI_Model {
 
 
     public function addProduct($product, $chars_array, $f , $supplier){
-
-
+    	
     	$insert = false;
     	$c = $product['category'];
 
@@ -1597,7 +1600,7 @@ class Live_model extends CI_Model {
 		$sku = $newSku['sku'];
 
 
-		if($sku){
+		if($newSku['new']){
 
 			
 			if($c == 'cartridges' || $c == 'toners'){
@@ -3506,7 +3509,7 @@ class Live_model extends CI_Model {
 
     		return $av;
 
-    	}elseif($supplier == 'ddc' || $supplier == 'braintrust'){
+    	}elseif($supplier == 'ddc' ){
 
     		switch ($availability) {
 	    		case '0':
@@ -3519,9 +3522,26 @@ class Live_model extends CI_Model {
 	    		default:
 	    			return false;
 	    			break;
-	    	}
+
+	    		}
+	    	}elseif( $supplier == 'braintrust'){
+
+    		switch ($availability) {
+	    		case '0':
+	    			$av = 'Αναμονή παραλαβής';
+	    			return false;
+	    			break;
+	    		case '1':
+	    			$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
+	    			break;
+	    		default:
+	    			return false;
+	    			break;
+
+	    		}
 
 	    	return $av;
+	    	
     	}elseif($supplier == 'etd' ){
 
     		switch ($availability) {
