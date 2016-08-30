@@ -1200,7 +1200,6 @@ class Live_model extends CI_Model {
 		}
     }
 
-
     public function copiers(){
     	$this->load->view('upload_copiers', array('error' => ' ' ));
     }
@@ -1484,7 +1483,6 @@ class Live_model extends CI_Model {
 		}
     }
 
-
     private function sendImportedProductsByMail($newProducts){
 
     	if (!empty($newProducts))//Send Mail Check
@@ -1599,13 +1597,9 @@ class Live_model extends CI_Model {
 		$sku = $newSku['sku'];
 
 
+		if($sku){
 
-
-
-		if($newSku['new']){
-
-
-
+			
 			if($c == 'cartridges' || $c == 'toners'){
 				$shipping_class = Modules::run('categories/makeShippingClass', $product, $c);
 				
@@ -1648,12 +1642,10 @@ class Live_model extends CI_Model {
 				);
 
 			}elseif($c == "copiers"){
-
 				unset($product['category']);
 				$product['sku'] = $sku;
 
 				$categoryData = $product;
-
 			}
 			else
 			{
@@ -1824,7 +1816,6 @@ class Live_model extends CI_Model {
 					$i++;
     		}//foreach($f as $image){
     	}//elseif( $supplier == 'etd')
-
     	elseif( $supplier == 'konica')
     	{
     		$imageData = array(
@@ -1837,9 +1828,8 @@ class Live_model extends CI_Model {
 						
 						
 						Modules::run('images/getImage',$imageData);
-						}
-    	*/
-						}//elseif( $supplier == 'etd')
+    	}//elseif( $supplier == 'etd')
+    }
 
 
     private function addProductChars($category, $product_code, $char_xml){
