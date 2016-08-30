@@ -1166,6 +1166,7 @@ class Live_model extends CI_Model {
 		echo "Finnished updating ACI Supplies.";
     }
 
+
     public function copiers(){
     	$this->load->view('upload_copiers', array('error' => ' ' ));
     }
@@ -1535,6 +1536,8 @@ class Live_model extends CI_Model {
     }
 
 
+=======
+>>>>>>> parent of 1ca0da7... copiers upload
     private function sendImportedProductsByMail($newProducts){
 
     	if (!empty($newProducts))//Send Mail Check
@@ -1640,6 +1643,7 @@ class Live_model extends CI_Model {
 		if($newSku['new']){
 
 
+
 			if($c == 'cartridges' || $c == 'toners'){
 				$shipping_class = Modules::run('categories/makeShippingClass', $product, $c);
 				
@@ -1683,10 +1687,12 @@ class Live_model extends CI_Model {
 			}
 			elseif($c == "copiers"){
 
+
 				unset($product['category']);
 				$product['sku'] = $sku;
 
 				$categoryData = $product;
+
 			}
 			else{
 
@@ -1852,6 +1858,7 @@ class Live_model extends CI_Model {
 				$i++;
     		}//foreach($f as $image){
     	}//elseif( $supplier == 'etd')
+
     	elseif( $supplier == 'konica')
     	{
     		$imageData = array(
@@ -1878,6 +1885,9 @@ class Live_model extends CI_Model {
 						Modules::run('images/getImage',$imageData);
     	}
     	*/
+
+    	
+
     }
 
 

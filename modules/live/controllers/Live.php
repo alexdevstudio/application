@@ -26,6 +26,7 @@ class Live extends MX_Controller {
 				break;
 			case 'aci':
 				$this->live_model->aci();
+
 				break;
 			case 'copiers':
 				$this->live_model->copiers();
@@ -33,6 +34,10 @@ class Live extends MX_Controller {
 			case 'cpi':
 				$this->live_model->cpi();
 				break;
+
+			
+			
+
 			default:
 				die('Δεν υπάρχει ο προμηθευτής');
 				break;
@@ -124,6 +129,7 @@ class Live extends MX_Controller {
 		}
 	}
 
+
 	public function upload_copiers_xml()
 	{
 		$config['upload_path'] = './files/suppliers/';
@@ -163,6 +169,7 @@ class Live extends MX_Controller {
 			$this->live_model->import_cpi($path);
 		}
 	}
+
 
 
 	public function addProduct($a,$b,$c,$d){

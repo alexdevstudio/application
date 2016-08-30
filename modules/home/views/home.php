@@ -41,6 +41,7 @@
 				</div>
 			</div>
 		</div>
+
 		<div class="col-sm-4 col-md-2">
 			<div class="color-palette-set text-center">
 				<div class="bg-red color-palette ">
@@ -93,6 +94,8 @@
 					$("#xmltitle").html('Loading...'); 
 					
 					var url = "<?= base_url()?>extract/xml/"+a;
+
+
 
 					$.post(url, function(data){
 						$("#xmltitle").html(a); 
