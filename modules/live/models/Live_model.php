@@ -1484,12 +1484,7 @@ class Live_model extends CI_Model {
 		}
     }
 
-<<<<<<< HEAD
 
-=======
->>>>>>> parent of 1ca0da7... copiers upload
-=======
->>>>>>> parent of 6ad90b3... Finish importing CPI
     private function sendImportedProductsByMail($newProducts){
 
     	if (!empty($newProducts))//Send Mail Check
@@ -1604,17 +1599,13 @@ class Live_model extends CI_Model {
 		$sku = $newSku['sku'];
 
 
-<<<<<<< HEAD
+
+
 
 		if($newSku['new']){
 
 
 
-=======
-		if($newSku['new']){
-
-			
->>>>>>> parent of 6ad90b3... Finish importing CPI
 			if($c == 'cartridges' || $c == 'toners'){
 				$shipping_class = Modules::run('categories/makeShippingClass', $product, $c);
 				
@@ -1656,11 +1647,8 @@ class Live_model extends CI_Model {
 				'shipping_class' => $product['shipping_class']
 				);
 
-<<<<<<< HEAD
-
-=======
 			}elseif($c == "copiers"){
->>>>>>> parent of 6ad90b3... Finish importing CPI
+
 				unset($product['category']);
 				$product['sku'] = $sku;
 
@@ -1849,16 +1837,9 @@ class Live_model extends CI_Model {
 						
 						
 						Modules::run('images/getImage',$imageData);
-<<<<<<< HEAD
-    	}
+						}
     	*/
-
-    	
-
-=======
-    	}//elseif( $supplier == 'etd')
->>>>>>> parent of 6ad90b3... Finish importing CPI
-    }
+						}//elseif( $supplier == 'etd')
 
 
     private function addProductChars($category, $product_code, $char_xml){

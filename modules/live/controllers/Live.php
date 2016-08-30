@@ -26,7 +26,6 @@ class Live extends MX_Controller {
 			break;
 			case 'aci':
 				$this->live_model->aci();
-<<<<<<< HEAD
 
 				break;
 			case 'copiers':
@@ -37,13 +36,6 @@ class Live extends MX_Controller {
 				break;
 
 			
-			
-=======
-			break;
-			case 'copiers':
-				$this->live_model->copiers();
-			break;
->>>>>>> parent of 6ad90b3... Finish importing CPI
 
 			default:
 				die('Δεν υπάρχει ο προμηθευτής');

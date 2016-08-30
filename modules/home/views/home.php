@@ -69,14 +69,14 @@ $tables = Modules::run('categories/fullCategoriesArray');
 			
 			</div>
 		</div>
-<<<<<<< HEAD
+
 
 		<div class="col-sm-4 col-md-2">
 			<div class="color-palette-set text-center">
 				<div class="bg-red color-palette ">
 					<a href="./live/index/cpi" style="color:#fff;display:block"><br /><span >CPI</span><br /><br /></a>
 				</div>
-=======
+
 </div> 
 <!-- <div class="col-sm-4 col-md-2">
 
@@ -90,7 +90,7 @@ $tables = Modules::run('categories/fullCategoriesArray');
 					<br />
 				</a>
 			
->>>>>>> parent of 6ad90b3... Finish importing CPI
+
 			</div>
 		</div>
 </div>  -->
@@ -110,6 +110,7 @@ $tables = Modules::run('categories/fullCategoriesArray');
 			</div>
 	</div> 
 </div> 
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 
@@ -119,6 +120,9 @@ $tables = Modules::run('categories/fullCategoriesArray');
 						$("#xml_link .box-body").html(data);        
 				    });
 =======
+=======
+
+>>>>>>> parent of 6ad90b3... Finish importing CPI
 <div class="sections col-xs-12">
 <section class="content-header">
       <h1>
@@ -126,7 +130,7 @@ $tables = Modules::run('categories/fullCategoriesArray');
       </h1>
       <br>	
     </section>
->>>>>>> parent of 6ad90b3... Finish importing CPI
+
 
 <div class="col-sm-4 col-md-2">
 
@@ -177,9 +181,6 @@ function linkGenerator(a){
 
 	var url = "<?= base_url()?>extract/xml/"+a;
 	
-
-	
-
 	$.post(url, function(data){
 		$("#xmltitle").html(a); 
 		$("#xml_link .box-body").html(data);        
@@ -253,9 +254,7 @@ function linkGenerator(a){
 
 				var inputFile = $('#updateXml');
 				//var category = $('#categories').val();
-
 				var uloadUri = $('#charUpdate').attr('action');
-
 				$('#uploadSubmit').on('click',function(event){
 
 						updateToggle();
