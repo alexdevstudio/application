@@ -18,6 +18,7 @@ class Edit extends MX_Controller {
 					$post['status'] = 'trash';
 					$post['delete_flag'] = 100;
 					$post['price_tax'] = NULL;
+					$post['sale_price'] = NULL;
 					$post['availability'] = 0;
 					$where = array('product_number'=>$post['product_number'], 'category'=>$post['category']);
 					$exists = Modules::run('crud/get','live',$where);
@@ -40,9 +41,15 @@ class Edit extends MX_Controller {
 
 					$post['availability']=$av;
 					$post['status']='publish';
-					$post['supplier']='etd';
 					$post['delete_flag']= 0;
 
+					if($post['sale_price']==''){
+						$post['sale_price'] = NULL;
+					}
+
+					if($post['price_tax']==''){
+						$post['price_tax'] = NULL;
+					}
 
 					$where = array('product_number'=>$item->row()->product_number);
 

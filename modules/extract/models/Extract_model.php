@@ -89,7 +89,7 @@ class Extract_model extends CI_Model {
            
 
                 $query = $this->db->query("
-                     SELECT l.product_number, l.category, l.net_price, l.recycle_tax,l.price_tax, l.availability, l.supplier, l.status, l.delete_flag, t.*
+                     SELECT l.product_number, l.category, l.net_price, l.recycle_tax,l.price_tax,l.sale_price, l.availability, l.supplier, l.status, l.delete_flag, t.*
 
                      FROM live l
 
@@ -338,6 +338,21 @@ class Extract_model extends CI_Model {
                              $skroutz_title = "$model  $color ($pn)";
 
                            break;
+                           case 'copiers':
+                        
+                       
+                        $pn    =  $product['product_number'];
+
+                       
+                                              
+                         if($etd_title == '')                            
+                             $etd_title = $product['Name'];
+                        
+
+                        if($skroutz_title == '')                             
+                             $skroutz_title = $product['Name'];
+
+                           break;
                         default:
                             $etd_title = $product['title'];
                             $skroutz_title = $product['title'];
@@ -486,6 +501,9 @@ $products_count = 0;
 
                         $where = array('post_id'=>$post_id,'meta_key'=>'_regular_price');
                         $data = array('meta_value'=>$product['price_tax']);                   
+                        Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
+                        $where = array('post_id'=>$post_id,'meta_key'=>'_sale_price');
+                        $data = array('meta_value'=>$product['sale_price']);                   
                         Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
                         $where = array('post_id'=>$post_id,'meta_key'=>'_price');
                         $data = array('meta_value'=>$product['price_tax']);                   

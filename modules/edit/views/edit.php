@@ -57,24 +57,35 @@ $image = Modules::run("images/getFirstImage",$sku,true);
 
  <div class="col-xs-12 ">
  <form method="post" action=''>
-<label>Τελική τιμή στο Eshop</label>
+ <div class="form-group">
+<label>Κανονική Τιμή</label>
+
 <?php
 $price = '';
 $availability = '';
-
+$sale_price = '';
+$supplier = '';
 $instock = '';
 $outstock = '';
 
 if($itemLive){
+	
 	$price = $itemLive->row()->price_tax;
-
+	$sale_price = $itemLive->row()->sale_price; 
 	$av = $itemLive->row()->availability;
+	$supplier = $itemLive->row()->supplier;
 
 	if($av=='Άμεσα Διαθέσιμο'){
 		$instock = 'selected';
 	}elseif($av=='Κατόπιν παραγγελίας σε 1 εργάσιμη'){
 		$outstock = 'selected';
 	}
+
+	
+	$etd = '';
+	$logicom = '';
+	$oktabit = '';
+	$braintrust = '';
 }
 
 
@@ -85,8 +96,72 @@ if($itemLive){
 <input class='form-control' type="hidden" name='delete_flag' value='0'>
 <input class='form-control' type="hidden" name='status' value='add'>
 
-<input class='form-control' name='price_tax' value='<?= $price; ?>'>
 
+<div class="input-group">
+    <input class='form-control' name='price_tax' id='regular' value='<?= $price; ?>'>
+    <span style="cursor:pointer;color:#dd4b39;" class="input-group-addon" id="basic-addon1" onclick='clearPrice("regular");' title="Εκκαθάριση τιμής">X</span>
+</div>
+
+
+
+
+</div>
+<div class="form-group">
+	                  	
+<label>Τιμή Προσφοράς</label>
+
+<div class="input-group">
+    <input class='form-control' name='sale_price' id='sale_price' value='<?= $sale_price; ?>'>
+    <span style="cursor:pointer;color:#dd4b39;" class="input-group-addon" id="basic-addon1" onclick='clearPrice("sale");' title="Εκκαθάριση τιμής">X</span>
+</div>
+	
+
+</div>
+<div class="form-group">
+	                  	
+	                  	<label>Προμυθευτής</label>
+	                  	
+	              		  <select class='form-control' name="supplier" id="supplier">
+
+	              		  	<?php
+
+
+	              		  			switch ($supplier) {
+	              		  				case 'etd':
+	              		  					$etd = 'selected';
+	              		  					break;
+	              		  				case 'logicom':
+	              		  					$logicom = 'selected';
+	              		  					break;
+	              		  				case 'oktabit':
+	              		  					$oktabit = 'selected';
+	              		  					break;
+	              		  				case 'braintrust':
+	              		  					$braintrust = 'selected';
+	              		  					break;
+	              		  				case 'cpi':
+	              		  					$cpi = 'selected';
+	              		  					break;
+	              		  				default:
+	              		  					$other = 'selected';
+	              		  					?>
+	              		  	<option value="<?= $suplier; ?>" <?= $other ?>>$supplier</option>
+
+	              		  					<?php
+	              		  					break;
+	              		  			}
+	              		  		
+
+	              		  	?>
+	              		  	<option value="etd" <?= $etd ?>>ETD</option>
+	              		  	<option value="logicom" <?= $logicom ?>>Logicom</option>
+	              		  	<option value="oktabit" <?= $oktabit ?>>Oktabit</option>
+	              		  	<option value="braintrust" <?= $braintrust ?>>Braintrust</option>
+	              		  </select>
+
+	                  	
+          
+	        </div>
 <div class="form-group">
 	                  	
 	                  	<label>Διαθεσιμότητα</label>
@@ -101,7 +176,7 @@ if($itemLive){
           
 	        </div>
 
-	<button type="submit" class="btn btn-block btn-warning">Προσθήκη στο Eshop</button>
+	<button type="submit" class="btn btn-block btn-warning">Ενημέρωση του Eshop</button>
 
 </form>
 <br/>
@@ -168,3 +243,24 @@ if($itemLive){
 		</form>
 		</div>
 </div>
+
+
+<script type="text/javascript">
+	/*$(document).ready(function(){*/
+
+			function clearPrice(a){
+				if(a == 'regular'){
+					$('#regular').val('');
+					
+				}
+
+				if(a == 'sale'){
+					$('#sale_price').val('');
+					
+
+				}
+			}
+
+/*});*/
+
+</script>>
