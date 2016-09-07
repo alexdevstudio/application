@@ -34,15 +34,62 @@ class Cross_sales_import extends CI_Model {
     	$bags = $bags->result_array();
     	$found = false;
     	foreach ($bags as $bag) {
+
+    		$pn = $bag['product_number'];
+
+    		$the_bag = Module::run('crud/get', 'carrying_cases', array('product_number'=>$bag['product_number']));
+    		$row = $the_bag->row();
+    		$bag_sku = $row->sku;
+    		//a. Availabilty
+
     		if($bag['availability']=='Άμεσα Διαθέσιμο'){
-    			$instock_bags[] = $bag['product_number'];
+    			$instock_bags[] = $bag_sku;
 			}else{
-				$outofstock_bags[] = $bag['product_number'];
+				$outofstock_bags[] = $bag_sku;
     		}
 
     		$total_bags = array($instock_bags, $outofstock_bags);
 
-    		
+    		//b. Brand
+
+    		if($brand == $row->brand{
+    			$same_brand[] =  $bag_sku;
+    		}else{
+    			$dif_brand[] =  $bag_sku;
+    		}
+
+    		$total_brands = array($same_brand, $dif_brand);
+
+    		//c. Size
+
+    		$size = substr($size, 0, strpos($size, '.'));
+
+    		if (strpos($row->size, $size) !== false) {
+			    $same_size[] = $bag_sku;
+			}
+
+			$perfect_match = array_intersect($instock_bags, $same_brand, $same_size);
+			$good_match = array_intersect($same_size,$same_brand);
+			$normal_match = $same_size;
+
+			if(!empty($perfect_match)){
+				foreach (array_rand($perfect_match) as $value) {
+					$cross_bag = $value;
+					break;
+				}
+			}elseif(!empty($good_match)){
+				foreach (array_rand($good_match) as $value) {
+					$cross_bag = $value;
+					break;
+				}
+			}elseif(!empty($normal_match)){
+				foreach (array_rand($normal_match) as $value) {
+					$cross_bag = $value;
+					break;
+				}
+			}else{
+				$cross_bag = '';
+			}
 
     	}
 
