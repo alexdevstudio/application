@@ -164,6 +164,7 @@ class Extract_model extends CI_Model {
 
                     $etd_title = $product['etd_title'];
                     $skroutz_title = $product['skroutz_title'];
+                    $cross = '';
                 
                 switch ($table) {
                         case 'laptops':
@@ -206,6 +207,13 @@ class Extract_model extends CI_Model {
                             $skroutz_title = $model.$color.$cpu.'/'.$ram.'/'.$disk. $vga.'/'.$os;
 
                         }
+
+
+                        $product['cross_sales'] =  Modules::run("crosssales/auto_laptop",$product['sku'], $product['brand'], $product['screen_size'], $product['price_tax']);
+                        
+                        
+
+
 
                             break;
                          case 'desktops':

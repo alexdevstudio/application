@@ -3,7 +3,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-class Cross_sales_model extends CI_Model {
+class Crosssales_model extends CI_Model {
 
     function __construct()
     {
@@ -17,7 +17,7 @@ class Cross_sales_model extends CI_Model {
     //2. If not then Check the general rule by category
     
 
-    function auto_laptop($sku, $brand, $size, $price){
+    public function auto_laptop($sku, $brand, $size, $price){
     	
     	if($this->manual_inserted($sku)){
     		return false;
@@ -27,32 +27,43 @@ class Cross_sales_model extends CI_Model {
 
     	//1. Pick up a bag based on: Availability, Size, Brand, Price.
 
+        $instock_bags = array();
+        $outofstock_bags = array();
+        $same_brand = array();
+        $dif_brand = array();
+        $same_size = array();
 
-
-    	$bags = Module::run('crud/get', 'live', array('category'=>'carrying_cases'));
+    	$bags = Modules::run('crud/get', 'live', array('category'=>'carrying_cases'));
 
     	$bags = $bags->result_array();
-    	$found = false;
+
+        
+
     	foreach ($bags as $bag) {
+
+
 
     		$pn = $bag['product_number'];
 
-    		$the_bag = Module::run('crud/get', 'carrying_cases', array('product_number'=>$bag['product_number']));
+    		$the_bag = Modules::run('crud/get', 'carrying_cases', array('product_number'=>$bag['product_number']));
     		$row = $the_bag->row();
     		$bag_sku = $row->sku;
-    		//a. Availabilty
 
+
+    		//a. Availabilty
     		if($bag['availability']=='Άμεσα Διαθέσιμο'){
     			$instock_bags[] = $bag_sku;
 			}else{
 				$outofstock_bags[] = $bag_sku;
+
     		}
 
     		$total_bags = array($instock_bags, $outofstock_bags);
 
+            
     		//b. Brand
 
-    		if($brand == $row->brand{
+    		if($brand == $row->brand){
     			$same_brand[] =  $bag_sku;
     		}else{
     			$dif_brand[] =  $bag_sku;
@@ -61,16 +72,22 @@ class Cross_sales_model extends CI_Model {
     		$total_brands = array($same_brand, $dif_brand);
 
     		//c. Size
-
-    		$size = substr($size, 0, strpos($size, '.'));
+            $size = explode('.', $size);
+    		$size = $size[0];
 
     		if (strpos($row->size, $size) !== false) {
 			    $same_size[] = $bag_sku;
-			}
+			}else{
+                $dif_size[] = $bag_sku;
+            }
+
+
 
 			$perfect_match = array_intersect($instock_bags, $same_brand, $same_size);
-			$good_match = array_intersect($same_size,$same_brand);
+			$good_match = array_intersect($total_bags, $same_brand);
 			$normal_match = $same_size;
+
+
 
 			if(!empty($perfect_match)){
 				foreach (array_rand($perfect_match) as $value) {
@@ -93,7 +110,11 @@ class Cross_sales_model extends CI_Model {
 
     	}
 
-    	return $cross_bag;
+        if(isset($same_size[0])){
+            return $same_size[0];
+        }
+        return false;
+    	
     }
 
     function manual_inserted($sku){
