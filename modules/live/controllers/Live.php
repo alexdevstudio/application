@@ -161,6 +161,7 @@ class Live extends MX_Controller {
 			$path = './files/suppliers/'.$data['upload_data']['file_name'];
 			$this->load->model('live_model');
 			$this->live_model->import_cpi($path);
+			
 		}
 	}
 
