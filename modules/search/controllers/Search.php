@@ -24,7 +24,12 @@ class Search extends MX_Controller {
 			$cat = $product['category'];
 			$sku = $product['item']->row()->sku;
 			$brand = $product['item']->row()->brand;
-			$model = $product['item']->row()->model;
+			if(isset($product['item']->row()->model)){
+				$model = $product['item']->row()->model;
+			}else{
+				$model = '';
+			}
+			 
 			$title = $product['item']->row()->title;
 			$pn = $product['item']->row()->product_number;
 

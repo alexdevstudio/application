@@ -3523,13 +3523,12 @@ class Live_model extends CI_Model {
 	    			return false;
 	    			break;
 
-	    		}
+	    		} 
 	    	}elseif( $supplier == 'braintrust'){
 
     		switch ($availability) {
 	    		case '0':
 	    			$av = 'Αναμονή παραλαβής';
-	    			
 	    			break;
 	    		case '1':
 	    			$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';

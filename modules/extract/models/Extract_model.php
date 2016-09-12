@@ -101,8 +101,6 @@ class Extract_model extends CI_Model {
                $i=1;
                $products = array();
 
-               
-
                foreach ($query->result_array() as $product) {
 
                 $cat = $product['category'];
@@ -211,6 +209,11 @@ class Extract_model extends CI_Model {
 
                         $product['cross_sales'] =  Modules::run("crosssales/auto_laptop",$product['sku'], $product['brand'], $product['screen_size'], $product['price_tax']);
                         
+                       /* if(!empty($product['cross_sales'])){
+                            print_r($product['cross_sales']); 
+                            exit();
+                        }*/
+
                         
 
 
