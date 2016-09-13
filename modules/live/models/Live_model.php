@@ -1630,7 +1630,7 @@ Manufacturer
 
 			switch ($cat) {
 				case 'GADGETS':
-					if (strpos($cat, 'SCOOTER') !== false
+					if (strpos($cat, 'SCOOTER') !== false)
 						$c = 'hoverboards';
 					else
 						$c = '';
