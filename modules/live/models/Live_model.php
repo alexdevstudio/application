@@ -1608,16 +1608,6 @@ class Live_model extends CI_Model {
 
 		$newProducts = array();
 		$i=0;
-/*
-
-Code
-Part_Number
-Description
-Stock_Status
-Final_Price
-Item_Category  GADGETS
-Manufacturer
-*/
 
 		foreach($xml->children() as $product) {
 
@@ -1641,8 +1631,6 @@ Manufacturer
 			}
 
 			if($c=='hoverboards'){
-
-				if($c!=''){
 
 					$availability = $this->makeAvailability((string) trim($product->Stock_Status), 'westnet');
 
