@@ -1620,7 +1620,7 @@ class Live_model extends CI_Model {
 
 			switch ($cat) {
 				case 'GADGETS':
-					if (strpos($cat, 'SCOOTER') !== false)
+					if (strpos($sc, 'SCOOTER') !== false)
 						$c = 'hoverboards';
 					else
 						$c = '';
@@ -1632,77 +1632,77 @@ class Live_model extends CI_Model {
 
 			if($c=='hoverboards'){
 
-					$availability = $this->makeAvailability((string) trim($product->Stock_Status), 'westnet');
+				$availability = $this->makeAvailability((string) trim($product->Stock_Status), 'westnet');
 
-					if(!$availability){
-						continue;
-					}
+				if(!$availability){
+					continue;
+				}
 
-					$code = (string) trim($product->Code);
-					$pn = (string) trim($product->Part_Number);
-					$title = (string) trim($product->Description);
-					$net_price = trim($product->Final_Price);
-					$recycle_tax = '';
-					$description = (string) trim($product->Description);
+				$code = (string) trim($product->Code);
+				$pn = (string) trim($product->Part_Number);
+				$title = (string) trim($product->Description);
+				$net_price = trim($product->Final_Price);
+				$recycle_tax = '';
+				$description = (string) trim($product->Description);
 
-					$brand = (string) trim($product->Manufacturer);
-					if($brand == "LL")
-						$brand = 'Lexgo';
+				$brand = (string) trim($product->Manufacturer);
+				if($brand == "LL")
+					$brand = 'Lexgo';
 
-					$supplier = 'westnet';
+				$supplier = 'westnet';
 
-					//Image cannot be parsed must import it manually
-					$imageUrl = '';
+				//Image cannot be parsed must import it manually
+				$imageUrl = '';
 
-					//1. Live
-	/*				if($this->checkLiveProduct($pn, $net_price, $supplier)){
+				//1. Live
+				if($this->checkLiveProduct($pn, $net_price, $supplier)){
 
-						$live = array(
-							'category'=>$c ,
-							'product_number'=>$pn ,
-							'net_price'=>$net_price ,
-							'availability'=>$availability ,
-							'recycle_tax'=>$recycle_tax ,
-							'supplier' =>$supplier,
-							'status' => 'publish',
-							'delete_flag'=>0
-							);
+					$live = array(
+						'category'=>$c ,
+						'product_number'=>$pn ,
+						'net_price'=>$net_price ,
+						'availability'=>$availability ,
+						'recycle_tax'=>$recycle_tax ,
+						'supplier' =>$supplier,
+						'status' => 'publish',
+						'delete_flag'=>0
+						);
 
-						$this->db->where('product_number', $pn);
-						$this->db->where('supplier', $supplier);
-						$this->db->delete('live', $live);
-						$this->db->insert('live', $live);
+					$this->db->where('product_number', $pn);
+					$this->db->where('supplier', $supplier);
+					$this->db->delete('live', $live);
+					$this->db->insert('live', $live);
 
-						unset($live);
-					}
+					unset($live);
+				}
 
-					//Array for categories table
-					$westnet_product = array(
-						'category' => $c,
-						'product_number' => $pn,
-						'brand' => $brand,
-						'title' => $title,
-						'description' => $description,
-						'product_url' => '',
-						'net_price'=>$net_price
-					);
+				//Array for categories table
+				$westnet_product = array(
+					'category' => $c,
+					'product_number' => $pn,
+					'brand' => $brand,
+					'title' => $title,
+					'description' => $description,
+					'product_url' => '',
+					'net_price'=>$net_price
+				);
 
-					//2. New products for charateristics tables that load Sku module
-					$insert = $this->addProduct ($westnet_product, array(), $imageUrl, $supplier);
+				//2. New products for charateristics tables that load Sku module
+				$insert = $this->addProduct ($westnet_product, array(), $imageUrl, $supplier);
 
-					if ($insert)
-					{
-						if(isset ($newProducts[$c]))
-							$newProducts[$c] = $newProducts[$c]+1;
-						else
-							$newProducts[$c] = 1;
-					}
-					*/
+				if ($insert)
+				{
+					if(isset ($newProducts[$c]))
+						$newProducts[$c] = $newProducts[$c]+1;
+					else
+						$newProducts[$c] = 1;
+				}
 			}
 		}//end foreach
 
 		$this->sendImportedProductsByMail($newProducts);
 		echo "Finnished updating Westnet.";
+		
     }
 
     private function sendImportedProductsByMail($newProducts){
