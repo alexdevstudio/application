@@ -163,6 +163,9 @@ if($itemLive){
 	              		  	<option value="logicom" <?= $logicom ?>>Logicom</option>
 	              		  	<option value="oktabit" <?= $oktabit ?>>Oktabit</option>
 	              		  	<option value="braintrust" <?= $braintrust ?>>Braintrust</option>
+	              		  	<option value="cpi" <?= $cpi ?>>CPI</option>
+	              		  	<option value="westnet" <?= $westnet ?>>WestNet</option>
+	              		  	<option value="DDC" <?= $ddc ?>>DDC</option>
 	              		  </select>
 
 	                  	
