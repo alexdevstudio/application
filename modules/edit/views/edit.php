@@ -142,6 +142,12 @@ if($itemLive){
 	              		  				case 'cpi':
 	              		  					$cpi = 'selected';
 	              		  					break;
+	              		  				case 'westnet':
+	              		  					$westnet = 'selected';
+	              		  					break;
+	              		  				case 'ddc':
+	              		  					$ddc = 'selected';
+	              		  					break;
 	              		  				default:
 	              		  					$other = 'selected';
 	              		  					?>
