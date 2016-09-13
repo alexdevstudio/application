@@ -86,6 +86,9 @@ if($itemLive){
 	$logicom = '';
 	$oktabit = '';
 	$braintrust = '';
+	$cpi = '';
+	$westnet = '';
+	$ddc = '';
 }
 
 
