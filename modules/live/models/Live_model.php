@@ -1484,7 +1484,114 @@ class Live_model extends CI_Model {
 				}
 
 			}
+		}//end foreach
+
+		$this->sendImportedProductsByMail($newProducts);
+		echo "Finnished updating KONICA Copiers.";
+    }
+
+    public function cpi(){
+    	$this->load->view('upload_cpi_xml', array('error' => ' ' ));
+    }
+
+    public function import_cpi($path){
+
+		if($xml = $this->xml($path)){
+			
+			$images = array();
+			$this->updateLive('cpi');
 		}
+
+		$newProducts = array();
+		$i=0;
+
+		foreach($xml->children() as $product) {
+			$availability=false;
+			set_time_limit(50);
+			
+			$cat = (string) trim($product->Item);
+			if (strpos($cat, 'OKI ') !== false || strpos($cat, 'ΟΚΙ') !== false)
+				$c = 'printers';
+			elseif (strpos($cat, 'ΡRΟJΕCΤΟR ') !== false)
+				$c = 'projectors';
+			else
+				$c ='';
+
+			if($c!=''){
+
+				$availability = $this->makeAvailability((string) trim($product->Availability), 'cpi');
+
+				if(!$availability){
+					continue;
+				}
+
+				$code = (string) trim($product->Int_Code);
+				$pn = (string) trim($product->Code);
+				$title = (string) trim($product->Item);
+				$net_price = trim($product->Price);
+				$recycle_tax = trim($product->Recycle_Price);
+				$description = '';
+
+				$supplier = 'cpi';
+				// For fixing brand 
+				if (strpos($cat, 'OKI ') !== false || strpos($cat, 'ΟΚΙ') !== false)
+					$brand = 'OKI';
+				elseif (strpos($cat, 'ΡRΟJΕCΤΟR ') !== false)
+					$brand = 'BENQ';
+				else
+					$brand = '';
+				
+				//Image cannot be parsed must import it manually
+				$imageUrl = '';
+
+				//1. Live
+				if($this->checkLiveProduct($pn, $net_price, $supplier)){
+
+					$live = array(
+						'category'=>$c ,
+						'product_number'=>$pn ,
+						'net_price'=>$net_price ,
+						'availability'=>$availability ,
+						'recycle_tax'=>$recycle_tax ,
+						'supplier' =>$supplier,
+						'status' => 'publish',
+						'delete_flag'=>0
+						);
+
+					$this->db->where('product_number', $pn);
+					$this->db->where('supplier', $supplier);
+					$this->db->delete('live', $live);
+					$this->db->insert('live', $live);
+
+					unset($live);
+				}
+
+				//Array for categories table
+				$cpi_product = array(
+					'category' => $c,
+					'product_number' => $pn,
+					'brand' => $brand,
+					'title' => $title,
+					'description' => $description,
+					'product_url' => '',
+					'net_price'=>$net_price
+				);
+
+				//2. New products for charateristics tables that load Sku module
+				$insert = $this->addProduct ($cpi_product, array(), $imageUrl, $supplier);
+
+				if ($insert)
+				{
+					if(isset ($newProducts[$c]))
+						$newProducts[$c] = $newProducts[$c]+1;
+					else
+						$newProducts[$c] = 1;
+				}
+			}
+		}//end foreach
+
+		$this->sendImportedProductsByMail($newProducts);
+		echo "Finnished updating CPI.";
     }
 
     private function sendImportedProductsByMail($newProducts){
@@ -1831,7 +1938,21 @@ class Live_model extends CI_Model {
 						
 						
 						Modules::run('images/getImage',$imageData);
-    	}//elseif( $supplier == 'etd')
+    	}//elseif( $supplier == 'konica')
+    	/* //For cpi if image are parsable
+    	elseif( $supplier == 'cpi')
+    	{
+    		$imageData = array(
+							'src' => $f,
+							'sku' => $sku ,
+							'brand' => $product['brand'] ,
+							'part_number' => $product['product_number'] ,
+							'tail' => ''
+						);
+						
+						Modules::run('images/getImage',$imageData);
+    	}
+    	*/
     }
 
 
@@ -3574,6 +3695,15 @@ class Live_model extends CI_Model {
 	    			return false;
 	    			break;
     		}
+
+    		return $av;
+    	}
+    	elseif($supplier == 'cpi'){
+
+    		if ($availability >= 1)
+    			$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
+    		else
+    			$av = false;
 
     		return $av;
     	}
