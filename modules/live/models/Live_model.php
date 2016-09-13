@@ -1594,6 +1594,128 @@ class Live_model extends CI_Model {
 		echo "Finnished updating CPI.";
     }
 
+    public function westnet(){
+    	$this->load->view('upload_westnet_xml', array('error' => ' ' ));
+    }
+
+        public function import_westnet($path){
+
+		if($xml = $this->xml($path)){
+			
+			$images = array();
+			$this->updateLive('westnet');
+		}
+
+		$newProducts = array();
+		$i=0;
+/*
+
+Code
+Part_Number
+Description
+Stock_Status
+Final_Price
+Item_Category  GADGETS
+Manufacturer
+*/
+
+		foreach($xml->children() as $product) {
+
+			$availability=false;
+			set_time_limit(50);
+			
+			$cat = (string) trim($product->Item_Category);
+			$sc = (string) trim($product->Description);
+			$c = '';
+
+			switch ($cat) {
+				case 'GADGETS':
+					if (strpos($cat, 'SCOOTER') !== false
+						$c = 'hoverboards';
+					else
+						$c = '';
+					break;
+				default:
+					$c = $cat;
+					break;
+			}
+
+			if($c=='hoverboards'){
+
+				if($c!=''){
+
+					$availability = $this->makeAvailability((string) trim($product->Stock_Status), 'westnet');
+
+					if(!$availability){
+						continue;
+					}
+
+					$code = (string) trim($product->Code);
+					$pn = (string) trim($product->Part_Number);
+					$title = (string) trim($product->Description);
+					$net_price = trim($product->Final_Price);
+					$recycle_tax = '';
+					$description = (string) trim($product->Description);
+
+					$brand = (string) trim($product->Manufacturer);
+					if($brand == "LL")
+						$brand = 'Lexgo';
+
+					$supplier = 'westnet';
+
+					//Image cannot be parsed must import it manually
+					$imageUrl = '';
+
+					//1. Live
+					if($this->checkLiveProduct($pn, $net_price, $supplier)){
+
+						$live = array(
+							'category'=>$c ,
+							'product_number'=>$pn ,
+							'net_price'=>$net_price ,
+							'availability'=>$availability ,
+							'recycle_tax'=>$recycle_tax ,
+							'supplier' =>$supplier,
+							'status' => 'publish',
+							'delete_flag'=>0
+							);
+
+						$this->db->where('product_number', $pn);
+						$this->db->where('supplier', $supplier);
+						$this->db->delete('live', $live);
+						$this->db->insert('live', $live);
+
+						unset($live);
+					}
+
+					//Array for categories table
+					$westnet_product = array(
+						'category' => $c,
+						'product_number' => $pn,
+						'brand' => $brand,
+						'title' => $title,
+						'description' => $description,
+						'product_url' => '',
+						'net_price'=>$net_price
+					);
+
+					//2. New products for charateristics tables that load Sku module
+					$insert = $this->addProduct ($westnet_product, array(), $imageUrl, $supplier);
+
+					if ($insert)
+					{
+						if(isset ($newProducts[$c]))
+							$newProducts[$c] = $newProducts[$c]+1;
+						else
+							$newProducts[$c] = 1;
+					}
+			}
+		}//end foreach
+
+		$this->sendImportedProductsByMail($newProducts);
+		echo "Finnished updating Westnet.";
+    }
+
     private function sendImportedProductsByMail($newProducts){
 
     	if (!empty($newProducts))//Send Mail Check
@@ -1756,6 +1878,17 @@ class Live_model extends CI_Model {
 				$product['sku'] = $sku;
 
 				$categoryData = $product;
+			}
+			elseif($c == 'hoverboards'){
+
+				$categoryData = array(
+				'brand'=> $product['brand'],
+				'sku'=> $sku,
+				'product_number'=> $product['product_number'],
+				'title'=> $product['title'],
+				'description'=> strip_tags($product['description']),
+				'shipping_class' => 4661
+				);
 			}
 			else
 			{
@@ -3707,6 +3840,23 @@ class Live_model extends CI_Model {
 
     		return $av;
     	}
+    	elseif($supplier == 'westnet'){
+
+    		switch ($availability) {
+				case 'OK':
+					$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
+					break;
+				case 'N/A':
+					$av = 'Κατόπιν παραγγελίας χωρίς διαθεσιμότητα';
+					break;
+				default:
+	    			return false;
+	    			break;
+    		}
+
+    		return $av;
+    	}
+
     }
 
 	public function updateLive($supplier){

@@ -48,6 +48,13 @@
 				</div>
 			</div>
 		</div>
+		<div class="col-sm-4 col-md-2">
+			<div class="color-palette-set text-center">
+				<div class="bg-red color-palette ">
+					<a href="./live/index/westnet" style="color:#fff;display:block"><br /><span >Westnet</span><br /><br /></a>
+				</div>
+			</div>
+		</div>
 		<!-- 
 		<div class="col-sm-4 col-md-2">
 			<div class="color-palette-set text-center">
