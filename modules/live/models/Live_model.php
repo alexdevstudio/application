@@ -1655,7 +1655,7 @@ class Live_model extends CI_Model {
 					$imageUrl = '';
 
 					//1. Live
-					if($this->checkLiveProduct($pn, $net_price, $supplier)){
+	/*				if($this->checkLiveProduct($pn, $net_price, $supplier)){
 
 						$live = array(
 							'category'=>$c ,
@@ -1697,6 +1697,7 @@ class Live_model extends CI_Model {
 						else
 							$newProducts[$c] = 1;
 					}
+					*/
 			}
 		}//end foreach
 
