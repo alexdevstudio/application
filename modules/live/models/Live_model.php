@@ -987,11 +987,55 @@ class Live_model extends CI_Model {
 			$c = $cat;
 			
 			$brand = (string) trim($product->Supplier);
+			$title = '';
+			$size = '';
 
 			switch ($cat) {
 				case 'Notebook':
 					if($brand == 'MSI')
 						$c = 'laptops';
+					else
+						$c = $cat;
+				break;
+				case 'PC Motherboard':
+					$c = 'motherboards';
+				break;
+				case 'VGA':
+					if($brand == 'MSI' || $brand == 'SAPPHIRE')
+						$c = 'graphic_cards';
+					else
+						$c = $cat;
+				break;
+				case 'HDD 3,5"':
+					$c = 'sata_hard_drives';
+					$size = '3.5"' ;
+				break;
+				case 'HDD 2,5"':
+					$c = 'sata_hard_drives';
+					$size = '2.5"' ;
+				break;
+				case 'HDD External':
+					$c = 'external_hard_drives';
+				break;
+				case 'SSD':
+					$c = 'external_hard_drives';
+				break;
+				case 'Monitor':
+				case 'TV/Monitor':
+					if($brand == 'LG ELECTRONICS')
+						$c = 'monitors';
+					else
+						$c = $cat;
+				break;
+				case 'Memory':
+					if($brand == 'CORSAIR MEMORY')
+						$c = 'memories';
+					else
+						$c = $cat;
+				break;
+				case 'PSU':
+					if($brand == 'CORSAIR MEMORY')
+						$c = 'power_supplies';
 					else
 						$c = $cat;
 				break;
@@ -1008,17 +1052,42 @@ class Live_model extends CI_Model {
 					continue;
 				}
 
-				//$code = (string) trim($product->code);
-				//$code = (string) trim($product->SKU);
 				$description = (string) trim($product->Description);
-				$title = substr($description, strpos($description, 'NB '), strpos($description, ', '));
-				$title = "MSI ".$title;
+				if($c == 'laptops')
+				{
+					$first = strpos($description, 'NB ')+3;
+					$last = strpos($description, ', ');
+					$diff = $last-$first;
+	
+					$title = substr($description, $first, $diff);
+					$title = "MSI ".$title;
+				}
+				elseif($c == 'motherboards')
+				{
+					$first = strpos($description, 'MB ')+3;
+					$last = strpos($description, ', ');
+					$diff = $last-$first;
+
+					$title = substr($description, $first, $diff);
+					$title = $brand." ".$title;
+				}
+				elseif($c == 'sata_hard_drives' || $c == 'external_hard_drives')
+				{
+					$title = str_replace('"', '', $description);
+				}
+				elseif($c == 'monitors')
+				{
+					$title = $description;
+
+				}//here stopped 16-9-2016
+				echo $title.'<br>';
+
 				$net_price = (string) trim($product->timi);
 				$availability = $availability;
 				$pn = (string) trim($product->SKU);
 				$imageUrl = (string) trim($product->Image);
 				$brand = (string) trim($product->Supplier);
-
+/*
 				//1. Live
 				$supplier = 'braintrust';
 				if($this->checkLiveProduct($pn, $net_price, $supplier)){
@@ -1066,12 +1135,14 @@ class Live_model extends CI_Model {
 					else
 						$newProducts[$c] = 1;
 				}
+				*/
 			} 		
 		} //end foreach
-
+/*
 		$this->sendImportedProductsByMail($newProducts);
 
 		echo "Finnished updating Braintrust.";
+		*/
     }
 
     public function aci(){

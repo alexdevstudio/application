@@ -59,6 +59,25 @@ class Insert extends MX_Controller {
 
 
 			//Add to live table
+
+			//if(Modules::run("live/checkLiveProduct", $product_number, $net_price,'etd')){
+
+					$live = array(
+						'category'=>$cat,
+						'product_number'=>$product_number,
+						'supplier' =>'etd',
+						'status' => 'publish',
+						'delete_flag'=>0
+						);
+
+					$this->db->where('product_number', $product_number);
+					$this->db->where('supplier', 'etd');
+					//$this->db->delete('live', $live);
+
+					$this->db->insert('live', $live);
+
+					unset($live);
+				//}
 			
 			/*if($_POST['av']=='1' &&  is_numeric ( $net_price )){
 
