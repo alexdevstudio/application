@@ -975,7 +975,6 @@ class Live_model extends CI_Model {
 		$newProducts = array();
 		$i=0;
 
-
 		foreach($xml->children() as $product) {
 			$availability=false;
 			set_time_limit(50);
@@ -1018,7 +1017,7 @@ class Live_model extends CI_Model {
 					$c = 'external_hard_drives';
 				break;
 				case 'SSD':
-					$c = 'external_hard_drives';
+					$c = 'ssd';
 				break;
 				case 'Monitor':
 				case 'TV/Monitor':
@@ -1051,8 +1050,14 @@ class Live_model extends CI_Model {
 				if(!$availability){
 					continue;
 				}
-
+				
 				$description = (string) trim($product->Description);
+				$pn = (string) trim($product->SKU);
+
+				if ($pn == ''){
+					continue;
+				}
+
 				if($c == 'laptops')
 				{
 					$first = strpos($description, 'NB ')+3;
@@ -1079,15 +1084,25 @@ class Live_model extends CI_Model {
 				{
 					$title = $description;
 
-				}//here stopped 16-9-2016
-				echo $title.'<br>';
+				}
+				elseif($c == 'memories')
+				{
+					$title = $description;
 
-				$net_price = (string) trim($product->timi);
+				}
+				elseif($c == 'power_supplies')
+				{
+					$title = $description;
+
+				}
+				//echo $title.'<br>';
+				$net_price = str_replace(",", ".", $product->timi);
+				$net_price = (string) trim($net_price);
+
 				$availability = $availability;
-				$pn = (string) trim($product->SKU);
 				$imageUrl = (string) trim($product->Image);
 				$brand = (string) trim($product->Supplier);
-/*
+
 				//1. Live
 				$supplier = 'braintrust';
 				if($this->checkLiveProduct($pn, $net_price, $supplier)){
@@ -1135,14 +1150,14 @@ class Live_model extends CI_Model {
 					else
 						$newProducts[$c] = 1;
 				}
-				*/
+				
 			} 		
 		} //end foreach
-/*
+
 		$this->sendImportedProductsByMail($newProducts);
 
 		echo "Finnished updating Braintrust.";
-		*/
+		
     }
 
     public function aci(){
@@ -1995,6 +2010,13 @@ class Live_model extends CI_Model {
 				{
 					$categoryData = array_merge($categoryData, $chars_array);
 				}
+			}
+			if($supplier == 'braintrust' && $c != "laptops")
+			{
+				$categoryData ['new_item'] = 1;
+				echo '<pre>';
+				print_r($categoryData);
+				echo '</pre>';
 			}
 
 			if(Modules::run("categories/insert", $c, $categoryData)){
