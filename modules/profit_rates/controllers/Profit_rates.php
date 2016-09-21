@@ -19,7 +19,25 @@ class Profit_rates extends MX_Controller {
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
 	
+	public function index()//$s stands for supplier
+	{	
 
+		//Insert from laptops Tables to Msi price table
+
+		//$allLaptops = $this->getMsi();
+		//$this->insertNewLaptops($allLaptops);
+
+		//Get all laptops from Msi_price table
+		//$laptops = $this->getMsiPrice();
+
+		//$data['title'] = 'MSI Laptops - Προτεινόμενες Τιμές';
+
+		//$data['laptops'] = $laptops;
+
+		$this->load->view('templates/header',$data);
+		$this->load->view('msi_price', $data);
+		$this->load->view('templates/footer',$data);
+	}
 
 	public function getRates($category)
 	{	
