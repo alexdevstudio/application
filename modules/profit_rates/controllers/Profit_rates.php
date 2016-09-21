@@ -55,6 +55,17 @@ class Profit_rates extends MX_Controller {
 		return $profit_table;
 	}
 
+	public function getCategoryRate($category)
+	{
+		$where = array('category'=>$category);
+
+		$profit_category = Modules::run("crud/get",'profit',$where);
+		$row = $profit_category->row();
+    	$rate = $row->rate;
+
+		return $rate;
+	}
+
 	public function updateRate()
 	{
 
