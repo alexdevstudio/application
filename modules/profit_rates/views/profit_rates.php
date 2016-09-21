@@ -3,7 +3,7 @@
 
 <div class="box">
             <div class="box-header">
-              <h3 class="box-title">MSI Laptops</h3>
+              <h3 class="box-title">Ποσοστά κατηγοριών</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -18,79 +18,68 @@
               </div>
               <div class="row">
               <div class="col-sm-12">
-              <table  id="msiTable" class="table table-bordered table-hover dataTable">
+              <table  id="profitTable" class="table table-bordered table-hover dataTable">
                 <thead>
                 <tr role="row">
-                <th  colspan="1" rowspan="1" >SKU</th>
-                <th colspan="1" rowspan="1" >Title</th>
-                <th colspan="1" rowspan="1"  >PN</th>
-                <th colspan="1" rowspan="1"  >Price</th>
-                <th colspan="1" rowspan="1"  >Προτεινόμενη Τιμή</th>
-                <th colspan="1" rowspan="1"  >Τελευταία ενημέρωση</th>
+                <th colspan="1" rowspan="1" >Περιγραφή</th>
+                <th colspan="1" rowspan="1" >Category</th>
+                <th colspan="1" rowspan="1" >Ποσοστό</th>
+                <th colspan="1" rowspan="1" >Νέο Ποσοστό (Χωρίς το %)</th>
 
                 </tr>
                 </thead>
                 <tbody>
                 <?php
                 $i = 1;
-/*
-                foreach ($laptops->result() as $item) {
+
+                foreach ($rates_table->result() as $item) {
                 	
                 	$class = ' odd ';
                 	if ($i % 2 == 0) {
 					  $class = ' even ';
 					}
 					$i++;
-					$sku = $item->sku;
-					$title = $item->title;
-					$pn = $item->product_number;
-					$price = $item->price;
-					$date = $item->updated;
+					$category = $item->category;
+					$rate = $item->rate;
+          $rate = $rate*100;
+					$description = $item->description;
 
-					$date = strtotime( $date );
-					$date = date( 'd-m-Y', $date );
-*/
 					?>
 
  				<tr class="<?= $class; ?>" role="row">
-                  <td><?= $sku; ?></td>
-                  <td><?= $title; ?></td>
-                  <td><?= $pn; ?></td>
-                  <td id="newPrice<?= $sku; ?>"><?= $price; ?></td>
+                  <td><?= $description; ?></td>
+                  <td><?= $category; ?></td>
+                  <td id="newRate_<?= $category; ?>"><?= $rate.'%' ?></td>
                   <td>
-               		<form id="sku<?= $sku; ?>" action="./updatePrice">
-               		<input type='hidden' value='<?= $sku; ?>' name='sku' id='sku' />
+               		<form id="rate_<?= $category; ?>" action="./updateRate">
+               		<input type='hidden' value='<?= $rate; ?>' name='rate' id='rate' />
                		
                		<div class="input-group col-xs-6 pull-left">
 		                  <div class="input-group-addon">
 		                    <i class="fa fa-euro"></i>
 		                  </div>
-		                  <input class="form-control " type='text'  id='price<?= $sku; ?>' name='price<?= $sku; ?>' />
+		                  <input class="form-control " type='text'  id='rate_price<?= $category; ?>' name='rate_price<?= $category; ?>' />
                		</div>
                		
-                 	 <button id="" type="button" class="btn btn-success btn-md col-xs-offset-1 col-xs-5" onclick="msiPrice('sku<?= $sku; ?>', '<?= $sku; ?>', 'price<?= $sku; ?>');" >Αλλαγή</button>
+                 	 <button id="" type="button" class="btn btn-success btn-md col-xs-offset-1 col-xs-5" onclick="fixRate('rate_<?= $category; ?>', '<?= $category; ?>', 'rate_price<?= $category; ?>');" >Αλλαγή</button>
 
                    </form> 
                   </td>
-                 <td class='text-center'><?= $date; ?></td>
                 </tr>
 
 
 			<?php
 
-  //              }
+                }
 		?>
                 
-
               </tbody>
                 <tfoot>
                 <tr role="row">
-                <th  colspan="1" rowspan="1" >SKU</th>
-                <th colspan="1" rowspan="1" >Title</th>
-                <th colspan="1" rowspan="1"  >PN</th>
-                <th colspan="1" rowspan="1"  >Price</th>
-                <th colspan="1" rowspan="1"  >Προτεινόμενη Τιμή</th>
-                <th colspan="1" rowspan="1"  >Τελευταία ενημέρωση</th>
+                <th colspan="1" rowspan="1" >Περιγραφή</th>
+                <th colspan="1" rowspan="1" >Category</th>
+                <th colspan="1" rowspan="1" >Ποσοστό</th>
+                <th colspan="1" rowspan="1" >Νέο Ποσοστό (Χωρίς το %)</th>
                 </tr>
                 </tfoot>
               </table>

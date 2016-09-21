@@ -140,7 +140,6 @@ class Crosssales_model extends CI_Model {
                 $row = $the_hdd->row();
                 $hdd_sku = $row->sku;
 
-
                 if($hdd['availability']=='Άμεσα Διαθέσιμο'){
                     $instock_hdds[] = $hdd_sku;
                 }else{

@@ -28,17 +28,17 @@ class Profit_rates extends MX_Controller {
 		//$this->insertNewLaptops($allLaptops);
 
 		//Get all laptops from Msi_price table
-		//$laptops = $this->getMsiPrice();
+		$rates_table = $this->getRatesTable();
 
-		//$data['title'] = 'MSI Laptops - Προτεινόμενες Τιμές';
+		$data['title'] = 'Ποσοστά Κέρδους ανα κατηγορία';
 
-		//$data['laptops'] = $laptops;
+		$data['rates_table'] = $rates_table;
 
 		$this->load->view('templates/header',$data);
-		$this->load->view('msi_price', $data);
+		$this->load->view('profit_rates', $data);
 		$this->load->view('templates/footer',$data);
 	}
-
+/*
 	public function getRates($category)
 	{	
 
@@ -47,16 +47,47 @@ class Profit_rates extends MX_Controller {
 		
 		
 	}
+*/
+	private function getRatesTable()
+	{
+		$profit_table = Modules::run("crud/get",'profit');
 
+		return $profit_table;
+	}
 
-	
+	public function updateRate()
+	{
 
+		$category = $_POST['category'];
+		$rate = $_POST['rate'];
+		$rate = $rate/100;
 
+		
 
+		if(trim($rate)=='')
+			$rate = '0.06';
 
+		$data=array(
+			'category'=>$category,
+			'rate'=>$rate
+			);
+
+		$where = array('category'=>$category);
+		
+		if(Modules::run("crud/update",'profit',$where, $data))
+		{
+			$response = array(
+				'result'=>'success',
+				'rate'=>$rate
+				);
+		}else{
+			$response = array(
+				'result'=>'false'
+				);
+		}
+
+		echo json_encode($response);
+
+	}
 }
-
-
-
-
 ?>
