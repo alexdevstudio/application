@@ -157,7 +157,7 @@ class Live_model extends CI_Model {
 						$c = 'external_hard_drives';
 							
 					}
-					elseif($sc == 'Sata Hard Drives' )
+					elseif($sc == 'SATA Hard Drives' )
 					{
 						$c = 'sata_hard_drives';
 							
