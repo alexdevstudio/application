@@ -2020,9 +2020,6 @@ class Live_model extends CI_Model {
 			if($supplier == 'braintrust' && $c != "laptops")
 			{
 				$categoryData ['new_item'] = 1;
-				echo '<pre>';
-				print_r($categoryData);
-				echo '</pre>';
 			}
 
 			if(Modules::run("categories/insert", $c, $categoryData)){
