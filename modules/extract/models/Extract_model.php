@@ -111,7 +111,7 @@ class Extract_model extends CI_Model {
                  //Price 
                     if($product['price_tax'] == '' ||  $product['price_tax'] === NULL  ||  $product['price_tax'] == '0.00' ){
                       
-                        $product['price_tax'] = $this->priceTax($product['net_price'],$product['recycle_tax']);
+                        $product['price_tax'] = $this->priceTax($product['net_price'],$product['recycle_tax'],$cat);
 
                         if($supplier=='braintrust' && $cat == 'laptops'){
                             $msi = Modules::run("crud/get",'msi_price',array('sku'=>$sku));
@@ -551,8 +551,11 @@ $products_count = 0;
         }
 
 
-        private function priceTax($net, $recycle)
+        private function priceTax($net, $recycle, $category)
         {
+           //  $category_rate = Modules::run("profit_rates/getCategoryRate",$category);
+           //  echo $category_rate;
+
              $net_price = $net + $recycle;
 
              $etd_price = $net_price*1.06;

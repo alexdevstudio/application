@@ -137,9 +137,11 @@ class Crosssales_model extends CI_Model {
                 
                 $the_hdd = Modules::run('crud/get', 'external_hard_drives', array('product_number'=>$pn));
                 
+                if(!$the_hdd)
+                    continue;
+                
                 $row = $the_hdd->row();
                 $hdd_sku = $row->sku;
-
 
                 if($hdd['availability']=='Άμεσα Διαθέσιμο'){
                     $instock_hdds[] = $hdd_sku;
