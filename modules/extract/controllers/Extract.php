@@ -19,11 +19,6 @@ class Extract extends MX_Controller {
 		}else{
 			echo 'Σφάλμα';
 		}
-
-
-
-			
-	
 	}
 
 
@@ -31,12 +26,7 @@ class Extract extends MX_Controller {
 
 		 $this->load->model('extract_model');
 		 echo $this->extract_model->allImport($table);
-
-		 
-		
 	}
-
-	
 }
 
 

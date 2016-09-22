@@ -393,7 +393,7 @@
          </li>
          <li class="">
             <a href="<?php echo base_url();?>profit_rates">
-              <i class="fa fa-calculator"></i> <span>% ΚΕΡΔΟΥΣ / ΚΑΤΗΓΟΡΙΑ</span>
+              <i class="fa fa-calculator"></i> <span>ΠΟΣΟΣΤΑ ΚΑΤΗΓΟΡΙΩΝ</span>
             </a>
          </li>
         <li class="header">LABELS</li>

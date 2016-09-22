@@ -553,12 +553,16 @@ $products_count = 0;
 
         private function priceTax($net, $recycle, $category)
         {
-           //  $category_rate = Modules::run("profit_rates/getCategoryRate",$category);
            //  echo $category_rate;
 
              $net_price = $net + $recycle;
 
-             $etd_price = $net_price*1.06;
+             $category_rate = Modules::run("profit_rates/getCategoryRate",$category);
+             $category_rate = number_format((float)$category_rate, 2, '.', '');
+
+             $etd_price = $net_price*(1 + $category_rate);
+
+             //$etd_price = $net_price*1.06;
 
              $price_tax = $etd_price*1.24;
 
