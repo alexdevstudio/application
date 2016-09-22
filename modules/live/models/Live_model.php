@@ -997,7 +997,10 @@ class Live_model extends CI_Model {
 						$c = $cat;
 				break;
 				case 'PC Motherboard':
-					$c = 'motherboards';
+					if($brand == 'MSI')
+						$c = 'motherboards';
+					else
+						$c = $cat;
 				break;
 				case 'VGA':
 					if($brand == 'MSI' || $brand == 'SAPPHIRE')
@@ -1017,7 +1020,10 @@ class Live_model extends CI_Model {
 					$c = 'external_hard_drives';
 				break;
 				case 'SSD':
-					$c = 'ssd';
+					if($brand == 'SILICON POWER')
+						$c = $cat;
+					else
+						$c = 'ssd';
 				break;
 				case 'Monitor':
 				case 'TV/Monitor':
