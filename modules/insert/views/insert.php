@@ -34,6 +34,28 @@ $tables = Modules::run('categories/categoriesArray');
 		                   
 		                  </select>
 	        </div>
+	        <!-- Added for mouse Keyboard import -->
+	        <div id="cat_type" style="display: none;" class="form-group">
+	        	<label>Επιλέγξτε τύπο</label>
+					<select id="type" name="type" class="form-control">
+					  <option  value="Keyboard">Keyboard</option>
+					  <option  value="Mouse">Mouse</option>
+					  <option  value="Set mouse / keyboard">Set mouse / keyboard</option>
+					</select>
+	        </div>
+	       <script> 
+	       $('#categories').on('change', function () {
+		        var type =$(this).val(); 
+		        if(type == 'keyboard_mouse'){
+		        	$('#cat_type').show();
+		        }
+		        else{cat_type
+		        	$('#cat_type').hide();
+		        }
+			});
+			</script>
+			<!-- End of Added for mouse Keyboard import -->
+
 	</div>
 	<div class="col-sm-6 col-md-3">
 
