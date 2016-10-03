@@ -1869,14 +1869,14 @@ class Live_model extends CI_Model {
 				$categoryData = $product;
 			}
 			elseif($c == 'hoverboards'){
-
+				$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
 				$categoryData = array(
 				'brand'=> $product['brand'],
 				'sku'=> $sku,
 				'product_number'=> $product['product_number'],
 				'title'=> $product['title'],
 				'description'=> strip_tags($product['description']),
-				'shipping_class' => 4661
+				'shipping_class' => $shipping_class
 				);
 			}
 			else
@@ -1888,7 +1888,7 @@ class Live_model extends CI_Model {
 				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c == "tablets"  || $c == "smartphones" ||
 				 $c == "cables" || $c == "patch_panels" || $c == "racks" || $c =="optical_drives" || $c == "card_readers" || $c == "flash_drives" || 
 				 $c == "power_supplies" || $c == "cases" || $c == "fans" || $c == "motherboards" || $c == "graphic_cards" || $c == "cpu" || 
-				 $c == "memories")		
+				 $c == "memories" || $c == 'hoverboards')		
 				$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
 
 
