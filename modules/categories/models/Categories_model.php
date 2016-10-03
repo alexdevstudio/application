@@ -281,6 +281,9 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 			case 'memories':
 					$shipping_class = 4644;
 					break;
+			case 'hoverboards':
+					$shipping_class = 4661;
+					break;
 			default:
 				return false;
 				break;
