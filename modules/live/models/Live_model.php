@@ -1704,6 +1704,7 @@ class Live_model extends CI_Model {
 		foreach($xml->children() as $product) {
 
 			$availability=false;
+			$title = $description = '';
 			set_time_limit(50);
 			
 			$cat = (string) trim($product->Item_Category);
@@ -1712,8 +1713,10 @@ class Live_model extends CI_Model {
 
 			switch ($cat) {
 				case 'GADGETS':
-					if (strpos($sc, 'SCOOTER') !== false)
+					if (strpos($sc, 'SCOOTER') !== false){
+						$title = $description = str_replace('MINI SCOOTER ', '', $sc);
 						$c = 'hoverboards';
+					}
 					else
 						$c = '';
 					break;
@@ -1732,10 +1735,15 @@ class Live_model extends CI_Model {
 
 				$code = (string) trim($product->Code);
 				$pn = (string) trim($product->Part_Number);
-				$title = (string) trim($product->Description);
+
+				if ($title=='')
+					$title = (string) trim($product->Description);
+
 				$net_price = trim($product->Final_Price);
 				$recycle_tax = '';
-				$description = (string) trim($product->Description);
+				
+				if ($description=='')
+					$description = (string) trim($product->Description);
 
 				$brand = (string) trim($product->Manufacturer);
 				if($brand == "LL")
