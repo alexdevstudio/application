@@ -56,7 +56,7 @@
                		
                		<div class="input-group col-xs-6 pull-left">
 		                  <div class="input-group-addon">
-		                    <i class="fa fa-euro"></i>
+		                    <i class="fa fa-percent"></i>
 		                  </div>
 		                  <input class="form-control " type='text'  id='rate_price<?= $category; ?>' name='rate_price<?= $category; ?>' />
                		</div>
