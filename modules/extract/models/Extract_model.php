@@ -519,9 +519,16 @@ $products_count = 0;
                         $where = array('post_id'=>$post_id,'meta_key'=>'_price');
                         $data = array('meta_value'=>$product['price_tax']);                   
                         Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
+                        /*$where = array('post_id'=>$post_id,'meta_key'=>'_stock_status');
+                        $data = array('meta_value'=>'instock');                   
+                        Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
+                        $where = array('post_id'=>$post_id,'meta_key'=>'_manage_stock');
+                        $data = array('meta_value'=>'no');                   
+                        Modules::run("crud/updateWp","wp_postmeta",  $where, $data);*/
                         $where = array('ID'=>$post_id);
                         $data = array('post_title'=>$product['etd_title'],"post_status"=>$product['status']);                   
                         Modules::run("crud/updateWp","wp_posts",  $where, $data);
+                        
 
                        // exit($product['price_tax']); 
 
