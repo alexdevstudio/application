@@ -2257,6 +2257,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Χωρητικότητα Μπαταρίας':
@@ -2320,6 +2322,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Τύπος':
@@ -2395,6 +2399,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Θύρες':
@@ -2465,6 +2471,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 
 					switch ($chars_title) {
@@ -2532,6 +2540,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					if (strpos($chars_value, '"'))
 						$chars_value = str_replace('"', '', $chars_value);
@@ -2610,6 +2620,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					if (strpos($chars_value, '"'))
 						$chars_value = str_replace('"', '', $chars_value);
@@ -2687,6 +2699,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Χωρητικότητα (Από εώς)':
@@ -2767,6 +2781,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Τύπος συσκευής':
@@ -2856,6 +2872,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Τύπος θήκης':
@@ -2945,6 +2963,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Συσκευή':
@@ -3009,6 +3029,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Τύπος συσκευής':
@@ -3066,6 +3088,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Χωρητικότητα':
@@ -3138,6 +3162,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Τύπος':
@@ -3216,6 +3242,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Τύπος':
@@ -3304,6 +3332,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Τύπος Ψύκτρας':
@@ -3388,6 +3418,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Κατασκευαστής επεξεργαστή':
@@ -3556,6 +3588,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Κατασκευαστής chip':
@@ -3647,6 +3681,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Οικογένεια επεξεργαστή':
@@ -3739,6 +3775,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Τύπος μνήμης':
