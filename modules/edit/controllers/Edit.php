@@ -34,7 +34,7 @@ class Edit extends MX_Controller {
 				{
 					unset ($post['status']);
 
-					$av = Modules::run("live/getAvailability",$post['availability'],'etd');
+					$av = Modules::run("live/getAvailability",$post['availability'],'edit');
 
 					if (!$av)
 						$av = 'Αναμονή παραλαβής';

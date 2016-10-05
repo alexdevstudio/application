@@ -67,6 +67,7 @@ $sale_price = '';
 $supplier = '';
 $instock = '';
 $outstock = '';
+$outstock2 = '';
 
 if($itemLive){
 	
@@ -79,6 +80,8 @@ if($itemLive){
 		$instock = 'selected';
 	}elseif($av=='Κατόπιν παραγγελίας σε 1 εργάσιμη'){
 		$outstock = 'selected';
+	}elseif($av=='Αναμονή παραλαβής'){
+		$outstock2 = 'selected';
 	}
 
 	
@@ -180,8 +183,9 @@ if($itemLive){
 	                  	
 	              		  <select class='form-control' name="availability" id="availability">
 	              		  	<option value="">----</option>
-	              		  	<option value="1" <?= $instock; ?>>Διαθέσιμο στο κατάστημα</option>
-	              		  	<option value="0" <?= $outstock; ?>>Μη διαθέσιμο στο κατάστημα / Διαθέσιμο στον προμηθευτή</option>
+	              		  	<option value="2" <?= $instock; ?>>Διαθέσιμο στο κατάστημα</option>
+	              		  	<option value="1" <?= $outstock; ?>>Μη διαθέσιμο στο κατάστημα / Διαθέσιμο στον προμηθευτή</option>
+	              		  	<option value="0" <?= $outstock2; ?>>Αναμονή παραλαβής</option>
 	              		  </select>
 
 	                  	

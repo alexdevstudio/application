@@ -3797,7 +3797,25 @@ class Live_model extends CI_Model {
 
     public function makeAvailability($availability, $supplier){
 
-    	if($supplier == 'oktabit'){
+    	if($supplier == 'edit'){
+    		switch ($availability) {
+    			case '0':
+	    			$av = 'Αναμονή παραλαβής';
+	    			break;
+	    		case '1':
+	    			$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
+	    			break;
+	    		case '2':
+	    			$av = 'Άμεσα Διαθέσιμο';
+	    			break;
+	    		
+	    		default:
+	    			return false;
+	    			break;
+	    	}
+
+	    	return $av;
+    	}elseif($supplier == 'oktabit'){
 
 /*
 1.Διαθεσιμο 
