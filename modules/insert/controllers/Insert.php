@@ -72,7 +72,7 @@ class Insert extends MX_Controller {
 
 					$this->db->where('product_number', $product_number);
 					$this->db->where('supplier', 'etd');
-					//$this->db->delete('live', $live);
+					$this->db->delete('live', $live);
 
 					$this->db->insert('live', $live);
 
