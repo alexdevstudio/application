@@ -978,6 +978,7 @@ class Live_model extends CI_Model {
 		foreach($xml->children() as $product) {
 			$availability=false;
 			set_time_limit(50);
+			$chars_array = array();
 			//Rename categories for ETD.gr
 
 			$cat = (string) trim($product->Category);
@@ -993,6 +994,12 @@ class Live_model extends CI_Model {
 				case 'Notebook':
 					if($brand == 'MSI')
 						$c = 'laptops';
+					else
+						$c = $cat;
+				break;
+				case 'Desktop/Tower':
+					if($brand == 'MSI')
+						$c = 'desktops';
 					else
 						$c = $cat;
 				break;
@@ -1073,6 +1080,12 @@ class Live_model extends CI_Model {
 					$title = substr($description, $first, $diff);
 					$title = "MSI ".$title;
 				}
+				elseif($c == 'desktops')
+				{
+					$last = strpos($description, ',');
+					$title = substr($description, 0, $last);
+					$chars_array['type']='Desktop';
+				}
 				elseif($c == 'motherboards')
 				{
 					$first = strpos($description, 'MB ')+3;
@@ -1147,7 +1160,7 @@ class Live_model extends CI_Model {
 
 				//2. New products for charateristics tables that load Sku module
 
-				$insert = $this->addProduct ($braintrust_product, array(), $imageUrl, 'braintrust');
+				$insert = $this->addProduct ($braintrust_product, $chars_array, $imageUrl, 'braintrust');
 
 				if ($insert)
 				{
@@ -1985,12 +1998,11 @@ class Live_model extends CI_Model {
 				if($c == "carrying_cases" || $c == "external_hard_drives" ||
 				 $c == "sata_hard_drives" || $c == "ssd" || $c == "speakers" || 
 				 $c == "power_banks" || $c == "keyboard_mouse"  || 
-				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c == "tablets"  || $c == "smartphones" ||
+				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c=="desktops" || $c == "tablets"  || $c == "smartphones" ||
 				 $c == "cables" || $c == "patch_panels" || $c == "racks" || $c =="optical_drives" || $c == "card_readers" || $c == "flash_drives" || 
 				 $c == "power_supplies" || $c == "cases" || $c == "fans" || $c == "motherboards" || $c == "graphic_cards" || $c == "cpu" || 
 				 $c == "memories" || $c == 'hoverboards')		
 				$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
-
 
 				$categoryData = array(
 				'brand'=> $product['brand'],

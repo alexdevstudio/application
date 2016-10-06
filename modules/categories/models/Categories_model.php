@@ -158,6 +158,7 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					$shipping_class= 4636;
 					break;
 			case 'desktops':
+					$shipping_class= 4661;
 					if($data['type']=='Mini Pc')
 						$shipping_class= 4660;
 					else
