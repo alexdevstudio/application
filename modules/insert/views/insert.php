@@ -1,5 +1,5 @@
 <?php
-$tables = Modules::run('categories/categoriesArray');
+$tables = Modules::run('categories/fullCategoriesArray');
 
 ?>
 <div class="sections col-xs-12">
