@@ -1998,11 +1998,11 @@ class Live_model extends CI_Model {
 				if($c == "carrying_cases" || $c == "external_hard_drives" ||
 				 $c == "sata_hard_drives" || $c == "ssd" || $c == "speakers" || 
 				 $c == "power_banks" || $c == "keyboard_mouse"  || 
-				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c=="desktops" || $c == "tablets"  || $c == "smartphones" ||
+				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c== "desktops" || $c == "tablets"  || $c == "smartphones" ||
 				 $c == "cables" || $c == "patch_panels" || $c == "racks" || $c =="optical_drives" || $c == "card_readers" || $c == "flash_drives" || 
 				 $c == "power_supplies" || $c == "cases" || $c == "fans" || $c == "motherboards" || $c == "graphic_cards" || $c == "cpu" || 
-				 $c == "memories" || $c == 'hoverboards')		
-				$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
+				 $c == "memories" || $c == "hoverboards")		
+					$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
 
 				$categoryData = array(
 				'brand'=> $product['brand'],
