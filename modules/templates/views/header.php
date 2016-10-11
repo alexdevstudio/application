@@ -391,6 +391,11 @@
               <i class="fa fa-laptop"></i> <span>MSI ΤΙΜΕΣ</span>
             </a>
          </li>
+         <li class="">
+            <a href="<?php echo base_url();?>profit_rates">
+              <i class="fa fa-calculator"></i> <span>ΠΟΣΟΣΤΑ ΚΑΤΗΓΟΡΙΩΝ</span>
+            </a>
+         </li>
         <li class="header">LABELS</li>
         <li><a href="#"><i class="fa fa-circle-o text-red"></i> <span>Important</span></a></li>
         <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> <span>Warning</span></a></li>

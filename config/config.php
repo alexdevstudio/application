@@ -11,7 +11,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 |	http://example.com/
 |
-| WARNING: You MUST set this value!
+| WARNING: You MUST set this value! 
 |
 | If it is not set, then CodeIgniter will try guess the protocol and path
 | your installation, but due to security concerns the hostname will be set
@@ -21,9 +21,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 | If you need to allow multiple domains, remember that this file is still
 | a PHP script and you can easily do that on your own.
-|
+| 
 */
-$config['base_url'] = 'http://etd.gr/xml'; 
+$config['base_url'] = 'http://etd.gr/xml/'; 
 
 /*
 |--------------------------------------------------------------------------

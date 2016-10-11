@@ -19,8 +19,10 @@ class Images_model extends CI_Model {
     	$src = $data['src'];
 		$sku = $data['sku'];
 		$brand = $data['brand'];
-		$pn = $data['part_number'];
+		//$pn = $data['part_number'];
+		$pn = str_replace("/","-",$data['part_number']);
 		$tail = $data['tail'];
+
 
 		if (!file_exists('images')) {
 		    mkdir('images', 0777, true);
@@ -31,8 +33,6 @@ class Images_model extends CI_Model {
 		    mkdir('images/'.$sku, 0777, true);
 		}
 
-			$newFileName = $brand.'_'.$pn.''.$tail;
-			
 			$newFileName = $brand.'_'.$pn.''.$tail;
 			
 		    $target_path = './images/'.$sku.'/'.$newFileName.'.jpg';

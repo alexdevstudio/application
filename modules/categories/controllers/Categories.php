@@ -31,20 +31,20 @@ class Categories extends MX_Controller {
 		echo 'Function insert() was not successfull: table name'.$c.'<br />';
 		echo '<pre>';
 		print_r($categoryData);
+
 		return false;
- 
 	} 
 
 	 public function categoriesArray(){
     	$array = array('desktops','laptops','printers', 'multifunction_printers',
-    		'monitors','servers','ups','tablets','smartphones','software');
+    		'monitors','servers','ups','tablets','smartphones','software','external_hard_drives','keyboard_mouse');
 
     	return $array;
     }
 
     public function fullCategoriesArray(){
-    	$array = array('cables','carrying_cases','cartridges','desktops','external_hard_drives','keyboard_mouse','laptops','monitors','multifunction_printers','patch_panels','power_bank','printers','racks','routers','sata_hard_drives',
-    		'servers','smartphones','speakers','ssd','switches','software','tablets','toners', 'ups');
+    	$array = array('cables','card_readers','carrying_cases','cartridges','cases','cpu','desktops','external_hard_drives','fans','flash_drives','graphic_cards','keyboard_mouse','laptops','memories','monitors','motherboards','multifunction_printers','optical_drives','patch_panels','power_bank','power_supplies','printers','racks','routers','sata_hard_drives',
+    		'servers','smartphones','software','speakers','ssd','switches','tablets','toners', 'ups', 'copiers','projectors','hoverboards');
 
     	return $array;
     }
@@ -63,14 +63,5 @@ class Categories extends MX_Controller {
      	echo $this->categories_model->makeShippingClass($data, $cat, $dynamic);
 
      }
-
-
-
-
-
 }
-
-
-
-
-?> 
+?>

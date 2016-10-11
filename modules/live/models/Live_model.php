@@ -13,7 +13,7 @@ class Live_model extends CI_Model {
 
     private function xml($url){
 
-		$xml=simplexml_load_file($url) or die("Error: Cannot create object");
+		$xml = simplexml_load_file($url) or die("Error: Cannot create object");
 
     	return $xml;
     }
@@ -53,6 +53,7 @@ class Live_model extends CI_Model {
 			$dist_type='';
 			$cat = (string) trim($product->category);
 			$sc = trim((string)$product->subcategory);
+			$B2b_sc = trim((string)$product->B2b_subcat);
 
 			$c = $cat;
 			
@@ -116,7 +117,6 @@ class Live_model extends CI_Model {
 						$c = 'multifunction_printers';
 					}
 					break;
-
 				case 'Software':
 					if($sc == 'OEM ROK Server'){
 						$c = 'software';
@@ -127,7 +127,6 @@ class Live_model extends CI_Model {
 						$sc = 'Εφαρμογές γραφείου';
 					}
 					break;
-
 				case 'Software DSP':
 					$dist_type = 'DSP';
 
@@ -140,7 +139,6 @@ class Live_model extends CI_Model {
 						$sc = 'Λειτουργικά Συστήματα';
 					}
 					break;
-
 				case 'Servers':
 					if($sc == 'Rackmount Systems' )
 					{
@@ -159,7 +157,7 @@ class Live_model extends CI_Model {
 						$c = 'external_hard_drives';
 							
 					}
-					elseif($sc == 'Sata Hard Drives' )
+					elseif($sc == 'SATA Hard Drives' )
 					{
 						$c = 'sata_hard_drives';
 							
@@ -168,14 +166,55 @@ class Live_model extends CI_Model {
 					{
 						$c = 'ssd';
 					}
+					elseif($sc == 'DVD-RW Drives' )
+					{
+						$c = 'optical_drives';
+					}
+					elseif($sc == 'Card Reader' )
+					{
+						$c = 'card_readers';
+					}
+					elseif($sc == 'USB Memory Sticks' )
+					{
+						$c = 'flash_drives';
+					}
 					break;
 				case 'Cases-Peripherals':
 					if($sc == 'Combo' || $sc == 'Keyboard' || $sc == 'Mouse')
 					{
 						$c = 'keyboard_mouse';
 					}
+					elseif($sc == 'Power Supplies')
+					{
+						$c = 'power_supplies';
+					}
+					elseif($sc == 'PC Cases')
+					{
+						$c = 'cases';
+					}
+					elseif($sc == 'PC Cases Options' && $B2b_sc == 'Συστήματα Ψύξης')
+					{
+						$c = 'fans';
+					}
 					break;
-
+				case 'Components':
+					if($sc == 'Motherboard for Intel')
+					{
+						$c = 'motherboards';
+					}
+					elseif($sc == 'VGA ATI' || $sc == 'VGA Nvidia')
+					{
+						$c = 'graphic_cards';
+					}
+					elseif($sc == 'CPU Intel')
+					{
+						$c = 'cpu';
+					}
+					elseif($sc == 'Memory Modules' )
+					{
+						$c = 'memories';
+					}
+					break;
 				default:
 					$c = $cat;
 					break;
@@ -263,6 +302,11 @@ class Live_model extends CI_Model {
 						$okt_product['dist_type'] = 'DSP';
 					elseif(strstr ($title,'Reseller Option Kit') || strstr ($title,'ROK'))
 						$okt_product['dist_type'] = 'ROK';
+				}
+
+				if ($c == 'memories' && $B2b_sc == 'Εξαρτήματα Servers')
+				{
+					$okt_product['description'] = 'Εξαρτήματα Servers';
 				}
 
 				//2. New products for charateristics tables that load Sku module
@@ -458,7 +502,6 @@ class Live_model extends CI_Model {
 
 					unset($live);
 				}
-
 				$log_product = array(
 					'category' => $c,
 					'product_number' => $pn,
@@ -486,12 +529,17 @@ class Live_model extends CI_Model {
 				//$this->AddProduct ($c, $pn, $description, $brand, $title, $product_url, $newProducts, $i, $imageUrl, 'logicom');
 				$insert = $this->addProduct ($log_product, array(), $imageUrl, 'logicom');
 
+
 				if ($insert)
 				{
-					if(isset ($newProducts[$c]))
-						$newProducts[$c] = $newProducts[$c]+1;
-					else
+
+
+					if(isset ($newProducts[$c])){
+						$newProducts[$c] = $newProducts[$c]+1; 
+					}
+					else{
 						$newProducts[$c] = 1;
+					}
 				}
 
 			}//if $c==$cat
@@ -927,10 +975,10 @@ class Live_model extends CI_Model {
 		$newProducts = array();
 		$i=0;
 
-
 		foreach($xml->children() as $product) {
 			$availability=false;
 			set_time_limit(50);
+			$chars_array = array();
 			//Rename categories for ETD.gr
 
 			$cat = (string) trim($product->Category);
@@ -939,11 +987,67 @@ class Live_model extends CI_Model {
 			$c = $cat;
 			
 			$brand = (string) trim($product->Supplier);
+			$title = '';
+			$size = '';
 
 			switch ($cat) {
 				case 'Notebook':
 					if($brand == 'MSI')
 						$c = 'laptops';
+					else
+						$c = $cat;
+				break;
+				case 'Desktop/Tower':
+					if($brand == 'MSI')
+						$c = 'desktops';
+					else
+						$c = $cat;
+				break;
+				case 'PC Motherboard':
+					if($brand == 'MSI')
+						$c = 'motherboards';
+					else
+						$c = $cat;
+				break;
+				case 'VGA':
+					if($brand == 'MSI' || $brand == 'SAPPHIRE')
+						$c = 'graphic_cards';
+					else
+						$c = $cat;
+				break;
+				case 'HDD 3,5"':
+					$c = 'sata_hard_drives';
+					$size = '3.5"' ;
+				break;
+				case 'HDD 2,5"':
+					$c = 'sata_hard_drives';
+					$size = '2.5"' ;
+				break;
+				case 'HDD External':
+					$c = 'external_hard_drives';
+				break;
+				case 'SSD':
+					if($brand == 'SILICON POWER')
+						$c = $cat;
+					else
+						$c = 'ssd';
+				break;
+				case 'Monitor':
+				case 'TV/Monitor':
+					if($brand == 'LG ELECTRONICS')
+						$c = 'monitors';
+					else
+						$c = $cat;
+				break;
+				case 'Memory':
+					if($brand == 'CORSAIR MEMORY')
+						$c = 'memories';
+					else
+						$c = $cat;
+				break;
+				case 'PSU':
+					if($brand == 'CORSAIR MEMORY')
+						$c = 'power_supplies';
 					else
 						$c = $cat;
 				break;
@@ -959,15 +1063,62 @@ class Live_model extends CI_Model {
 				if(!$availability){
 					continue;
 				}
-
-				//$code = (string) trim($product->code);
-				//$code = (string) trim($product->SKU);
+				
 				$description = (string) trim($product->Description);
-				$title = substr($description, strpos($description, 'NB '), strpos($description, ', '));
-				$title = "MSI ".$title;
-				$net_price = (string) trim($product->timi);
-				$availability = $availability;
 				$pn = (string) trim($product->SKU);
+
+				if ($pn == ''){
+					continue;
+				}
+
+				if($c == 'laptops')
+				{
+					$first = strpos($description, 'NB ')+3;
+					$last = strpos($description, ', ');
+					$diff = $last-$first;
+	
+					$title = substr($description, $first, $diff);
+					$title = "MSI ".$title;
+				}
+				elseif($c == 'desktops')
+				{
+					$last = strpos($description, ',');
+					$title = substr($description, 0, $last);
+					$chars_array['type']='Desktop';
+				}
+				elseif($c == 'motherboards')
+				{
+					$first = strpos($description, 'MB ')+3;
+					$last = strpos($description, ', ');
+					$diff = $last-$first;
+
+					$title = substr($description, $first, $diff);
+					$title = $brand." ".$title;
+				}
+				elseif($c == 'sata_hard_drives' || $c == 'external_hard_drives')
+				{
+					$title = str_replace('"', '', $description);
+				}
+				elseif($c == 'monitors')
+				{
+					$title = $description;
+
+				}
+				elseif($c == 'memories')
+				{
+					$title = $description;
+
+				}
+				elseif($c == 'power_supplies')
+				{
+					$title = $description;
+
+				}
+				//echo $title.'<br>';
+				$net_price = str_replace(",", ".", $product->timi);
+				$net_price = (string) trim($net_price);
+
+				$availability = $availability;
 				$imageUrl = (string) trim($product->Image);
 				$brand = (string) trim($product->Supplier);
 
@@ -1009,7 +1160,7 @@ class Live_model extends CI_Model {
 
 				//2. New products for charateristics tables that load Sku module
 
-				$insert = $this->addProduct ($braintrust_product, array(), $imageUrl, 'braintrust');
+				$insert = $this->addProduct ($braintrust_product, $chars_array, $imageUrl, 'braintrust');
 
 				if ($insert)
 				{
@@ -1018,14 +1169,654 @@ class Live_model extends CI_Model {
 					else
 						$newProducts[$c] = 1;
 				}
+				
 			} 		
 		} //end foreach
 
 		$this->sendImportedProductsByMail($newProducts);
 
 		echo "Finnished updating Braintrust.";
+		
     }
 
+    public function aci(){
+    	$this->load->view('upload_aci_xml', array('error' => ' ' ));
+    }
+
+    public function import_aci($path){
+
+		if($xml = $this->xml($path)){
+			
+			$images = array();
+			
+			$this->updateLive('aci');
+
+		}
+
+		$newProducts = array();
+		$i=0;
+
+
+		foreach($xml->children() as $product) {
+			$availability=false;
+			set_time_limit(50);
+			
+			//Rename categories for ETD.gr
+
+			$cat = (string) trim($product->Category);
+			$c = $cat;
+
+			switch ($cat) {
+				case 'Μελάνια για inkjet εκτυπωτές':
+					$c = 'cartridges';
+					break;
+				case 'Τόνερ':
+					$c = 'toners';
+					break;
+				default :
+					$c = $cat;
+					break;
+			}
+
+			if($c!=$cat){
+
+				$availability = $this->makeAvailability((string) trim($product->Availability), 'aci');
+
+				if(!$availability){
+					continue;
+				}
+				$code = (string) trim($product->Code);
+				$pn = (string) trim($product->OEM);
+				$title = (string) trim($product->Item);
+				$net_price = (string) trim($product->Price);
+				$availability = $availability;
+
+				$arr = explode(" ", $title, 2);
+				$brand = $arr[0];
+
+				$i++;
+				if($i>20)
+					continue;
+
+				$imageUrl = 'http://www.acihellas.gr/images/products/originals/' . $pn . '.jpg';
+				$content = @file_get_contents($imageUrl);
+				if ($content === false) 
+					{ 
+						echo "NOT";
+						//return false; 
+					}
+					else 
+					{
+						echo "YES";
+						//return true;
+					}
+
+				/*
+				if (get_headers($imageUrl)[0]!='HTTP/1.1 200 OK')
+				{
+					$imageUrl = 'http://www.acihellas.gr/images/products/originals/' . $code . '.jpg';
+					if (get_headers($imageUrl)[0]!='HTTP/1.1 200 OK')
+						$imageUrl = '';
+				}
+				*/
+				echo $imageUrl.'<br>';
+
+				//1. Live
+				$supplier = 'aci';
+
+	/*			if($this->checkLiveProduct($pn, $net_price, $supplier)){
+
+					$live = array(
+						'category'=>$c ,
+						'product_number'=>$pn ,
+						'net_price'=>$net_price ,
+						'availability'=>$availability ,
+						'recycle_tax'=>'' ,
+						'supplier' =>'aci',
+						'status' => 'publish',
+						'delete_flag'=>0
+						);
+
+					$this->db->where('product_number', $pn);
+					$this->db->where('supplier', 'aci');
+					$this->db->delete('live', $live);
+					$this->db->insert('live', $live);
+
+					unset($live);
+				}
+
+				//Array for categories table
+				$aci_product = array(
+					'category' => $c,
+					'product_number' => $pn,
+					'brand' => $brand,
+					'title' => $title,
+					'net_price'=>$net_price,
+				);
+
+				//2. New products for charateristics tables that load Sku module
+				$insert = $this->addProduct ($aci_product, array(), $imageUrl, 'aci');
+
+				if ($insert)
+				{
+					if(isset ($newProducts[$c]))
+						$newProducts[$c] = $newProducts[$c]+1;
+					else
+						$newProducts[$c] = 1;
+				}
+*/
+			}
+		}
+    }
+
+    public function copiers(){
+    	$this->load->view('upload_copiers', array('error' => ' ' ));
+    }
+
+    public function import_copiers($path){
+
+		if($xml = $this->xml($path)){
+			
+			$images = array();
+			
+			$this->updateLive('konica');
+
+		}
+
+		$newProducts = array();
+		$i=0;
+
+
+		foreach($xml->children() as $product) {
+			$availability=false;
+			set_time_limit(50);
+			
+			//Rename categories for ETD.gr
+
+			
+			$c = 'copiers';
+
+			
+
+			if($c){
+
+				//$availability = $this->makeAvailability((string) trim($product->Availability), 'aci');
+				$availability = "Κατόπιν παραγγελίας χωρίς διαθεσιμότητα";
+
+				if(!$availability){
+					continue;
+				}
+
+				
+
+				$Name = (string) trim($product->Name);
+				$Image = (string) trim($product->Image);
+				$PRODUCT_URL = (string) trim($product->PRODUCT_URL);
+				$PRODUCT_URL_PDF = (string) trim($product->PRODUCT_URL_PDF);
+				$URL_SUPPORT = (string) trim($product->URL_SUPPORT);
+				$THL__SUPPORT = (string) trim($product->THL__SUPPORT);
+				$Brand = (string) trim($product->Brand);
+				$copying_process = (string) trim($product->copying_process);
+				$Toner_Writing_System = (string) trim($product->Toner_Writing_System);
+				$Colour = (string) trim($product->Colour);
+				$Speed_Copy_Print_A4_Monochrome = (string) trim($product->Speed_Copy_Print_A4_Monochrome);
+				$Speed_Copy_Print_A4_Colour = (string) trim($product->Speed_Copy_Print_A4_Colour);
+				$Speed_Copy_Print_A3_Monochrome = (string) trim($product->Speed_Copy_Print_A3_Monochrome);
+				$Speed_Copy_Print_A3_Colour = (string) trim($product->Speed_Copy_Print_A3_Colour);
+				$Duplex_A4 = (string) trim($product->Duplex_A4);
+				$Duplex_A4_Colour = (string) trim($product->Duplex_A4_Colour);
+				$First_copy_time_sec_ = (string) trim($product->First_copy_time_sec_);
+				$First_copy_time_sec__Colour = (string) trim($product->First_copy_time_sec__Colour);
+				$Warm_up_time_sec_ = (string) trim($product->Warm_up_time_sec_);
+				$Copy_resolution_dpi = (string) trim($product->Copy_resolution_dpi);
+				$graduations = (string) trim($product->graduations);
+				$Multi_copy = (string) trim($product->Multi_copy);
+				$original_Size = (string) trim($product->original_Size);
+				$A3_Support = (string) trim($product->A3_Support);
+				$magnification = (string) trim($product->magnification);
+				$copy_features = (string) trim($product->copy_features);
+				$Resolution_dpi = (string) trim($product->Resolution_dpi);
+				$print_Processor = (string) trim($product->print_Processor);
+				$Page_Description_Language = (string) trim($product->Page_Description_Language);
+				$Operating_Systems = (string) trim($product->Operating_Systems);
+				$fonts_printer = (string) trim($product->fonts_printer);
+				$print_features = (string) trim($product->print_features);
+				$Mobile_printing = (string) trim($product->Mobile_printing);
+				$Scan_Speed_scans___min_Colour = (string) trim($product->Scan_Speed_scans___min_Colour);
+				$Scan_Speed_scans___min_M_C = (string) trim($product->Scan_Speed_scans___min_M_C);
+				$Scan_Resolution_dpi = (string) trim($product->Scan_Resolution_dpi);
+				$scanning_Methods = (string) trim($product->scanning_Methods);
+				$file_Types = (string) trim($product->file_Types);
+				$scan_destinations = (string) trim($product->scan_destinations);
+				$Scan_operations = (string) trim($product->Scan_operations);
+				$standard_Fax = (string) trim($product->standard_Fax);
+				$Fax_Broadcast = (string) trim($product->Fax_Broadcast);
+				$Fax_Resolution_dpi = (string) trim($product->Fax_Resolution_dpi);
+				$Compression_methods_Fax = (string) trim($product->Compression_methods_Fax);
+				$Fax_modem_Kvps = (string) trim($product->Fax_modem_Kvps);
+				$Fax_Destinations = (string) trim($product->Fax_Destinations);
+				$Fax_functions = (string) trim($product->Fax_functions);
+				$box_mode = (string) trim($product->box_mode);
+				$Max__user_boxes = (string) trim($product->Max__user_boxes);
+				$Type_box_s_system = (string) trim($product->Type_box_s_system);
+				$User_Box_Functions = (string) trim($product->User_Box_Functions);
+				$Systems_Memory_MB = (string) trim($product->Systems_Memory_MB);
+				$Systems_Memory_MB_optionally = (string) trim($product->Systems_Memory_MB_optionally);
+				$HDD_GB = (string) trim($product->HDD_GB);
+				$Interfaces_standard = (string) trim($product->Interfaces_standard);
+				$Interfaces_optionally = (string) trim($product->Interfaces_optionally);
+				$network_Protocols = (string) trim($product->network_Protocols);
+				$Frame_types = (string) trim($product->Frame_types);
+				$Automatic_document_feeder = (string) trim($product->Automatic_document_feeder);
+				$paper_Size = (string) trim($product->paper_Size);
+				$Printable_paper_weight = (string) trim($product->Printable_paper_weight);
+				$Paper_input_capacity = (string) trim($product->Paper_input_capacity);
+				$Standard_paper_cassettes = (string) trim($product->Standard_paper_cassettes);
+				$Standard_paper_cassettes_optionally = (string) trim($product->Standard_paper_cassettes_optionally);
+				$Automatic_duplexing = (string) trim($product->Automatic_duplexing);
+				$Finishing_modes_optional = (string) trim($product->Finishing_modes_optional);
+				$Output_capacity_with_finisher = (string) trim($product->Output_capacity_with_finisher);
+				$Output_capacity_without_finisher = (string) trim($product->Output_capacity_without_finisher);
+				$Staple = (string) trim($product->Staple);
+				$Stapling_output_capacity = (string) trim($product->Stapling_output_capacity);
+				$Letter_fold = (string) trim($product->Letter_fold);
+				$Letter_fold_capacity = (string) trim($product->Letter_fold_capacity);
+				$Booklet = (string) trim($product->Booklet);
+				$Booklet_output_capacity = (string) trim($product->Booklet_output_capacity);
+				$Monthly_production_volume = (string) trim($product->Monthly_production_volume);
+				$Max_Monthly_production_volume = (string) trim($product->Max_Monthly_production_volume);
+				$Lifetime_Toner_Black = (string) trim($product->Lifetime_Toner_Black);
+				$Lifetime_Toner_CMY = (string) trim($product->Lifetime_Toner_CMY);
+				$Developer_lifetime_Black = (string) trim($product->Developer_lifetime_Black);
+				$Developer_lifetime_CMY = (string) trim($product->Developer_lifetime_CMY);
+				$Drum_lifetime_Black = (string) trim($product->Drum_lifetime_Black);
+				$Drum_lifetime_CMY = (string) trim($product->Drum_lifetime_CMY);
+				$Lifetime_Imaging_Unit_Black = (string) trim($product->Lifetime_Imaging_Unit_Black);
+				$Lifetime_Imaging_Unit_CMY = (string) trim($product->Lifetime_Imaging_Unit_CMY);
+				$power_consumption = (string) trim($product->power_consumption);
+				$Dimensions = (string) trim($product->Dimensions);
+				$System_weight_kg = (string) trim($product->System_weight_kg);
+				$Safety = (string) trim($product->Safety);
+				$Accounts = (string) trim($product->Accounts);
+				$Accounts_Software  = (string) trim($product->Accounts_Software);
+				$System_weight_kg = (string) trim($product->System_weight_kg);
+				$Safety = (string) trim($product->Safety);
+				$Accounts = (string) trim($product->Accounts);
+				$Accounts_Software = (string) trim($product->Accounts_Software);
+
+
+				$pn = (string) trim($product->product_number);
+
+				
+
+				$imageUrl = $Image;
+				
+
+				
+				//1. Live
+				$supplier = 'konica';
+
+				if($this->checkLiveProduct($pn, '', $supplier)){
+
+					$live = array(
+						'category'=>$c ,
+						'product_number'=>$pn ,
+						'net_price'=>'' ,
+						'availability'=>$availability ,
+						'recycle_tax'=>'' ,
+						'supplier' =>$supplier ,
+						'status' => 'publish',
+						'delete_flag'=>0
+						);
+
+					$this->db->where('product_number', $pn);
+					$this->db->where('supplier', $supplier);
+					$this->db->delete('live', $live);
+					$this->db->insert('live', $live);
+
+					unset($live);
+				}
+
+				//Array for categories table
+				$copiers_product = array(
+					'category' => $c,
+					'product_number'=>$pn ,
+					'Name' => $Name ,
+					'PRODUCT_URL' => $PRODUCT_URL ,
+					'PRODUCT_URL_PDF' => $PRODUCT_URL_PDF ,
+					'URL_SUPPORT' => $URL_SUPPORT ,
+					'THL__SUPPORT' => $THL__SUPPORT ,
+					'Brand' => $Brand ,
+					'copying_process' => $copying_process ,
+					'Toner_Writing_System' => $Toner_Writing_System ,
+					'Colour' => $Colour ,
+					'Speed_Copy_Print_A4_Monochrome' => $Speed_Copy_Print_A4_Monochrome ,
+					'Speed_Copy_Print_A4_Colour' => $Speed_Copy_Print_A4_Colour ,
+					'Speed_Copy_Print_A3_Monochrome' => $Speed_Copy_Print_A3_Monochrome ,
+					'Speed_Copy_Print_A3_Colour' => $Speed_Copy_Print_A3_Colour ,
+					'Duplex_A4' => $Duplex_A4 ,
+					'Duplex_A4_Colour' => $Duplex_A4_Colour ,
+					'First_copy_time_sec_' => $First_copy_time_sec_ ,
+					'First_copy_time_sec__Colour' => $First_copy_time_sec__Colour ,
+					'Warm_up_time_sec_' => $Warm_up_time_sec_ ,
+					'Copy_resolution_dpi' => $Copy_resolution_dpi ,
+					'graduations' => $graduations ,
+					'Multi_copy' => $Multi_copy ,
+					'original_Size' => $original_Size ,
+					'A3_Support' => $A3_Support ,
+					'magnification' => $magnification ,
+					'copy_features' => $copy_features ,
+					'Resolution_dpi' => $Resolution_dpi ,
+					'print_Processor' => $print_Processor ,
+					'Page_Description_Language' => $Page_Description_Language ,
+					'Operating_Systems' => $Operating_Systems ,
+					'fonts_printer' => $fonts_printer ,
+					'print_features' => $print_features ,
+					'Mobile_printing' => $Mobile_printing ,
+					'Scan_Speed_scans___min_Colour' => $Scan_Speed_scans___min_Colour ,
+					'Scan_Speed_scans___min_M_C' => $Scan_Speed_scans___min_M_C ,
+					'Scan_Resolution_dpi' => $Scan_Resolution_dpi ,
+					'scanning_Methods' => $scanning_Methods ,
+					'file_Types' => $file_Types ,
+					'scan_destinations' => $scan_destinations ,
+					'Scan_operations' => $Scan_operations ,
+					'standard_Fax' => $standard_Fax ,
+					'Fax_Broadcast' => $Fax_Broadcast ,
+					'Fax_Resolution_dpi' => $Fax_Resolution_dpi ,
+					'Compression_methods_Fax' => $Compression_methods_Fax ,
+					'Fax_modem_Kvps' => $Fax_modem_Kvps ,
+					'Fax_Destinations' => $Fax_Destinations ,
+					'Fax_functions' => $Fax_functions ,
+					'box_mode' => $box_mode ,
+					'Max__user_boxes' => $Max__user_boxes ,
+					'Type_box_s_system' => $Type_box_s_system ,
+					'User_Box_Functions' => $User_Box_Functions ,
+					'Systems_Memory_MB' => $Systems_Memory_MB ,
+					'Systems_Memory_MB_optionally' => $Systems_Memory_MB_optionally ,
+					'HDD_GB' => $HDD_GB ,
+					'Interfaces_standard' => $Interfaces_standard ,
+					'Interfaces_optionally' => $Interfaces_optionally ,
+					'network_Protocols' => $network_Protocols ,
+					'Frame_types' => $Frame_types ,
+					'Automatic_document_feeder' => $Automatic_document_feeder ,
+					'paper_Size' => $paper_Size ,
+					'Printable_paper_weight' => $Printable_paper_weight ,
+					'Paper_input_capacity' => $Paper_input_capacity ,
+					'Standard_paper_cassettes' => $Standard_paper_cassettes ,
+					'Standard_paper_cassettes_optionally' => $Standard_paper_cassettes_optionally ,
+					'Automatic_duplexing' => $Automatic_duplexing ,
+					'Finishing_modes_optional' => $Finishing_modes_optional ,
+					'Output_capacity_with_finisher' => $Output_capacity_with_finisher ,
+					'Output_capacity_without_finisher' => $Output_capacity_without_finisher ,
+					'Staple' => $Staple ,
+					'Stapling_output_capacity' => $Stapling_output_capacity ,
+					'Letter_fold' => $Letter_fold ,
+					'Letter_fold_capacity' => $Letter_fold_capacity ,
+					'Booklet' => $Booklet ,
+					'Booklet_output_capacity' => $Booklet_output_capacity ,
+					'Monthly_production_volume' => $Monthly_production_volume ,
+					'Max_Monthly_production_volume' => $Max_Monthly_production_volume ,
+					'Lifetime_Toner_Black' => $Lifetime_Toner_Black ,
+					'Lifetime_Toner_CMY' => $Lifetime_Toner_CMY ,
+					'Developer_lifetime_Black' => $Developer_lifetime_Black ,
+					'Developer_lifetime_CMY' => $Developer_lifetime_CMY ,
+					'Drum_lifetime_Black' => $Drum_lifetime_Black ,
+					'Drum_lifetime_CMY' => $Drum_lifetime_CMY ,
+					'Lifetime_Imaging_Unit_Black' => $Lifetime_Imaging_Unit_Black ,
+					'Lifetime_Imaging_Unit_CMY' => $Lifetime_Imaging_Unit_CMY ,
+					'power_consumption' => $power_consumption ,
+					'Dimensions' => $Dimensions ,
+					'System_weight_kg' => $System_weight_kg ,
+					'Safety' => $Safety ,
+					'Accounts' => $Accounts ,
+					'Accounts_Software ' => $Accounts_Software  ,
+					'System_weight_kg' => $System_weight_kg ,
+					'Safety' => $Safety ,
+					'Accounts' => $Accounts ,
+					'Accounts_Software' => $Accounts_Software,
+					'shipping_class' => 4682
+				);
+
+				//2. New products for charateristics tables that load Sku module
+				$insert = $this->addProduct ($copiers_product, array(), $imageUrl, $supplier);
+
+				if ($insert)
+				{
+					if(isset ($newProducts[$c]))
+						$newProducts[$c] = $newProducts[$c]+1;
+					else
+						$newProducts[$c] = 1;
+				}
+
+			}
+		}//end foreach
+
+		$this->sendImportedProductsByMail($newProducts);
+		echo "Finnished updating KONICA Copiers.";
+    }
+
+    public function cpi(){
+    	$this->load->view('upload_cpi_xml', array('error' => ' ' ));
+    }
+
+    public function import_cpi($path){
+
+		if($xml = $this->xml($path)){
+			
+			$images = array();
+			$this->updateLive('cpi');
+		}
+
+		$newProducts = array();
+		$i=0;
+
+		foreach($xml->children() as $product) {
+			$availability=false;
+			set_time_limit(50);
+			
+			$cat = (string) trim($product->Item);
+			if (strpos($cat, 'OKI ') !== false || strpos($cat, 'ΟΚΙ') !== false)
+				$c = 'printers';
+			elseif (strpos($cat, 'ΡRΟJΕCΤΟR ') !== false)
+				$c = 'projectors';
+			else
+				$c ='';
+
+			if($c!=''){
+
+				$availability = $this->makeAvailability((string) trim($product->Availability), 'cpi');
+
+				if(!$availability){
+					continue;
+				}
+
+				$code = (string) trim($product->Int_Code);
+				$pn = (string) trim($product->Code);
+				$title = (string) trim($product->Item);
+				$net_price = trim($product->Price);
+				$recycle_tax = trim($product->Recycle_Price);
+				$description = '';
+
+				$supplier = 'cpi';
+				// For fixing brand 
+				if (strpos($cat, 'OKI ') !== false || strpos($cat, 'ΟΚΙ') !== false)
+					$brand = 'OKI';
+				elseif (strpos($cat, 'ΡRΟJΕCΤΟR ') !== false)
+					$brand = 'BENQ';
+				else
+					$brand = '';
+				
+				//Image cannot be parsed must import it manually
+				$imageUrl = '';
+
+				//1. Live
+				if($this->checkLiveProduct($pn, $net_price, $supplier)){
+
+					$live = array(
+						'category'=>$c ,
+						'product_number'=>$pn ,
+						'net_price'=>$net_price ,
+						'availability'=>$availability ,
+						'recycle_tax'=>$recycle_tax ,
+						'supplier' =>$supplier,
+						'status' => 'publish',
+						'delete_flag'=>0
+						);
+
+					$this->db->where('product_number', $pn);
+					$this->db->where('supplier', $supplier);
+					$this->db->delete('live', $live);
+					$this->db->insert('live', $live);
+
+					unset($live);
+				}
+
+				//Array for categories table
+				$cpi_product = array(
+					'category' => $c,
+					'product_number' => $pn,
+					'brand' => $brand,
+					'title' => $title,
+					'description' => $description,
+					'product_url' => '',
+					'net_price'=>$net_price
+				);
+
+				//2. New products for charateristics tables that load Sku module
+				$insert = $this->addProduct ($cpi_product, array(), $imageUrl, $supplier);
+
+				if ($insert)
+				{
+					if(isset ($newProducts[$c]))
+						$newProducts[$c] = $newProducts[$c]+1;
+					else
+						$newProducts[$c] = 1;
+				}
+			}
+		}//end foreach
+
+		$this->sendImportedProductsByMail($newProducts);
+		echo "Finnished updating CPI.";
+    }
+
+    public function westnet(){
+    	$this->load->view('upload_westnet_xml', array('error' => ' ' ));
+    }
+
+        public function import_westnet($path){
+
+		if($xml = $this->xml($path)){
+			
+			$images = array();
+			$this->updateLive('westnet');
+		}
+
+		$newProducts = array();
+		$i=0;
+
+		foreach($xml->children() as $product) {
+
+			$availability=false;
+			$title = $description = '';
+			set_time_limit(50);
+			
+			$cat = (string) trim($product->Item_Category);
+			$sc = (string) trim($product->Description);
+			$c = '';
+
+			switch ($cat) {
+				case 'GADGETS':
+					if (strpos($sc, 'SCOOTER') !== false){
+						$title = $description = str_replace('MINI SCOOTER ', '', $sc);
+						$c = 'hoverboards';
+					}
+					else
+						$c = '';
+					break;
+				default:
+					$c = $cat;
+					break;
+			}
+
+			if($c=='hoverboards'){
+
+				$availability = $this->makeAvailability((string) trim($product->Stock_Status), 'westnet');
+
+				if(!$availability){
+					continue;
+				}
+
+				$code = (string) trim($product->Code);
+				$pn = (string) trim($product->Part_Number);
+
+				if ($title=='')
+					$title = (string) trim($product->Description);
+
+				$net_price = trim($product->Final_Price);
+				$recycle_tax = '';
+				
+				if ($description=='')
+					$description = (string) trim($product->Description);
+
+				$brand = (string) trim($product->Manufacturer);
+				if($brand == "LL")
+					$brand = 'Lexgo';
+
+				$supplier = 'westnet';
+
+				//Image cannot be parsed must import it manually
+				$imageUrl = '';
+
+				//1. Live
+				if($this->checkLiveProduct($pn, $net_price, $supplier)){
+
+					$live = array(
+						'category'=>$c ,
+						'product_number'=>$pn ,
+						'net_price'=>$net_price ,
+						'availability'=>$availability ,
+						'recycle_tax'=>$recycle_tax ,
+						'supplier' =>$supplier,
+						'status' => 'publish',
+						'delete_flag'=>0
+						);
+
+					$this->db->where('product_number', $pn);
+					$this->db->where('supplier', $supplier);
+					$this->db->delete('live', $live);
+					$this->db->insert('live', $live);
+
+					unset($live);
+				}
+
+				//Array for categories table
+				$westnet_product = array(
+					'category' => $c,
+					'product_number' => $pn,
+					'brand' => $brand,
+					'title' => $title,
+					'description' => $description,
+					'product_url' => '',
+					'net_price'=>$net_price
+				);
+
+				//2. New products for charateristics tables that load Sku module
+				$insert = $this->addProduct ($westnet_product, array(), $imageUrl, $supplier);
+
+				if ($insert)
+				{
+					if(isset ($newProducts[$c]))
+						$newProducts[$c] = $newProducts[$c]+1;
+					else
+						$newProducts[$c] = 1;
+				}
+			}
+		}//end foreach
+
+		$this->sendImportedProductsByMail($newProducts);
+		echo "Finnished updating Westnet.";
+		
+    }
 
     private function sendImportedProductsByMail($newProducts){
 
@@ -1106,8 +1897,7 @@ class Live_model extends CI_Model {
 
 
     public function addProduct($product, $chars_array, $f , $supplier){
-
-
+    	
     	$insert = false;
     	$c = $product['category'];
 
@@ -1118,27 +1908,24 @@ class Live_model extends CI_Model {
 
 				
 		// Only For Update
+/*
+		
+		if($c == "power_bank" || $c == "routers" ||$c == "switches" ||$c == "speakers" ||$c == "external_hard_drives" ||$c == "sata_hard_drives" ||$c == "ssd" ||$c == "keyboard_mouse" ||$c == "optical_drives" ||$c == "card_readers" ||$c == "flash_drives" ||$c == "power_supplies" ||$c == "cases" ||$c == "fans" ||$c == "motherboards" ||$c == "graphic_cards" ||$c == "cpu" ||$c == "memories")
 
-		/*
-		if($c == "carrying_cases" || $c == "external_hard_drives" ||
-				 $c == "sata_hard_drives" || $c == "ssd" || $c == "speakers" || 
-				 $c == "power_banks" || $c == "keyboard_mouse"  || 
-				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c == "tablets"  || $c == "smartphones" )
 		{
 			
-		if(!$chars_array){
+			if(!$chars_array){
 			$chars_array=array();
-}
+			}
 
 
-			$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
-			$chars_array = array_merge($chars_array, array("shipping_class"=>$shipping_class));
-			$chars_array = array_merge($chars_array, array("description"=>$product['description']));
+			//$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
+			//$chars_array = array_merge($chars_array, array("shipping_class"=>$shipping_class));
+			//$chars_array = array_merge($chars_array, array("description"=>$product['description']));
 			$this->updateProduct($c, $chars_array, $product['product_number']);
 			
-		}
-		*/
-		// End Only for Update
+		}*/
+				// End Only for Update
 		
 		$newSku = Modules::run('sku/checkSku',$skuArray);
 		$sku = $newSku['sku'];
@@ -1188,6 +1975,22 @@ class Live_model extends CI_Model {
 				'shipping_class' => $product['shipping_class']
 				);
 
+			}elseif($c == "copiers"){
+				unset($product['category']);
+				$product['sku'] = $sku;
+
+				$categoryData = $product;
+			}
+			elseif($c == 'hoverboards'){
+				$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
+				$categoryData = array(
+				'brand'=> $product['brand'],
+				'sku'=> $sku,
+				'product_number'=> $product['product_number'],
+				'title'=> $product['title'],
+				'description'=> strip_tags($product['description']),
+				'shipping_class' => $shipping_class
+				);
 			}
 			else
 			{
@@ -1195,10 +1998,11 @@ class Live_model extends CI_Model {
 				if($c == "carrying_cases" || $c == "external_hard_drives" ||
 				 $c == "sata_hard_drives" || $c == "ssd" || $c == "speakers" || 
 				 $c == "power_banks" || $c == "keyboard_mouse"  || 
-				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c == "tablets"  || $c == "smartphones" ||
-				 $c == "cables" || $c == "patch_panels" || $c == "racks")		
-				$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
-
+				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c== "desktops" || $c == "tablets"  || $c == "smartphones" ||
+				 $c == "cables" || $c == "patch_panels" || $c == "racks" || $c =="optical_drives" || $c == "card_readers" || $c == "flash_drives" || 
+				 $c == "power_supplies" || $c == "cases" || $c == "fans" || $c == "motherboards" || $c == "graphic_cards" || $c == "cpu" || 
+				 $c == "memories" || $c == "hoverboards")		
+					$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
 
 				$categoryData = array(
 				'brand'=> $product['brand'],
@@ -1233,11 +2037,57 @@ class Live_model extends CI_Model {
 					$categoryData = array_merge($categoryData, $chars_array);
 				}
 			}
+			if($supplier == 'braintrust' && $c != "laptops")
+			{
+				$categoryData ['new_item'] = 1;
+			}
+
+			switch ($product['brand']) {
+				case 'APC':
+					$categoryData['support_url'] = 'http://www.schneider-electric.gr/sites/greece/gr/support/contact/we-care.page';
+					$categoryData['support_tel'] = '8001162900';
+					break;
+				case 'DELL':
+					$categoryData['support_url'] = 'http://www1.euro.dell.com/content/topics/topic.aspx/emea/contact/elgr?c=gr&l=el';
+					$categoryData['support_tel'] = '80044149518';
+					break;
+				case 'HP':
+					$categoryData['support_url'] = 'http://support.hp.com/gr-el/';
+					$categoryData['support_tel'] = '80111225547';
+					break;
+				/*case 'INTEL':
+					$categoryData['support_url'] = '';
+					$categoryData['support_tel'] = '';
+					break;*/
+				case 'PHILIPS':
+				case 'Philips':
+					$categoryData['support_url'] = 'http://www.philips.gr/c-m/consumer-support';
+					$categoryData['support_tel'] = '00800 3122 1223';
+					break;
+				case 'AOC':
+					$categoryData['support_url'] = 'www.aoc-service.com ';
+					$categoryData['support_tel'] = '80049129216';
+					break;
+				case 'MICROSOFT':
+					$categoryData['support_url'] = '';
+					$categoryData['support_tel'] = '2105197500';
+					break;
+				case 'LENOVO':
+					$categoryData['support_url'] = '';
+					$categoryData['support_tel'] = '2111984507';
+					break;
+				case 'LG':
+				case 'LG ELECTRONICS':
+					$categoryData['support_url'] = 'http://www.lg.com/gr/support';
+					$categoryData['support_tel'] = '80111200900';
+					break;
+				default:
+					break;
+			}
 
 			if(Modules::run("categories/insert", $c, $categoryData)){
 				
 				$insert = true;
-
 
 			}
 			else{
@@ -1259,8 +2109,13 @@ class Live_model extends CI_Model {
 				$this->db->set('shipping_class',$shipping_class);
 				$this->db->where('sku',$sku);
 				$this->db->update($c);
-			}	
+			}
+			/*else if($c == 'memories') //Fix for updating image 
+			{
+				$mem_images = $this->AddProductImages($product, $f, $supplier, $sku);
+			}*/
     	}
+
     	return $insert;
     }
 
@@ -1351,6 +2206,33 @@ class Live_model extends CI_Model {
 					$i++;
     		}//foreach($f as $image){
     	}//elseif( $supplier == 'etd')
+    	elseif( $supplier == 'konica')
+    	{
+    		$imageData = array(
+							'src' => $f,
+							'sku' => $sku ,
+							'brand' => $product['Brand'] ,
+							'part_number' => $product['product_number'] ,
+							'tail' => ''
+						);
+						
+						
+						Modules::run('images/getImage',$imageData);
+    	}//elseif( $supplier == 'konica')
+    	/* //For cpi if image are parsable
+    	elseif( $supplier == 'cpi')
+    	{
+    		$imageData = array(
+							'src' => $f,
+							'sku' => $sku ,
+							'brand' => $product['brand'] ,
+							'part_number' => $product['product_number'] ,
+							'tail' => ''
+						);
+						
+						Modules::run('images/getImage',$imageData);
+    	}
+    	*/
     }
 
 
@@ -1425,6 +2307,13 @@ class Live_model extends CI_Model {
 					$chars_title = (string) trim($chars->atribute[0]);
 					$chars_value = (string) trim($chars->value[0]);
 
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
+
 					switch ($chars_title) {
 						case 'Χωρητικότητα Μπαταρίας':
 							$chars_array['battery_capacity']=$chars_value;
@@ -1439,7 +2328,15 @@ class Live_model extends CI_Model {
 							$chars_array['dimensions']=$chars_value;
 							break;
 						case 'Εγγύηση (μήνες)':
-							$chars_array['warranty']=$chars_value;
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
 							break;
 						default :
 
@@ -1475,6 +2372,12 @@ class Live_model extends CI_Model {
 					$is_found = true;
 					$chars_title = (string) trim($chars->atribute[0]);
 					$chars_value = (string) trim($chars->value[0]);
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Τύπος':
@@ -1502,7 +2405,15 @@ class Live_model extends CI_Model {
 							$chars_array['removable_antenna']=$chars_value;
 							break;
 						case 'Εγγύηση (μήνες)':
-							$chars_array['warranty']=$chars_value;
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
 							break;
 						default :
 
@@ -1538,6 +2449,13 @@ class Live_model extends CI_Model {
 					$chars_title = (string) trim($chars->atribute[0]);
 					$chars_value = (string) trim($chars->value[0]);
 
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
+
 					switch ($chars_title) {
 						case 'Θύρες':
 							$chars_array['ports']=$chars_value;
@@ -1561,7 +2479,15 @@ class Live_model extends CI_Model {
 							$chars_array['rackmount']=$chars_value;
 							break;
 						case 'Εγγύηση (μήνες)':
-							$chars_array['warranty']=$chars_value;
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
 							break;
 						default :
 
@@ -1595,6 +2521,14 @@ class Live_model extends CI_Model {
 					$chars_title = (string) trim($chars->atribute[0]);
 					$chars_value = (string) trim($chars->value[0]);
 
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
+
+
 					switch ($chars_title) {
 						case 'Τύπος ηχείων':
 							$chars_array['type']=$chars_value;
@@ -1612,7 +2546,15 @@ class Live_model extends CI_Model {
 							$chars_array['input']=$chars_value;
 							break;
 						case 'Εγγύηση (μήνες)':
-							$chars_array['warranty']=$chars_value;
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
 							break;
 						default :
 
@@ -1648,6 +2590,16 @@ class Live_model extends CI_Model {
 					$chars_title = (string) trim($chars->atribute[0]);
 					$chars_value = (string) trim($chars->value[0]);
 
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
+
+					if (strpos($chars_value, '"'))
+						$chars_value = str_replace('"', '', $chars_value);
+
 					switch ($chars_title) {
 						case 'Χωρητικότητα':
 							$chars_array['capacity']=$chars_value;
@@ -1668,10 +2620,21 @@ class Live_model extends CI_Model {
 							$chars_array['colour']=$chars_value;
 							break;
 						case 'Βάρος (γραμμάρια)':
-							$chars_array['weight']=$chars_value;
+							if($chars_value != '')
+								$chars_array['weight']=(string)$chars_value.' gr.';
+							else
+								$chars_array['weight']=$chars_value;
 							break;
 						case 'Εγγύηση (μήνες)':
-							$chars_array['warranty']=$chars_value;
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
 							break;
 						default :
 
@@ -1707,6 +2670,16 @@ class Live_model extends CI_Model {
 					$chars_title = (string) trim($chars->atribute[0]);
 					$chars_value = (string) trim($chars->value[0]);
 
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
+
+					if (strpos($chars_value, '"'))
+						$chars_value = str_replace('"', '', $chars_value);
+
 					switch ($chars_title) {
 						case 'Χωρητικότητα':
 							$chars_array['capacity']=$chars_value;
@@ -1727,7 +2700,15 @@ class Live_model extends CI_Model {
 							$chars_array['packaging']=$chars_value;
 							break;
 						case 'Εγγύηση (μήνες)':
-							$chars_array['warranty']=$chars_value;
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
 							break;
 						default :
 
@@ -1765,6 +2746,16 @@ class Live_model extends CI_Model {
 					$chars_title = (string) trim($chars->atribute[0]);
 					$chars_value = (string) trim($chars->value[0]);
 
+					if (strpos($chars_value, '"'))
+						$chars_value = str_replace('"', '', $chars_value);
+
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
+
 					switch ($chars_title) {
 						case 'Χωρητικότητα (Από εώς)':
 							$chars_array['capacity_from_to']=$chars_value;
@@ -1794,7 +2785,15 @@ class Live_model extends CI_Model {
 							$chars_array['packaging']=$chars_value;
 							break;
 						case 'Εγγύηση (μήνες)':
-							$chars_array['warranty']=$chars_value;
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
 							break;
 						default :
 
@@ -1832,6 +2831,13 @@ class Live_model extends CI_Model {
 					$chars_title = (string) trim($chars->atribute[0]);
 					$chars_value = (string) trim($chars->value[0]);
 
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
+
 					switch ($chars_title) {
 						case 'Τύπος συσκευής':
 							$chars_array['type']=$chars_value;
@@ -1861,7 +2867,15 @@ class Live_model extends CI_Model {
 							$chars_array['multimedia_buttons']=$chars_value;
 							break;
 						case 'Εγγύηση (μήνες)':
-							$chars_array['warranty']=$chars_value;
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
 							break;
 						default :
 
@@ -1908,6 +2922,13 @@ class Live_model extends CI_Model {
 					$chars_title = (string) trim($chars->atribute[0]);
 					$chars_value = (string) trim($chars->value[0]);
 
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
+
 					switch ($chars_title) {
 						case 'Τύπος θήκης':
 							$chars_array['form_factor'] = $chars_value;
@@ -1946,7 +2967,15 @@ class Live_model extends CI_Model {
 							$chars_array['power_supply']=$chars_value;
 							break;
 						case 'Εγγύηση (μήνες)':
-							$chars_array['year_warranty']=(string)($chars_value/60).' έτη';
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['year_warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['year_warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['year_warranty'] = $chars_value;
 							break;
 						case 'Τύπος εγγύησης':
 							$chars_array['warranty']=$chars_value;
@@ -1962,6 +2991,889 @@ class Live_model extends CI_Model {
 			}
 			return $chars_array;
 		}
+		else if ($category == 'optical_drives')
+		{
+			$chars_array = array(
+				'device' => "",
+				'type' => "",
+				'connection' => "",
+				'write_speed' => "",
+				'read_speed' => "",
+				'color' => "",
+				'warranty' => ""
+				);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
+
+					switch ($chars_title) {
+						case 'Συσκευή':
+							$chars_array['device'] = $chars_value;
+							break;
+						case 'Τύπος':
+							$chars_array['type'] = $chars_value;
+							break;
+						case 'Σύνδεση':
+							$chars_array['connection'] = $chars_value;
+							break;
+						case 'Ταχύτητα εγγραφής':
+							$chars_array['write_speed'] = $chars_value;
+							break;
+						case 'Ταχύτητα ανάγνωσης':
+							$chars_array['read_speed'] = $chars_value;
+							break;
+						case 'Χρώμα':
+							$chars_array['color'] = $chars_value;
+							break;
+						case 'Εγγύηση (μήνες)':
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					continue;
+				}
+			}
+			return $chars_array;
+		}
+		else if ($category == 'card_readers')
+		{
+			$chars_array = array(
+				'device_type' => "",
+				'card_types' => "",
+				'warranty' => ""
+				);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
+
+					switch ($chars_title) {
+						case 'Τύπος συσκευής':
+							$chars_array['device_type'] = $chars_value;
+							break;
+						case 'Υποστήριξη τύπων μνήμης':
+							$chars_array['card_types'] = $chars_value;
+							break;
+						case 'Εγγύηση (μήνες)':
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					continue;
+				}
+			}
+			return $chars_array;
+		}
+		else if ($category == 'flash_drives')
+		{
+			$chars_array = array(
+				'capacity' => "",
+				'connection' => "",
+				'security' => "",
+				'read_speed' => "",
+				'write_speed' => "",
+				'color' => "",
+				'closing_type' => "",
+				'warranty' => ""
+				);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
+
+					switch ($chars_title) {
+						case 'Χωρητικότητα':
+							$chars_array['capacity'] = $chars_value;
+							break;
+						case 'Σύνδεση':
+							$chars_array['connection'] = $chars_value;
+							break;
+						case 'Ασφάλεια':
+							$chars_array['security'] = $chars_value;
+							break;
+						case 'Ταχύτητα ανάγνωσης (MB/sec)':
+							$chars_array['read_speed'] = $chars_value;
+							break;
+						case 'Ταχύτητα εγγραφής (MB/sec)':
+							$chars_array['write_speed'] = $chars_value;
+							break;
+						case 'Χρώμα':
+							$chars_array['color'] = $chars_value;
+							break;
+						case 'Τύπος κλεισίματος':
+							$chars_array['closing_type'] = $chars_value;
+							break;
+						case 'Εγγύηση (μήνες)':
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					continue;
+				}
+			}
+			return $chars_array;
+		}
+		else if ($category == 'power_supplies')
+		{
+			$chars_array = array(
+				'type' => "",
+				'power' => "",
+				'energy_efficiency' => "",
+				'fan_size' => "",
+				'output_connectors' => "",
+				'pfc' => "",
+				'dimensions' => "",
+				'warranty' => ""
+				);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
+
+					switch ($chars_title) {
+						case 'Τύπος':
+							$chars_array['type'] = $chars_value;
+							break;
+						case 'Ισχύς (Watt)':
+							$chars_array['power'] = $chars_value;
+							break;
+						case 'Energy-Efficient':
+							$chars_array['energy_efficiency'] = $chars_value;
+							break;
+						case 'Ανεμιστήρας':
+							$chars_array['fan_size'] = $chars_value;
+							break;
+						case 'Υποδοχές εξόδου':
+							$chars_array['output_connectors'] = $chars_value;
+							break;
+						case 'PFC':
+							$chars_array['pfc'] = $chars_value;
+							break;
+						case 'Διαστάσεις (πλάτος x ύψος x βάθος, σε mm)': 
+							$chars_array['dimensions'] = $chars_value;
+							break;
+						case 'Εγγύηση (μήνες)':
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					continue;
+				}
+			}
+			return $chars_array;
+		}
+		else if ($category == 'cases')
+		{
+			$chars_array = array(
+				'type' => "",
+				'motherboard_size' => "",
+				'color' => "",
+				'external_5_25' => "",
+				'external_3_5' => "",
+				'internal_5_25' => "",
+				'internal_3_5' => "",
+				'hdd_dock' => "",
+				'installed_fans' => "",
+				'side_window' => "",
+				'dimensions' => "",
+				'weight' => "",
+				'power_supply' => "",
+				'warranty' => ""
+				);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
+
+					switch ($chars_title) {
+						case 'Τύπος':
+							$chars_array['type'] = $chars_value;
+							break;
+						case 'Υποστήριξη μητρικής':
+							$chars_array['motherboard_size'] = $chars_value;
+							break;
+						case 'Χρώμα':
+							$chars_array['color'] = $chars_value;
+							break;
+						case 'Εξωτερικές Θέσεις 5,25"':
+							$chars_array['external_5_25'] = $chars_value;
+							break;
+						case 'Εξωτερικές Θέσεις 3,5"':
+							$chars_array['external_3_5'] = $chars_value;
+							break;
+						case 'Εσωτερικές Θέσεις 3,5"':
+							$chars_array['internal_5_25'] = $chars_value;
+							break;
+						case 'Εσωτερικές Θέσεις 2,5"':
+							$chars_array['internal_3_5'] = $chars_value;
+							break;
+						case 'Docking σκληρού δίσκου':
+							$chars_array['hdd_dock'] = $chars_value;
+							break;
+						case 'Εγκατεστημένοι ανεμιστήρες':
+							$chars_array['installed_fans'] = $chars_value;
+							break;
+						case 'Πλαϊνό Παράθυρο':
+							$chars_array['side_window'] = $chars_value;
+							break;
+						case 'Διαστάσεις (πλάτος x ύψος x βάθος, σε mm)':
+							$chars_array['dimensions'] = $chars_value;
+							break;
+						case 'Βάρος (κιλά)':
+							$chars_array['weight'] = $chars_value;
+							break;
+						case 'Τροφοδοτικό':
+							$chars_array['power_supply'] = $chars_value;
+							break;
+						case 'Εγγύηση (μήνες)':
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					continue;
+				}
+			}
+			return $chars_array;
+		}
+		else if ($category == 'fans')
+		{
+			$chars_array = array(
+				'heat_sink_type' => "",
+				'fan_diameter' => "",
+				'fan_number' => "",
+				'compatibility' => "",
+				'dimensions' => "",
+				'warranty' => ""
+				);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
+
+					switch ($chars_title) {
+						case 'Τύπος Ψύκτρας':
+							$chars_array['heat_sink_type'] = $chars_value;
+							break;
+						case 'Μέγεθος ανεμιστήρα (mm)':
+							$chars_array['fan_diameter'] = $chars_value;
+							break;
+						case 'Αριθμός ανεμιστήρων':
+							$chars_array['fan_number'] = $chars_value;
+							break;
+						case 'Συμβατότητα':
+							$chars_array['compatibility'] = $chars_value;
+							break;
+						case 'Διαστάσεις (μήκος x πλάτος x ύψος, σε mm)':
+							$chars_array['dimensions'] = $chars_value;
+							break;
+						case 'Εγγύηση (μήνες)':
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					continue;
+				}
+			}
+			return $chars_array;
+		}
+		else if ($category == 'motherboards')
+		{
+			$chars_array = array(
+				'cpu_brand' => "",
+				'socket' => "",
+				'chipset' => "",
+				'integrated_cpu' => "",
+				'type' => "",
+				'ram_type' => "",
+				'max_ram' => "",
+				'integrated_graphics' => "",
+				'crossfire_x' => "",
+				'sli' => "",
+				'sound' => "",
+				'sata_2' => "",
+				'sata_3' => "",
+				'raid' => "",
+				'pci_express_x8_16' => "",
+				'pci_express_x1_4' => "",
+				'pci' => "",
+				'usb_2' => "",
+				'usb_3' => "",
+				'usb_3_1' => "",
+				'firewire' => "",
+				'e_sata' => "",
+				'network' => "",
+				'serial' => "",
+				'parallel' => "",
+				'warranty' => ""
+				);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
+
+					switch ($chars_title) {
+						case 'Κατασκευαστής επεξεργαστή':
+							$chars_array['cpu_brand'] = $chars_value;
+							break;						
+						case 'Socket':
+							$chars_array['socket'] = $chars_value;
+							break;						
+						case 'Chipset':
+							$chars_array['chipset'] = $chars_value;
+							break;						
+						case 'Ενσωματωμένος επεξεργαστής':
+							$chars_array['integrated_cpu'] = $chars_value;
+							break;						
+						case 'Τύπος μητρικής':
+							$chars_array['type'] = $chars_value;
+							break;						
+						case 'Υποστηριζόμενη μνήμη':
+							$chars_array['ram_type'] = $chars_value;
+							break;						
+						case 'Μέγιστο μέγεθος μνήμης':
+							$chars_array['max_ram'] = $chars_value;
+							break;						
+						case 'Ενσωματωμένη κάρτα γραφικών':
+							$chars_array['integrated_graphics'] = $chars_value;
+							break;						
+						case 'Υποστήριξη CrossfireX / SLI':
+
+							if($whereIs = strpos( $chars_value, '/'))
+							{
+								$etd_crossfire_x = trim(substr($chars_value, 0, $whereIs));
+								$etd_sli = trim(substr($chars_value, $whereIs+1, strlen($chars_value)));
+
+								if($etd_crossfire_x == 'No')
+									$chars_array['crossfire_x'] = 'ΟΧΙ';
+								elseif($etd_crossfire_x == 'Yes')
+									$chars_array['crossfire_x'] = 'ΝΑΙ';
+
+								if($etd_sli == 'No')
+									$chars_array['sli'] = 'ΟΧΙ';
+								elseif($etd_sli == 'Yes')
+									$chars_array['sli'] = 'ΝΑΙ';
+							}
+							break;						
+						case 'Ήχος':
+							$chars_array['sound'] = $chars_value;
+							break;						
+						case 'SATA 3Gb/s':
+							$chars_array['sata_2'] = $chars_value;
+							break;						
+						case 'SATA 6Gb/s':
+							$chars_array['sata_3'] = $chars_value;
+							break;						
+						case 'Raid':
+							$chars_array['raid'] = $chars_value;
+							break;						
+						case 'PCI Express (x16, x8)':
+							$chars_array['pci_express_x8_16'] = $chars_value;
+							break;						
+						case 'PCI Express (x1, x4)':
+							$chars_array['pci_express_x1_4'] = $chars_value;
+							break;						
+						case 'PCI':
+							$chars_array['pci'] = $chars_value;
+							break;						
+						case 'USB 2.0':
+							$chars_array['usb_2'] = $chars_value;
+							break;						
+						case 'USB 3.0':
+							$chars_array['usb_3'] = $chars_value;
+							break;						
+						case 'USB 3.1':
+							$chars_array['usb_3_1'] = $chars_value;
+							break;						
+						case 'Firewire / eSATA':
+
+							if($whereIs = strpos( $chars_value, '/'))
+							{
+								$etd_firewire = trim(substr($chars_value, 0, $whereIs));
+								$etd_e_sata = trim(substr($chars_value, $whereIs+1, strlen($chars_value)));
+
+								if($etd_firewire == 'No')
+									$chars_array['firewire'] = 'ΟΧΙ';
+								elseif($etd_crossfire_x == 'Yes')
+									$chars_array['firewire'] = 'ΝΑΙ';
+
+								if($etd_e_sata == 'No')
+									$chars_array['e_sata'] = 'ΟΧΙ';
+								elseif($etd_e_sata == 'Yes')
+									$chars_array['e_sata'] = 'ΝΑΙ';
+							}
+
+							break;						
+						case 'Δίκτυο':
+							$chars_array['network'] = $chars_value;
+							break;						
+						case 'Σειριακή θύρα / Παράλληλη θύρα':
+
+							if($whereIs = strpos( $chars_value, '/'))
+							{
+								$etd_serial = trim(substr($chars_value, 0, $whereIs));
+								$etd_parallel = trim(substr($chars_value, $whereIs+1, strlen($chars_value)));
+
+								if($etd_serial == 'No')
+									$chars_array['serial'] = 'ΟΧΙ';
+								elseif($etd_serial == 'Yes')
+									$chars_array['serial'] = 'ΝΑΙ';
+
+								if($etd_parallel == 'No')
+									$chars_array['parallel'] = 'ΟΧΙ';
+								elseif($etd_parallel == 'Yes')
+									$chars_array['parallel'] = 'ΝΑΙ';
+							}
+
+							break;
+						case 'Εγγύηση (μήνες)':
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
+							break;					
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					continue;
+				}
+			}
+			return $chars_array;
+		}
+		else if ($category == 'graphic_cards')
+		{
+			$chars_array = array(
+				'chip_brand' => "",
+				'gpu' => "",
+				'core_frequency' => "",
+				'manufacturer_technology' => "",
+				'ram_size' => "",
+				'ram_type' => "",
+				'ram_frequency' => "",
+				'ram_channel' => "",
+				'connection' => "",
+				'direct_x' => "",
+				'output_ports' => "",
+				'warranty' => ""
+				);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
+
+					switch ($chars_title) {
+						case 'Κατασκευαστής chip':
+							$chars_array['chip_brand'] = $chars_value;
+							break;
+						case 'Επεξεργαστής γραφικών':
+							$chars_array['gpu'] = $chars_value;
+							break;
+						case 'Συχνότητα πυρήνα (MHz)':
+							$chars_array['core_frequency'] = $chars_value;
+							break;
+						case 'Τεχνολογία κατασκευής':
+							$chars_array['manufacturer_technology'] = $chars_value;
+							break;
+						case 'Μέγεθος μνήμης':
+							$chars_array['ram_size'] = $chars_value;
+							break;
+						case 'Τύπος μνήμης':
+							$chars_array['ram_type'] = $chars_value;
+							break;
+						case 'Συχνότητα μνήμης (MHz)':
+							$chars_array['ram_frequency'] = $chars_value;
+							break;
+						case 'Δίαυλος μνήμης':
+							$chars_array['ram_channel'] = $chars_value;
+							break;
+						case 'Σύνδεση':					
+							$chars_array['connection'] = $chars_value;
+							break;
+						case 'DirectX':					
+							$chars_array['direct_x'] = $chars_value;
+							break;
+						case 'Θύρες εξόδου':
+							$chars_array['output_ports'] = $chars_value;
+							break;
+						case 'Εγγύηση (μήνες)':
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					continue;
+				}
+			}
+			return $chars_array;
+		}
+		else if ($category == 'cpu')
+		{
+			$chars_array = array(
+				'family' => "",
+				'cpu_model' => "",
+				'frequency' => "",
+				'turbo_core' => "",
+				'turbo_boost' => "",
+				'socket' => "",
+				'thermal_design_power' => "",
+				'cache' => "",
+				'construction_technology' => "",
+				'core_num' => "",
+				'threads' => "",
+				'integrated_graphic' => "",
+				'heat_sink' => "",
+				'packaging' => "",
+				'warranty' => ""
+				);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
+
+					switch ($chars_title) {
+						case 'Οικογένεια επεξεργαστή':
+							$chars_array['family'] = $chars_value;
+							break;
+						case 'Μοντέλο επεξεργαστή':
+							$chars_array['cpu_model'] = $chars_value;
+							break;
+						case 'Συχνότητα':
+							$chars_array['frequency'] = $chars_value;
+							break;
+						case 'Turbo Core':
+							$chars_array['turbo_core'] = $chars_value;
+							break;
+						case 'Turbo Boost':
+							$chars_array['turbo_boost'] = $chars_value;
+							break;
+						case 'Socket':
+							$chars_array['socket'] = $chars_value;
+							break;
+						case 'Thermal Design Power':
+							$chars_array['thermal_design_power'] = $chars_value;
+							break;
+						case 'Συνολική Μνήμη Cache (L2 + L3)':
+							$chars_array['cache'] = $chars_value;
+							break;
+						case 'Τεχνολογία κατασκευής':
+							$chars_array['construction_technology'] = $chars_value;
+							break;
+						case 'Αριθμός πυρήνων':
+							$chars_array['core_num'] = $chars_value;
+							break;
+						case 'Threads':
+							$chars_array['threads'] = $chars_value;
+							break;
+						case 'Ενσωματωμένη κάρτα/chip γραφικών':
+								$chars_array['integrated_graphic'] = $chars_value;
+							break;
+						case 'Ψύκτρα':
+								$chars_array['heat_sink'] = $chars_value;
+							break;
+						case 'Συσκευασία':
+							$chars_array['packaging'] = $chars_value;
+							break;
+						case 'Εγγύηση (μήνες)':
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					continue;
+				}
+			}
+			return $chars_array;
+		}
+		else if ($category == 'memories')
+		{
+			$chars_array = array(
+				'type' => "",
+				'capacity' => "",
+				'quantity' => "",
+				'frequency' => "",
+				'cas_latency' => "",
+				'voltage' => "",
+				'warranty' => ""
+				);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{ 
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					if ($chars_value == 'Yes')
+						$chars_value = 'NAI';
+					else if ($chars_value == 'No')
+						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
+
+					switch ($chars_title) {
+						case 'Τύπος μνήμης':
+							$chars_array['type'] = $chars_value;
+							break;
+						case 'Χωρητικότητα μνήμης':
+							$chars_array['capacity'] = $chars_value;
+							break;
+						case 'Τεμάχια':
+							$chars_array['quantity'] = $chars_value;
+							break;
+						case 'Συχνότητα λειτουργίας':
+							$chars_array['frequency'] = $chars_value;
+							break;
+						case 'CAS Latency':
+							$chars_array['cas_latency'] = $chars_value;
+							break;
+						case 'Τάση λειτουργίας':
+							$chars_array['voltage'] = $chars_value;
+							break;
+						case 'Εγγύηση (μήνες)':
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['warranty'] = $chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					continue;
+				}
+			}
+			return $chars_array;
+		}
+
 		/////////////
 
     }
@@ -1977,7 +3889,25 @@ class Live_model extends CI_Model {
 
     public function makeAvailability($availability, $supplier){
 
-    	if($supplier == 'oktabit'){
+    	if($supplier == 'edit'){
+    		switch ($availability) {
+    			case '0':
+	    			$av = 'Αναμονή παραλαβής';
+	    			break;
+	    		case '1':
+	    			$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
+	    			break;
+	    		case '2':
+	    			$av = 'Άμεσα Διαθέσιμο';
+	    			break;
+	    		
+	    		default:
+	    			return false;
+	    			break;
+	    	}
+
+	    	return $av;
+    	}elseif($supplier == 'oktabit'){
 
 /*
 1.Διαθεσιμο 
@@ -2036,7 +3966,7 @@ class Live_model extends CI_Model {
 
     		return $av;
 
-    	}elseif($supplier == 'ddc' || $supplier == 'braintrust'){
+    	}elseif($supplier == 'ddc' ){
 
     		switch ($availability) {
 	    		case '0':
@@ -2049,9 +3979,25 @@ class Live_model extends CI_Model {
 	    		default:
 	    			return false;
 	    			break;
-	    	}
+
+	    		} 
+	    	}elseif( $supplier == 'braintrust'){
+
+    		switch ($availability) {
+	    		case '0':
+	    			$av = 'Αναμονή παραλαβής';
+	    			break;
+	    		case '1':
+	    			$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
+	    			break;
+	    		default:
+	    			return false;
+	    			break;
+
+	    		}
 
 	    	return $av;
+	    	
     	}elseif($supplier == 'etd' ){
 
     		switch ($availability) {
@@ -2068,7 +4014,52 @@ class Live_model extends CI_Model {
 
 	    	return $av;
 
+    	}elseif($supplier == 'aci'){
+
+    		switch ($availability) {
+				case 'Διαθέσιμο':
+				case 'Περιορισμένη Διαθ.':
+					$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
+					break;
+				case 'Κατόπιν Παραγγελίας':
+					$av = 'Κατόπιν παραγγελίας χωρίς διαθεσιμότητα';
+					break;
+				case 'Μη Διαθέσιμο':
+					$av = false;
+					break;
+				default:
+	    			return false;
+	    			break;
+    		}
+
+    		return $av;
     	}
+    	elseif($supplier == 'cpi'){
+
+    		if ($availability >= 1)
+    			$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
+    		else
+    			$av = false;
+
+    		return $av;
+    	}
+    	elseif($supplier == 'westnet'){
+
+    		switch ($availability) {
+				case 'OK':
+					$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
+					break;
+				case 'N/A':
+					$av = 'Κατόπιν παραγγελίας χωρίς διαθεσιμότητα';
+					break;
+				default:
+	    			return false;
+	    			break;
+    		}
+
+    		return $av;
+    	}
+
     }
 
 	public function updateLive($supplier){
@@ -2100,12 +4091,6 @@ class Live_model extends CI_Model {
 
 		return true;
 	}
-
-
-
-
-
-
 }
 
 ?>

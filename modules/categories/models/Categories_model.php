@@ -158,6 +158,7 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					$shipping_class= 4636;
 					break;
 			case 'desktops':
+					$shipping_class= 4661;
 					if($data['type']=='Mini Pc')
 						$shipping_class= 4660;
 					else
@@ -250,6 +251,39 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					break;
 			case 'racks':
 					$shipping_class= 4682;
+					break;
+			case 'optical_drives':
+					$shipping_class = 4662;
+					break;
+			case 'card_readers':
+					$shipping_class = 4671;
+					break;
+			case 'flash_drives':
+					$shipping_class = 4644;
+					break;
+			case 'power_supplies':
+					$shipping_class = 4636;
+					break;
+			case 'cases':
+					$shipping_class = 4661;
+					break;
+			case 'fans':
+					$shipping_class = 4671;
+					break;
+			case 'motherboards':
+					$shipping_class = 4636;
+					break;
+			case 'graphic_cards':
+					$shipping_class = 4662;
+					break;
+			case 'cpu':
+					$shipping_class = 4636;
+					break;
+			case 'memories':
+					$shipping_class = 4644;
+					break;
+			case 'hoverboards':
+					$shipping_class = 4661;
 					break;
 			default:
 				return false;
