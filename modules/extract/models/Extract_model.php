@@ -12,7 +12,7 @@ class Extract_model extends CI_Model {
     }
 
 
-    public function xml($table){
+    public function xml($table,$all){
 
             
             $xml = new DomDocument("1.0","UTF-8");//ISO-8859-7
@@ -24,8 +24,9 @@ class Extract_model extends CI_Model {
 
             //$this->db->where("new_item", "1");
             //$query = $this->db->query("SELECT * FROM $table");
-
-            $this->db->where('new_item', 1); 
+            if(!$all)
+                $this->db->where('new_item', 1); 
+            
             $query = $this->db->get($table); 
 
             $i=0;

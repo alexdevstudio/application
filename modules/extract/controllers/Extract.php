@@ -5,13 +5,13 @@ class Extract extends MX_Controller {
 
 	
 
-	public function xml($table=null)
+	public function xml($table=null,$all=false)
 	{	
 		//if(!$table){redirect('https://etd.gr/','refresh');}
 
 		$this->load->model('extract_model');
 		
-		if($this->extract_model->xml($table)){
+		if($this->extract_model->xml($table,$all)){
 
 			
 			echo '<a class="btn btn-block btn-success btn-md"

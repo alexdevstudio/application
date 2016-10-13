@@ -79,6 +79,7 @@
 					<option onclick='linkGenerator("<?= $table; ?>")'><?= ucfirst($table); ?></option>
 				<?php } ?>
 				</select>
+				<input type="checkbox" name="all_product" value="all" id="isAllSelected"> Όλα τα Προϊόντα<br>
 			</div>
 		</div>
 		<div class="col-sm-4 col-md-2">              
@@ -98,8 +99,11 @@
 				function linkGenerator(a){
 					$('#xml_link').show();
 					$("#xmltitle").html('Loading...'); 
-					
+
 					var url = "<?= base_url()?>extract/xml/"+a;
+
+					if($("#isAllSelected").is(':checked'))
+						url = "<?= base_url()?>extract/xml/"+a+"/true";
 
 					$.post(url, function(data){
 						$("#xmltitle").html(a); 
