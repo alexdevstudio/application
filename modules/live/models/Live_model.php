@@ -1095,6 +1095,15 @@ class Live_model extends CI_Model {
 					$title = substr($description, $first, $diff);
 					$title = $brand." ".$title;
 				}
+				elseif($c == 'graphic_cards')
+				{
+					$first = strpos($description, 'VGA ')+4;
+					$last = strpos($description, ', ');
+					$diff = $last-$first;
+
+					$title = substr($description, $first, $diff);
+					$title = $brand." ".$title;
+				}
 				elseif($c == 'sata_hard_drives' || $c == 'external_hard_drives')
 				{
 					$title = str_replace('"', '', $description);
