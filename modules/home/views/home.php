@@ -259,54 +259,6 @@
 			</script>
 		</div>
 
-	<div class="col-xs-12">
-		<div class="sections col-xs-6">
-			<section class="content-header">
-		    	<h1>4. Δημιουργία XML για All Import</h1>
-		      	<br>	
-		    </section>
-			<div class="col-sm-6 col-md-6">
-				<div class="form-group">
-					<label>Κατηγορίες Προϊόντων</label>
-					<select class="form-control">
-						<?php
-						foreach($tables as $table){
-						?>
-							<option onclick='allImportGenerator("<?= $table; ?>")'><?= ucfirst($table); ?></option>
-						<?php
-						}
-						?>
-					</select>
-				</div>
-			</div>
-		    <div class="col-sm-6 col-md-6">              
-		        <div id='xml_link2' style="display:none;">
-		          	<div class="box box-success box-solid">
-		            	<div class="box-header with-border">
-		              		<h3 id='xmltitle2' class="box-title">Removable</h3>
-		              		<div class="box-tools pull-right">
-		                		<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-		              		</div><!-- /.box-tools -->
-		            	</div><!-- /.box-header -->
-			            <div class="box-body">
-			            </div><!-- /.box-body -->
-					</div><!-- /.box -->
-		        </div>
-		  	</div>
-			<script>
-				function allImportGenerator(a){
-					$('#xml_link2').show();
-					$("#xmltitle2").html('Loading...'); 
-					
-					var url = "<?= base_url()?>extract/allImport/"+a;
-					$.post(url, function(data){
-						$("#xmltitle2").html(a); 
-						$("#xml_link2 .box-body").html(data);        
-				    });
-				}
-			</script>
-		</div>
-
 		<div class="sections col-xs-6" style="display: none;">
 			<section class="content-header">
 		    	<h1>5. Εισαγωγή όλων All Import</h1>
