@@ -333,6 +333,91 @@ class Live_model extends CI_Model {
 
     }
 
+    public function partnernet(){
+    	
+
+    	if($xml = $this->xml("http://eshop.partnernet.gr/index.php?route=feed/any_feed&name=episilonteledata")){
+			
+			$images = array();
+			$this->updateLive('partnernet');
+	
+		}else{
+			die("XML from PartnerNet can not be loaded.");
+		}
+
+		$newProducts = array();
+		$i=0;
+
+
+		foreach($xml->children() as $product) {
+			
+			set_time_limit(50);
+			//Rename categories for ETD.gr
+
+			$dist_type='';
+			$cat = (string) trim($product->categories1);
+			
+			$c_array = explode(">", $cat);
+
+			if($c_array[0]=='Telephony'){
+				$cat = trim($c_array[1]);
+			}
+
+
+			
+			switch ($cat) {
+				case 'Asterisk Cards':
+					$c='ip_cards';
+					break;
+				case 'Gateways':
+					$c='ip_gateways';
+					break;
+				case 'IP PBX':
+					$c='ip_pbx';
+					break;
+				case 'IP Phones':
+				case 'IP Video Phones':
+					$c='ip_phones';
+					break;
+				default:
+					$c =  $cat;
+					break;
+			}
+
+
+			if($c==$cat){
+				continue;
+			}
+
+			$availability = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
+
+			$net_price = str_replace(",", ".", $product->price);
+			$net_price = str_replace("€", "", $product->price);
+			$net_price = (string) trim($net_price);
+
+			$pn = (string) trim($product->sku);
+			$description = "";
+			$brand = (string) trim($product->manufacturer);
+			$title = (string) trim($product->name);
+			$product_url = "";
+			$code = (string) trim($product->code);
+
+
+
+			echo"<pre>";
+			print_r($c_array);
+
+			
+
+
+
+			
+
+		}//foreach($xml->children() as $product)
+
+
+    }
+
     public function logicom(){
 
     	$this->load->view('upload_logicom_xml', array('error' => ' ' ));

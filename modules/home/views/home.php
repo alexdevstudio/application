@@ -1,62 +1,69 @@
 <?php
 	$tables = Modules::run('categories/fullCategoriesArray');
 ?>
-	<div class="sections col-xs-12">
+	<div class="suppliers sections col-xs-12">
 		<section class="content-header">
 	      <h1>1. Ενημέρωση αποθήκης </h1>  
 	      <br>	   
 	    </section> 
-		<div class="col-sm-4 col-md-2">
+		<div class="supplier-item col-sm-4 col-md-2">
 			<div class="color-palette-set text-center">
 				<div class="bg-orange-active color-palette ">
 					<a href="./live/index/oktabit" style="color:#fff;display:block"><br /><span >Oktabit</span><br /><br /></a>
 				</div>
 			</div>
 		</div>
-		<div class="col-sm-4 col-md-2">
+		<div class="supplier-item col-sm-4 col-md-2">
 			<div class="color-palette-set text-center">
 				<div class="bg-light-blue color-palette ">
 					<a href="./live/index/logicom" style="color:#fff;display:block"><br /><span >Logicom - Enet</span><br /><br /></a>
 				</div>
 			</div>
 		</div> 
-		<div class="col-sm-4 col-md-2">
+		<div class="supplier-item col-sm-4 col-md-2">
 			<div class="color-palette-set text-center">
 				<div class="bg-green color-palette ">
 					<a href="./live/index/braintrust" style="color:#fff;display:block"><br /><span >BrainTrust</span><br /><br /></a>
 				</div>
 			</div>
 		</div> 
-		<div class="col-sm-4 col-md-2">
+		<div class="supplier-item col-sm-4 col-md-2">
 			<div class="color-palette-set text-center">
 				<div class="bg-red color-palette ">
 					<a href="./live/index/ddc" style="color:#fff;display:block"><br /><span >Digital Data</span><br /><br /></a>
 				</div>
 			</div>
 		</div> 
-		<div class="col-sm-4 col-md-2">
+		<div class="supplier-item col-sm-4 col-md-2">
 			<div class="color-palette-set text-center">
 				<div class="bg-navy color-palette ">
 					<a href="./live/index/copiers" style="color:#fff;display:block"><br /><span >Copiers</span><br /><br /></a>
 				</div>
 			</div>
 		</div>
-		<div class="col-sm-4 col-md-2">
+		<div class="supplier-item col-sm-4 col-md-2">
 			<div class="color-palette-set text-center">
 				<div class="bg-red color-palette ">
 					<a href="./live/index/cpi" style="color:#fff;display:block"><br /><span >CPI</span><br /><br /></a>
 				</div>
 			</div>
 		</div>
-		<div class="col-sm-4 col-md-2">
+		<div class="supplier-item col-sm-4 col-md-2">
 			<div class="color-palette-set text-center">
 				<div class="bg-red color-palette ">
 					<a href="./live/index/westnet" style="color:#fff;display:block"><br /><span >Westnet</span><br /><br /></a>
 				</div>
 			</div>
 		</div>
+		<div class="supplier-item col-sm-4 col-md-2">
+			<div class="color-palette-set text-center">
+				<div class="bg-orange-active color-palette ">
+					<a href="./live/index/partnernet" style="color:#fff;display:block"><br /><span >PartnerNet</span><br /><br /></a>
+				</div>
+			</div>
+		</div>
 		<!-- 
-		<div class="col-sm-4 col-md-2">
+		<div class="supplier-item col-sm-4 col-md-2">
 			<div class="color-palette-set text-center">
 				<div class="bg-navy color-palette ">
 					<a href="./live/index/aci" style="color:#fff;display:block"><br /><span >ACI Supplies</span><br /><br /></a>
@@ -70,7 +77,7 @@
 	      <br>	
 	    </section>
 
-		<div class="col-sm-4 col-md-2">
+		<div class=" col-sm-4 col-md-2">
 			<div class="form-group">
 				<label>Κατηγορίες Προϊόντων</label>
 				<select class="form-control">
