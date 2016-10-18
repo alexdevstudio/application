@@ -259,8 +259,6 @@
 			</script>
 		</div>
 
-<<<<<<< HEAD
-=======
 	<div class="col-xs-12">
 		<div class="sections col-xs-6">
 			<section class="content-header">
@@ -308,7 +306,7 @@
 				}
 			</script>
 		</div>
->>>>>>> CheckBox_Step2_for_all_products
+
 		<div class="sections col-xs-6" style="display: none;">
 			<section class="content-header">
 		    	<h1>5. Εισαγωγή όλων All Import</h1>
