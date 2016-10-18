@@ -569,7 +569,7 @@ $products_count = 0;
              $net_price = $net + $recycle;
 
              $category_rate = Modules::run("profit_rates/getCategoryRate",$category);
-             $category_rate = number_format((float)$category_rate, 2, '.', '');
+             $category_rate = number_format((float)$category_rate, 3, '.', '');
 
              $etd_price = $net_price*(1 + $category_rate);
 

@@ -36,20 +36,26 @@
                 	
                 	$class = ' odd ';
                 	if ($i % 2 == 0) {
-					  $class = ' even ';
-					}
+					           $class = ' even ';
+					         }
 					$i++;
 					$category = $item->category;
 					$rate = $item->rate;
           $rate = $rate*100;
 					$description = $item->description;
 
+          $class_color='';
+
+          if($rate !=6)
+            $class_color='bg-orange-light';
+           
+
 					?>
 
  				<tr class="<?= $class; ?>" role="row">
                   <td><?= $description; ?></td>
                   <td><?= $category; ?></td>
-                  <td id="newRate_<?= $category; ?>"><?= $rate.'%' ?></td>
+                  <td class="<?= $class_color; ?>" id="newRate_<?= $category; ?>"><?= $rate.'%' ?></td>
                   <td>
                		<form id="rate_<?= $category; ?>" action="./updateRate">
                		<input type='hidden' value='<?= $rate; ?>' name='rate' id='rate' />
