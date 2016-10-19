@@ -1155,7 +1155,7 @@ class Live_model extends CI_Model {
 
 			switch ($cat) {
 				case 'Notebook':
-					if($brand == 'MSI')
+					if($brand == 'MSI' || $brand == 'ACER')
 						$c = 'laptops';
 					else
 						$c = $cat;
@@ -1198,7 +1198,10 @@ class Live_model extends CI_Model {
 				case 'Monitor':
 				case 'TV/Monitor':
 					if($brand == 'LG ELECTRONICS')
+					{
 						$c = 'monitors';
+						$brand == 'LG'
+					}
 					else
 						$c = $cat;
 				break;
