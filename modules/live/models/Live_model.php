@@ -1200,7 +1200,7 @@ class Live_model extends CI_Model {
 					if($brand == 'LG ELECTRONICS')
 					{
 						$c = 'monitors';
-						$brand == 'LG'
+						$brand = 'LG';
 					}
 					else
 						$c = $cat;
