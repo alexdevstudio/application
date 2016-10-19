@@ -80,7 +80,7 @@
 		<div class=" col-sm-4 col-md-2">
 			<div class="form-group">
 				<label>Κατηγορίες Προϊόντων</label>
-				<select class="form-control">
+				<select id="SelectTable" class="form-control">
 				<?php foreach($tables as $table){?>
 
 					<option onclick='linkGenerator("<?= $table; ?>")'><?= ucfirst($table); ?></option>
@@ -116,8 +116,11 @@
 						$("#xmltitle").html(a); 
 						$("#xml_link .box-body").html(data);        
 				    });
-
 				}
+					$('#isAllSelected').change(function() {
+						var selected = $('#SelectTable :selected').val().toLowerCase();
+				       	linkGenerator(selected);       
+				    });
 			</script>
 		</div>
 	</div>
