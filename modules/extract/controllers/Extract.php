@@ -13,7 +13,7 @@ class Extract extends MX_Controller {
 		
 		if($this->extract_model->xml($table,$all)){
 
-			if(!$all || $all='new')
+			if(!$all || $all=='new')
 				echo '<a class="btn btn-block btn-success btn-md"
 			 target="_blank" href="'.base_url().'/files/'.$table.'_new_items.xml" download>Λήψη</a>';
 			 else

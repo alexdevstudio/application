@@ -56,7 +56,7 @@ class Extract_model extends CI_Model {
             if (!file_exists('files')) {
             mkdir('files', 0777, true);
             }
-            if(!$all)
+            if(!$all || $all=='new')
                 $file = "./files/".$table."_new_items.xml";
             else
                 $file = "./files/".$table."_all_items.xml";
