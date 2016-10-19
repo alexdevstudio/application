@@ -311,7 +311,7 @@ class Live_model extends CI_Model {
 
 				//2. New products for charateristics tables that load Sku module
 
-				$insert = $this->addProduct ($okt_product, $chars_array, $f, 'oktabit');
+				$insert = $this->addProduct ($okt_product, $chars_array, $f, $supplier);
 
 				if ($insert)
 				{
@@ -346,7 +346,7 @@ class Live_model extends CI_Model {
 		}
 
 		$newProducts = array();
-		$i=0;
+		$supplier = "partnernet";
 
 
 		foreach($xml->children() as $product) {
@@ -358,11 +358,16 @@ class Live_model extends CI_Model {
 			$cat = (string) trim($product->categories1);
 			
 			$c_array = explode(">", $cat);
-
-			if($c_array[0]=='Telephony'){
+			$c_array[0] = trim($c_array[0]);
+			if($c_array[0]!='Telephony'){
+				continue;
+			}else{
 				$cat = trim($c_array[1]);
+
 			}
 
+			
+			
 
 			
 			switch ($cat) {
@@ -384,7 +389,7 @@ class Live_model extends CI_Model {
 					break;
 			}
 
-
+			
 			if($c==$cat){
 				continue;
 			}
@@ -396,28 +401,101 @@ class Live_model extends CI_Model {
 			$net_price = (string) trim($net_price);
 
 			$pn = (string) trim($product->sku);
+			$model = (string) trim($product->model);
+
+			
+
+
+			if($pn=='' || $pn!=$model)
+				continue;
+
+
 			$description = "";
 			$brand = (string) trim($product->manufacturer);
 			$title = (string) trim($product->name);
-			$product_url = "";
-			$code = (string) trim($product->code);
+			//$product_url = "";
 
+			//Insert into live
 
+			//1. Live
+				
+				if($this->checkLiveProduct($pn, $net_price, $supplier)){
 
-			echo"<pre>";
-			print_r($c_array);
+					$live = array(
+						'category'=>$c,
+						'product_number'=>$pn ,
+						'net_price'=>$net_price ,
+						'availability'=>$availability,
+						'recycle_tax'=>'',
+						'supplier' =>$supplier,
+						'status' => 'publish',
+						'delete_flag'=>0
+						);
 
-			
+					$this->db->where('product_number', $pn);
+					$this->db->where('supplier', $supplier);
+					$this->db->delete('live', $live);
 
+					$this->db->insert('live', $live);
 
+					unset($live);
+				}
 
-			
+				//Array for categories table
 
-		}//foreach($xml->children() as $product)
+				$product_array = array(
+					'category' => $c,
+					'product_number' => $pn,
+					'description' => $description,
+					'brand' => $brand,
+					'title' => $title,
+					//'product_url' => $product_url,
+					//'code' => $code,
+					'net_price'=>$net_price
+				);
 
+				$chars_array=array();
 
-    }
+				$f = array();
+				$f[]=trim($product->image);
+				$f[]=trim($product->additional_images1);
+				$f[]=trim($product->additional_images2);
+				$f[]=trim($product->additional_images3);
+				$f[]=trim($product->additional_images4);
+				$f[]=trim($product->additional_images5);
+				$f[]=trim($product->additional_images6);
+				$f[]=trim($product->additional_images7);
+				$f[]=trim($product->additional_images8);
+				$f[]=trim($product->additional_images9);
 
+				foreach ($f as $key => $value) {
+					if($value=='')
+						unset($f[$key]);
+				}
+
+				//2. New products for charateristics tables that load Sku module
+
+				$insert = $this->addProduct ($product_array, $chars_array, $f, $supplier);
+
+				if ($insert)
+				{
+					if(isset ($newProducts[$c]))
+						$newProducts[$c] = $newProducts[$c]+1;
+					else
+						$newProducts[$c] = 1;
+				}
+
+			}//foreach($xml->children() as $product)
+				
+			$this->sendImportedProductsByMail($newProducts);
+			echo "<pre>";
+			print_r($newProducts);
+			echo "Finnished $supplier";
+
+		}
+
+		
+    
     public function logicom(){
 
     	$this->load->view('upload_logicom_xml', array('error' => ' ' ));
@@ -2085,6 +2163,19 @@ class Live_model extends CI_Model {
 				'description'=> strip_tags($product['description']),
 				'shipping_class' => $shipping_class
 				);
+			}elseif($supplier == 'partnernet'){
+				
+				$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
+				$categoryData = array(
+				'brand'=> $product['brand'],
+				'sku'=> $sku,
+				'product_number'=> $product['product_number'],
+				'title'=> $product['title'],
+				'description'=>'',
+				'shipping_class' => $shipping_class
+				);
+
+
 			}
 			else
 			{
@@ -2256,7 +2347,7 @@ class Live_model extends CI_Model {
 				
 				Modules::run('images/getImage',$imageData);
     	}
-    	else if ($supplier == 'ddc')
+    	else if ($supplier == 'ddc' )
     	{
 
     		$image_size = count($f);
@@ -2272,7 +2363,7 @@ class Live_model extends CI_Model {
 				Modules::run('images/getImage',$imageData);
     		}
     	}
-    	elseif( $supplier == 'etd')
+    	elseif( $supplier == 'etd' || $supplier=='partnernet')
     	{
     		$i=0;
     		foreach($f as $image){

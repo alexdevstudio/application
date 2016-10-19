@@ -285,6 +285,18 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 			case 'hoverboards':
 					$shipping_class = 4661;
 					break;
+			case 'ip_cards':
+					$shipping_class = 4672;
+					break;
+			case 'ip_gateways':
+					$shipping_class = 4636;
+					break;
+		    case 'ip_phones':
+					$shipping_class = 4676;
+					break;
+			case 'ip_pbx':
+					$shipping_class = 4636;
+					break;
 			default:
 				return false;
 				break;
