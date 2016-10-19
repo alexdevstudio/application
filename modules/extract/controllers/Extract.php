@@ -13,9 +13,12 @@ class Extract extends MX_Controller {
 		
 		if($this->extract_model->xml($table,$all)){
 
-			
-			echo '<a class="btn btn-block btn-success btn-md"
+			if(!$all)
+				echo '<a class="btn btn-block btn-success btn-md"
 			 target="_blank" href="'.base_url().'/files/'.$table.'_new_items.xml" download>Λήψη</a>';
+			 else
+			 	echo '<a class="btn btn-block btn-success btn-md"
+			 target="_blank" href="'.base_url().'/files/'.$table.'_all_items.xml" download>Λήψη</a>';
 		}else{
 			echo 'Σφάλμα';
 		}
