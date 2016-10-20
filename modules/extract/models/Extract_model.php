@@ -104,11 +104,18 @@ class Extract_model extends CI_Model {
 
                foreach ($query->result_array() as $product) {
 
+
+
                 $cat = $product['category'];
                 $supplier = $product['supplier'];
                 $pn = $product['product_number'];
                 $sku = $product['sku'];
-                $brand = $product['brand'];
+                 if(isset($product['brand'])){
+                    $brand = $product['brand'];
+                }else{
+                    $brand = $product['Brand'];
+                }
+                
 
                  //Price 
                     if($product['price_tax'] == '' ||  $product['price_tax'] === NULL  ||  $product['price_tax'] == '0.00' ){
@@ -117,8 +124,7 @@ class Extract_model extends CI_Model {
 
                         if($supplier=='braintrust' && $cat == 'laptops' && $brand == 'MSI'){
                             $msi = Modules::run("crud/get",'msi_price',array('sku'=>$sku));
-                            echo "<pre>:$sku<br>";
-                            print_r($msi->result());
+                            
                             $msi_price = $msi->row()->price;
                             
                             if($msi_price!='0.00' && $msi_price!='' && $msi_price!='0'){
