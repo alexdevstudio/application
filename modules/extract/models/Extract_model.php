@@ -24,7 +24,7 @@ class Extract_model extends CI_Model {
 
             //$this->db->where("new_item", "1");
             //$query = $this->db->query("SELECT * FROM $table");
-            if(!$all)
+            if(!$all || $all=='new')
                 $this->db->where('new_item', 1); 
             
             $query = $this->db->get($table); 
@@ -43,8 +43,6 @@ class Extract_model extends CI_Model {
                     $item = $product->appendChild($item);   
                     }
                 }
-
-
             }
             $product = $xml->createElement('product');
             $product = $products->appendChild($product);
