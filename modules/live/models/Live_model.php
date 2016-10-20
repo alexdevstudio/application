@@ -1239,12 +1239,15 @@ class Live_model extends CI_Model {
 
 				if($c == 'laptops')
 				{
-					$first = strpos($description, 'NB ')+3;
-					$last = strpos($description, ', ');
-					$diff = $last-$first;
-	
-					$title = substr($description, $first, $diff);
-					$title = "MSI ".$title;
+						$first = strpos($description, 'NB ')+3;
+						$last = strpos($description, ', ');
+						$diff = $last-$first;
+		
+						$title = substr($description, $first, $diff);
+					if($brand == 'MSI')
+						$title = "MSI ".$title;
+					elseif($brand == 'ACER')
+						$title = "ACER ".$title;
 				}
 				elseif($c == 'desktops')
 				{
