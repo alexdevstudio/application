@@ -67,6 +67,7 @@ $sale_price = '';
 $supplier = '';
 $instock = '';
 $outstock = '';
+$outstock2 = '';
 
 if($itemLive){
 	
@@ -79,7 +80,13 @@ if($itemLive){
 		$instock = 'selected';
 	}elseif($av=='Κατόπιν παραγγελίας σε 1 εργάσιμη'){
 		$outstock = 'selected';
+	}elseif($av=='Αναμονή παραλαβής'){
+		$outstock2 = 'selected';
 	}
+
+	
+	
+}
 
 	
 	$etd = '';
@@ -89,9 +96,8 @@ if($itemLive){
 	$cpi = '';
 	$westnet = '';
 	$ddc = '';
-}
-
-
+	$partnernet = '';
+	$other = '';
 
 ?>
 <input class='form-control' type="hidden" name='product_number' value='<?= $pn; ?>'>
@@ -133,6 +139,9 @@ if($itemLive){
 	              		  				case 'etd':
 	              		  					$etd = 'selected';
 	              		  					break;
+	              		  				case 'partnernet':
+	              		  					$partnernet = 'selected';
+	              		  					break;
 	              		  				case 'logicom':
 	              		  					$logicom = 'selected';
 	              		  					break;
@@ -151,12 +160,10 @@ if($itemLive){
 	              		  				case 'ddc':
 	              		  					$ddc = 'selected';
 	              		  					break;
+	              		  				
 	              		  				default:
 	              		  					$other = 'selected';
-	              		  					?>
-	              		  	<option value="<?= $suplier; ?>" <?= $other ?>>$supplier</option>
-
-	              		  					<?php
+	              		  					
 	              		  					break;
 	              		  			}
 	              		  		
@@ -169,6 +176,9 @@ if($itemLive){
 	              		  	<option value="cpi" <?= $cpi ?>>CPI</option>
 	              		  	<option value="westnet" <?= $westnet ?>>WestNet</option>
 	              		  	<option value="DDC" <?= $ddc ?>>DDC</option>
+	              		  	<option value="partnernet" <?= $partnernet ?>>PartnerNet</option>
+	              		  	<option value="none" <?= $other ?>>Δεν υπάρχει σε κανέναν προμηθευτή</option>
+
 	              		  </select>
 
 	                  	
@@ -180,8 +190,9 @@ if($itemLive){
 	                  	
 	              		  <select class='form-control' name="availability" id="availability">
 	              		  	<option value="">----</option>
-	              		  	<option value="1" <?= $instock; ?>>Διαθέσιμο στο κατάστημα</option>
-	              		  	<option value="0" <?= $outstock; ?>>Μη διαθέσιμο στο κατάστημα / Διαθέσιμο στον προμηθευτή</option>
+	              		  	<option value="2" <?= $instock; ?>>Διαθέσιμο στο κατάστημα</option>
+	              		  	<option value="1" <?= $outstock; ?>>Μη διαθέσιμο στο κατάστημα / Διαθέσιμο στον προμηθευτή</option>
+	              		  	<option value="0" <?= $outstock2; ?>>Αναμονή παραλαβής</option>
 	              		  </select>
 
 	                  	

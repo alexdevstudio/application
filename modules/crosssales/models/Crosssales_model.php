@@ -222,10 +222,14 @@ class Crosssales_model extends CI_Model {
                 $where = array(
                     'type'=>'Mouse',
                     'usage'=>'Mobile',
-                    'connection'=>'wireless'
+                    'connection'=>'wireless',
+                    'product_number'=>$pn
                     );
                 $the_mouse = Modules::run('crud/get', 'keyboard_mouse', $where);
                 
+                if(!$the_mouse)
+                    continue;
+               
                 $row = $the_mouse->row();
                 $mouse_sku = $row->sku;
 

@@ -12,7 +12,7 @@ class Extract_model extends CI_Model {
     }
 
 
-    public function xml($table){
+    public function xml($table,$all){
 
             
             $xml = new DomDocument("1.0","UTF-8");//ISO-8859-7
@@ -24,8 +24,9 @@ class Extract_model extends CI_Model {
 
             //$this->db->where("new_item", "1");
             //$query = $this->db->query("SELECT * FROM $table");
-
-            $this->db->where('new_item', 1); 
+            if(!$all || $all=='new')
+                $this->db->where('new_item', 1); 
+            
             $query = $this->db->get($table); 
 
             $i=0;
@@ -42,8 +43,6 @@ class Extract_model extends CI_Model {
                     $item = $product->appendChild($item);   
                     }
                 }
-
-
             }
             $product = $xml->createElement('product');
             $product = $products->appendChild($product);
@@ -55,8 +54,10 @@ class Extract_model extends CI_Model {
             if (!file_exists('files')) {
             mkdir('files', 0777, true);
             }
-
-            $file = "./files/".$table."_new_items.xml";
+            if(!$all || $all=='new')
+                $file = "./files/".$table."_new_items.xml";
+            else
+                $file = "./files/".$table."_all_items.xml";
 
             if (file_exists($file)) { unlink ($file); }
 
@@ -103,20 +104,30 @@ class Extract_model extends CI_Model {
 
                foreach ($query->result_array() as $product) {
 
+
+
                 $cat = $product['category'];
                 $supplier = $product['supplier'];
                 $pn = $product['product_number'];
                 $sku = $product['sku'];
+                 if(isset($product['brand'])){
+                    $brand = $product['brand'];
+                }else{
+                    $brand = $product['Brand'];
+                }
+                
 
                  //Price 
                     if($product['price_tax'] == '' ||  $product['price_tax'] === NULL  ||  $product['price_tax'] == '0.00' ){
                       
                         $product['price_tax'] = $this->priceTax($product['net_price'],$product['recycle_tax'],$cat);
 
-                        if($supplier=='braintrust' && $cat == 'laptops'){
+                        if($supplier=='braintrust' && $cat == 'laptops' && $brand == 'MSI'){
                             $msi = Modules::run("crud/get",'msi_price',array('sku'=>$sku));
+                            
                             $msi_price = $msi->row()->price;
-                            if($msi_price!='0.00' && $msi_price!=''){
+                            
+                            if($msi_price!='0.00' && $msi_price!='' && $msi_price!='0'){
                                 $product['price_tax'] = $msi_price;
                             }
                             
@@ -519,9 +530,19 @@ $products_count = 0;
                         $where = array('post_id'=>$post_id,'meta_key'=>'_price');
                         $data = array('meta_value'=>$product['price_tax']);                   
                         Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
+                        $where = array('post_id'=>$post_id,'meta_key'=>'custom_availability');
+                        $data = array('meta_value'=>$product['availability']);                   
+                        Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
+                        /*$where = array('post_id'=>$post_id,'meta_key'=>'_stock_status');
+                        $data = array('meta_value'=>'instock');                   
+                        Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
+                        $where = array('post_id'=>$post_id,'meta_key'=>'_manage_stock');
+                        $data = array('meta_value'=>'no');                   
+                        Modules::run("crud/updateWp","wp_postmeta",  $where, $data);*/
                         $where = array('ID'=>$post_id);
                         $data = array('post_title'=>$product['etd_title'],"post_status"=>$product['status']);                   
                         Modules::run("crud/updateWp","wp_posts",  $where, $data);
+                        
 
                        // exit($product['price_tax']); 
 

@@ -36,6 +36,9 @@ class Live extends MX_Controller {
 			case 'westnet':
 				$this->live_model->westnet();
 				break;
+			case 'partnernet':
+				$this->live_model->partnernet();
+				break;
 			default:
 				die('Δεν υπάρχει ο προμηθευτής');
 				break;

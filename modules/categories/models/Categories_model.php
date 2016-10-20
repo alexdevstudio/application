@@ -158,6 +158,7 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					$shipping_class= 4636;
 					break;
 			case 'desktops':
+					$shipping_class= 4661;
 					if($data['type']=='Mini Pc')
 						$shipping_class= 4660;
 					else
@@ -280,6 +281,21 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					break;
 			case 'memories':
 					$shipping_class = 4644;
+					break;
+			case 'hoverboards':
+					$shipping_class = 4661;
+					break;
+			case 'ip_cards':
+					$shipping_class = 4672;
+					break;
+			case 'ip_gateways':
+					$shipping_class = 4636;
+					break;
+		    case 'ip_phones':
+					$shipping_class = 4676;
+					break;
+			case 'ip_pbx':
+					$shipping_class = 4636;
 					break;
 			default:
 				return false;
