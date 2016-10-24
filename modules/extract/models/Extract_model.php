@@ -39,8 +39,8 @@ class Extract_model extends CI_Model {
 
                 foreach($columns as $key => $value){
                     if($key!='id' && $key!='new_item' ){
-                    $item = $xml->createElement($key, trim(htmlspecialchars($value)));
-                    $item = $product->appendChild($item);   
+                        $item = $xml->createElement($key, trim(htmlspecialchars($value)));
+                        $item = $product->appendChild($item);   
                     }
                 }
             }
