@@ -589,5 +589,4 @@ $products_count = 0;
 
              return number_format((float)$price_tax, 2, '.', '');
         }
-
     }

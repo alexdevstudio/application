@@ -82,8 +82,19 @@
 				<label>Κατηγορίες Προϊόντων</label>
 				<select id="SelectTable" class="form-control">
 				<?php foreach($tables as $table){?>
+					<?php
+					$this->db->where('new_item', 1); 
+                    $query = $this->db->get($table); 
 
-					<option onclick='linkGenerator("<?= $table; ?>")'><?= ucfirst($table); ?></option>
+                    $rows = $query->num_rows();
+
+                    if($rows<1)
+                    	$rows='';
+                    else
+                    	$rows ="______($rows)";
+					?>
+
+					<option onclick='linkGenerator("<?= $table; ?>")'><?php echo ucfirst($table); echo $rows;  ?></option>
 				<?php } ?>
 				</select>
 				<input type="checkbox" name="all_product" value="all" id="isAllSelected"> Όλα τα Προϊόντα<br>
