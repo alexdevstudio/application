@@ -118,7 +118,7 @@ class Extract_model extends CI_Model {
                 
 
                  //Price 
-                    if($product['price_tax'] == '' ||  $product['price_tax'] === NULL  ||  $product['price_tax'] == '0.00' ){
+                    if($product['price_tax'] == '' ||  $product['price_tax'] === NULL  ||  $product['price_tax'] == '0.00' || $product['price_tax'] =='0'){
                       
                         $product['price_tax'] = $this->priceTax($product['net_price'],$product['recycle_tax'],$cat);
 
@@ -132,11 +132,9 @@ class Extract_model extends CI_Model {
                             }
                             
                         }
-                        
-
-                       
-                       
-
+                        //Skip product without price....
+                        if(!$product['price_tax'])
+                            continue;   
                     }
 
                     // Check if Etd product is trashed to increment the delete flag.
@@ -587,6 +585,11 @@ $products_count = 0;
 
              $price_tax = $etd_price*1.24;
 
-             return number_format((float)$price_tax, 2, '.', '');
+             //if($price_tax == '' ||  $price_tax === NULL  ||  $price_tax == '0.00' || $price_tax =='0')
+             if(isset($price_tax) && $price_tax !='0' )
+                return number_format((float)$price_tax, 2, '.', '');
+            else
+                return false;  
+             
         }
     }
