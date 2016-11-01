@@ -4175,7 +4175,10 @@ class Live_model extends CI_Model {
 	    			return false;
 	    			break;
 
-	    		} 
+	    		}
+
+	    	return $av; 
+
 	    	}elseif( $supplier == 'braintrust'){
 
     		switch ($availability) {
