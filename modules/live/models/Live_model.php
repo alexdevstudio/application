@@ -2246,6 +2246,10 @@ class Live_model extends CI_Model {
 					$categoryData['support_url'] = 'http://support.hp.com/gr-el/';
 					$categoryData['support_tel'] = '80111225547';
 					break;
+				case 'ACER':
+					$categoryData['support_url'] = '';
+					$categoryData['support_tel'] = '8015002000';
+					break;
 				/*case 'INTEL':
 					$categoryData['support_url'] = '';
 					$categoryData['support_tel'] = '';
