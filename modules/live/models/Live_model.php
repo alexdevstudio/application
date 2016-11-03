@@ -1155,7 +1155,7 @@ class Live_model extends CI_Model {
 
 			switch ($cat) {
 				case 'Notebook':
-					if($brand == 'MSI' || $brand == 'ACER')
+					if($brand == 'MSI')// || $brand == 'ACER')
 						$c = 'laptops';
 					else
 						$c = $cat;
@@ -1246,8 +1246,8 @@ class Live_model extends CI_Model {
 						$title = substr($description, $first, $diff);
 					if($brand == 'MSI')
 						$title = "MSI ".$title;
-					elseif($brand == 'ACER')
-						$title = "ACER ".$title;
+					/*elseif($brand == 'ACER')
+						$title = "ACER ".$title;*/
 				}
 				elseif($c == 'desktops')
 				{
@@ -2246,10 +2246,10 @@ class Live_model extends CI_Model {
 					$categoryData['support_url'] = 'http://support.hp.com/gr-el/';
 					$categoryData['support_tel'] = '80111225547';
 					break;
-				case 'ACER':
+				/*case 'ACER':
 					$categoryData['support_url'] = '';
 					$categoryData['support_tel'] = '8015002000';
-					break;
+					break;*/
 				/*case 'INTEL':
 					$categoryData['support_url'] = '';
 					$categoryData['support_tel'] = '';
