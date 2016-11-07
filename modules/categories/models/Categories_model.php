@@ -172,7 +172,17 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 
 					$size = (float) $data['screen_size'];
 
-					if($data['brand']=='DELL'){
+					if($size >= 42)
+						$shipping_class= 4667;
+					elseif($size >= 32)
+						$shipping_class= 4666;
+					elseif($size >= 25)
+						$shipping_class= 4665;
+					else
+						$shipping_class= 4664;
+					break;
+
+					/*if($data['brand']=='DELL'){
 						if($size >= 32)
 							$shipping_class= 4667;
 						elseif($size >= 25)
@@ -192,7 +202,7 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 						else
 							$shipping_class= 4664;
 						break;
-					}
+					}*/
 			case 'routers':
 					$shipping_class= 4671;
 					break;
