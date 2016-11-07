@@ -71,6 +71,7 @@ $fa = 0;
 
 
     			$sku = $data['sku'];
+    			echo $sku;
     				/*if($sku == '1313329'){
     					echo "<pre />";
     						print_r($data);
@@ -171,26 +172,8 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 			case 'monitors':
 
 					$size = (float) $data['screen_size'];
-
-					if($size >= 42)
-						$shipping_class= 4667;
-					elseif($size >= 32)
-						$shipping_class= 4666;
-					elseif($size >= 25)
-						$shipping_class= 4665;
-					else
-						$shipping_class= 4664;
-					break;
-
-					/*if($data['brand']=='DELL'){
-						if($size >= 32)
-							$shipping_class= 4667;
-						elseif($size >= 25)
-							$shipping_class= 4666;
-						else
-							$shipping_class= 4665;
-						break;
-					}
+					if($data['brand']=='DELL' && $size >= 24 && $size <= 25 )
+						$shipping_class= 9393;
 					else
 					{
 						if($size >= 42)
@@ -201,8 +184,9 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 							$shipping_class= 4665;
 						else
 							$shipping_class= 4664;
-						break;
-					}*/
+					}
+					break;
+
 			case 'routers':
 					$shipping_class= 4671;
 					break;
