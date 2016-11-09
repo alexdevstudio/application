@@ -431,18 +431,29 @@ class Extract_model extends CI_Model {
                     $item = $items->appendChild($item);
 
                     foreach($product as $key => $value){
+
+                        $value = trim($value);
+
                         if($key!='id' && $key!='new_item' ){
 
-                            if($key == 'description' && $table == 'laptops')// for insert the description without stip_tags
+                            if($key == 'maximum_resolution' || $key=='screen_resolution'){
+
+                                $value = str_replace(' ','',$value); 
+
+                            }
+
+                            if($key == 'description' && $table == 'laptops')// for insert the description without strip_tags
                                 $attr = $xml->createElement($key, trim(htmlspecialchars($value)));
                             else
                                 $attr = $xml->createElement($key, trim(htmlspecialchars(strip_tags($value))));
 
                             $attr = $item->appendChild($attr);   
+
+                            
                         }
                     }
 
-
+                    $cat_check = ''; //to reset the category for next product
                 }
 
                 $item = $xml->createElement('item');
