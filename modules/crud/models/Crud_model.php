@@ -33,7 +33,13 @@ class Crud_model extends CI_Model {
   public function delete($table, $where){
         
         $this->db->where($where);
-        return $this->db->delete($table);
+        $sql = $this->db->delete($table);
+
+        if($this->db->affected_rows > 0){
+          return $sql;
+        }else{
+          return false;
+        }
   }
 
   
