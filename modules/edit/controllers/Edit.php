@@ -8,7 +8,16 @@ class Edit extends MX_Controller {
 
 
 		$item = Modules::run('crud/get',$category, array('sku'=>$sku));
+		$installments = Modules::run('crud/get','installments', array('sku'=>$sku));
+		if(!$installments){
+				$installments='';
+		}else{
+			$installments = $installments->row()->installments_count;
+		}
+
+		
 		$update ='';
+		
 		if($post = $this->input->post()){
 
 			if(isset($post['status'])){
@@ -29,6 +38,9 @@ class Edit extends MX_Controller {
 					}
 					else
 						echo "Το προϊόν δεν βρέθηκε στο STOCK.";
+
+
+					Modules::run('crud/delete','installments',array('sku'=>$sku));
 				}
 				else if($post['status']=='add')
 				{
@@ -57,13 +69,19 @@ class Edit extends MX_Controller {
 
 					$exists = Modules::run("crud/get","live",$where);
 
+					$installments_q = Modules::run('crud/delete','installments',array('sku'=>$sku));
+					$installments_count = $post['installments'];
+					Modules::run('crud/insert','installments',array('sku'=>$sku,'installments_count'=>$installments_count));
+					unset($post['installments']);
+
+
+
 					if($exists){
 						$update = Modules::run('crud/update','live',$where,$post);
 					}else{
 
 						$update = Modules::run('crud/insert','live', $post);
 
-						
 					}
 				}
 				else if($post['status']=='update')
@@ -77,6 +95,8 @@ class Edit extends MX_Controller {
 					echo "<h2>Updated</h2>";
 				}
 			}
+
+
 		}
 
 		if($item){
@@ -86,6 +106,7 @@ class Edit extends MX_Controller {
 			$data['category'] = $category;
 			$data['title'] = 'Επεξεργασία προϊόντος';
 			$data['item'] = $item;
+			$data['installments'] = $installments;
 
 			$this->load->view('templates/header',$data);
 			$this->load->view('edit', $data);
