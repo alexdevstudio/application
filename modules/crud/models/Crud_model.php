@@ -42,6 +42,17 @@ class Crud_model extends CI_Model {
         }
   }
 
+  public function deleteWp($table, $where){
+        $wpdb = $this->load->database('wordpress', TRUE);
+        $wpdb->where($where);
+        $wpdb->delete($table);
+
+        if($wpdb->affected_rows > 0){
+          return true;
+        }else{
+          return false;
+        }
+  }
   
 
   public function get($category, $where=null){

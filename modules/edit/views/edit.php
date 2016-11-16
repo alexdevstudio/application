@@ -117,13 +117,14 @@ if($itemLive){
 </div>
 <div class="form-group">
 	                  	
-<label>Αριθμός Άτοκων Δόσεων</label>
+<label>Μέγιστος Αριθμός Άτοκων Δόσεων</label>
 
 <div class="input-group">
     <input class='form-control' name='installments' type="number" id='installments' value='<?= $installments; ?>'>
     <span style="cursor:pointer;color:#dd4b39;" class="input-group-addon" id="basic-addon1" onclick='clearPrice("installments");' title="Εκκαθάριση δόσεων">X</span>
 </div>
-	
+
+
 
 </div>
 <div style='display:none;'class="form-group">
@@ -288,4 +289,4 @@ if($itemLive){
 
 /*});*/
 
-</script>>
+</script>

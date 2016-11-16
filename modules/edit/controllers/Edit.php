@@ -71,6 +71,11 @@ class Edit extends MX_Controller {
 
 					$installments_q = Modules::run('crud/delete','installments',array('sku'=>$sku));
 					$installments_count = $post['installments'];
+					
+					if($installments_count=='' || $installments_count=='0'){
+						$installments_count = 12;
+					}
+
 					Modules::run('crud/insert','installments',array('sku'=>$sku,'installments_count'=>$installments_count));
 					unset($post['installments']);
 
@@ -83,6 +88,8 @@ class Edit extends MX_Controller {
 						$update = Modules::run('crud/insert','live', $post);
 
 					}
+					unset($post);
+					header("Refresh:0");
 				}
 				else if($post['status']=='update')
 				{
