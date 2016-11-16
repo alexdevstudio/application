@@ -90,17 +90,27 @@ class Extract_model extends CI_Model {
            
 
                 $query = $this->db->query("
-                     SELECT l.product_number, l.category, l.net_price, l.recycle_tax,l.price_tax,l.sale_price, l.availability, l.supplier, l.status, l.delete_flag, t.*
+                     SELECT l.product_number, l.category, l.net_price, l.recycle_tax,l.price_tax,l.sale_price, l.availability, l.supplier, l.status, l.delete_flag, t.*,
+                     i.installments_count
 
                      FROM live l
 
                      INNER JOIN {$table} t ON l.product_number = t.product_number
                      
+                     LEFT JOIN installments i ON t.sku = i.sku
+
                      WHERE l.category = '{$table}' AND t.new_item = 0
+
                      
                     ");
                $i=1;
                $products = array();
+
+
+
+                  
+                
+
 
                foreach ($query->result_array() as $product) {
 
@@ -115,8 +125,11 @@ class Extract_model extends CI_Model {
                 }else{
                     $brand = $product['Brand'];
                 }
-                
 
+                
+                
+                
+                 //echo "$sku<br />";
                  //Price 
                     if($product['price_tax'] == '' ||  $product['price_tax'] === NULL  ||  $product['price_tax'] == '0.00' || $product['price_tax'] =='0'){
                       
@@ -124,7 +137,7 @@ class Extract_model extends CI_Model {
 
                         if($supplier=='braintrust' && $cat == 'laptops' && $brand == 'MSI'){
                             $msi = Modules::run("crud/get",'msi_price',array('sku'=>$sku));
-                            
+                           
                             $msi_price = $msi->row()->price;
                             
                             if($msi_price!='0.00' && $msi_price!='' && $msi_price!='0'){
@@ -172,6 +185,12 @@ class Extract_model extends CI_Model {
                     $etd_title = $product['etd_title'];
                     $skroutz_title = $product['skroutz_title'];
                     $cross = '';
+                    $installments_import = $product['installments_count'];
+
+                    if(!$installments_import){
+                        $installments_import = 12;
+                    }
+
                 
                 switch ($table) {
                         case 'laptops':
@@ -530,6 +549,9 @@ $products_count = 0;
                         $post_id = $post_id->result();
                         $post_id = $post_id[0]->post_id;
 
+                        if($product['status']=='publish'){
+
+                        
                         $where = array('post_id'=>$post_id,'meta_key'=>'_regular_price');
                         $data = array('meta_value'=>$product['price_tax']);                   
                         Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
@@ -542,6 +564,16 @@ $products_count = 0;
                         $where = array('post_id'=>$post_id,'meta_key'=>'custom_availability');
                         $data = array('meta_value'=>$product['availability']);                   
                         Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
+                        
+                        $where = array('post_id'=>$post_id,'meta_key'=>'max_installments');
+                        Modules::run("crud/deleteWp","wp_postmeta",  $where);
+                       
+                        $data = array('post_id'=>$post_id,'meta_key'=>'max_installments','meta_value'=>$installments_import);                   
+                        Modules::run("crud/insertWp","wp_postmeta", $data);
+
+                        echo  $products_count++;
+                        echo ":$sku:".$product['status']."<br />";  
+                        }
                         /*$where = array('post_id'=>$post_id,'meta_key'=>'_stock_status');
                         $data = array('meta_value'=>'instock');                   
                         Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
@@ -555,8 +587,7 @@ $products_count = 0;
 
                        // exit($product['price_tax']); 
 
-                        echo  $products_count++;
-                        echo ":$sku:".$product['status']."<br />";  
+                        
                     }
                     
 
