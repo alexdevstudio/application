@@ -42,6 +42,11 @@ class MX_Controller
 	
 	public function __construct() 
 	{
+		if($_SERVER['REMOTE_ADDR']!='85.72.61.177' && $_SERVER['REMOTE_ADDR']!='94.70.138.200') {
+
+        	die('Page does not exist');
+        }
+        
 		$class = str_replace(CI::$APP->config->item('controller_suffix'), '', get_class($this));
 		log_message('debug', $class." MX_Controller Initialized");
 		Modules::$registry[strtolower($class)] = $this;	

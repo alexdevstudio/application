@@ -8,11 +8,11 @@ class Home extends MX_Controller {
         parent::__construct();
 
 
-        if($_SERVER['REMOTE_ADDR']!='85.72.61.177' && $_SERVER['REMOTE_ADDR']!='94.70.138.200') {
+        /*if($_SERVER['REMOTE_ADDR']!='85.72.61.177' && $_SERVER['REMOTE_ADDR']!='94.70.138.200') {
 
         	die('Page does not exist');
 
-        }
+        }*/
     }
 
 	
