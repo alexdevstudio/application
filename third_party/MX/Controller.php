@@ -42,7 +42,7 @@ class MX_Controller
 	
 	public function __construct() 
 	{
-		if($_SERVER['REMOTE_ADDR']!='85.72.61.177' && $_SERVER['REMOTE_ADDR']!='94.70.138.200') {
+		if($_SERVER['REMOTE_ADDR']!='85.72.61.177' && $_SERVER['REMOTE_ADDR']!='94.70.138.200' && $_SERVER['REMOTE_ADDR']!='62.138.8.222') {
 
         	die('Page does not exist');
         }
