@@ -38,46 +38,40 @@
                 	if ($i % 2 == 0) {
 					           $class = ' even ';
 					         }
-					$i++;
-					$category = $item->category;
-					$rate = $item->rate;
-          $rate = $rate*100;
-					$description = $item->description;
 
-          $class_color='';
+        					$i++;
+        					$category = $item->category;
+        					$rate = $item->rate;
+                  $rate = $rate*100;
+        					$description = $item->description;
 
-          if($rate !=6)
-            $class_color='bg-orange-light';
-           
+                  $class_color='';
 
-					?>
+                  if($rate !=6)
+                    $class_color='bg-orange-light';
+					         ?>
 
- 				<tr class="<?= $class; ?>" role="row">
-                  <td><?= $description; ?></td>
-                  <td><?= $category; ?></td>
-                  <td class="<?= $class_color; ?>" id="newRate_<?= $category; ?>"><?= $rate.'%' ?></td>
-                  <td>
-               		<form id="rate_<?= $category; ?>" action="./updateRate">
-               		<input type='hidden' value='<?= $rate; ?>' name='rate' id='rate' />
-               		
-               		<div class="input-group col-xs-6 pull-left">
-		                  <div class="input-group-addon">
-		                    <i class="fa fa-percent"></i>
-		                  </div>
-		                  <input class="form-control " type='text'  id='rate_price<?= $category; ?>' name='rate_price<?= $category; ?>' />
-               		</div>
-               		
-                 	 <button id="" type="button" class="btn btn-success btn-md col-xs-offset-1 col-xs-5" onclick="fixRate('rate_<?= $category; ?>', '<?= $category; ?>', 'rate_price<?= $category; ?>');" >Αλλαγή</button>
-
-                   </form> 
-                  </td>
-                </tr>
-
-
-			<?php
+                  <tr class="<?= $class; ?>" role="row">
+                    <td><?= $description; ?></td>
+                    <td><?= $category; ?></td>
+                    <td class="<?= $class_color; ?>" id="newRate_<?= $category; ?>"><?= $rate.'%' ?></td>
+                    <td>
+                      <form id="rate_<?= $category; ?>" action="./updateRate">
+                        <input type='hidden' value='<?= $rate; ?>' name='rate' id='rate' />
+                        <div class="input-group col-xs-6 pull-left">
+  		                    <div class="input-group-addon">
+  		                      <i class="fa fa-percent"></i>
+  		                    </div>
+  		                  <input class="form-control " type='text'  id='rate_price<?= $category; ?>' name='rate_price<?= $category; ?>' />
+                        </div>
+                        <button id="" type="button" class="btn btn-success btn-md col-xs-offset-1 col-xs-5" onclick="fixRate('rate_<?= $category; ?>', '<?= $category; ?>', 'rate_price<?= $category; ?>');" >Αλλαγή</button>
+                      </form> 
+                    </td>
+                  </tr>
+			         <?php
 
                 }
-		?>
+		            ?>
                 
               </tbody>
                 <tfoot>
