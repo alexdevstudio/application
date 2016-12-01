@@ -543,13 +543,29 @@ $products_count = 0;
                     $data = array('new_item'=>0);
                     Modules::run("crud/update",$table, $where, $data); 
 
+                   
                     $where = array('meta_value'=>$sku,"meta_key"=>"_sku");
                     $post_id = Modules::run("crud/getWp","wp_postmeta", $where);
+
+
+
+
                     if(!is_bool($post_id)){
                         $post_id = $post_id->result();
                         $post_id = $post_id[0]->post_id;
 
+                         $where = array('id'=>$post_id);
+                         $post_name = Modules::run("crud/getWp","wp_posts", $where);
+                         $post_name = $post_name->result();
+                         $post_name = $post_name[0]->post_name;
+
+
                         if($product['status']=='publish'){
+
+                         
+                         $post_name = rtrim($post_name,'__trashed');
+
+
 
                         
                         $where = array('post_id'=>$post_id,'meta_key'=>'_regular_price');
@@ -571,8 +587,12 @@ $products_count = 0;
                         $data = array('post_id'=>$post_id,'meta_key'=>'max_installments','meta_value'=>$installments_import);                   
                         Modules::run("crud/insertWp","wp_postmeta", $data);
 
+
+
                         echo  $products_count++;
                         echo ":$sku:".$product['status']."<br />";  
+
+
                         }
                         /*$where = array('post_id'=>$post_id,'meta_key'=>'_stock_status');
                         $data = array('meta_value'=>'instock');                   
@@ -581,7 +601,7 @@ $products_count = 0;
                         $data = array('meta_value'=>'no');                   
                         Modules::run("crud/updateWp","wp_postmeta",  $where, $data);*/
                         $where = array('ID'=>$post_id);
-                        $data = array('post_title'=>$product['etd_title'],"post_status"=>$product['status']);                   
+                        $data = array('post_title'=>$product['etd_title'],"post_status"=>$product['status'],"post_name"=>$post_name);                   
                         Modules::run("crud/updateWp","wp_posts",  $where, $data);
                         
 
