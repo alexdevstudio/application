@@ -18,15 +18,13 @@ class Home extends MX_Controller {
 	
 	public function index($pass=null){
 		$this->dashboard($pass);
+
 	}
 	public function dashboard($pass=null){
 
 
-		/*if($pass!='efi' && $pass!='george' && $pass!='alex' && $pass!='evans'){
+		//$this->load->model('home_model');
 
-			die("<a href='https://www.etd.gr'>Welcome, Click Here Please</a>");
-			
-		}*/
 
 		$data['title'] = 'Dashboard';
 

@@ -31,5 +31,12 @@ class Extract extends MX_Controller {
 		 echo $this->extract_model->allImport($table);
 	}
 
+
+	public function getPrice($net, $recycle, $category){
+		$this->load->model('extract_model');
+		return $this->extract_model->priceTax($net, $recycle, $category);
+		
+	}
+
 }
 ?> 

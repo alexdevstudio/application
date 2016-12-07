@@ -397,8 +397,8 @@ class Live_model extends CI_Model {
 			$availability = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
 
 			$net_price = str_replace(",", ".", $product->price);
-			$net_price = str_replace("€", "", $product->price);
-			$net_price = (string) trim($net_price);
+			$net_price = str_replace("€", "", $net_price);
+			$net_price = (float) $net_price;
 
 			$pn = (string) trim($product->sku);
 			$model = (string) trim($product->model);
