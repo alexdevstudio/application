@@ -236,7 +236,8 @@ class Extract_model extends CI_Model {
 
 
                         $product['cross_sales'] =  Modules::run("crosssales/auto_laptop",$product['sku'], $product['brand'], $product['screen_size'], $product['price_tax']);
-                        
+                        $product['up_sales'] = $product['cross_sales'];
+
                        /* if(!empty($product['cross_sales'])){
                             print_r($product['cross_sales']); 
                             exit();
@@ -412,7 +413,12 @@ class Extract_model extends CI_Model {
 
                     $product['etd_title'] =  $etd_title;
                     $product['skroutz_title'] =  $skroutz_title;
-
+                    if($product['availability'] == 'Άμεσα Διαθέσιμο'){
+                        $product['tag'] = 'laptop_related_'.$product['availability'];
+                    }else{
+                    $product['tags'] = $product['availability'].','.$product['category'];
+                        
+                    }
 
 
                     $i=1;
