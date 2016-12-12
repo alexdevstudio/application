@@ -6,9 +6,9 @@
 
 <?php echo $error;?>
 
-<?php echo form_open_multipart('live/upload_cpi_xml');?>
+<?php echo form_open_multipart('live/upload_westnet_xml');?>
 
-    Select File To Upload for CPI import:<br />
+    Select File To Upload for Westnet import:<br />
     <input type="file" name="userfile"  />
     <br /><br />
     <input type="submit" name="submit" value="Upload" class="btn btn-success" />

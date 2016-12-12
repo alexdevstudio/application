@@ -137,9 +137,11 @@ class Crosssales_model extends CI_Model {
                 
                 $the_hdd = Modules::run('crud/get', 'external_hard_drives', array('product_number'=>$pn));
                 
+                if(!$the_hdd)
+                    continue;
+                
                 $row = $the_hdd->row();
                 $hdd_sku = $row->sku;
-
 
                 if($hdd['availability']=='Άμεσα Διαθέσιμο'){
                     $instock_hdds[] = $hdd_sku;
@@ -220,10 +222,14 @@ class Crosssales_model extends CI_Model {
                 $where = array(
                     'type'=>'Mouse',
                     'usage'=>'Mobile',
-                    'connection'=>'wireless'
+                    'connection'=>'wireless',
+                    'product_number'=>$pn
                     );
                 $the_mouse = Modules::run('crud/get', 'keyboard_mouse', $where);
                 
+                if(!$the_mouse)
+                    continue;
+               
                 $row = $the_mouse->row();
                 $mouse_sku = $row->sku;
 

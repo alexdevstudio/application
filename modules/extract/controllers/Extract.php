@@ -5,25 +5,23 @@ class Extract extends MX_Controller {
 
 	
 
-	public function xml($table=null)
+	public function xml($table=null,$all=false)
 	{	
 		//if(!$table){redirect('https://etd.gr/','refresh');}
 
 		$this->load->model('extract_model');
 		
-		if($this->extract_model->xml($table)){
+		if($this->extract_model->xml($table,$all)){
 
-			
-			echo '<a class="btn btn-block btn-success btn-md"
+			if(!$all || $all=='new')
+				echo '<a class="btn btn-block btn-success btn-md"
 			 target="_blank" href="'.base_url().'/files/'.$table.'_new_items.xml" download>Λήψη</a>';
+			 else
+			 	echo '<a class="btn btn-block btn-success btn-md"
+			 target="_blank" href="'.base_url().'/files/'.$table.'_all_items.xml" download>Λήψη</a>';
 		}else{
 			echo 'Σφάλμα';
 		}
-
-
-
-			
-	
 	}
 
 
@@ -31,15 +29,14 @@ class Extract extends MX_Controller {
 
 		 $this->load->model('extract_model');
 		 echo $this->extract_model->allImport($table);
+	}
 
-		 
+
+	public function getPrice($net, $recycle, $category){
+		$this->load->model('extract_model');
+		return $this->extract_model->priceTax($net, $recycle, $category);
 		
 	}
 
-	
 }
-
-
-
-
 ?> 
