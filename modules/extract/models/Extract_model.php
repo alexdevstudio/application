@@ -253,7 +253,7 @@ class Extract_model extends CI_Model {
                         }*/
 
                         
-
+                        $product['up_sells'] = implode(",",$laptops);
 
 
                             break;
