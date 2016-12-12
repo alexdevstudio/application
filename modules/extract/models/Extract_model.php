@@ -107,8 +107,18 @@ class Extract_model extends CI_Model {
                $products = array();
 
 
+                    $monitors=array();
+                    $laptops=array();
 
-                  
+                 foreach ($query->result_array() as $available){
+
+                    if($available['category']=='monitors' && $available['availability']=='Άμεσα Διαθέσιμο'){
+                        $monitors[] =  $available['sku'];
+                    }
+                    if($available['category']=='laptops' && $available['availability']=='Άμεσα Διαθέσιμο'){
+                        $laptops[] =  $available['sku'];
+                    }
+                 }
                 
 
 
@@ -285,6 +295,8 @@ class Extract_model extends CI_Model {
                         $pn = str_replace(' ','',$product['product_number']);
                         $ips = '';
 
+                        $product['up_sells'] = implode(",",$monitors);
+
                         if (strpos($title, 'IPS') !== false) {
                                 $ips = ' IPS ';
                             }
@@ -300,7 +312,7 @@ class Extract_model extends CI_Model {
                             
                         }
 
-                            
+                            $product['tags'] = $product['availability'];
 
                             break;
                             case 'printers':
