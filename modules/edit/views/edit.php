@@ -1,7 +1,7 @@
 
 <div class="sections col-xs-12">
 	<section class="content-header">
-		<h1>Επεξεργασία προϊόντος</h1>  
+	
 		<br>	   
     </section> 
 
@@ -127,7 +127,7 @@ if($itemLive){
 
 
 </div>
-<div style='display:none;'class="form-group">
+<div style=''class="form-group">
 	                  	
 <label>Τιμή Προσφοράς</label>
 

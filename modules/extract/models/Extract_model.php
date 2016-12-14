@@ -578,16 +578,22 @@ $products_count = 0;
                          $post_name = rtrim($post_name,'__trashed');
 
 
-
+                         //If Sale Price is SET check
+                         $sale_price = trim($product['sale_price']);
+                         if($sale_price!='' && $sale_price!=0.00 && $sale_price!=0){
+                            $price1 = $sale_price;
+                         }else{
+                            $price1 = $product['price_tax'];
+                         }
                         
                         $where = array('post_id'=>$post_id,'meta_key'=>'_regular_price');
                         $data = array('meta_value'=>$product['price_tax']);                   
                         Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
                         $where = array('post_id'=>$post_id,'meta_key'=>'_sale_price');
-                        $data = array('meta_value'=>$product['sale_price']);                   
+                        $data = array('meta_value'=>$sale_price);                   
                         Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
                         $where = array('post_id'=>$post_id,'meta_key'=>'_price');
-                        $data = array('meta_value'=>$product['price_tax']);                   
+                        $data = array('meta_value'=>$price1);                   
                         Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
                         $where = array('post_id'=>$post_id,'meta_key'=>'custom_availability');
                         $data = array('meta_value'=>$product['availability']);                   
