@@ -67,6 +67,7 @@ $sale_price = '';
 $supplier = '';
 $instock = '';
 $outstock = '';
+$outstock2 = '';
 
 if($itemLive){
 	
@@ -79,16 +80,24 @@ if($itemLive){
 		$instock = 'selected';
 	}elseif($av=='Κατόπιν παραγγελίας σε 1 εργάσιμη'){
 		$outstock = 'selected';
+	}elseif($av=='Αναμονή παραλαβής'){
+		$outstock2 = 'selected';
 	}
+
+	
+	
+}
 
 	
 	$etd = '';
 	$logicom = '';
 	$oktabit = '';
 	$braintrust = '';
-}
-
-
+	$cpi = '';
+	$westnet = '';
+	$ddc = '';
+	$partnernet = '';
+	$other = '';
 
 ?>
 <input class='form-control' type="hidden" name='product_number' value='<?= $pn; ?>'>
@@ -108,11 +117,23 @@ if($itemLive){
 </div>
 <div class="form-group">
 	                  	
+<label>Μέγιστος Αριθμός Άτοκων Δόσεων</label>
+
+<div class="input-group">
+    <input class='form-control' name='installments' type="number" id='installments' value='<?= $installments; ?>'>
+    <span style="cursor:pointer;color:#dd4b39;" class="input-group-addon" id="basic-addon1" onclick='clearPrice("installments");' title="Εκκαθάριση δόσεων">X</span>
+</div>
+
+
+
+</div>
+<div style='display:none;'class="form-group">
+	                  	
 <label>Τιμή Προσφοράς</label>
 
 <div class="input-group">
     <input class='form-control' name='sale_price' id='sale_price' value='<?= $sale_price; ?>'>
-    <span style="cursor:pointer;color:#dd4b39;" class="input-group-addon" id="basic-addon1" onclick='clearPrice("sale");' title="Εκκαθάριση τιμής">X</span>
+    <span style="cursor:pointer;color:#dd4b39;" class="input-group-addon" id="basic-addon1" onclick='clearPrice("sale_price");' title="Εκκαθάριση τιμής">X</span>
 </div>
 	
 
@@ -130,6 +151,9 @@ if($itemLive){
 	              		  				case 'etd':
 	              		  					$etd = 'selected';
 	              		  					break;
+	              		  				case 'partnernet':
+	              		  					$partnernet = 'selected';
+	              		  					break;
 	              		  				case 'logicom':
 	              		  					$logicom = 'selected';
 	              		  					break;
@@ -142,12 +166,16 @@ if($itemLive){
 	              		  				case 'cpi':
 	              		  					$cpi = 'selected';
 	              		  					break;
+	              		  				case 'westnet':
+	              		  					$westnet = 'selected';
+	              		  					break;
+	              		  				case 'ddc':
+	              		  					$ddc = 'selected';
+	              		  					break;
+	              		  				
 	              		  				default:
 	              		  					$other = 'selected';
-	              		  					?>
-	              		  	<option value="<?= $suplier; ?>" <?= $other ?>>$supplier</option>
-
-	              		  					<?php
+	              		  					
 	              		  					break;
 	              		  			}
 	              		  		
@@ -157,6 +185,12 @@ if($itemLive){
 	              		  	<option value="logicom" <?= $logicom ?>>Logicom</option>
 	              		  	<option value="oktabit" <?= $oktabit ?>>Oktabit</option>
 	              		  	<option value="braintrust" <?= $braintrust ?>>Braintrust</option>
+	              		  	<option value="cpi" <?= $cpi ?>>CPI</option>
+	              		  	<option value="westnet" <?= $westnet ?>>WestNet</option>
+	              		  	<option value="DDC" <?= $ddc ?>>DDC</option>
+	              		  	<option value="partnernet" <?= $partnernet ?>>PartnerNet</option>
+	              		  	<option value="none" <?= $other ?>>Δεν υπάρχει σε κανέναν προμηθευτή</option>
+
 	              		  </select>
 
 	                  	
@@ -168,8 +202,9 @@ if($itemLive){
 	                  	
 	              		  <select class='form-control' name="availability" id="availability">
 	              		  	<option value="">----</option>
-	              		  	<option value="1" <?= $instock; ?>>Διαθέσιμο στο κατάστημα</option>
-	              		  	<option value="0" <?= $outstock; ?>>Μη διαθέσιμο στο κατάστημα / Διαθέσιμο στον προμηθευτή</option>
+	              		  	<option value="2" <?= $instock; ?>>Διαθέσιμο στο κατάστημα</option>
+	              		  	<option value="1" <?= $outstock; ?>>Μη διαθέσιμο στο κατάστημα / Διαθέσιμο στον προμηθευτή</option>
+	              		  	<option value="0" <?= $outstock2; ?>>Αναμονή παραλαβής</option>
 	              		  </select>
 
 	                  	
@@ -249,18 +284,9 @@ if($itemLive){
 	/*$(document).ready(function(){*/
 
 			function clearPrice(a){
-				if(a == 'regular'){
-					$('#regular').val('');
-					
-				}
-
-				if(a == 'sale'){
-					$('#sale_price').val('');
-					
-
-				}
+				$('#'+a).val('');
 			}
 
 /*});*/
 
-</script>>
+</script>
