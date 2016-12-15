@@ -297,6 +297,7 @@ class Live_model extends CI_Model {
 					$okt_product['type'] = $sc;
 					$okt_product['dist_type'] = $dist_type;
 					$okt_product['shipping_class'] = 4644;
+					$okt_product['volumetric_weight'] = 2;
 
 					if (strstr ($title,'DSP'))
 						$okt_product['dist_type'] = 'DSP';
@@ -679,6 +680,7 @@ class Live_model extends CI_Model {
 				{
 					$log_product['type'] = $sc;
 					$log_product['shipping_class'] = 4644;
+					$log_product['volumetric_weight'] = 2;
 					if (strstr ($title,'DSP'))
 						$log_product['dist_type'] = 'DSP';
 					elseif(strstr ($title,'Reseller Option Kit') || strstr ($title,'ROK'))
@@ -1753,6 +1755,7 @@ class Live_model extends CI_Model {
 					'Accounts' => $Accounts ,
 					'Accounts_Software' => $Accounts_Software,
 					'shipping_class' => 4682
+					//'volumetric_weight'???
 				);
 
 				//2. New products for charateristics tables that load Sku module
@@ -2098,6 +2101,9 @@ class Live_model extends CI_Model {
 
 
 			//$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
+	
+		//Do not forget volumetric_weight if needed!!!!!!!!!!!!!!!!!!
+
 			//$chars_array = array_merge($chars_array, array("shipping_class"=>$shipping_class));
 			//$chars_array = array_merge($chars_array, array("description"=>$product['description']));
 			$this->updateProduct($c, $chars_array, $product['product_number']);
@@ -2114,6 +2120,7 @@ class Live_model extends CI_Model {
 			
 			if($c == 'cartridges' || $c == 'toners'){
 				$shipping_class = Modules::run('categories/makeShippingClass', $product, $c);
+				$volumetric_weight = Modules::run('categories/getWeight', $shipping_class);
 				
 				$categoryData = array(
 				'brand'=> $product['brand'], 
@@ -2121,7 +2128,8 @@ class Live_model extends CI_Model {
 				'product_number'=> $product['product_number'],
 				'title'=> $product['title'],
 				'supplier_product_url'=> $product['product_url'],
-				'shipping_class' => $shipping_class
+				'shipping_class' => $shipping_class,
+				'volumetric_weight' =>$volumetric_weight
 
 				);
 			}elseif($c == 'printers' || $c == 'multifunction_printers'){
@@ -2129,6 +2137,7 @@ class Live_model extends CI_Model {
 				$price = array('price'=>$product['net_price']);
 				
 				$shipping_class  = Modules::run('categories/makeShippingClass',$price, $c, true);
+				$volumetric_weight = Modules::run('categories/getWeight', $shipping_class);
 				$categoryData = array(
 				'brand'=> $product['brand'],
 				'sku'=> $sku,
@@ -2136,7 +2145,8 @@ class Live_model extends CI_Model {
 				'title'=> $product['title'],
 				'description'=> strip_tags($product['description']),
 				'supplier_product_url'=> $product['product_url'],
-				'shipping_class' => $shipping_class
+				'shipping_class' => $shipping_class,
+				'volumetric_weight' => $volumetric_weight
 				);
 			}
 			elseif($c == 'software'){
@@ -2150,7 +2160,8 @@ class Live_model extends CI_Model {
 				'dist_type'=> $product['dist_type'],
 				'description'=> strip_tags($product['description']),
 				'supplier_product_url'=> $product['product_url'],
-				'shipping_class' => $product['shipping_class']
+				'shipping_class' => $product['shipping_class'],
+				'volumetric_weight' => $volumetric_weight
 				);
 
 			}elseif($c == "copiers"){
@@ -2161,24 +2172,28 @@ class Live_model extends CI_Model {
 			}
 			elseif($c == 'hoverboards'){
 				$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
+				$volumetric_weight = Modules::run('categories/getWeight', $shipping_class);
 				$categoryData = array(
 				'brand'=> $product['brand'],
 				'sku'=> $sku,
 				'product_number'=> $product['product_number'],
 				'title'=> $product['title'],
 				'description'=> strip_tags($product['description']),
-				'shipping_class' => $shipping_class
+				'shipping_class' => $shipping_class,
+				'volumetric_weight' => $volumetric_weight
 				);
 			}elseif($supplier == 'partnernet'){
 				
 				$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
+				$volumetric_weight = Modules::run('categories/getWeight', $shipping_class);
 				$categoryData = array(
 				'brand'=> $product['brand'],
 				'sku'=> $sku,
 				'product_number'=> $product['product_number'],
 				'title'=> $product['title'],
 				'description'=>'',
-				'shipping_class' => $shipping_class
+				'shipping_class' => $shipping_class,
+				'volumetric_weight' => $volumetric_weight
 				);
 
 
@@ -2192,9 +2207,12 @@ class Live_model extends CI_Model {
 				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c== "desktops" || $c == "tablets"  || $c == "smartphones" ||
 				 $c == "cables" || $c == "patch_panels" || $c == "racks" || $c =="optical_drives" || $c == "card_readers" || $c == "flash_drives" || 
 				 $c == "power_supplies" || $c == "cases" || $c == "fans" || $c == "motherboards" || $c == "graphic_cards" || $c == "cpu" || 
-				 $c == "memories" || $c == "hoverboards")		
-					$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
+				 $c == "memories" || $c == "hoverboards"){
 
+
+					$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
+					$volumetric_weight = Modules::run('categories/getWeight', $shipping_class);
+				}	
 				$categoryData = array(
 				'brand'=> $product['brand'],
 				'sku'=> $sku,
@@ -2202,7 +2220,8 @@ class Live_model extends CI_Model {
 				'title'=> $product['title'],
 				'description'=> strip_tags($product['description']),
 				'supplier_product_url'=> $product['product_url'],
-				'shipping_class' => $shipping_class
+				'shipping_class' => $shipping_class,
+				'volumetric_weight' => $volumetric_weight
 				);
 
 				if($c == "cables" || $c == "patch_panels" || $c == "racks"){
@@ -2300,7 +2319,7 @@ class Live_model extends CI_Model {
 				$price = array('price'=>(float)$product['net_price']);
 				//print_r($price['price']);
 				$shipping_class  = Modules::run('categories/makeShippingClass',$price, $c, true);
-					
+					//Must add volumetricWeight!!!
 				$this->db->set('shipping_class',$shipping_class);
 				$this->db->where('sku',$sku);
 				$this->db->update($c);

@@ -69,5 +69,32 @@ class Categories extends MX_Controller {
      	echo $this->categories_model->makeShippingClass($data, $cat, $dynamic);
 
      }
+
+     function getWeight($shipping_class){
+     	$this->load->model('categories_model');
+     	return $this->categories_model->getWeight($shipping_class);
+     }
+
+     function updateweight(){
+     	$cats = $this->fullCategoriesArray();
+
+     	foreach ($cats as $cat) {
+
+
+
+     		if($cat!='multifunction_printers' && $cat!='printers' && $cat!='racks' && $cat!='ups' && $cat!='copiers' ){
+
+     			$products = Modules::run('crud/get', $cat);
+     			$products = $products->result_array();
+     			foreach ($products as $product) {
+     				$sku = $product['sku'];
+     				$volumetric_weight = $this->getWeight($product['shipping_class']);
+     				Modules::run('crud/update', $cat, array('sku'=>$sku), array('volumetric_weight'=>$volumetric_weight));
+     			}
+     			
+     		}
+     		echo "$cat: OK<br />";
+     	}
+     }
 }
 ?>
