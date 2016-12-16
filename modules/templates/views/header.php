@@ -55,7 +55,7 @@
     <!-- Logo -->
     <a href="index2.html" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><b>A</b>LT</span>
+      <span class="logo-mini"><b>X</b>ML</span>
       <!-- logo for regular state and mobile devices -->
       <span class="logo-lg"><b>XML</b>APP</span>
     </a>
@@ -397,8 +397,13 @@
             </a>
          </li>
          <li class="">
-            <a href="https://etd.gr">
+            <a target="_blank" href="https://etd.gr">
               <img src="https://etd.gr/wp-content/uploads/2015/10/logo72.png" class='img-menu'> <span>ETD.GR</span>
+            </a>
+         </li>
+         <li class="">
+            <a target="_blank" href="http://skroutz.gr">
+              <img src="<?= base_url()?>/assets/images/skroutz.png" class='img-menu'> <span>SKROUTZ.GR</span>
             </a>
          </li>
 
