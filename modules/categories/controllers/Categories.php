@@ -82,7 +82,7 @@ class Categories extends MX_Controller {
 
 
 
-     		if($cat!='multifunction_printers' && $cat!='printers' && $cat!='racks' && $cat!='ups' && $cat!='copiers' ){
+     		if($cat=='servers'  ){
 
      			$products = Modules::run('crud/get', $cat);
      			$products = $products->result_array();
