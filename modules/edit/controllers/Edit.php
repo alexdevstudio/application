@@ -96,8 +96,11 @@ class Edit extends MX_Controller {
 					unset ($post['status']);
 					$where = array('sku'=>$sku);
 
-					if($category=='monitors' && $post['shipping_class']==''){
+					if($post['shipping_class']==''){
 						$post['shipping_class'] = Modules::run('categories/makeShippingClass',$post,$category);
+					}
+
+					if($post['shipping_class']!=''){
 						$post['volumetric_weight'] = Modules::run('categories/getWeight',$post['shipping_class']);
 					}
 
