@@ -77,9 +77,17 @@ $fa = 0;
     						exit();
     				}*/
     			$data['new_item']=0;
-    			if($table=="desktops" || $table == "monitors" || $table == "ups")
-    			$data['shipping_class'] = $this->makeShippingClass($data, $table);
-					
+    			if($table=="desktops" || $table == "monitors" || $table == "ups"){
+    			    $data['shipping_class'] = $this->makeShippingClass($data, $table);
+    			}
+    			$vw = $data['volumetric_weight'];
+
+    			if($vw=='' || $vw == 0){
+    				$data['volumetric_weight'] = $this->getWeight($data['shipping_class']);
+    			}
+
+				
+				
 				$this->db->where('sku', $sku );
 				$query = $this->db->get($table);
 
@@ -171,8 +179,13 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 			case 'monitors':
 
 					$size = (float) $data['screen_size'];
-					if($data['brand']=='DELL' && $size >= 24 && $size <= 25 )
+					$pn = $data['product_number'];
+					if($data['brand']=='DELL' && $size >= 24 && $size <= 25 && (substr($pn, 0, 1) === 'U' || substr($pn, 0, 1) === 'u') ){
+									
 						$shipping_class= 9393;
+						
+					}
+						
 					else
 					{
 						if($size >= 42)
@@ -312,6 +325,34 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 		}
      
       return $shipping_class;
+    }
+
+    public function getWeight($shipping_class){
+      $sc_array = array('4636' =>5,
+						'4644' =>2,
+						'4660' =>9,
+						'4661' =>13,
+						'4662' =>2,
+						'4663' =>2,
+						'4664' =>5,
+						'4665' =>19,
+						'4666' =>32,
+						'4667' =>46,
+						'4668' =>13,
+						'4669' =>40,
+						'4670' =>2,
+						'4671' =>2,
+						'4672' =>2,
+						'4673' =>3,
+						'4674' =>2,
+						'4675' =>2,
+						'4676' =>2,
+						'4677' =>2,
+						'4686' =>4,
+						'9393' =>16
+						);
+
+    	return $sc_array[$shipping_class];
     }
    
 
