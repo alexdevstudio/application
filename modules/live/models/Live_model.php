@@ -2161,7 +2161,7 @@ class Live_model extends CI_Model {
 				'description'=> strip_tags($product['description']),
 				'supplier_product_url'=> $product['product_url'],
 				'shipping_class' => $product['shipping_class'],
-				'volumetric_weight' => $volumetric_weight
+				'volumetric_weight' => $product['volumetric_weight']
 				);
 
 			}elseif($c == "copiers"){
@@ -2203,7 +2203,7 @@ class Live_model extends CI_Model {
 				$shipping_class = '';
 				if($c == "carrying_cases" || $c == "external_hard_drives" ||
 				 $c == "sata_hard_drives" || $c == "ssd" || $c == "speakers" || 
-				 $c == "power_banks" || $c == "keyboard_mouse"  || $c == "servers"  || 
+				 $c == "power_bank" || $c == "keyboard_mouse"  || $c == "servers"  || 
 				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c== "desktops" || $c == "tablets"  || $c == "smartphones" ||
 				 $c == "cables" || $c == "patch_panels" || $c == "racks" || $c =="optical_drives" || $c == "card_readers" || $c == "flash_drives" || 
 				 $c == "power_supplies" || $c == "cases" || $c == "fans" || $c == "motherboards" || $c == "graphic_cards" || $c == "cpu" || 

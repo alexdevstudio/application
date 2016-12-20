@@ -66,7 +66,7 @@ class Categories extends MX_Controller {
      public function makeShippingClass($data, $cat, $dynamic = null){
 
      	$this->load->model('categories_model');
-     	echo $this->categories_model->makeShippingClass($data, $cat, $dynamic);
+     	return $this->categories_model->makeShippingClass($data, $cat, $dynamic);
 
      }
 
