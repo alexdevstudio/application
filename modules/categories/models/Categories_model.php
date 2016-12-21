@@ -128,7 +128,7 @@ $fa = 0;
     		}
 
     		$message = 'Η ενημέρωση των '.$table.' ολοκληρώθηκε με επιτυχία.';
-    		echo $message;
+    		return $message;
 
 
     }
@@ -174,7 +174,9 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 			case 'printers':
 			case 'multifunction_printers':
 						
-						$vweight = $data['volumetric_weight'];
+						$vweight = (int) $data['volumetric_weight'];
+
+
 
 						if($vweight > 35)
 							$shipping_class= 9974;

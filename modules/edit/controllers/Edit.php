@@ -96,19 +96,42 @@ class Edit extends MX_Controller {
 					unset ($post['status']);
 					$where = array('sku'=>$sku);
 
-					if($post['shipping_class']==''){
+
+					if($category!='printers' && $category != 'multifunction_printers'){
+						
+					
+
+
+						if($post['shipping_class']==''){
+							$post['shipping_class'] = Modules::run('categories/makeShippingClass',$post,$category);
+						}
+
+
+
+						if($post['shipping_class']!='' && $post['volumetric_weight']==''){
+							$post['volumetric_weight'] = Modules::run('categories/getWeight',$post['shipping_class']);
+						}
+
+
+					}else{
+						
+						if($post['volumetric_weight']==''){
+							$post['volumetric_weight'] = Modules::run('categories/volumeWeight', $post['dimensions']);
+						}
+
 						$post['shipping_class'] = Modules::run('categories/makeShippingClass',$post,$category);
+
+							
 					}
 
-					if($post['shipping_class']!=''){
-						$post['volumetric_weight'] = Modules::run('categories/getWeight',$post['shipping_class']);
-					}
+				
 
 					$update = Modules::run('crud/update',$category,$where,$post);
 				}
 
 				if($update){
 					echo "<h2>Updated</h2>";
+					
 				}
 			}
 
