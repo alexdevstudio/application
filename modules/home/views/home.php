@@ -171,69 +171,7 @@
 				</form>
 			</div><!-- <div class="form-group"> -->
 			</div>
-			<script>
-				function category(){
-					return $('#categories').val();
-				}
-						
-				function updateToggle(){
-					$('#uploadSubmit').toggle();
-					$('#updateLoader').toggle();
-				}
-
-				$(function(){
-					var inputFile = $('#updateXml');
-					//var category = $('#categories').val();
-
-					var uloadUri = $('#charUpdate').attr('action');
-
-					$('#uploadSubmit').on('click',function(event){
-
-						updateToggle();
-
-						var fileToUpload = inputFile[0].files[0];
-
-						//check if there is actually file to upload
-						var cat = category();
-						if(cat == ''){
-							alert('Δεν έχετε επιλέξει κατηγορία');
-							updateToggle();
-							return false;
-						}
-						if(fileToUpload !='undefined'){
-
-							var formData = new FormData();
-							
-							formData.append('file', fileToUpload);
-							formData.append('cat', cat);
-
-							$.ajax({
-
-								url: uloadUri,
-								type: 'post',
-								data: formData,
-								processData:false,
-								contentType:false,
-								success: function(data){
-									if(data=='ok'){
-										$('#updateXml').val('');
-										$('#categories').val('');
-										alert('Τα προϊόντα ενημερώθηκαν.');
-										updateToggle();
-									}else{
-										alert(data);
-										updateToggle();
-									}
-								}
-							});
-						}
-						else {
-							alert('Δεν έχετε επιλέξει αρχείο');
-							updateToggle();
-						}
-					});
-				});
-			</script>
+			
 	<div class="clearfix"></div>
 			<section class="content-header">
 		    	<h1>4. Δημιουργία XML για All Import</h1>

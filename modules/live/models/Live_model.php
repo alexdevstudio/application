@@ -2134,10 +2134,10 @@ class Live_model extends CI_Model {
 				);
 			}elseif($c == 'printers' || $c == 'multifunction_printers'){
 				
-				$price = array('price'=>$product['net_price']);
+				//$price = array('price'=>$product['net_price']);
 				
-				$shipping_class  = Modules::run('categories/makeShippingClass',$price, $c, true);
-				$volumetric_weight = Modules::run('categories/getWeight', $shipping_class);
+				//$shipping_class  = Modules::run('categories/makeShippingClass',$price, $c, true);
+				//$volumetric_weight = Modules::run('categories/getWeight', $shipping_class);
 				$categoryData = array(
 				'brand'=> $product['brand'],
 				'sku'=> $sku,
@@ -2145,8 +2145,8 @@ class Live_model extends CI_Model {
 				'title'=> $product['title'],
 				'description'=> strip_tags($product['description']),
 				'supplier_product_url'=> $product['product_url'],
-				'shipping_class' => $shipping_class,
-				'volumetric_weight' => $volumetric_weight
+				//'shipping_class' => $shipping_class,
+				//'volumetric_weight' => $volumetric_weight
 				);
 			}
 			elseif($c == 'software'){
@@ -2247,6 +2247,7 @@ class Live_model extends CI_Model {
 					$categoryData = array_merge($categoryData, $chars_array);
 				}
 			}
+			
 			if($supplier == 'braintrust' && $c != "laptops")
 			{
 				$categoryData ['new_item'] = 1;
@@ -2313,7 +2314,7 @@ class Live_model extends CI_Model {
 			$this->AddProductImages($product, $f, $supplier, $sku);
 			
 		}//if($sku = Modules::run('sku/checkSku',$skuArray)){
-		else
+		/*else
 		{
 			if($c == 'printers' || $c == 'multifunction_printers'){
 				$price = array('price'=>(float)$product['net_price']);
@@ -2327,8 +2328,8 @@ class Live_model extends CI_Model {
 			/*else if($c == 'memories') //Fix for updating image 
 			{
 				$mem_images = $this->AddProductImages($product, $f, $supplier, $sku);
-			}*/
-    	}
+			}
+    	}*/
 
     	return $insert;
     }
