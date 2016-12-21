@@ -75,6 +75,12 @@ class Categories extends MX_Controller {
      	return $this->categories_model->getWeight($shipping_class);
      }
 
+     function volumeWeight($dimensions){
+
+        $this->load->model('categories_model');
+        return $this->categories_model->volumeWeight($dimensions);
+     }
+
      function updateweight(){
      	$cats = $this->fullCategoriesArray();
 
