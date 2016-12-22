@@ -309,6 +309,7 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					break;
 
 			case 'cables':
+			case 'cable_accessories':
 					$shipping_class= 4644;
 					break;
 			case 'patch_panels':
@@ -357,6 +358,7 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					$shipping_class = 4636;
 					break;
 		    case 'ip_phones':
+		    case 'docking_stations':
 					$shipping_class = 4676;
 					break;
 			case 'ip_pbx':
