@@ -145,7 +145,7 @@ class Extract_model extends CI_Model {
                       
                         $product['price_tax'] = $this->priceTax($product['net_price'],$product['recycle_tax'],$cat);
 
-                        if($supplier=='braintrust' && $cat == 'laptops' && $brand == 'MSI'){
+                        if(($supplier=='braintrust' || $supplier=='etd') && $cat == 'laptops' && $brand == 'MSI'){
                             $msi = Modules::run("crud/get",'msi_price',array('sku'=>$sku));
                            
                             $msi_price = $msi->row()->price;
