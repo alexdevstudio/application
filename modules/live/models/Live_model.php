@@ -2252,22 +2252,24 @@ class Live_model extends CI_Model {
 			{
 				$categoryData ['new_item'] = 1;
 			}
+			
+			$product['brand'] = strtoupper($product['brand']);
 
 			switch ($product['brand']) {
 				case 'APC':
 					$categoryData['support_url'] = 'http://www.schneider-electric.gr/sites/greece/gr/support/contact/we-care.page';
-					$categoryData['support_tel'] = '8001162900';
+					$categoryData['support_tel'] = '8001162900 (επιλογή 3)';
 					break;
 				case 'DELL':
 					$categoryData['support_url'] = 'http://www1.euro.dell.com/content/topics/topic.aspx/emea/contact/elgr?c=gr&l=el';
-					$categoryData['support_tel'] = '80044149518';
+					$categoryData['support_tel'] = '80044149518 / 2108129810 / 2108129855';
 					break;
 				case 'HP':
 					$categoryData['support_url'] = 'http://support.hp.com/gr-el/';
-					$categoryData['support_tel'] = '80111225547';
+					$categoryData['support_tel'] = '80111225547 / 2109696416 ';
 					break;
 				case 'ACER':
-					$categoryData['support_url'] = '';
+					$categoryData['support_url'] = 'http://www.acer.com/ac/el/GR/content/service-contact';
 					$categoryData['support_tel'] = '8015002000';
 					break;
 				/*case 'INTEL':
@@ -2275,9 +2277,8 @@ class Live_model extends CI_Model {
 					$categoryData['support_tel'] = '';
 					break;*/
 				case 'PHILIPS':
-				case 'Philips':
 					$categoryData['support_url'] = 'http://www.philips.gr/c-m/consumer-support';
-					$categoryData['support_tel'] = '00800 3122 1223';
+					$categoryData['support_tel'] = '80031221223';
 					break;
 				case 'AOC':
 					$categoryData['support_url'] = 'www.aoc-service.com ';
@@ -2288,13 +2289,45 @@ class Live_model extends CI_Model {
 					$categoryData['support_tel'] = '2105197500';
 					break;
 				case 'LENOVO':
-					$categoryData['support_url'] = '';
-					$categoryData['support_tel'] = '2111984507';
+					$categoryData['support_url'] = 'http://support.lenovo.com/gr/en';
+					$categoryData['support_tel'] = '2111984507(Idea) / 2104800499(Think)';
 					break;
 				case 'LG':
 				case 'LG ELECTRONICS':
 					$categoryData['support_url'] = 'http://www.lg.com/gr/support';
 					$categoryData['support_tel'] = '80111200900';
+					break;
+				case 'VIEWSONIC':
+					$categoryData['support_url'] = 'http://www.alman.gr/el/';
+					$categoryData['support_tel'] = '2102409150';
+					break;
+				case 'ASUS':
+					$categoryData['support_url'] = '';
+					$categoryData['support_tel'] = '80044142044';
+					break;
+				case 'GIGASET':
+					$categoryData['support_url'] = '';
+					$categoryData['support_tel'] = '2106619010';
+					break;
+				case 'GIGASET':
+					$categoryData['support_url'] = '';
+					$categoryData['support_tel'] = '2106619010';
+					break;
+				case 'MICROSOFT':
+					$categoryData['support_url'] = '';
+					$categoryData['support_tel'] = '2111206000';
+					break;
+				case 'SAMSUNG':
+					$categoryData['support_url'] = '';
+					$categoryData['support_tel'] = '801117267864 ή 2106897691';
+					break;
+				case 'TP-LINK':
+					$categoryData['support_url'] = '';
+					$categoryData['support_tel'] = '2106148834';
+					break;
+				case 'MSI':
+					$categoryData['support_url'] = '';
+					$categoryData['support_tel'] = '2106995825';
 					break;
 				default:
 					break;
