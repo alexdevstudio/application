@@ -14,6 +14,7 @@ class Crud_model extends CI_Model {
 
   public function update($table, $where, $data){
 		
+    $this->dataValidation($table, $data);
 		$this->db->where($where);
 		$this->db->set($data);
 		return $this->db->update($table);
@@ -32,9 +33,26 @@ class Crud_model extends CI_Model {
   public function delete($table, $where){
         
         $this->db->where($where);
-        return $this->db->delete($table);
+        $sql = $this->db->delete($table);
+
+        if($this->db->affected_rows > 0){
+          return $sql;
+        }else{
+          return false;
+        }
   }
 
+  public function deleteWp($table, $where){
+        $wpdb = $this->load->database('wordpress', TRUE);
+        $wpdb->where($where);
+        $wpdb->delete($table);
+
+        if($wpdb->affected_rows > 0){
+          return true;
+        }else{
+          return false;
+        }
+  }
   
 
   public function get($category, $where=null){
@@ -77,6 +95,7 @@ class Crud_model extends CI_Model {
     }
     public function insert($table, $data){
 
+        $this->dataValidation($table, $data);
         $item = $this->db->insert($table, $data);
 
         if($this->db->affected_rows()>0){
@@ -119,6 +138,23 @@ public function insertWp($table, $data){
       $result = $this->db->get();
 
       return $result;
+    }
+
+    private function dataValidation($table, $data)
+    {
+      foreach ($data as $key => $value) {
+          $variable= strtolower($value);
+          if($value=='yes' || $value=='nai' || $value=='ναι' || $value=='ναί')
+            $data[$key]='ΝΑΙ';
+          elseif($value=='no' || $value=='νο' || $value=='οχι' || $value=='όχι')
+            $data[$key]='ΟΧΙ';
+
+          if (($table=='laptops' || $table=='desktops' || $table=='smartphones' || $table=='tablets') && $key=='screen_resolution')
+            $data[$key]= str_replace(' x ', 'x', $value);
+
+         // if()
+        }
+        return $data;
     }
 
 }

@@ -22,12 +22,6 @@ class Profit_rates extends MX_Controller {
 	public function index()//$s stands for supplier
 	{	
 
-		//Insert from laptops Tables to Msi price table
-
-		//$allLaptops = $this->getMsi();
-		//$this->insertNewLaptops($allLaptops);
-
-		//Get all laptops from Msi_price table
 		$rates_table = $this->getRatesTable();
 
 		$data['title'] = 'Ποσοστά Κέρδους ανα κατηγορία';
@@ -72,8 +66,6 @@ class Profit_rates extends MX_Controller {
 		$category = $_POST['category'];
 		$rate = $_POST['rate'];
 		$rate = $rate/100;
-
-		
 
 		if(trim($rate)=='')
 			$rate = '0.06';

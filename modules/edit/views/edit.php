@@ -1,7 +1,7 @@
 
 <div class="sections col-xs-12">
 	<section class="content-header">
-		<h1>Επεξεργασία προϊόντος</h1>  
+	
 		<br>	   
     </section> 
 
@@ -117,11 +117,23 @@ if($itemLive){
 </div>
 <div class="form-group">
 	                  	
+<label>Μέγιστος Αριθμός Άτοκων Δόσεων</label>
+
+<div class="input-group">
+    <input class='form-control' name='installments' type="number" id='installments' value='<?= $installments; ?>'>
+    <span style="cursor:pointer;color:#dd4b39;" class="input-group-addon" id="basic-addon1" onclick='clearPrice("installments");' title="Εκκαθάριση δόσεων">X</span>
+</div>
+
+
+
+</div>
+<div style=''class="form-group">
+	                  	
 <label>Τιμή Προσφοράς</label>
 
 <div class="input-group">
     <input class='form-control' name='sale_price' id='sale_price' value='<?= $sale_price; ?>'>
-    <span style="cursor:pointer;color:#dd4b39;" class="input-group-addon" id="basic-addon1" onclick='clearPrice("sale");' title="Εκκαθάριση τιμής">X</span>
+    <span style="cursor:pointer;color:#dd4b39;" class="input-group-addon" id="basic-addon1" onclick='clearPrice("sale_price");' title="Εκκαθάριση τιμής">X</span>
 </div>
 	
 
@@ -272,18 +284,9 @@ if($itemLive){
 	/*$(document).ready(function(){*/
 
 			function clearPrice(a){
-				if(a == 'regular'){
-					$('#regular').val('');
-					
-				}
-
-				if(a == 'sale'){
-					$('#sale_price').val('');
-					
-
-				}
+				$('#'+a).val('');
 			}
 
 /*});*/
 
-</script>>
+</script>

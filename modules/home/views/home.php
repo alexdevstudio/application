@@ -1,61 +1,62 @@
 <?php
 	$tables = Modules::run('categories/fullCategoriesArray');
 ?>
-	<div class="suppliers sections col-xs-12">
+	<div class="suppliers sections col-sm-8 col-xs-12">
+		
 		<section class="content-header">
 	      <h1>1. Ενημέρωση αποθήκης </h1>  
 	      <br>	   
 	    </section> 
-		<div class="supplier-item col-sm-4 col-md-2">
+		<div class="supplier-item col-sm-4 col-md-3">
 			<div class="color-palette-set text-center">
 				<div class="bg-orange-active color-palette ">
 					<a href="./live/index/oktabit" style="color:#fff;display:block"><br /><span >Oktabit</span><br /><br /></a>
 				</div>
 			</div>
 		</div>
-		<div class="supplier-item col-sm-4 col-md-2">
+		<div class="supplier-item col-sm-4 col-md-3">
 			<div class="color-palette-set text-center">
 				<div class="bg-light-blue color-palette ">
 					<a href="./live/index/logicom" style="color:#fff;display:block"><br /><span >Logicom - Enet</span><br /><br /></a>
 				</div>
 			</div>
 		</div> 
-		<div class="supplier-item col-sm-4 col-md-2">
+		<div class="supplier-item col-sm-4 col-md-3">
 			<div class="color-palette-set text-center">
 				<div class="bg-green color-palette ">
 					<a href="./live/index/braintrust" style="color:#fff;display:block"><br /><span >BrainTrust</span><br /><br /></a>
 				</div>
 			</div>
 		</div> 
-		<div class="supplier-item col-sm-4 col-md-2">
+		<div class="supplier-item col-sm-4 col-md-3">
 			<div class="color-palette-set text-center">
 				<div class="bg-red color-palette ">
 					<a href="./live/index/ddc" style="color:#fff;display:block"><br /><span >Digital Data</span><br /><br /></a>
 				</div>
 			</div>
 		</div> 
-		<div class="supplier-item col-sm-4 col-md-2">
+		<div class="supplier-item col-sm-4 col-md-3">
 			<div class="color-palette-set text-center">
 				<div class="bg-navy color-palette ">
 					<a href="./live/index/copiers" style="color:#fff;display:block"><br /><span >Copiers</span><br /><br /></a>
 				</div>
 			</div>
 		</div>
-		<div class="supplier-item col-sm-4 col-md-2">
+		<div class="supplier-item col-sm-4 col-md-3">
 			<div class="color-palette-set text-center">
 				<div class="bg-red color-palette ">
 					<a href="./live/index/cpi" style="color:#fff;display:block"><br /><span >CPI</span><br /><br /></a>
 				</div>
 			</div>
 		</div>
-		<div class="supplier-item col-sm-4 col-md-2">
+		<div class="supplier-item col-sm-4 col-md-3">
 			<div class="color-palette-set text-center">
 				<div class="bg-red color-palette ">
 					<a href="./live/index/westnet" style="color:#fff;display:block"><br /><span >Westnet</span><br /><br /></a>
 				</div>
 			</div>
 		</div>
-		<div class="supplier-item col-sm-4 col-md-2">
+		<div class="supplier-item col-sm-4 col-md-3">
 			<div class="color-palette-set text-center">
 				<div class="bg-orange-active color-palette ">
 					<a href="./live/index/partnernet" style="color:#fff;display:block"><br /><span >PartnerNet</span><br /><br /></a>
@@ -70,8 +71,7 @@
 				</div>
 			</div>
 		</div>  -->
-	</div> 
-	<div class="sections col-xs-12">
+	<div class="clearfix"></div>
 		<section class="content-header">
 	      	<h1>2. Δημιουργία XML με νέα προϊόντα </h1>
 	      <br>	
@@ -82,8 +82,19 @@
 				<label>Κατηγορίες Προϊόντων</label>
 				<select id="SelectTable" class="form-control">
 				<?php foreach($tables as $table){?>
+					<?php
+					$this->db->where('new_item', 1); 
+                    $query = $this->db->get($table); 
 
-					<option onclick='linkGenerator("<?= $table; ?>")'><?= ucfirst($table); ?></option>
+                    $rows = $query->num_rows();
+
+                    if($rows<1)
+                    	$rows='';
+                    else
+                    	$rows ="______($rows)";
+					?>
+
+					<option onclick='linkGenerator("<?= $table; ?>")'><?php echo ucfirst($table); echo $rows;  ?></option>
 				<?php } ?>
 				</select>
 				<input type="checkbox" name="all_product" value="all" id="isAllSelected"> Όλα τα Προϊόντα<br>
@@ -123,14 +134,17 @@
 				    });
 			</script>
 		</div>
-	</div>
-
-	<div class="col-sm-6 col-md-6">
-		<div class="sections col-xs-12">
-			<section class="row content-header">
+	
+<div class="clearfix"></div>
+	
+		
+			
+			
+			<section class=" content-header">
 			      <h1>3. Ενημέρωση Χαρακτηριστικών</h1>
 			      <br>	
 			</section>
+			<div class=" col-xs-12 col-sm-6">
 			<div class="form-group">
 				<label>Επιλέξτε τη κατηγορία των προϊόντων που θέλετε να ενημερώσετε</label>
 
@@ -150,79 +164,15 @@
 				 	<label for="updateXml">Επιλέξτε XML Αρχείου</label>
 				 	<input id="updateXml" name="file" type="file">
 					</br>
-					<div class="col-sm-4 row">
+					
 						<button type="button" id="uploadSubmit" class="btn pull-left btn-danger">Ενημέρωση</button>
 						<img src="<?= base_url()?>/assets/images/loader.gif" id="updateLoader" class="pull-left loader" style="display:none;"/>
-					</div>
+					
 				</form>
 			</div><!-- <div class="form-group"> -->
-			<script>
-				function category(){
-					return $('#categories').val();
-				}
-						
-				function updateToggle(){
-					$('#uploadSubmit').toggle();
-					$('#updateLoader').toggle();
-				}
-
-				$(function(){
-					var inputFile = $('#updateXml');
-					//var category = $('#categories').val();
-
-					var uloadUri = $('#charUpdate').attr('action');
-
-					$('#uploadSubmit').on('click',function(event){
-
-						updateToggle();
-
-						var fileToUpload = inputFile[0].files[0];
-
-						//check if there is actually file to upload
-						var cat = category();
-						if(cat == ''){
-							alert('Δεν έχετε επιλέξει κατηγορία');
-							updateToggle();
-							return false;
-						}
-						if(fileToUpload !='undefined'){
-
-							var formData = new FormData();
-							
-							formData.append('file', fileToUpload);
-							formData.append('cat', cat);
-
-							$.ajax({
-
-								url: uloadUri,
-								type: 'post',
-								data: formData,
-								processData:false,
-								contentType:false,
-								success: function(data){
-									if(data=='ok'){
-										$('#updateXml').val('');
-										$('#categories').val('');
-										alert('Τα προϊόντα ενημερώθηκαν.');
-										updateToggle();
-									}else{
-										alert(data);
-										updateToggle();
-									}
-								}
-							});
-						}
-						else {
-							alert('Δεν έχετε επιλέξει αρχείο');
-							updateToggle();
-						}
-					});
-				});
-			</script>
-		</div>
-	</div>
-	<div class="col-xs-12">
-		<div class="sections col-xs-6">
+			</div>
+			
+	<div class="clearfix"></div>
 			<section class="content-header">
 		    	<h1>4. Δημιουργία XML για All Import</h1>
 		      	<br>	
@@ -279,6 +229,102 @@
 		    	<a href="http://etd.gr/xml/extract/allImport/all" target="_blank" class="btn pull-left btn-danger" role="button">Ενημέρωση</a>
 			</div>
 			
-		</div>
-	</div>
+		
 </div><!-- EEEE -->
+
+<div style="background:#fff;" class="col-sm-4 col-xs-12">
+			<section class="content-header">
+		    	<h1 style="text-align:center;">Σε Απόθεμα</h1>
+		      	<br>	
+		    </section>
+
+		    <?php
+
+		    $where = array(
+		    	'supplier'=>'etd'
+		    	);
+
+                $stock = Modules::run('crud/get','live',$where);
+               // print_r($stock->result_array());
+                $cat_array = array();
+                $out = '';
+                foreach ($stock->result_array() as $items) {
+                	$category = $items['category'];
+                	$cat_array[] = $category;
+                	
+
+                	$product_number = $items['product_number'];
+                	$where =array(
+						'product_number'=>$product_number
+                		);
+
+                	$item = Modules::run('crud/get', $category, $where);
+                	$sku =  $item->row()->sku;
+                	$title = $item->row()->title;
+                	@$price = $items['price_tax'];
+                	if(!$price){
+                		$price = '<span style="color:red;">Δεν υπάρχει τιμή</span>';
+                	}else{
+                		$price = "€ $price";
+                	}
+
+                	$img = Modules::run('images/getFirstImage', $sku, true);
+					
+					$out.=' <div class="instock_item clearfix" data-category="'.$category.'">
+					                			'.$img.'
+					        <h5><a href="http://etd.gr/xml/edit/'.$category.'/'.$sku.'">'.$title.'</a></h5>
+					        <strong style="color:#0fc504;">SKU: '.$sku.'</strong>
+					        <span class="instock_item_price">
+					        Τιμή στο site: '.$price.'
+					        </span>
+
+
+					        </div>';
+                	
+                	//print_r($item->result_array());
+                }
+
+?>
+<div class="instock_filter">
+	<span class="active_filter instock_filter_item" id="all">Όλα :<?php echo count($cat_array); ?></span>
+
+<?php
+$cats = array_count_values($cat_array);
+
+foreach ($cats as $key => $value) {
+	?>
+
+	<span class=" instock_filter_item" id="<?= $key; ?>"><?php echo ucfirst($key).': '. $value; ?></span>
+
+	<?php
+}
+
+?>
+</div>
+<?php
+echo $out;
+
+		    ?>
+
+
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$('.instock_filter_item').on('click',function(){
+		var id = $(this).attr('id');
+		$('.instock_filter_item').removeClass('active_filter');
+		$('#'+id).addClass('active_filter');
+
+		if(id=='all'){
+			$('.instock_item').removeClass('to_hide');
+		}else{
+
+			$('.instock_item').addClass('to_hide');
+			$('.instock_item[data-category="'+id+'"]').removeClass('to_hide');
+		}
+
+	});
+});
+	
+</script>

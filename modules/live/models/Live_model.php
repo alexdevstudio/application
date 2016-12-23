@@ -297,6 +297,7 @@ class Live_model extends CI_Model {
 					$okt_product['type'] = $sc;
 					$okt_product['dist_type'] = $dist_type;
 					$okt_product['shipping_class'] = 4644;
+					$okt_product['volumetric_weight'] = 2;
 
 					if (strstr ($title,'DSP'))
 						$okt_product['dist_type'] = 'DSP';
@@ -396,9 +397,9 @@ class Live_model extends CI_Model {
 
 			$availability = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
 
-			$net_price = str_replace(",", ".", $product->price);
-			$net_price = str_replace("€", "", $product->price);
-			$net_price = (string) trim($net_price);
+			$net_price = str_replace(".", "", $product->price);
+			$net_price = str_replace("€", "", $net_price);
+			$net_price = (float) $net_price;
 
 			$pn = (string) trim($product->sku);
 			$model = (string) trim($product->model);
@@ -679,6 +680,7 @@ class Live_model extends CI_Model {
 				{
 					$log_product['type'] = $sc;
 					$log_product['shipping_class'] = 4644;
+					$log_product['volumetric_weight'] = 2;
 					if (strstr ($title,'DSP'))
 						$log_product['dist_type'] = 'DSP';
 					elseif(strstr ($title,'Reseller Option Kit') || strstr ($title,'ROK'))
@@ -1155,7 +1157,7 @@ class Live_model extends CI_Model {
 
 			switch ($cat) {
 				case 'Notebook':
-					if($brand == 'MSI' || $brand == 'ACER')
+					if($brand == 'MSI')// || $brand == 'ACER')
 						$c = 'laptops';
 					else
 						$c = $cat;
@@ -1239,12 +1241,15 @@ class Live_model extends CI_Model {
 
 				if($c == 'laptops')
 				{
-					$first = strpos($description, 'NB ')+3;
-					$last = strpos($description, ', ');
-					$diff = $last-$first;
-	
-					$title = substr($description, $first, $diff);
-					$title = "MSI ".$title;
+						$first = strpos($description, 'NB ')+3;
+						$last = strpos($description, ', ');
+						$diff = $last-$first;
+		
+						$title = substr($description, $first, $diff);
+					if($brand == 'MSI')
+						$title = "MSI ".$title;
+					/*elseif($brand == 'ACER')
+						$title = "ACER ".$title;*/
 				}
 				elseif($c == 'desktops')
 				{
@@ -1750,6 +1755,7 @@ class Live_model extends CI_Model {
 					'Accounts' => $Accounts ,
 					'Accounts_Software' => $Accounts_Software,
 					'shipping_class' => 4682
+					//'volumetric_weight'???
 				);
 
 				//2. New products for charateristics tables that load Sku module
@@ -2095,6 +2101,9 @@ class Live_model extends CI_Model {
 
 
 			//$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
+	
+		//Do not forget volumetric_weight if needed!!!!!!!!!!!!!!!!!!
+
 			//$chars_array = array_merge($chars_array, array("shipping_class"=>$shipping_class));
 			//$chars_array = array_merge($chars_array, array("description"=>$product['description']));
 			$this->updateProduct($c, $chars_array, $product['product_number']);
@@ -2111,6 +2120,7 @@ class Live_model extends CI_Model {
 			
 			if($c == 'cartridges' || $c == 'toners'){
 				$shipping_class = Modules::run('categories/makeShippingClass', $product, $c);
+				$volumetric_weight = Modules::run('categories/getWeight', $shipping_class);
 				
 				$categoryData = array(
 				'brand'=> $product['brand'], 
@@ -2118,14 +2128,16 @@ class Live_model extends CI_Model {
 				'product_number'=> $product['product_number'],
 				'title'=> $product['title'],
 				'supplier_product_url'=> $product['product_url'],
-				'shipping_class' => $shipping_class
+				'shipping_class' => $shipping_class,
+				'volumetric_weight' =>$volumetric_weight
 
 				);
 			}elseif($c == 'printers' || $c == 'multifunction_printers'){
 				
-				$price = array('price'=>$product['net_price']);
+				//$price = array('price'=>$product['net_price']);
 				
-				$shipping_class  = Modules::run('categories/makeShippingClass',$price, $c, true);
+				//$shipping_class  = Modules::run('categories/makeShippingClass',$price, $c, true);
+				//$volumetric_weight = Modules::run('categories/getWeight', $shipping_class);
 				$categoryData = array(
 				'brand'=> $product['brand'],
 				'sku'=> $sku,
@@ -2133,7 +2145,8 @@ class Live_model extends CI_Model {
 				'title'=> $product['title'],
 				'description'=> strip_tags($product['description']),
 				'supplier_product_url'=> $product['product_url'],
-				'shipping_class' => $shipping_class
+				//'shipping_class' => $shipping_class,
+				//'volumetric_weight' => $volumetric_weight
 				);
 			}
 			elseif($c == 'software'){
@@ -2147,7 +2160,8 @@ class Live_model extends CI_Model {
 				'dist_type'=> $product['dist_type'],
 				'description'=> strip_tags($product['description']),
 				'supplier_product_url'=> $product['product_url'],
-				'shipping_class' => $product['shipping_class']
+				'shipping_class' => $product['shipping_class'],
+				'volumetric_weight' => $product['volumetric_weight']
 				);
 
 			}elseif($c == "copiers"){
@@ -2158,24 +2172,28 @@ class Live_model extends CI_Model {
 			}
 			elseif($c == 'hoverboards'){
 				$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
+				$volumetric_weight = Modules::run('categories/getWeight', $shipping_class);
 				$categoryData = array(
 				'brand'=> $product['brand'],
 				'sku'=> $sku,
 				'product_number'=> $product['product_number'],
 				'title'=> $product['title'],
 				'description'=> strip_tags($product['description']),
-				'shipping_class' => $shipping_class
+				'shipping_class' => $shipping_class,
+				'volumetric_weight' => $volumetric_weight
 				);
 			}elseif($supplier == 'partnernet'){
 				
 				$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
+				$volumetric_weight = Modules::run('categories/getWeight', $shipping_class);
 				$categoryData = array(
 				'brand'=> $product['brand'],
 				'sku'=> $sku,
 				'product_number'=> $product['product_number'],
 				'title'=> $product['title'],
 				'description'=>'',
-				'shipping_class' => $shipping_class
+				'shipping_class' => $shipping_class,
+				'volumetric_weight' => $volumetric_weight
 				);
 
 
@@ -2185,13 +2203,16 @@ class Live_model extends CI_Model {
 				$shipping_class = '';
 				if($c == "carrying_cases" || $c == "external_hard_drives" ||
 				 $c == "sata_hard_drives" || $c == "ssd" || $c == "speakers" || 
-				 $c == "power_banks" || $c == "keyboard_mouse"  || 
+				 $c == "power_bank" || $c == "keyboard_mouse"  || $c == "servers"  || 
 				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c== "desktops" || $c == "tablets"  || $c == "smartphones" ||
 				 $c == "cables" || $c == "patch_panels" || $c == "racks" || $c =="optical_drives" || $c == "card_readers" || $c == "flash_drives" || 
 				 $c == "power_supplies" || $c == "cases" || $c == "fans" || $c == "motherboards" || $c == "graphic_cards" || $c == "cpu" || 
-				 $c == "memories" || $c == "hoverboards")		
-					$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
+				 $c == "memories" || $c == "hoverboards"){
 
+
+					$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
+					$volumetric_weight = Modules::run('categories/getWeight', $shipping_class);
+				}	
 				$categoryData = array(
 				'brand'=> $product['brand'],
 				'sku'=> $sku,
@@ -2199,7 +2220,8 @@ class Live_model extends CI_Model {
 				'title'=> $product['title'],
 				'description'=> strip_tags($product['description']),
 				'supplier_product_url'=> $product['product_url'],
-				'shipping_class' => $shipping_class
+				'shipping_class' => $shipping_class,
+				'volumetric_weight' => $volumetric_weight
 				);
 
 				if($c == "cables" || $c == "patch_panels" || $c == "racks"){
@@ -2225,6 +2247,7 @@ class Live_model extends CI_Model {
 					$categoryData = array_merge($categoryData, $chars_array);
 				}
 			}
+			
 			if($supplier == 'braintrust' && $c != "laptops")
 			{
 				$categoryData ['new_item'] = 1;
@@ -2242,6 +2265,10 @@ class Live_model extends CI_Model {
 				case 'HP':
 					$categoryData['support_url'] = 'http://support.hp.com/gr-el/';
 					$categoryData['support_tel'] = '80111225547';
+					break;
+				case 'ACER':
+					$categoryData['support_url'] = '';
+					$categoryData['support_tel'] = '8015002000';
 					break;
 				/*case 'INTEL':
 					$categoryData['support_url'] = '';
@@ -2287,13 +2314,13 @@ class Live_model extends CI_Model {
 			$this->AddProductImages($product, $f, $supplier, $sku);
 			
 		}//if($sku = Modules::run('sku/checkSku',$skuArray)){
-		else
+		/*else
 		{
 			if($c == 'printers' || $c == 'multifunction_printers'){
 				$price = array('price'=>(float)$product['net_price']);
 				//print_r($price['price']);
 				$shipping_class  = Modules::run('categories/makeShippingClass',$price, $c, true);
-					
+					//Must add volumetricWeight!!!
 				$this->db->set('shipping_class',$shipping_class);
 				$this->db->where('sku',$sku);
 				$this->db->update($c);
@@ -2301,8 +2328,8 @@ class Live_model extends CI_Model {
 			/*else if($c == 'memories') //Fix for updating image 
 			{
 				$mem_images = $this->AddProductImages($product, $f, $supplier, $sku);
-			}*/
-    	}
+			}
+    	}*/
 
     	return $insert;
     }
@@ -4168,7 +4195,10 @@ class Live_model extends CI_Model {
 	    			return false;
 	    			break;
 
-	    		} 
+	    		}
+
+	    	return $av; 
+
 	    	}elseif( $supplier == 'braintrust'){
 
     		switch ($availability) {

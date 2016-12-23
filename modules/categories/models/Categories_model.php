@@ -77,9 +77,40 @@ $fa = 0;
     						exit();
     				}*/
     			$data['new_item']=0;
-    			if($table=="desktops" || $table == "monitors" || $table == "ups")
-    			$data['shipping_class'] = $this->makeShippingClass($data, $table);
-					
+    			if($table=="desktops" || $table == "monitors" || $table == "ups" ){
+    			    $data['shipping_class'] = $this->makeShippingClass($data, $table);
+    			}
+    			$vw = $data['volumetric_weight'];
+
+    			if($vw=='' || $vw == 0 ){
+
+    				if($table == "printers" || $table == "multifunction_printers") {
+
+    					$dimensions = $data['dimensions'];
+						$data['volumetric_weight'] = $this->volumeWeight($dimensions);
+    			   		
+
+						if(!$data['volumetric_weight']){
+    						
+    						$data['new_item']=1;
+
+						}
+    				}
+    				else
+    				{
+
+    					$data['volumetric_weight'] = $this->getWeight($data['shipping_class']);
+    				}
+    			}
+
+
+    			if($table == "printers" || $table == "multifunction_printers"){
+    				$data['shipping_class'] = $this->makeShippingClass($data, $table);
+    			}
+
+
+				
+				
 				$this->db->where('sku', $sku );
 				$query = $this->db->get($table);
 
@@ -97,56 +128,79 @@ $fa = 0;
     		}
 
     		$message = 'Η ενημέρωση των '.$table.' ολοκληρώθηκε με επιτυχία.';
-    		echo $message;
+    		return $message;
 
 
     }
 
+public function volumeWeight($dimensions){
 
+
+
+	//String sanitize
+	$dimensions = str_replace(' ','', $dimensions);
+	$dimensions = str_replace('mm','', $dimensions);
+	$dimensions = str_replace('.',',', $dimensions);
+	$dimensions = str_replace('X','x', $dimensions);
+
+	//Create an array
+	$da = explode("x",$dimensions);
+	
+	if(count($da) != 3){
+
+		return false;
+	}
+
+	$vweight = (((int) $da[0]/10+10)*((int) $da[1]/10+10)*((int) $da[2]/10+10))/5000;
+
+	$vweight = ceil($vweight);
+	
+
+	return $vweight;
+	
+
+
+
+
+
+}
 
 public function makeShippingClass($data, $cat, $dynamic = null){
 
-	if($dynamic){
-		
+	
+
 		switch ($cat) {
 
 			case 'printers':
+			case 'multifunction_printers':
 						
-						$price = (float) $data['price'];
-						if($price >= 600)
+						$vweight = (int) $data['volumetric_weight'];
+
+
+
+						if($vweight > 35)
+							$shipping_class= 9974;
+						elseif($vweight > 30)
+							$shipping_class= 4682;
+						elseif($vweight > 26)
+							$shipping_class= 4681;
+						elseif($vweight > 23)
+							$shipping_class= 4680;
+						elseif($vweight > 20)
+							$shipping_class= 4679;
+						elseif($vweight > 17)
+							$shipping_class= 4678;
+						elseif($vweight > 14)
 							$shipping_class= 4654;
-						elseif($price >= 320)
+						elseif($vweight > 11)
 							$shipping_class= 4653;
-						elseif($price >= 200)
+						elseif($vweight > 8)
 							$shipping_class= 4652;
-						elseif($price >= 120)
+						elseif($vweight > 5)
 							$shipping_class= 4651;
 						else
 							$shipping_class= 4650;
 						break;
-				
-			case 'multifunction_printers':
-					
-						$price = (float) $data['price'];
-						if($price >= 600)
-							$shipping_class= 4682;
-						elseif($price >= 320)
-							$shipping_class= 4681;
-						elseif($price >= 200)
-							$shipping_class= 4680;
-						elseif($price >= 120)
-							$shipping_class= 4679;
-						else
-							$shipping_class= 4678;
-						break;
-				default:
-						return false;
-						break; 
-			
-		}								
-	}else{
-
-		switch ($cat) {
 
 			case 'laptops':
 					$shipping_class= 4636;
@@ -170,16 +224,27 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					break;
 			case 'monitors':
 
-			$size = (float) $data['screen_size'];
-					if($size >= 42)
-						$shipping_class= 4667;
-					elseif($size >= 32)
-						$shipping_class= 4666;
-					elseif($size >= 25)
-						$shipping_class= 4665;
+					$size = (float) $data['screen_size'];
+					$pn = $data['product_number'];
+					if($data['brand']=='DELL' && $size >= 24 && $size <= 25 && (substr($pn, 0, 1) === 'U' || substr($pn, 0, 1) === 'u') ){
+									
+						$shipping_class= 9393;
+						
+					}
+						
 					else
-						$shipping_class= 4664;
+					{
+						if($size >= 42)
+							$shipping_class= 4667;
+						elseif($size >= 32)
+							$shipping_class= 4666;
+						elseif($size >= 25)
+							$shipping_class= 4665;
+						else
+							$shipping_class= 4664;
+					}
 					break;
+
 			case 'routers':
 					$shipping_class= 4671;
 					break;
@@ -196,7 +261,7 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					$strength=(int) $data['strength'];
 					
 					if( $strength >= 3001)
-						$shipping_class= 4682;
+						$shipping_class= 9974;
 					elseif( $strength >= 1501)
 						$shipping_class = 4669;
 					else
@@ -244,13 +309,14 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					break;
 
 			case 'cables':
+			case 'cable_accessories':
 					$shipping_class= 4644;
 					break;
 			case 'patch_panels':
 					$shipping_class= 4675;
 					break;
 			case 'racks':
-					$shipping_class= 4682;
+					$shipping_class= 9974;
 					break;
 			case 'optical_drives':
 					$shipping_class = 4662;
@@ -292,6 +358,7 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					$shipping_class = 4636;
 					break;
 		    case 'ip_phones':
+		    case 'docking_stations':
 					$shipping_class = 4676;
 					break;
 			case 'ip_pbx':
@@ -303,9 +370,37 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 	
 			}
 	
-		}
+		
      
       return $shipping_class;
+    }
+
+    public function getWeight($shipping_class){
+      $sc_array = array('4636' =>5,
+						'4644' =>2,
+						'4660' =>9,
+						'4661' =>13,
+						'4662' =>2,
+						'4663' =>2,
+						'4664' =>5,
+						'4665' =>19,
+						'4666' =>32,
+						'4667' =>46,
+						'4668' =>13,
+						'4669' =>40,
+						'4670' =>2,
+						'4671' =>2,
+						'4672' =>2,
+						'4673' =>3,
+						'4674' =>2,
+						'4675' =>2,
+						'4676' =>2,
+						'4677' =>2,
+						'4686' =>4,
+						'9393' =>16
+						);
+
+    	return $sc_array[$shipping_class];
     }
    
 
