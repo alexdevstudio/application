@@ -240,6 +240,8 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 							$shipping_class= 4666;
 						elseif($size >= 25)
 							$shipping_class= 4665;
+						elseif($size >= 22)
+							$shipping_class= 10019;
 						else
 							$shipping_class= 4664;
 					}
@@ -397,7 +399,8 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 						'4676' =>2,
 						'4677' =>2,
 						'4686' =>4,
-						'9393' =>16
+						'9393' =>16,
+						'10019' =>6
 						);
 
     	return $sc_array[$shipping_class];

@@ -88,7 +88,7 @@ class Categories extends MX_Controller {
 
 
 
-     		if($cat=='servers'  ){
+     		if($cat=='monitors'  ){
 
      			$products = Modules::run('crud/get', $cat);
      			$products = $products->result_array();
@@ -99,7 +99,7 @@ class Categories extends MX_Controller {
      			}
      			
      		}
-     		echo "$cat: OK<br />";
+     		//echo "$cat: OK<br />";
      	}
      }
 }
