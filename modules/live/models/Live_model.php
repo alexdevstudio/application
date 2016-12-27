@@ -2132,7 +2132,7 @@ class Live_model extends CI_Model {
 				'volumetric_weight' =>$volumetric_weight
 
 				);
-			}elseif($c == 'printers' || $c == 'multifunction_printers'){
+			}elseif($c == 'printers' || $c == 'multifunction_printers' || $c == 'monitors'){
 				
 				//$price = array('price'=>$product['net_price']);
 				
