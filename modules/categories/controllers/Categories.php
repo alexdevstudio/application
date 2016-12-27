@@ -97,10 +97,10 @@ class Categories extends MX_Controller {
      				$volumetric_weight = $this->getWeight($product['shipping_class']);
      				Modules::run('crud/update', $cat, array('sku'=>$sku), array('volumetric_weight'=>$volumetric_weight));
      			}
-     			
-     		}
-     		//echo "$cat: OK<br />";
+            }
+                 			
      	}
+     		//echo "$cat: OK<br />";
      }
 }
 ?>
