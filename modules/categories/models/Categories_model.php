@@ -224,6 +224,11 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					break;
 			case 'monitors':
 
+			$vweight = (int) $data['volumetric_weight'];
+				if($vweight!=''){
+					$shipping_class=$this->shippingByWeight($vweight);					
+				}else{
+
 					$size = (float) $data['screen_size'];
 					$pn = $data['product_number'];
 					if($data['brand']=='DELL' && $size >= 24 && $size <= 25 && (substr($pn, 0, 1) === 'U' || substr($pn, 0, 1) === 'u') ){
@@ -245,6 +250,8 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 						else
 							$shipping_class= 4664;
 					}
+
+				}
 					break;
 
 			case 'routers':
@@ -375,6 +382,64 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 		
      
       return $shipping_class;
+    }
+
+
+    public function shippingByWeight($vweight){
+    	$vweight = (float) $vweight;
+
+
+    	switch ($vweight) {
+    		case 5:
+    			$shipping_class = 10063;
+    			break;
+    		case 6:
+    			$shipping_class = 10019;
+    			break;
+    		case 7:
+    			$shipping_class = 10064;
+    			break;
+    		case 8:
+    			$shipping_class = 10065;
+    			break;
+    		case 9:
+    			$shipping_class = 10066;
+    			break;
+    		case 10:
+    			$shipping_class = 10067;
+    			break;
+    		case 11:
+    			$shipping_class = 10068;
+    			break;
+    		case 12:
+    			$shipping_class = 10069;
+    			break;
+    		case 13:
+    			$shipping_class = 10070;
+    			break;
+    		case 14:
+    			$shipping_class = 10071;
+    			break;
+    		case 15:
+    			$shipping_class = 10072;
+    			break;
+    		case 16:
+    			$shipping_class = 10073;
+    			break;
+    		case 17:
+    			$shipping_class = 10074;
+    			break;
+    		case 18:
+    			$shipping_class = 10075;
+    			break;
+    		
+    		default:
+    			$shipping_class = 4679;
+    			break;
+    	}
+    			//exit($shipping_class);
+
+    	return $shipping_class;
     }
 
     public function getWeight($shipping_class){

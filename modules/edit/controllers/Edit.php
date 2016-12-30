@@ -96,32 +96,42 @@ class Edit extends MX_Controller {
 					unset ($post['status']);
 					$where = array('sku'=>$sku);
 
-
-					if($category!='printers' && $category != 'multifunction_printers'){
-						
+					$vweight = trim($post['volumetric_weight']);
 					
+					if($vweight!='' && ($category=='monitors' || $category=='desktops')){
+						
 
-
-						if($post['shipping_class']==''){
-							$post['shipping_class'] = Modules::run('categories/makeShippingClass',$post,$category);
-						}
-
-
-
-						if($post['shipping_class']!='' && $post['volumetric_weight']==''){
-							$post['volumetric_weight'] = Modules::run('categories/getWeight',$post['shipping_class']);
-						}
-
+						$post['shipping_class'] = Modules::run('categories/shippingByWeight', $vweight);
 
 					}else{
-						
-						if($post['volumetric_weight']==''){
-							$post['volumetric_weight'] = Modules::run('categories/volumeWeight', $post['dimensions']);
-						}
 
-						$post['shipping_class'] = Modules::run('categories/makeShippingClass',$post,$category);
-
+							if($category!='printers' && $category != 'multifunction_printers'){
+								
 							
+
+
+								if($post['shipping_class']==''){
+									$post['shipping_class'] = Modules::run('categories/makeShippingClass',$post,$category);
+								}
+
+
+
+								if($post['shipping_class']!='' && $post['volumetric_weight']==''){
+									$post['volumetric_weight'] = Modules::run('categories/getWeight',$post['shipping_class']);
+								}
+
+
+							}else{
+								
+								if($post['volumetric_weight']==''){
+									$post['volumetric_weight'] = Modules::run('categories/volumeWeight', $post['dimensions']);
+								}
+
+								$post['shipping_class'] = Modules::run('categories/makeShippingClass',$post,$category);
+
+									
+							}
+
 					}
 
 				

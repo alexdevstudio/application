@@ -102,5 +102,12 @@ class Categories extends MX_Controller {
      	}
      		//echo "$cat: OK<br />";
      }
+
+
+
+     public function shippingByWeight($vweight){
+        $this->load->model('categories_model');
+        return $this->categories_model->shippingByWeight($vweight);
+     }
 }
 ?>
