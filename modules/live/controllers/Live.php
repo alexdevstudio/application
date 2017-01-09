@@ -208,6 +208,11 @@ class Live extends MX_Controller {
 		$this->load->model('live_model');
 		return $this->live_model->makeAvailability($availability, $supplier);
 	}
+
+	public function updateAvPraxis($availability,$sku){
+/*http://etd.gr/xml/live/updateAvPraxis/insert/"sku"
+http://etd.gr/xml/live/updateAvPraxis/delete/"sku"*/
+	}
 }
 
 
