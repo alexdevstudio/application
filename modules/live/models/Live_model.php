@@ -2282,7 +2282,7 @@ class Live_model extends CI_Model {
 					break;
 				case 'AOC':
 					$categoryData['support_url'] = 'www.aoc-service.com ';
-					$categoryData['support_tel'] = '80049129216';
+					$categoryData['support_tel'] = '‎2102409150';
 					break;
 				case 'MICROSOFT':
 					$categoryData['support_url'] = '';
