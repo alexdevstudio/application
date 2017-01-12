@@ -32,11 +32,20 @@ class Crud extends MX_Controller {
         $this->load->model('crud_model');
         return $this->crud_model->delete($table, $where);
   	}
-
-	public function get($table, $where){
+  	public function deleteWp($table, $where)
+	{
+        $this->load->model('crud_model');
+        return $this->crud_model->deleteWp($table, $where);
+  	}
+	public function get($table, $where=null){
 
     	$this->load->model('crud_model');
 		return $this->crud_model->get($table, $where);
+    }
+    public function getWp($table, $where=null){
+
+    	$this->load->model('crud_model');
+		return $this->crud_model->getWp($table, $where);
     }
 
     public function insert($table, $data){
@@ -47,6 +56,27 @@ class Crud extends MX_Controller {
 
     }
 
+    public function insertWp($table, $data){
+
+    	$this->load->model('crud_model');
+		return $this->crud_model->insertWp($table, $data);
+
+
+    }
+
+	public function join($table, $join_table, $join)
+	{
+		$this->load->model('crud_model');
+		return $this->crud_model->join($table, $join_table, $join);
+	}
+
+	public function updateWp($table, $where, $data)
+	{	
+		$this->load->model('crud_model');
+		return $this->crud_model->updateWp($table, $where, $data);
+	}
+
+	
 
 
 }

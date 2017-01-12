@@ -31,20 +31,26 @@ class Categories extends MX_Controller {
 		echo 'Function insert() was not successfull: table name'.$c.'<br />';
 		echo '<pre>';
 		print_r($categoryData);
+
 		return false;
- 
 	} 
 
 	 public function categoriesArray(){
-    	$array = array('desktops','laptops','printers', 'multifunction_printers',
-    		'monitors','servers','ups','tablets','smartphones','software');
+    	$array = array('cable_accessories','desktops','docking_stations','laptops','printers', 'multifunction_printers',
+    		'monitors','servers','ups','tablets','smartphones','software',
+    		'external_hard_drives','keyboard_mouse','ip_phones','ip_cards','ip_gateways','ip_pbx');
 
     	return $array;
     }
 
     public function fullCategoriesArray(){
-    	$array = array('cables','carrying_cases','cartridges','desktops','external_hard_drives','keyboard_mouse','laptops','monitors','multifunction_printers','patch_panels','power_bank','printers','racks','routers','sata_hard_drives',
-    		'servers','smartphones','speakers','ssd','switches','software','tablets','toners', 'ups');
+    	$array = array('cables','cable_accessories','card_readers','carrying_cases','cartridges','cases','cpu',
+    		'desktops','docking_stations','external_hard_drives','fans','flash_drives','graphic_cards',
+    		'keyboard_mouse','laptops','memories','monitors','motherboards','multifunction_printers',
+    		'optical_drives','patch_panels','power_bank','power_supplies','printers','racks',
+    		'routers','sata_hard_drives','servers','smartphones','software','speakers','ssd',
+    		'switches','tablets','toners', 'ups', 'copiers','projectors','hoverboards','ip_phones',
+    		'ip_cards','ip_gateways','ip_pbx');
 
     	return $array;
     }
@@ -60,17 +66,48 @@ class Categories extends MX_Controller {
      public function makeShippingClass($data, $cat, $dynamic = null){
 
      	$this->load->model('categories_model');
-     	echo $this->categories_model->makeShippingClass($data, $cat, $dynamic);
+     	return $this->categories_model->makeShippingClass($data, $cat, $dynamic);
 
+     }
+
+     function getWeight($shipping_class){
+     	$this->load->model('categories_model');
+     	return $this->categories_model->getWeight($shipping_class);
+     }
+
+     function volumeWeight($dimensions){
+
+        $this->load->model('categories_model');
+        return $this->categories_model->volumeWeight($dimensions);
+     }
+
+     function updateweight(){
+     	$cats = $this->fullCategoriesArray();
+
+     	foreach ($cats as $cat) {
+
+
+
+     		if($cat=='monitors'  ){
+
+     			$products = Modules::run('crud/get', $cat);
+     			$products = $products->result_array();
+     			foreach ($products as $product) {
+     				$sku = $product['sku'];
+     				$volumetric_weight = $this->getWeight($product['shipping_class']);
+     				Modules::run('crud/update', $cat, array('sku'=>$sku), array('volumetric_weight'=>$volumetric_weight));
+     			}
+            }
+                 			
+     	}
+     		//echo "$cat: OK<br />";
      }
 
 
 
-
-
+     public function shippingByWeight($vweight){
+        $this->load->model('categories_model');
+        return $this->categories_model->shippingByWeight($vweight);
+     }
 }
-
-
-
-
-?> 
+?>

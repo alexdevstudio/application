@@ -3,7 +3,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-class Edit_model extends CI_Model {
+class Home_model extends CI_Model {
 
     function __construct()
     {
@@ -11,6 +11,6 @@ class Edit_model extends CI_Model {
         parent::__construct();
     }
 
-    
+
+
 }
-?>
