@@ -90,7 +90,7 @@ class Extract_model extends CI_Model {
             $f = 0;
             foreach ($tables as $table) {
 
-            if($skus){
+            if($skus && $skus!=''){
 
                 $skus = str_replace('_', ',', $skus);
                 $query = $this->db->query("
