@@ -7,56 +7,56 @@
 	      <h1>1. Ενημέρωση αποθήκης </h1>  
 	      <br>	   
 	    </section> 
-		<div class="supplier-item col-sm-4 col-md-3">
+		<div class="supplier-item col-sm-6 col-md-3">
 			<div class="color-palette-set text-center">
 				<div class="bg-orange-active color-palette ">
 					<a href="./live/index/oktabit" style="color:#fff;display:block"><br /><span >Oktabit</span><br /><br /></a>
 				</div>
 			</div>
 		</div>
-		<div class="supplier-item col-sm-4 col-md-3">
+		<div class="supplier-item col-sm-6 col-md-3">
 			<div class="color-palette-set text-center">
 				<div class="bg-light-blue color-palette ">
 					<a href="./live/index/logicom" style="color:#fff;display:block"><br /><span >Logicom - Enet</span><br /><br /></a>
 				</div>
 			</div>
 		</div> 
-		<div class="supplier-item col-sm-4 col-md-3">
+		<div class="supplier-item col-sm-6 col-md-3">
 			<div class="color-palette-set text-center">
 				<div class="bg-green color-palette ">
 					<a href="./live/index/braintrust" style="color:#fff;display:block"><br /><span >BrainTrust</span><br /><br /></a>
 				</div>
 			</div>
 		</div> 
-		<div class="supplier-item col-sm-4 col-md-3">
+		<div class="supplier-item col-sm-6 col-md-3">
 			<div class="color-palette-set text-center">
 				<div class="bg-red color-palette ">
 					<a href="./live/index/ddc" style="color:#fff;display:block"><br /><span >Digital Data</span><br /><br /></a>
 				</div>
 			</div>
 		</div> 
-		<div class="supplier-item col-sm-4 col-md-3">
+		<div class="supplier-item col-sm-6 col-md-3">
 			<div class="color-palette-set text-center">
 				<div class="bg-navy color-palette ">
 					<a href="./live/index/copiers" style="color:#fff;display:block"><br /><span >Copiers</span><br /><br /></a>
 				</div>
 			</div>
 		</div>
-		<div class="supplier-item col-sm-4 col-md-3">
+		<div class="supplier-item col-sm-6 col-md-3">
 			<div class="color-palette-set text-center">
 				<div class="bg-red color-palette ">
 					<a href="./live/index/cpi" style="color:#fff;display:block"><br /><span >CPI</span><br /><br /></a>
 				</div>
 			</div>
 		</div>
-		<div class="supplier-item col-sm-4 col-md-3">
+		<div class="supplier-item col-sm-6 col-md-3">
 			<div class="color-palette-set text-center">
 				<div class="bg-red color-palette ">
 					<a href="./live/index/westnet" style="color:#fff;display:block"><br /><span >Westnet</span><br /><br /></a>
 				</div>
 			</div>
 		</div>
-		<div class="supplier-item col-sm-4 col-md-3">
+		<div class="supplier-item col-sm-6 col-md-3">
 			<div class="color-palette-set text-center">
 				<div class="bg-orange-active color-palette ">
 					<a href="./live/index/partnernet" style="color:#fff;display:block"><br /><span >PartnerNet</span><br /><br /></a>
@@ -77,7 +77,7 @@
 	      <br>	
 	    </section>
 
-		<div class=" col-sm-4 col-md-2">
+		<div class=" col-sm-12 col-md-3">
 			<div class="form-group">
 				<label>Κατηγορίες Προϊόντων</label>
 				<select id="SelectTable" class="form-control">
@@ -100,7 +100,7 @@
 				<input type="checkbox" name="all_product" value="all" id="isAllSelected"> Όλα τα Προϊόντα<br>
 			</div>
 		</div>
-		<div class="col-sm-4 col-md-2">              
+		<div class="col-sm-12 col-md-3">              
 			<div id='xml_link' style="display:none;">
 				<div class="box box-success box-solid">
 					<div class="box-header with-border">
@@ -144,7 +144,7 @@
 			      <h1>3. Ενημέρωση Χαρακτηριστικών</h1>
 			      <br>	
 			</section>
-			<div class=" col-xs-12 col-sm-6">
+			<div class=" col-sm-12 col-md-6">
 			<div class="form-group">
 				<label>Επιλέξτε τη κατηγορία των προϊόντων που θέλετε να ενημερώσετε</label>
 
@@ -177,9 +177,32 @@
 		    	<h1>4. Δημιουργία XML για All Import</h1>
 		      	<br>	
 		    </section>
-			<div class="col-sm-6 col-md-6">
+		    <div class="col-sm-6 col-md-3">
 				<div class="form-group">
-					<label>Κατηγορίες Προϊόντων</label>
+					<label>Πόσα προϊόντα να εξαχθούν;</label>
+
+				<select class='form-control allImport_num_rows'>
+						<option value='all' >All</option>
+						<option value='5'>5</option>
+						<option value='10'>10</option>
+						<option value='15'>15</option>
+						<option value='20' selected>20</option>
+					</select>
+					</div>
+
+			</div>
+			<div class="col-sm-6 col-md-3">
+				<div class="form-group">
+					<label>SKU Προϊόντων (με κόμμα):</label>
+
+				<input class='form-control allImport_sku' />
+						
+					</div>
+
+			</div>
+			<div class="col-sm-12 col-md-3">
+				<div class="form-group">
+					<label>Κατηγορίες Προϊόντων:</label>
 					<select class="form-control">
 						<?php
 						foreach($tables as $table){
@@ -189,9 +212,13 @@
 						}
 						?>
 					</select>
+					
 				</div>
+
 			</div>
-		    <div class="col-sm-6 col-md-6">              
+
+
+		    <div class="col-sm-12 col-md-3">              
 		        <div id='xml_link2' style="display:none;">
 		          	<div class="box box-success box-solid">
 		            	<div class="box-header with-border">
@@ -205,18 +232,7 @@
 					</div><!-- /.box -->
 		        </div>
 		  	</div>
-			<script>
-				function allImportGenerator(a){
-					$('#xml_link2').show();
-					$("#xmltitle2").html('Loading...'); 
-					
-					var url = "<?= base_url()?>extract/allImport/"+a;
-					$.post(url, function(data){
-						$("#xmltitle2").html(a); 
-						$("#xml_link2 .box-body").html(data);        
-				    });
-				}
-			</script>
+			
 		</div>
 
 		<div class="sections col-xs-6" style="display: none;">

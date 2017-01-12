@@ -69,8 +69,11 @@ class Extract_model extends CI_Model {
             }
         //, i.item_sku, i.image_src
 //INNER JOIN images i ON t.sku = i.item_sku
-        public function allImport($table){
+        public function allImport($table, $numrows, $skus=null){
 
+            if($numrows == 'all'){
+                $numrows = 500;
+            }
 
             $action = '';
             $allProds = array();
@@ -87,10 +90,11 @@ class Extract_model extends CI_Model {
             $f = 0;
             foreach ($tables as $table) {
 
-           
+            if($skus){
 
+                $skus = str_replace('_', ',', $skus);
                 $query = $this->db->query("
-                     SELECT l.product_number, l.category, l.net_price, l.recycle_tax,l.price_tax,l.sale_price, l.availability, l.supplier, l.status, l.delete_flag, t.*,
+                     SELECT l.id, l.product_number, l.category, l.net_price, l.recycle_tax,l.price_tax,l.sale_price, l.availability, l.supplier, l.status, l.delete_flag, t.*,
                      i.installments_count
 
                      FROM live l
@@ -99,10 +103,29 @@ class Extract_model extends CI_Model {
                      
                      LEFT JOIN installments i ON t.sku = i.sku
 
-                     WHERE l.category = '{$table}' AND t.new_item = 0
+                     WHERE l.category = '{$table}' AND t.new_item = 0 AND t.sku IN ({$skus})
 
                      
                     ");
+
+            }else{
+                $query = $this->db->query("
+                     SELECT l.id, l.product_number, l.category, l.net_price, l.recycle_tax,l.price_tax,l.sale_price, l.availability, l.supplier, l.status, l.delete_flag, t.*,
+                     i.installments_count
+
+                     FROM live l
+
+                     INNER JOIN {$table} t ON l.product_number = t.product_number
+                     
+                     LEFT JOIN installments i ON t.sku = i.sku
+
+                     WHERE l.category = '{$table}' AND t.new_item = 0 ORDER BY t.sku DESC LIMIT {$numrows}
+
+                     
+                    ");
+            }
+
+                
                $i=1;
                $products = array();
 

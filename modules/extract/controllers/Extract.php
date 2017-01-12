@@ -25,10 +25,10 @@ class Extract extends MX_Controller {
 	}
 
 
-	public function allImport($table){
+	public function allImport($table, $numrows, $skus){
 
 		 $this->load->model('extract_model');
-		 echo $this->extract_model->allImport($table);
+		 echo $this->extract_model->allImport($table, $numrows, $skus);
 	}
 
 
