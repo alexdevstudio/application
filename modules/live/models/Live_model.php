@@ -4287,7 +4287,7 @@ class Live_model extends CI_Model {
     	}
     	elseif($supplier == 'cpi'){
 
-    		if ($availability >= 1)
+    		if ($availability >= 1 || $availability == 'Αμεσα Διαθέσιμο' || $availability == 'Περιορισμένη Διαθεσιμότητα')
     			$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
     		else
     			$av = false;
