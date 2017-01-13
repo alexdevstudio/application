@@ -1862,7 +1862,8 @@ class Live_model extends CI_Model {
 					'product_url' => '',
 					'net_price'=>$net_price
 				);
-
+				/*echo '<pre>';
+				print_r($cpi_product);*/
 				//2. New products for charateristics tables that load Sku module
 				$insert = $this->addProduct ($cpi_product, array(), $imageUrl, $supplier);
 
