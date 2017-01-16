@@ -32,8 +32,6 @@ class Home extends MX_Controller {
 		$this->load->view('home', $data);
 		$this->load->view('templates/footer',$data);
 
-			
-
 		
 	}
 
