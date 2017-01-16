@@ -397,6 +397,11 @@
             </a>
          </li>
          <li class="">
+            <a href="<?php echo base_url();?>skroutz">
+              <i class="fa fa-money" aria-hidden="true"></i> <span>ΤΙΜΕΣ SKROUTZ</span>
+            </a>
+         </li>
+         <li class="">
             <a target="_blank" href="https://etd.gr">
               <img src="https://etd.gr/wp-content/uploads/2015/10/logo72.png" class='img-menu'> <span>ETD.GR</span>
             </a>

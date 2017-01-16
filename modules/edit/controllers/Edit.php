@@ -8,6 +8,14 @@ class Edit extends MX_Controller {
 
 
 		$item = Modules::run('crud/get',$category, array('sku'=>$sku));
+		$skroutzUrl = Modules::run('crud/get','skroutz_urls', array('sku'=>$sku));
+
+		if(!$skroutzUrl){
+			$skroutzUrl = '';
+		}else{
+			$skroutzUrl = $skroutzUrl->row()->url;
+		}
+
 		$installments = Modules::run('crud/get','installments', array('sku'=>$sku));
 		if(!$installments){
 				$installments='';
@@ -94,6 +102,13 @@ class Edit extends MX_Controller {
 				else if($post['status']=='update')
 				{
 					unset ($post['status']);
+
+					$skroutz_url = $post['skroutz_url'];
+					unset ($post['skroutz_url']);
+
+					//Insert or delete Skroutz URL from DB;
+					Modules::run('skroutz/toggleSkroutzUrl', $skroutz_url, $sku);
+					
 					$where = array('sku'=>$sku);
 
 					$vweight = trim($post['volumetric_weight']);
@@ -141,7 +156,8 @@ class Edit extends MX_Controller {
 
 				if($update){
 					echo "<h2>Updated</h2>";
-					
+					unset($post);
+					header("Refresh:0");
 				}
 			}
 
@@ -155,6 +171,7 @@ class Edit extends MX_Controller {
 			$data['category'] = $category;
 			$data['title'] = 'Επεξεργασία προϊόντος';
 			$data['item'] = $item;
+			$data['skroutzUrl'] = $skroutzUrl;
 			$data['installments'] = $installments;
 
 			$this->load->view('templates/header',$data);

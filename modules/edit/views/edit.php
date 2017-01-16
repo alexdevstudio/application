@@ -230,6 +230,8 @@ if($itemLive){
     </div>
 
 		<div class=" col-xs-12 col-md-10">
+		<h2><?= $item->row()->title; ?></h2>
+		<div style='border-top:1px solid #888'></div><br />
 		<form  method='post' action="">
 
    <?php
@@ -242,7 +244,7 @@ if($itemLive){
 		}
 		?>
 
-		<div class="col-xs-12 col-md-5">
+		<div class="col-xs-12 col-md-6">
 
 		<div class="col-xs-12 col-md-4">
 		<label><?= ucfirst(str_replace('_', ' ', $key));  ?></label>
@@ -274,6 +276,17 @@ if($itemLive){
 		<?php
 	}
 	?>
+	<div class="col-xs-12 col-md-6">
+
+		<div class="col-xs-12 col-md-4">
+		<label>Skroutz URL 	<a target="_blank" href="<?= $skroutzUrl; ?>"><i class="fa fa-external-link" aria-hidden="true"></i></a></label>
+		</div>
+		<div class="col-xs-12 col-md-8">
+			<input class="form-control edit-form-etd" value="<?= $skroutzUrl; ?>" name="skroutz_url"/>
+		
+		</div>
+	
+	</div>		
 	<button type="submit" class="btn btn-block btn-success">Ενημέρωση</button>
 		</form>
 		</div>
