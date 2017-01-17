@@ -12,7 +12,8 @@ class Skroutz_model extends CI_Model {
     }
 
     public function getItems(){
-    	return Modules::run('crud/get', 'skroutz_urls');
+    	$where=array('active'=>1);
+    	return Modules::run('crud/get', 'skroutz_urls',$where);
     }
     
   

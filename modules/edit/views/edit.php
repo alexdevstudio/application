@@ -56,6 +56,39 @@ $image = Modules::run("images/getFirstImage",$sku,true);
 </div>
 
  <div class="col-xs-12 ">
+ <?php
+     if($skroutzPrice){
+	
+     
+$best_price = json_decode($skroutzPrice['best_price']);
+
+$sklogo = $best_price->shopLogo;
+$sktitle = $best_price->shopTitle;
+$skprice = $best_price->shopPrice;
+$skupdate = strtotime($skroutzPrice['last_update']);
+$skupdate = date( 'H:i d-m-Y ', $skupdate );
+
+//print_r($best_price);
+     	?>
+ <div class="skroutz_box form-group">
+     
+     <label>1η Τιμή Skroutz</label>   
+
+     
+     <img src="<?= $sklogo; ?>" />
+
+     <span class='edit-sktitle'><?= $sktitle; ?></span>   
+
+     <span class='edit-skprice'><?= $skprice; ?> €</span>
+     <span class='edit-skupdate'><?= $skupdate; ?></span>
+
+
+</div>
+
+<?php
+}
+
+?>
  <form method="post" action=''>
  <div class="form-group">
 <label>Κανονική Τιμή</label>

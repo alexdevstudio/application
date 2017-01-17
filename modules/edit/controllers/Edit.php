@@ -9,6 +9,8 @@ class Edit extends MX_Controller {
 
 		$item = Modules::run('crud/get',$category, array('sku'=>$sku));
 		$skroutzUrl = Modules::run('crud/get','skroutz_urls', array('sku'=>$sku));
+		
+
 
 		if(!$skroutzUrl){
 			$skroutzUrl = '';
@@ -172,6 +174,17 @@ class Edit extends MX_Controller {
 			$data['title'] = 'Επεξεργασία προϊόντος';
 			$data['item'] = $item;
 			$data['skroutzUrl'] = $skroutzUrl;
+
+
+			$skroutzPrice = Modules::run('crud/get','skroutz_prices', array('sku'=>$sku),array('last_update','ASC'),1);
+
+			if($skroutzPrice){
+				$skroutzPrice = $skroutzPrice->result_array();
+				$data['skroutzPrice'] = $skroutzPrice[0];
+			}else{
+				$data['skroutzPrice'] = false;
+			}
+
 			$data['installments'] = $installments;
 
 			$this->load->view('templates/header',$data);

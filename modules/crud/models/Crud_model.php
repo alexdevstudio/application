@@ -55,12 +55,20 @@ class Crud_model extends CI_Model {
   }
   
 
-  public function get($category, $where=null){
+  public function get($category, $where=null, $order_by=null, $limit=null){
 
+
+        //$this->db->order_by('title', 'DESC');
+        if($order_by)
+          $this->db->order_by($order_by[0], $order_by[1]);
+
+        if($limit)
+          $this->db->limit($limit);
+        
         if($where)
-        {
-        $this->db->where($where);
-        }
+          $this->db->where($where);
+
+        
           $item = $this->db->get($category);
 
           if($item->num_rows()<1){
