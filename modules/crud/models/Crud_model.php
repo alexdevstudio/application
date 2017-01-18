@@ -59,15 +59,18 @@ class Crud_model extends CI_Model {
 
 
         //$this->db->order_by('title', 'DESC');
-        if($order_by)
-          $this->db->order_by($order_by[0], $order_by[1]);
+        
 
-        if($limit)
-          $this->db->limit($limit);
+        
         
         if($where)
           $this->db->where($where);
 
+        if($order_by)
+          $this->db->order_by($order_by[0], $order_by[1]);
+        
+        if($limit)
+          $this->db->limit($limit);
         
           $item = $this->db->get($category);
 

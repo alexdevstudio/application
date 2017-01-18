@@ -40,7 +40,7 @@ class Crud extends MX_Controller {
 	public function get($table, $where=null, $order_by=null, $limit=null){
 
     	$this->load->model('crud_model');
-		return $this->crud_model->get($table, $where, $order_by=null, $limit=null);
+		return $this->crud_model->get($table, $where, $order_by, $limit);
     }
     public function getWp($table, $where=null){
 

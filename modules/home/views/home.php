@@ -256,49 +256,76 @@
 
 		    <?php
 
-		    $where = array(
-		    	'supplier'=>'etd'
-		    	);
+			    $where = array(
+			    	'supplier'=>'etd'
+			    	);
 
-                $stock = Modules::run('crud/get','live',$where);
-               // print_r($stock->result_array());
-                $cat_array = array();
-                $out = '';
-                foreach ($stock->result_array() as $items) {
-                	$category = $items['category'];
-                	$cat_array[] = $category;
-                	
+	                $stock = Modules::run('crud/get','live',$where);
+	               // print_r($stock->result_array());
+	                $cat_array = array();
+	                $out = '';
+	                foreach ($stock->result_array() as $items) {
 
-                	$product_number = $items['product_number'];
-                	$where =array(
-						'product_number'=>$product_number
-                		);
+	                	$category = $items['category'];
+	                	$cat_array[] = $category;
+	                	
 
-                	$item = Modules::run('crud/get', $category, $where);
-                	$sku =  $item->row()->sku;
-                	$title = $item->row()->title;
-                	@$price = $items['price_tax'];
-                	if(!$price){
-                		$price = '<span style="color:red;">Δεν υπάρχει τιμή</span>';
-                	}else{
-                		$price = "€ $price";
-                	}
+	                	$product_number = $items['product_number'];
+	                	$where =array(
+							'product_number'=>$product_number
+	                		);
 
-                	$img = Modules::run('images/getFirstImage', $sku, true);
-					
-					$out.=' <div class="instock_item clearfix" data-category="'.$category.'">
-					                			'.$img.'
-					        <h5><a href="http://etd.gr/xml/edit/'.$category.'/'.$sku.'">'.$title.'</a></h5>
-					        <strong style="color:#0fc504;">SKU: '.$sku.'</strong>
-					        <span class="instock_item_price">
-					        Τιμή στο site: '.$price.'
-					        </span>
+	                	$item = Modules::run('crud/get', $category, $where);
+	                	
 
 
-					        </div>';
-                	
-                	//print_r($item->result_array());
-                }
+	                	$sku =  $item->row()->sku;
+	                	$title = $item->row()->title;
+	                	@$price = ($items['sale_price']=='' || $items['sale_price']<0.01)? $items['price_tax']: $items['sale_price'];
+
+	                	if(!$price){
+	                		$price = '<span style="color:red;">Δεν υπάρχει τιμή</span>';
+	                	}else{
+	                		$price = "€ $price";
+	                	}
+
+
+
+	                	$skroutzPrice = Modules::run('skroutz/getBestPrice',$sku);
+
+						if($skroutzPrice){
+							$skroutzPrice = $skroutzPrice->result_array();
+							$skroutzPrice = $skroutzPrice[0];
+							$best_price = json_decode($skroutzPrice['best_price']);
+
+							$sklogo = $best_price->shopLogo;
+							$sktitle = $best_price->shopTitle;
+							$skprice = $best_price->shopPrice;
+							
+							$skroutzPrice = '<img  class="instosk-sklogo" src="'.$sklogo.'"  /> € '.$skprice.' <br/>';
+
+
+						}else{
+							$skroutzPrice = '';
+						}
+
+
+
+	                	$img = Modules::run('images/getFirstImage', $sku, true);
+						
+						$out.=' <div class="instock_item clearfix" data-category="'.$category.'">
+						                			'.$img.'
+						        <h5><a href="http://etd.gr/xml/edit/'.$category.'/'.$sku.'">'.$title.'</a></h5>
+						        <strong style="color:#0fc504;">SKU: '.$sku.'</strong><br />
+						        <span class="instock_item_price">'.$skroutzPrice.'
+						        Τιμή στο site: '.$price.'
+						        </span>
+
+
+						        </div>';
+	                	
+	                	//print_r($item->result_array());
+               	 }
 
 ?>
 <div class="instock_filter">

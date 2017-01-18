@@ -10,10 +10,10 @@
    
  <?php 
 
-$sku = $item->row()->sku;
-$pn = $item->row()->product_number;
+	$sku = $item->row()->sku;
+	$pn = $item->row()->product_number;
 
-$image = Modules::run("images/getFirstImage",$sku,true);
+	$image = Modules::run("images/getFirstImage",$sku,true);
 
  ?>
 
@@ -66,21 +66,21 @@ $sklogo = $best_price->shopLogo;
 $sktitle = $best_price->shopTitle;
 $skprice = $best_price->shopPrice;
 $skupdate = strtotime($skroutzPrice['last_update']);
-$skupdate = date( 'H:i d-m-Y ', $skupdate );
+$skupdate = date( 'H:i d M `y ', $skupdate );
 
 //print_r($best_price);
      	?>
  <div class="skroutz_box form-group">
      
-     <label>1η Τιμή Skroutz</label>   
+     <label class='bg-orange' ><a target="_blank" style="color:#fff" href="<?= $skroutzUrl; ?>">1η Τιμή Skroutz <i class="fa fa-external-link"  aria-hidden="true"></i></a></label>   
 
      
      <img src="<?= $sklogo; ?>" />
 
-     <span class='edit-sktitle'><?= $sktitle; ?></span>   
+     <!-- <span class='edit-sktitle'><?= $sktitle; ?></span>   --> 
 
      <span class='edit-skprice'><?= $skprice; ?> €</span>
-     <span class='edit-skupdate'><?= $skupdate; ?></span>
+     <span class='edit-skupdate'><i class="fa fa-calendar"></i> <?= $skupdate; ?></span>
 
 
 </div>
