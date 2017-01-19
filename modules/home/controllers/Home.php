@@ -8,33 +8,29 @@ class Home extends MX_Controller {
         parent::__construct();
 
 
-        if($_SERVER['REMOTE_ADDR']!='85.72.61.177'){
+        /*if($_SERVER['REMOTE_ADDR']!='85.72.61.177' && $_SERVER['REMOTE_ADDR']!='94.70.138.200') {
 
         	die('Page does not exist');
 
-        }
+        }*/
     }
 
 	
 	public function index($pass=null){
 		$this->dashboard($pass);
+
 	}
 	public function dashboard($pass=null){
 
 
-		/*if($pass!='efi' && $pass!='george' && $pass!='alex' && $pass!='evans'){
+		//$this->load->model('home_model');
 
-			die("<a href='https://www.etd.gr'>Welcome, Click Here Please</a>");
-			
-		}*/
 
 		$data['title'] = 'Dashboard';
 
 		$this->load->view('templates/header',$data);
 		$this->load->view('home', $data);
 		$this->load->view('templates/footer',$data);
-
-			
 
 		
 	}

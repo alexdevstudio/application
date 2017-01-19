@@ -157,7 +157,7 @@ class Live_model extends CI_Model {
 						$c = 'external_hard_drives';
 							
 					}
-					elseif($sc == 'Sata Hard Drives' )
+					elseif($sc == 'SATA Hard Drives' )
 					{
 						$c = 'sata_hard_drives';
 							
@@ -297,6 +297,7 @@ class Live_model extends CI_Model {
 					$okt_product['type'] = $sc;
 					$okt_product['dist_type'] = $dist_type;
 					$okt_product['shipping_class'] = 4644;
+					$okt_product['volumetric_weight'] = 2;
 
 					if (strstr ($title,'DSP'))
 						$okt_product['dist_type'] = 'DSP';
@@ -311,7 +312,7 @@ class Live_model extends CI_Model {
 
 				//2. New products for charateristics tables that load Sku module
 
-				$insert = $this->addProduct ($okt_product, $chars_array, $f, 'oktabit');
+				$insert = $this->addProduct ($okt_product, $chars_array, $f, $supplier);
 
 				if ($insert)
 				{
@@ -333,6 +334,169 @@ class Live_model extends CI_Model {
 
     }
 
+    public function partnernet(){
+    	
+
+    	if($xml = $this->xml("http://eshop.partnernet.gr/index.php?route=feed/any_feed&name=episilonteledata")){
+			
+			$images = array();
+			$this->updateLive('partnernet');
+	
+		}else{
+			die("XML from PartnerNet can not be loaded.");
+		}
+
+		$newProducts = array();
+		$supplier = "partnernet";
+
+
+		foreach($xml->children() as $product) {
+			
+			set_time_limit(50);
+			//Rename categories for ETD.gr
+
+			$dist_type='';
+			$cat = (string) trim($product->categories1);
+			
+			$c_array = explode(">", $cat);
+			$c_array[0] = trim($c_array[0]);
+			if($c_array[0]!='Telephony'){
+				continue;
+			}else{
+				$cat = trim($c_array[1]);
+
+			}
+
+			
+			
+
+			
+			switch ($cat) {
+				case 'Asterisk Cards':
+					$c='ip_cards';
+					break;
+				case 'Gateways':
+					$c='ip_gateways';
+					break;
+				case 'IP PBX':
+					$c='ip_pbx';
+					break;
+				case 'IP Phones':
+				case 'IP Video Phones':
+					$c='ip_phones';
+					break;
+				default:
+					$c =  $cat;
+					break;
+			}
+
+			
+			if($c==$cat){
+				continue;
+			}
+
+			$availability = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
+
+			$net_price = str_replace(".", "", $product->price);
+			$net_price = str_replace("€", "", $net_price);
+			$net_price = (float) $net_price;
+
+			$pn = (string) trim($product->sku);
+			$model = (string) trim($product->model);
+
+			
+
+
+			if($pn=='' || $pn!=$model)
+				continue;
+
+
+			$description = "";
+			$brand = (string) trim($product->manufacturer);
+			$title = (string) trim($product->name);
+			//$product_url = "";
+
+			//Insert into live
+
+			//1. Live
+				
+				if($this->checkLiveProduct($pn, $net_price, $supplier)){
+
+					$live = array(
+						'category'=>$c,
+						'product_number'=>$pn ,
+						'net_price'=>$net_price ,
+						'availability'=>$availability,
+						'recycle_tax'=>'',
+						'supplier' =>$supplier,
+						'status' => 'publish',
+						'delete_flag'=>0
+						);
+
+					$this->db->where('product_number', $pn);
+					$this->db->where('supplier', $supplier);
+					$this->db->delete('live', $live);
+
+					$this->db->insert('live', $live);
+
+					unset($live);
+				}
+
+				//Array for categories table
+
+				$product_array = array(
+					'category' => $c,
+					'product_number' => $pn,
+					'description' => $description,
+					'brand' => $brand,
+					'title' => $title,
+					//'product_url' => $product_url,
+					//'code' => $code,
+					'net_price'=>$net_price
+				);
+
+				$chars_array=array();
+
+				$f = array();
+				$f[]=trim($product->image);
+				$f[]=trim($product->additional_images1);
+				$f[]=trim($product->additional_images2);
+				$f[]=trim($product->additional_images3);
+				$f[]=trim($product->additional_images4);
+				$f[]=trim($product->additional_images5);
+				$f[]=trim($product->additional_images6);
+				$f[]=trim($product->additional_images7);
+				$f[]=trim($product->additional_images8);
+				$f[]=trim($product->additional_images9);
+
+				foreach ($f as $key => $value) {
+					if($value=='')
+						unset($f[$key]);
+				}
+
+				//2. New products for charateristics tables that load Sku module
+
+				$insert = $this->addProduct ($product_array, $chars_array, $f, $supplier);
+
+				if ($insert)
+				{
+					if(isset ($newProducts[$c]))
+						$newProducts[$c] = $newProducts[$c]+1;
+					else
+						$newProducts[$c] = 1;
+				}
+
+			}//foreach($xml->children() as $product)
+				
+			$this->sendImportedProductsByMail($newProducts);
+			echo "<pre>";
+			print_r($newProducts);
+			echo "Finnished $supplier";
+
+		}
+
+		
+    
     public function logicom(){
 
     	$this->load->view('upload_logicom_xml', array('error' => ' ' ));
@@ -516,6 +680,7 @@ class Live_model extends CI_Model {
 				{
 					$log_product['type'] = $sc;
 					$log_product['shipping_class'] = 4644;
+					$log_product['volumetric_weight'] = 2;
 					if (strstr ($title,'DSP'))
 						$log_product['dist_type'] = 'DSP';
 					elseif(strstr ($title,'Reseller Option Kit') || strstr ($title,'ROK'))
@@ -975,10 +1140,10 @@ class Live_model extends CI_Model {
 		$newProducts = array();
 		$i=0;
 
-
 		foreach($xml->children() as $product) {
 			$availability=false;
 			set_time_limit(50);
+			$chars_array = array();
 			//Rename categories for ETD.gr
 
 			$cat = (string) trim($product->Category);
@@ -987,11 +1152,70 @@ class Live_model extends CI_Model {
 			$c = $cat;
 			
 			$brand = (string) trim($product->Supplier);
+			$title = '';
+			$size = '';
 
 			switch ($cat) {
 				case 'Notebook':
-					if($brand == 'MSI')
+					if($brand == 'MSI')// || $brand == 'ACER')
 						$c = 'laptops';
+					else
+						$c = $cat;
+				break;
+				case 'Desktop/Tower':
+					if($brand == 'MSI')
+						$c = 'desktops';
+					else
+						$c = $cat;
+				break;
+				case 'PC Motherboard':
+					if($brand == 'MSI')
+						$c = 'motherboards';
+					else
+						$c = $cat;
+				break;
+				case 'VGA':
+					if($brand == 'MSI' || $brand == 'SAPPHIRE')
+						$c = 'graphic_cards';
+					else
+						$c = $cat;
+				break;
+				case 'HDD 3,5"':
+					$c = 'sata_hard_drives';
+					$size = '3.5"' ;
+				break;
+				case 'HDD 2,5"':
+					$c = 'sata_hard_drives';
+					$size = '2.5"' ;
+				break;
+				case 'HDD External':
+					$c = 'external_hard_drives';
+				break;
+				case 'SSD':
+					if($brand == 'SILICON POWER')
+						$c = $cat;
+					else
+						$c = 'ssd';
+				break;
+				case 'Monitor':
+				case 'TV/Monitor':
+					if($brand == 'LG ELECTRONICS')
+					{
+						$c = 'monitors';
+						$brand = 'LG';
+					}
+					else
+						$c = $cat;
+				break;
+				case 'Memory':
+					if($brand == 'CORSAIR MEMORY')
+						$c = 'memories';
+					else
+						$c = $cat;
+				break;
+				case 'PSU':
+					if($brand == 'CORSAIR MEMORY')
+						$c = 'power_supplies';
 					else
 						$c = $cat;
 				break;
@@ -1007,15 +1231,74 @@ class Live_model extends CI_Model {
 				if(!$availability){
 					continue;
 				}
-
-				//$code = (string) trim($product->code);
-				//$code = (string) trim($product->SKU);
+				
 				$description = (string) trim($product->Description);
-				$title = substr($description, strpos($description, 'NB '), strpos($description, ', '));
-				$title = "MSI ".$title;
-				$net_price = (string) trim($product->timi);
-				$availability = $availability;
 				$pn = (string) trim($product->SKU);
+
+				if ($pn == ''){
+					continue;
+				}
+
+				if($c == 'laptops')
+				{
+						$first = strpos($description, 'NB ')+3;
+						$last = strpos($description, ', ');
+						$diff = $last-$first;
+		
+						$title = substr($description, $first, $diff);
+					if($brand == 'MSI')
+						$title = "MSI ".$title;
+					/*elseif($brand == 'ACER')
+						$title = "ACER ".$title;*/
+				}
+				elseif($c == 'desktops')
+				{
+					$last = strpos($description, ',');
+					$title = substr($description, 0, $last);
+					$chars_array['type']='Desktop';
+				}
+				elseif($c == 'motherboards')
+				{
+					$first = strpos($description, 'MB ')+3;
+					$last = strpos($description, ', ');
+					$diff = $last-$first;
+
+					$title = substr($description, $first, $diff);
+					$title = $brand." ".$title;
+				}
+				elseif($c == 'graphic_cards')
+				{
+					$first = strpos($description, 'VGA ')+4;
+					$last = strpos($description, ', ');
+					$diff = $last-$first;
+
+					$title = substr($description, $first, $diff);
+					$title = $brand." ".$title;
+				}
+				elseif($c == 'sata_hard_drives' || $c == 'external_hard_drives')
+				{
+					$title = str_replace('"', '', $description);
+				}
+				elseif($c == 'monitors')
+				{
+					$title = $description;
+
+				}
+				elseif($c == 'memories')
+				{
+					$title = $description;
+
+				}
+				elseif($c == 'power_supplies')
+				{
+					$title = $description;
+
+				}
+				//echo $title.'<br>';
+				$net_price = str_replace(",", ".", $product->timi);
+				$net_price = (string) trim($net_price);
+
+				$availability = $availability;
 				$imageUrl = (string) trim($product->Image);
 				$brand = (string) trim($product->Supplier);
 
@@ -1057,7 +1340,7 @@ class Live_model extends CI_Model {
 
 				//2. New products for charateristics tables that load Sku module
 
-				$insert = $this->addProduct ($braintrust_product, array(), $imageUrl, 'braintrust');
+				$insert = $this->addProduct ($braintrust_product, $chars_array, $imageUrl, 'braintrust');
 
 				if ($insert)
 				{
@@ -1066,12 +1349,14 @@ class Live_model extends CI_Model {
 					else
 						$newProducts[$c] = 1;
 				}
+				
 			} 		
 		} //end foreach
 
 		$this->sendImportedProductsByMail($newProducts);
 
 		echo "Finnished updating Braintrust.";
+		
     }
 
     public function aci(){
@@ -1470,6 +1755,7 @@ class Live_model extends CI_Model {
 					'Accounts' => $Accounts ,
 					'Accounts_Software' => $Accounts_Software,
 					'shipping_class' => 4682
+					//'volumetric_weight'???
 				);
 
 				//2. New products for charateristics tables that load Sku module
@@ -1576,7 +1862,8 @@ class Live_model extends CI_Model {
 					'product_url' => '',
 					'net_price'=>$net_price
 				);
-
+				/*echo '<pre>';
+				print_r($cpi_product);*/
 				//2. New products for charateristics tables that load Sku module
 				$insert = $this->addProduct ($cpi_product, array(), $imageUrl, $supplier);
 
@@ -1612,6 +1899,7 @@ class Live_model extends CI_Model {
 		foreach($xml->children() as $product) {
 
 			$availability=false;
+			$title = $description = '';
 			set_time_limit(50);
 			
 			$cat = (string) trim($product->Item_Category);
@@ -1620,8 +1908,10 @@ class Live_model extends CI_Model {
 
 			switch ($cat) {
 				case 'GADGETS':
-					if (strpos($sc, 'SCOOTER') !== false)
+					if (strpos($sc, 'SCOOTER') !== false){
+						$title = $description = str_replace('MINI SCOOTER ', '', $sc);
 						$c = 'hoverboards';
+					}
 					else
 						$c = '';
 					break;
@@ -1640,10 +1930,15 @@ class Live_model extends CI_Model {
 
 				$code = (string) trim($product->Code);
 				$pn = (string) trim($product->Part_Number);
-				$title = (string) trim($product->Description);
+
+				if ($title=='')
+					$title = (string) trim($product->Description);
+
 				$net_price = trim($product->Final_Price);
 				$recycle_tax = '';
-				$description = (string) trim($product->Description);
+				
+				if ($description=='')
+					$description = (string) trim($product->Description);
 
 				$brand = (string) trim($product->Manufacturer);
 				if($brand == "LL")
@@ -1807,6 +2102,9 @@ class Live_model extends CI_Model {
 
 
 			//$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
+	
+		//Do not forget volumetric_weight if needed!!!!!!!!!!!!!!!!!!
+
 			//$chars_array = array_merge($chars_array, array("shipping_class"=>$shipping_class));
 			//$chars_array = array_merge($chars_array, array("description"=>$product['description']));
 			$this->updateProduct($c, $chars_array, $product['product_number']);
@@ -1823,6 +2121,7 @@ class Live_model extends CI_Model {
 			
 			if($c == 'cartridges' || $c == 'toners'){
 				$shipping_class = Modules::run('categories/makeShippingClass', $product, $c);
+				$volumetric_weight = Modules::run('categories/getWeight', $shipping_class);
 				
 				$categoryData = array(
 				'brand'=> $product['brand'], 
@@ -1830,14 +2129,16 @@ class Live_model extends CI_Model {
 				'product_number'=> $product['product_number'],
 				'title'=> $product['title'],
 				'supplier_product_url'=> $product['product_url'],
-				'shipping_class' => $shipping_class
+				'shipping_class' => $shipping_class,
+				'volumetric_weight' =>$volumetric_weight
 
 				);
-			}elseif($c == 'printers' || $c == 'multifunction_printers'){
+			}elseif($c == 'printers' || $c == 'multifunction_printers' || $c == 'monitors'){
 				
-				$price = array('price'=>$product['net_price']);
+				//$price = array('price'=>$product['net_price']);
 				
-				$shipping_class  = Modules::run('categories/makeShippingClass',$price, $c, true);
+				//$shipping_class  = Modules::run('categories/makeShippingClass',$price, $c, true);
+				//$volumetric_weight = Modules::run('categories/getWeight', $shipping_class);
 				$categoryData = array(
 				'brand'=> $product['brand'],
 				'sku'=> $sku,
@@ -1845,7 +2146,8 @@ class Live_model extends CI_Model {
 				'title'=> $product['title'],
 				'description'=> strip_tags($product['description']),
 				'supplier_product_url'=> $product['product_url'],
-				'shipping_class' => $shipping_class
+				//'shipping_class' => $shipping_class,
+				//'volumetric_weight' => $volumetric_weight
 				);
 			}
 			elseif($c == 'software'){
@@ -1859,7 +2161,8 @@ class Live_model extends CI_Model {
 				'dist_type'=> $product['dist_type'],
 				'description'=> strip_tags($product['description']),
 				'supplier_product_url'=> $product['product_url'],
-				'shipping_class' => $product['shipping_class']
+				'shipping_class' => $product['shipping_class'],
+				'volumetric_weight' => $product['volumetric_weight']
 				);
 
 			}elseif($c == "copiers"){
@@ -1870,28 +2173,47 @@ class Live_model extends CI_Model {
 			}
 			elseif($c == 'hoverboards'){
 				$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
+				$volumetric_weight = Modules::run('categories/getWeight', $shipping_class);
 				$categoryData = array(
 				'brand'=> $product['brand'],
 				'sku'=> $sku,
 				'product_number'=> $product['product_number'],
 				'title'=> $product['title'],
 				'description'=> strip_tags($product['description']),
-				'shipping_class' => $shipping_class
+				'shipping_class' => $shipping_class,
+				'volumetric_weight' => $volumetric_weight
 				);
+			}elseif($supplier == 'partnernet'){
+				
+				$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
+				$volumetric_weight = Modules::run('categories/getWeight', $shipping_class);
+				$categoryData = array(
+				'brand'=> $product['brand'],
+				'sku'=> $sku,
+				'product_number'=> $product['product_number'],
+				'title'=> $product['title'],
+				'description'=>'',
+				'shipping_class' => $shipping_class,
+				'volumetric_weight' => $volumetric_weight
+				);
+
+
 			}
 			else
 			{
 				$shipping_class = '';
 				if($c == "carrying_cases" || $c == "external_hard_drives" ||
 				 $c == "sata_hard_drives" || $c == "ssd" || $c == "speakers" || 
-				 $c == "power_banks" || $c == "keyboard_mouse"  || 
-				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c == "tablets"  || $c == "smartphones" ||
+				 $c == "power_bank" || $c == "keyboard_mouse"  || $c == "servers"  || 
+				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c== "desktops" || $c == "tablets"  || $c == "smartphones" ||
 				 $c == "cables" || $c == "patch_panels" || $c == "racks" || $c =="optical_drives" || $c == "card_readers" || $c == "flash_drives" || 
 				 $c == "power_supplies" || $c == "cases" || $c == "fans" || $c == "motherboards" || $c == "graphic_cards" || $c == "cpu" || 
-				 $c == "memories" || $c == 'hoverboards')		
-				$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
+				 $c == "memories" || $c == "hoverboards"){
 
 
+					$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
+					$volumetric_weight = Modules::run('categories/getWeight', $shipping_class);
+				}	
 				$categoryData = array(
 				'brand'=> $product['brand'],
 				'sku'=> $sku,
@@ -1899,7 +2221,8 @@ class Live_model extends CI_Model {
 				'title'=> $product['title'],
 				'description'=> strip_tags($product['description']),
 				'supplier_product_url'=> $product['product_url'],
-				'shipping_class' => $shipping_class
+				'shipping_class' => $shipping_class,
+				'volumetric_weight' => $volumetric_weight
 				);
 
 				if($c == "cables" || $c == "patch_panels" || $c == "racks"){
@@ -1925,11 +2248,95 @@ class Live_model extends CI_Model {
 					$categoryData = array_merge($categoryData, $chars_array);
 				}
 			}
+			
+			if($supplier == 'braintrust' && $c != "laptops")
+			{
+				$categoryData ['new_item'] = 1;
+			}
+			
+			$product['brand'] = strtoupper($product['brand']);
+
+			switch ($product['brand']) {
+				case 'APC':
+					$categoryData['support_url'] = 'http://www.schneider-electric.gr/sites/greece/gr/support/contact/we-care.page';
+					$categoryData['support_tel'] = '8001162900 (επιλογή 3)';
+					break;
+				case 'DELL':
+					$categoryData['support_url'] = 'http://www1.euro.dell.com/content/topics/topic.aspx/emea/contact/elgr?c=gr&l=el';
+					$categoryData['support_tel'] = '80044149518 / 2108129810 / 2108129855';
+					break;
+				case 'HP':
+					$categoryData['support_url'] = 'http://support.hp.com/gr-el/';
+					$categoryData['support_tel'] = '80111225547 / 2109696416 ';
+					break;
+				case 'ACER':
+					$categoryData['support_url'] = 'http://www.acer.com/ac/el/GR/content/service-contact';
+					$categoryData['support_tel'] = '8015002000';
+					break;
+				/*case 'INTEL':
+					$categoryData['support_url'] = '';
+					$categoryData['support_tel'] = '';
+					break;*/
+				case 'PHILIPS':
+					$categoryData['support_url'] = 'http://www.philips.gr/c-m/consumer-support';
+					$categoryData['support_tel'] = '80031221223';
+					break;
+				case 'AOC':
+					$categoryData['support_url'] = 'www.aoc-service.com ';
+					$categoryData['support_tel'] = '‎2102409150';
+					break;
+				case 'MICROSOFT':
+					$categoryData['support_url'] = '';
+					$categoryData['support_tel'] = '2105197500';
+					break;
+				case 'LENOVO':
+					$categoryData['support_url'] = 'http://support.lenovo.com/gr/en';
+					$categoryData['support_tel'] = '2111984507(Idea) / 2104800499(Think)';
+					break;
+				case 'LG':
+				case 'LG ELECTRONICS':
+					$categoryData['support_url'] = 'http://www.lg.com/gr/support';
+					$categoryData['support_tel'] = '80111200900';
+					break;
+				case 'VIEWSONIC':
+					$categoryData['support_url'] = 'http://www.alman.gr/el/';
+					$categoryData['support_tel'] = '2102409150';
+					break;
+				case 'ASUS':
+					$categoryData['support_url'] = '';
+					$categoryData['support_tel'] = '80044142044';
+					break;
+				case 'GIGASET':
+					$categoryData['support_url'] = '';
+					$categoryData['support_tel'] = '2106619010';
+					break;
+				case 'GIGASET':
+					$categoryData['support_url'] = '';
+					$categoryData['support_tel'] = '2106619010';
+					break;
+				case 'MICROSOFT':
+					$categoryData['support_url'] = '';
+					$categoryData['support_tel'] = '2111206000';
+					break;
+				case 'SAMSUNG':
+					$categoryData['support_url'] = '';
+					$categoryData['support_tel'] = '801117267864 ή 2106897691';
+					break;
+				case 'TP-LINK':
+					$categoryData['support_url'] = '';
+					$categoryData['support_tel'] = '2106148834';
+					break;
+				case 'MSI':
+					$categoryData['support_url'] = '';
+					$categoryData['support_tel'] = '2106995825';
+					break;
+				default:
+					break;
+			}
 
 			if(Modules::run("categories/insert", $c, $categoryData)){
 				
 				$insert = true;
-
 
 			}
 			else{
@@ -1941,13 +2348,13 @@ class Live_model extends CI_Model {
 			$this->AddProductImages($product, $f, $supplier, $sku);
 			
 		}//if($sku = Modules::run('sku/checkSku',$skuArray)){
-		else
+		/*else
 		{
 			if($c == 'printers' || $c == 'multifunction_printers'){
 				$price = array('price'=>(float)$product['net_price']);
 				//print_r($price['price']);
 				$shipping_class  = Modules::run('categories/makeShippingClass',$price, $c, true);
-					
+					//Must add volumetricWeight!!!
 				$this->db->set('shipping_class',$shipping_class);
 				$this->db->where('sku',$sku);
 				$this->db->update($c);
@@ -1955,8 +2362,8 @@ class Live_model extends CI_Model {
 			/*else if($c == 'memories') //Fix for updating image 
 			{
 				$mem_images = $this->AddProductImages($product, $f, $supplier, $sku);
-			}*/
-    	}
+			}
+    	}*/
 
     	return $insert;
     }
@@ -2004,7 +2411,7 @@ class Live_model extends CI_Model {
 				
 				Modules::run('images/getImage',$imageData);
     	}
-    	else if ($supplier == 'ddc')
+    	else if ($supplier == 'ddc' )
     	{
 
     		$image_size = count($f);
@@ -2020,7 +2427,7 @@ class Live_model extends CI_Model {
 				Modules::run('images/getImage',$imageData);
     		}
     	}
-    	elseif( $supplier == 'etd')
+    	elseif( $supplier == 'etd' || $supplier=='partnernet')
     	{
     		$i=0;
     		foreach($f as $image){
@@ -2153,6 +2560,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Χωρητικότητα Μπαταρίας':
@@ -2216,6 +2625,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Τύπος':
@@ -2291,6 +2702,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Θύρες':
@@ -2361,6 +2774,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 
 					switch ($chars_title) {
@@ -2428,6 +2843,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					if (strpos($chars_value, '"'))
 						$chars_value = str_replace('"', '', $chars_value);
@@ -2506,6 +2923,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					if (strpos($chars_value, '"'))
 						$chars_value = str_replace('"', '', $chars_value);
@@ -2583,6 +3002,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Χωρητικότητα (Από εώς)':
@@ -2663,6 +3084,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Τύπος συσκευής':
@@ -2752,6 +3175,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Τύπος θήκης':
@@ -2841,6 +3266,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Συσκευή':
@@ -2905,6 +3332,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Τύπος συσκευής':
@@ -2962,6 +3391,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Χωρητικότητα':
@@ -3034,6 +3465,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Τύπος':
@@ -3112,6 +3545,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Τύπος':
@@ -3200,6 +3635,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Τύπος Ψύκτρας':
@@ -3284,6 +3721,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Κατασκευαστής επεξεργαστή':
@@ -3452,6 +3891,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Κατασκευαστής chip':
@@ -3543,6 +3984,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Οικογένεια επεξεργαστή':
@@ -3635,6 +4078,8 @@ class Live_model extends CI_Model {
 						$chars_value = 'NAI';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
+					else if ($chars_value == '-')
+						$chars_value = '';
 
 					switch ($chars_title) {
 						case 'Τύπος μνήμης':
@@ -3693,7 +4138,25 @@ class Live_model extends CI_Model {
 
     public function makeAvailability($availability, $supplier){
 
-    	if($supplier == 'oktabit'){
+    	if($supplier == 'edit'){
+    		switch ($availability) {
+    			case '0':
+	    			$av = 'Αναμονή παραλαβής';
+	    			break;
+	    		case '1':
+	    			$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
+	    			break;
+	    		case '2':
+	    			$av = 'Άμεσα Διαθέσιμο';
+	    			break;
+	    		
+	    		default:
+	    			return false;
+	    			break;
+	    	}
+
+	    	return $av;
+    	}elseif($supplier == 'oktabit'){
 
 /*
 1.Διαθεσιμο 
@@ -3766,7 +4229,10 @@ class Live_model extends CI_Model {
 	    			return false;
 	    			break;
 
-	    		} 
+	    		}
+
+	    	return $av; 
+
 	    	}elseif( $supplier == 'braintrust'){
 
     		switch ($availability) {
@@ -3822,7 +4288,7 @@ class Live_model extends CI_Model {
     	}
     	elseif($supplier == 'cpi'){
 
-    		if ($availability >= 1)
+    		if ($availability >= 1 || $availability == 'Αμεσα Διαθέσιμο' || $availability == 'Περιορισμένη Διαθεσιμότητα')
     			$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
     		else
     			$av = false;

@@ -18,7 +18,7 @@ class Crosssales_model extends CI_Model {
     
 
     public function auto_laptop($sku, $brand, $size, $price){
-    	
+
     	if($this->manual_inserted($sku)){
     		return false;
     	}
@@ -137,9 +137,11 @@ class Crosssales_model extends CI_Model {
                 
                 $the_hdd = Modules::run('crud/get', 'external_hard_drives', array('product_number'=>$pn));
                 
+                if(!$the_hdd)
+                    continue;
+                
                 $row = $the_hdd->row();
                 $hdd_sku = $row->sku;
-
 
                 if($hdd['availability']=='Άμεσα Διαθέσιμο'){
                     $instock_hdds[] = $hdd_sku;
@@ -220,10 +222,14 @@ class Crosssales_model extends CI_Model {
                 $where = array(
                     'type'=>'Mouse',
                     'usage'=>'Mobile',
-                    'connection'=>'wireless'
+                    'connection'=>'wireless',
+                    'product_number'=>$pn
                     );
                 $the_mouse = Modules::run('crud/get', 'keyboard_mouse', $where);
                 
+                if(!$the_mouse)
+                    continue;
+               
                 $row = $the_mouse->row();
                 $mouse_sku = $row->sku;
 
@@ -287,11 +293,11 @@ class Crosssales_model extends CI_Model {
             $antivs = Modules::run('crud/get', 'live', $where);
 
             $antivs= $antivs->result_array();
-
+                $a=0;
             foreach ($antivs as $antiv) {
 
                 $pn = $antiv['product_number'];
-                echo $pn. ' / ';
+
                 $where  = array(
                     'product_number'=>$pn
                     );
@@ -302,8 +308,7 @@ class Crosssales_model extends CI_Model {
 
                 if($row->brand != 'INTEL'){
                     continue;
-                }
-
+                }                
 
                 if($antiv['availability']=='Άμεσα Διαθέσιμο'){
                     $instock_antivs[] = $antiv_sku;
@@ -311,7 +316,6 @@ class Crosssales_model extends CI_Model {
                     $outofstock_antivs[] = $antiv_sku;
 
                 }
-
             
             //b. Brand
 
@@ -320,7 +324,6 @@ class Crosssales_model extends CI_Model {
                 }else{
                     $dif_brand[] =  $antiv_sku;
                 }
-
                 
             }
 

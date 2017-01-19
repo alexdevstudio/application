@@ -1,7 +1,7 @@
 
 <div class="sections col-xs-12">
 	<section class="content-header">
-		<h1>Επεξεργασία προϊόντος</h1>  
+	
 		<br>	   
     </section> 
 
@@ -10,10 +10,10 @@
    
  <?php 
 
-$sku = $item->row()->sku;
-$pn = $item->row()->product_number;
+	$sku = $item->row()->sku;
+	$pn = $item->row()->product_number;
 
-$image = Modules::run("images/getFirstImage",$sku,true);
+	$image = Modules::run("images/getFirstImage",$sku,true);
 
  ?>
 
@@ -56,6 +56,39 @@ $image = Modules::run("images/getFirstImage",$sku,true);
 </div>
 
  <div class="col-xs-12 ">
+ <?php
+     if($skroutzPrice){
+	
+     
+$best_price = json_decode($skroutzPrice['best_price']);
+
+$sklogo = $best_price->shopLogo;
+$sktitle = $best_price->shopTitle;
+$skprice = $best_price->shopPrice;
+$skupdate = strtotime($skroutzPrice['last_update']);
+$skupdate = date( 'H:i d M `y ', $skupdate );
+
+//print_r($best_price);
+     	?>
+ <div class="skroutz_box form-group">
+     
+     <label class='bg-orange' ><a target="_blank" style="color:#fff" href="<?= $skroutzUrl; ?>">1η Τιμή Skroutz <i class="fa fa-external-link"  aria-hidden="true"></i></a></label>   
+
+     
+     <img src="<?= $sklogo; ?>" />
+
+     <!-- <span class='edit-sktitle'><?= $sktitle; ?></span>   --> 
+
+     <span class='edit-skprice'><?= $skprice; ?> €</span>
+     <span class='edit-skupdate'><i class="fa fa-calendar"></i> <?= $skupdate; ?></span>
+
+
+</div>
+
+<?php
+}
+
+?>
  <form method="post" action=''>
  <div class="form-group">
 <label>Κανονική Τιμή</label>
@@ -67,6 +100,7 @@ $sale_price = '';
 $supplier = '';
 $instock = '';
 $outstock = '';
+$outstock2 = '';
 
 if($itemLive){
 	
@@ -79,16 +113,24 @@ if($itemLive){
 		$instock = 'selected';
 	}elseif($av=='Κατόπιν παραγγελίας σε 1 εργάσιμη'){
 		$outstock = 'selected';
+	}elseif($av=='Αναμονή παραλαβής'){
+		$outstock2 = 'selected';
 	}
+
+	
+	
+}
 
 	
 	$etd = '';
 	$logicom = '';
 	$oktabit = '';
 	$braintrust = '';
-}
-
-
+	$cpi = '';
+	$westnet = '';
+	$ddc = '';
+	$partnernet = '';
+	$other = '';
 
 ?>
 <input class='form-control' type="hidden" name='product_number' value='<?= $pn; ?>'>
@@ -108,11 +150,23 @@ if($itemLive){
 </div>
 <div class="form-group">
 	                  	
+<label>Μέγιστος Αριθμός Άτοκων Δόσεων</label>
+
+<div class="input-group">
+    <input class='form-control' name='installments' type="number" id='installments' value='<?= $installments; ?>'>
+    <span style="cursor:pointer;color:#dd4b39;" class="input-group-addon" id="basic-addon1" onclick='clearPrice("installments");' title="Εκκαθάριση δόσεων">X</span>
+</div>
+
+
+
+</div>
+<div style=''class="form-group">
+	                  	
 <label>Τιμή Προσφοράς</label>
 
 <div class="input-group">
     <input class='form-control' name='sale_price' id='sale_price' value='<?= $sale_price; ?>'>
-    <span style="cursor:pointer;color:#dd4b39;" class="input-group-addon" id="basic-addon1" onclick='clearPrice("sale");' title="Εκκαθάριση τιμής">X</span>
+    <span style="cursor:pointer;color:#dd4b39;" class="input-group-addon" id="basic-addon1" onclick='clearPrice("sale_price");' title="Εκκαθάριση τιμής">X</span>
 </div>
 	
 
@@ -130,6 +184,9 @@ if($itemLive){
 	              		  				case 'etd':
 	              		  					$etd = 'selected';
 	              		  					break;
+	              		  				case 'partnernet':
+	              		  					$partnernet = 'selected';
+	              		  					break;
 	              		  				case 'logicom':
 	              		  					$logicom = 'selected';
 	              		  					break;
@@ -142,12 +199,16 @@ if($itemLive){
 	              		  				case 'cpi':
 	              		  					$cpi = 'selected';
 	              		  					break;
+	              		  				case 'westnet':
+	              		  					$westnet = 'selected';
+	              		  					break;
+	              		  				case 'ddc':
+	              		  					$ddc = 'selected';
+	              		  					break;
+	              		  				
 	              		  				default:
 	              		  					$other = 'selected';
-	              		  					?>
-	              		  	<option value="<?= $suplier; ?>" <?= $other ?>>$supplier</option>
-
-	              		  					<?php
+	              		  					
 	              		  					break;
 	              		  			}
 	              		  		
@@ -157,6 +218,12 @@ if($itemLive){
 	              		  	<option value="logicom" <?= $logicom ?>>Logicom</option>
 	              		  	<option value="oktabit" <?= $oktabit ?>>Oktabit</option>
 	              		  	<option value="braintrust" <?= $braintrust ?>>Braintrust</option>
+	              		  	<option value="cpi" <?= $cpi ?>>CPI</option>
+	              		  	<option value="westnet" <?= $westnet ?>>WestNet</option>
+	              		  	<option value="DDC" <?= $ddc ?>>DDC</option>
+	              		  	<option value="partnernet" <?= $partnernet ?>>PartnerNet</option>
+	              		  	<option value="none" <?= $other ?>>Δεν υπάρχει σε κανέναν προμηθευτή</option>
+
 	              		  </select>
 
 	                  	
@@ -168,8 +235,9 @@ if($itemLive){
 	                  	
 	              		  <select class='form-control' name="availability" id="availability">
 	              		  	<option value="">----</option>
-	              		  	<option value="1" <?= $instock; ?>>Διαθέσιμο στο κατάστημα</option>
-	              		  	<option value="0" <?= $outstock; ?>>Μη διαθέσιμο στο κατάστημα / Διαθέσιμο στον προμηθευτή</option>
+	              		  	<option value="2" <?= $instock; ?>>Διαθέσιμο στο κατάστημα</option>
+	              		  	<option value="1" <?= $outstock; ?>>Μη διαθέσιμο στο κατάστημα / Διαθέσιμο στον προμηθευτή</option>
+	              		  	<option value="0" <?= $outstock2; ?>>Αναμονή παραλαβής</option>
 	              		  </select>
 
 	                  	
@@ -195,6 +263,8 @@ if($itemLive){
     </div>
 
 		<div class=" col-xs-12 col-md-10">
+		<h2><?= $item->row()->title; ?></h2>
+		<div style='border-top:1px solid #888'></div><br />
 		<form  method='post' action="">
 
    <?php
@@ -207,7 +277,7 @@ if($itemLive){
 		}
 		?>
 
-		<div class="col-xs-12 col-md-5">
+		<div class="col-xs-12 col-md-6">
 
 		<div class="col-xs-12 col-md-4">
 		<label><?= ucfirst(str_replace('_', ' ', $key));  ?></label>
@@ -239,6 +309,17 @@ if($itemLive){
 		<?php
 	}
 	?>
+	<div class="col-xs-12 col-md-6">
+
+		<div class="col-xs-12 col-md-4">
+		<label>Skroutz URL 	<a target="_blank" href="<?= $skroutzUrl; ?>"><i class="fa fa-external-link" aria-hidden="true"></i></a></label>
+		</div>
+		<div class="col-xs-12 col-md-8">
+			<input class="form-control edit-form-etd" value="<?= $skroutzUrl; ?>" name="skroutz_url"/>
+		
+		</div>
+	
+	</div>		
 	<button type="submit" class="btn btn-block btn-success">Ενημέρωση</button>
 		</form>
 		</div>
@@ -249,18 +330,9 @@ if($itemLive){
 	/*$(document).ready(function(){*/
 
 			function clearPrice(a){
-				if(a == 'regular'){
-					$('#regular').val('');
-					
-				}
-
-				if(a == 'sale'){
-					$('#sale_price').val('');
-					
-
-				}
+				$('#'+a).val('');
 			}
 
 /*});*/
 
-</script>>
+</script>
