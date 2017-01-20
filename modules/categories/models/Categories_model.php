@@ -56,10 +56,8 @@ $fa = 0;
     		foreach ($xml->children() as $product) {
     			$data=array();
 
-    			if(empty($product))
-    				continue;
-
     			foreach ($product as $key => $value) {
+    				
     				
     				if($key != 'description' && $key!='shipping_class'){
 
@@ -69,9 +67,10 @@ $fa = 0;
 
 
     			}
+				
+
 
     			$sku = $data['sku'];
-
     				/*if($sku == '1313329'){
     					echo "<pre />";
     						print_r($data);
