@@ -1924,12 +1924,14 @@ class Live_model extends CI_Model {
 
 				$availability = $this->makeAvailability((string) trim($product->Stock_Status), 'westnet');
 
-				if(!$availability){
+				if(!$availability)
 					continue;
-				}
 
 				$code = (string) trim($product->Code);
 				$pn = (string) trim($product->Part_Number);
+
+				if(substr($pn, -4)=='-EOL')
+					continue;
 
 				if ($title=='')
 					$title = (string) trim($product->Description);
