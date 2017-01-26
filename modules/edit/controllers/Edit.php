@@ -65,6 +65,12 @@ class Edit extends MX_Controller {
 					$post['status']='publish';
 					$post['delete_flag']= 0;
 
+					if($post['upcoming_date']=='' || $av!='Αναμονή παραλαβής'){
+						unset($post['upcoming_date']);
+					}else{
+						$post['upcoming_date'] = date("Y-m-d",strtotime($post['upcoming_date']));
+					}
+
 					if($post['sale_price']==''){
 						$post['sale_price'] = NULL;
 					}

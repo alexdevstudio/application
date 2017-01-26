@@ -92,7 +92,6 @@ $skupdate = date( 'H:i d M `y ', $skupdate );
  <form method="post" action=''>
  <div class="form-group">
 <label>Κανονική Τιμή</label>
-
 <?php
 $price = '';
 $availability = '';
@@ -108,6 +107,17 @@ if($itemLive){
 	$sale_price = $itemLive->row()->sale_price; 
 	$av = $itemLive->row()->availability;
 	$supplier = $itemLive->row()->supplier;
+	$upcomingDate = $itemLive->row()->upcoming_date;
+	
+
+	if($itemLive->row()->upcoming_date == ''){
+		$upcomingDate = '';
+	}else{
+		$upcomingDate = date('m/d/Y',strtotime($upcomingDate));
+	}
+
+
+	//date( 'H:i d M `y ', $skupdate );
 
 	if($av=='Άμεσα Διαθέσιμο'){
 		$instock = 'selected';
@@ -234,15 +244,32 @@ if($itemLive){
 	                  	<label>Διαθεσιμότητα</label>
 	                  	
 	              		  <select class='form-control' name="availability" id="availability">
-	              		  	<option value="">----</option>
-	              		  	<option value="2" <?= $instock; ?>>Διαθέσιμο στο κατάστημα</option>
-	              		  	<option value="1" <?= $outstock; ?>>Μη διαθέσιμο στο κατάστημα / Διαθέσιμο στον προμηθευτή</option>
-	              		  	<option value="0" <?= $outstock2; ?>>Αναμονή παραλαβής</option>
+	              		  	<option onClick='toogleUpcommingDate("false")' value="">----</option>
+	              		  	<option onClick='toogleUpcommingDate("false")' value="2" <?= $instock; ?>>Διαθέσιμο στο κατάστημα</option>
+	              		  	<option onClick='toogleUpcommingDate("false")' value="1" <?= $outstock; ?>>Μη διαθέσιμο στο κατάστημα / Διαθέσιμο στον προμηθευτή</option>
+	              		  	<option onClick='toogleUpcommingDate("true")' value="0" <?= $outstock2; ?>>Αναμονή παραλαβής</option>
 	              		  </select>
 
 	                  	
           
 	        </div>
+	        <div class="form-group upcommingDate">
+	        	
+   
+       <label>Ημ/νία Παραλαβής</label>
+            
+                <div class='input-group date' id='datetimepicker1'>
+                    <input name="upcoming_date" type='text' value="<?php echo $upcomingDate; ?>" class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        
+       
+   
+
+	       
 
 	<button type="submit" class="btn btn-block btn-warning">Ενημέρωση του Eshop</button>
 
