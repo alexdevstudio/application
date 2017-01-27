@@ -99,6 +99,7 @@ class Edit extends MX_Controller {
 
 					if($exists){
 						$update = Modules::run('crud/update','live',$where,$post);
+						//updateWp($product, $table);
 					}else{
 
 						$update = Modules::run('crud/insert','live', $post);
@@ -202,6 +203,8 @@ class Edit extends MX_Controller {
 			echo 'Error';
 		}
 	}
+
+
 }
 
 ?>
