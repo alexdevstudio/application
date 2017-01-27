@@ -94,7 +94,7 @@ class Extract_model extends CI_Model {
 
                 $skus = str_replace('_', ',', $skus);
                 $query = $this->db->query("
-                     SELECT l.id, l.product_number, l.category, l.net_price, l.recycle_tax,l.price_tax,l.sale_price, l.availability, l.supplier, l.status, l.delete_flag, t.*,
+                     SELECT l.id, l.product_number, l.category, l.net_price, l.recycle_tax,l.price_tax,l.sale_price, l.availability, l.upcoming_date, l.supplier, l.status, l.delete_flag, t.*,
                      i.installments_count
 
                      FROM live l
@@ -110,7 +110,7 @@ class Extract_model extends CI_Model {
 
             }else{
                 $query = $this->db->query("
-                     SELECT l.id, l.product_number, l.category, l.net_price, l.recycle_tax,l.price_tax,l.sale_price, l.availability, l.supplier, l.status, l.delete_flag, t.*,
+                     SELECT l.id, l.product_number, l.category, l.net_price, l.recycle_tax,l.price_tax,l.sale_price, l.availability, l.upcoming_date, l.supplier, l.status, l.delete_flag, t.*,
                      i.installments_count
 
                      FROM live l
@@ -608,18 +608,29 @@ $products_count = 0;
                          }else{
                             $price1 = $product['price_tax'];
                          }
+
+                         $customAvailability = $product['availability'];
+                         $upcommingDate = $product['upcoming_date'];
+
+                         if($customAvailability=='Αναμονή παραλαβής' && $upcommingDate!=''){
+                            $customAvailability.= "^$upcommingDate";
+                            
+                         }
                         
                         $where = array('post_id'=>$post_id,'meta_key'=>'_regular_price');
                         $data = array('meta_value'=>$product['price_tax']);                   
                         Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
+                        
                         $where = array('post_id'=>$post_id,'meta_key'=>'_sale_price');
                         $data = array('meta_value'=>$sale_price);                   
                         Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
+                        
                         $where = array('post_id'=>$post_id,'meta_key'=>'_price');
                         $data = array('meta_value'=>$price1);                   
                         Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
+                        
                         $where = array('post_id'=>$post_id,'meta_key'=>'custom_availability');
-                        $data = array('meta_value'=>$product['availability']);                   
+                        $data = array('meta_value'=>$customAvailability);                   
                         Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
                         
                         $where = array('post_id'=>$post_id,'meta_key'=>'max_installments');
