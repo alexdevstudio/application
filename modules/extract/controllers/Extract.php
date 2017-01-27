@@ -3,13 +3,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Extract extends MX_Controller {
 
-	
+	function __construct()
+    {
+        parent::__construct();
+
+        $this->load->model('extract_model');
+       
+    }
 
 	public function xml($table=null,$all=false)
 	{	
 		//if(!$table){redirect('https://etd.gr/','refresh');}
 
-		$this->load->model('extract_model');
+		
 		
 		if($this->extract_model->xml($table,$all)){
 
@@ -27,14 +33,21 @@ class Extract extends MX_Controller {
 
 	public function allImport($table, $numrows, $skus=null){
 
-		 $this->load->model('extract_model');
+		 
 		 echo $this->extract_model->allImport($table, $numrows, $skus);
 	}
 
 
 	public function getPrice($net, $recycle, $category){
-		$this->load->model('extract_model');
+		
 		return $this->extract_model->priceTax($net, $recycle, $category);
+		
+	}
+
+
+	public function updateWp($product,$customVar=null){
+		
+		return $this->extract_model->updateWp($product, $customVar);
 		
 	}
 

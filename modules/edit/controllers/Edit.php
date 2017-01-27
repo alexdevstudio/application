@@ -65,6 +65,12 @@ class Edit extends MX_Controller {
 					$post['status']='publish';
 					$post['delete_flag']= 0;
 
+					if($post['upcoming_date']=='' || $av!='Αναμονή παραλαβής'){
+						unset($post['upcoming_date']);
+					}else{
+						$post['upcoming_date'] = date("Y-m-d",strtotime($post['upcoming_date']));
+					}
+
 					if($post['sale_price']==''){
 						$post['sale_price'] = NULL;
 					}
@@ -93,6 +99,7 @@ class Edit extends MX_Controller {
 
 					if($exists){
 						$update = Modules::run('crud/update','live',$where,$post);
+						//updateWp($product, $table);
 					}else{
 
 						$update = Modules::run('crud/insert','live', $post);
@@ -196,6 +203,8 @@ class Edit extends MX_Controller {
 			echo 'Error';
 		}
 	}
+
+
 }
 
 ?>

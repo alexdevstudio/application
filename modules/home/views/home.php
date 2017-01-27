@@ -2,11 +2,11 @@
 	$tables = Modules::run('categories/fullCategoriesArray');
 ?>
 <?php 
-$var = Modules::run('crud/getWp', 'wp_options',array('option_id'=>161176));
+/*$var = Modules::run('crud/getWp', 'wp_options',array('option_id'=>161176));
 echo "<pre>";
 
 print_r($var->row()->option_name);
-echo "</pre>";
+echo "</pre>";*/
  ?>
 	<div class="suppliers sections col-sm-8 col-xs-12">
 		
