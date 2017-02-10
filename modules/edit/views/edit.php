@@ -89,9 +89,6 @@ $skupdate = date( 'H:i d M `y ', $skupdate );
 }
 
 ?>
- <form method="post" action=''>
- <div class="form-group">
-<label>Κανονική Τιμή</label>
 <?php
 $price = '';
 $availability = '';
@@ -105,6 +102,7 @@ if($itemLive){
 	
 	$price = $itemLive->row()->price_tax;
 	$sale_price = $itemLive->row()->sale_price; 
+	$shipping = $itemLive->row()->shipping; 
 	$av = $itemLive->row()->availability;
 	$supplier = $itemLive->row()->supplier;
 	$upcomingDate = $itemLive->row()->upcoming_date;
@@ -143,6 +141,10 @@ if($itemLive){
 	$other = '';
 
 ?>
+ <form method="post" action=''>
+ <div class="form-group">
+<label>Κανονική Τιμή</label>
+
 <input class='form-control' type="hidden" name='product_number' value='<?= $pn; ?>'>
 <input class='form-control' type="hidden" name='category' value='<?= $category; ?>'>
 <input class='form-control' type="hidden" name='delete_flag' value='0'>
@@ -158,6 +160,28 @@ if($itemLive){
 
 
 </div>
+<div style=''class="form-group">
+	                  	
+<label>Τιμή Προσφοράς</label>
+
+<div class="input-group">
+    <input class='form-control' name='sale_price' id='sale_price' value='<?= $sale_price; ?>'>
+    <span style="cursor:pointer;color:#dd4b39;" class="input-group-addon" id="basic-addon1" onclick='clearPrice("sale_price");' title="Εκκαθάριση τιμής">X</span>
+</div>
+	
+
+</div>
+<div style=''class="form-group">
+	                  	
+<label>Κόστος Αποστολής</label>
+
+<div class="input-group">
+    <input class='form-control' name='shipping' id='shipping' value='<?= $shipping; ?>'>
+    <span style="cursor:pointer;color:#dd4b39;" class="input-group-addon" id="basic-addon1" onclick='clearPrice("shipping");' title="Εκκαθάριση κόστους αποστολής">X</span>
+</div>
+	
+
+</div>
 <div class="form-group">
 	                  	
 <label>Μέγιστος Αριθμός Άτοκων Δόσεων</label>
@@ -170,17 +194,7 @@ if($itemLive){
 
 
 </div>
-<div style=''class="form-group">
-	                  	
-<label>Τιμή Προσφοράς</label>
 
-<div class="input-group">
-    <input class='form-control' name='sale_price' id='sale_price' value='<?= $sale_price; ?>'>
-    <span style="cursor:pointer;color:#dd4b39;" class="input-group-addon" id="basic-addon1" onclick='clearPrice("sale_price");' title="Εκκαθάριση τιμής">X</span>
-</div>
-	
-
-</div>
 <div class="form-group">
 	                  	
 	                  	<label>Προμυθευτής</label>

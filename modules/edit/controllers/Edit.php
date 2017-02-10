@@ -79,6 +79,10 @@ class Edit extends MX_Controller {
 						$post['price_tax'] = NULL;
 					}
 
+					if($post['shipping']==''){
+						$post['shipping'] = NULL;
+					}
+
 					$where = array('product_number'=>$item->row()->product_number);
 
 					//First check if item exists
