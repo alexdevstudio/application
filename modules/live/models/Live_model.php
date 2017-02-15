@@ -1862,7 +1862,8 @@ class Live_model extends CI_Model {
 					'product_url' => '',
 					'net_price'=>$net_price
 				);
-
+				/*echo '<pre>';
+				print_r($cpi_product);*/
 				//2. New products for charateristics tables that load Sku module
 				$insert = $this->addProduct ($cpi_product, array(), $imageUrl, $supplier);
 
@@ -1923,12 +1924,14 @@ class Live_model extends CI_Model {
 
 				$availability = $this->makeAvailability((string) trim($product->Stock_Status), 'westnet');
 
-				if(!$availability){
+				if(!$availability)
 					continue;
-				}
 
 				$code = (string) trim($product->Code);
 				$pn = (string) trim($product->Part_Number);
+
+				if(substr($pn, -4)=='-EOL')
+					continue;
 
 				if ($title=='')
 					$title = (string) trim($product->Description);
@@ -4287,7 +4290,7 @@ class Live_model extends CI_Model {
     	}
     	elseif($supplier == 'cpi'){
 
-    		if ($availability >= 1)
+    		if ($availability >= 1 || $availability == 'Αμεσα Διαθέσιμο' || $availability == 'Περιορισμένη Διαθεσιμότητα')
     			$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
     		else
     			$av = false;

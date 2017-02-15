@@ -38,5 +38,9 @@
 <!-- AdminLTE for demo purposes -->
 <script src="<?= base_url()?>assets/dist/js/demo.js"></script>
 <script src="<?= base_url()?>assets/js/etd.js"></script>
+ <script type="text/javascript">
+
+
+        </script>
 </body>
 </html>

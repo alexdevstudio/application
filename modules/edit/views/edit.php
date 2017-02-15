@@ -10,10 +10,10 @@
    
  <?php 
 
-$sku = $item->row()->sku;
-$pn = $item->row()->product_number;
+	$sku = $item->row()->sku;
+	$pn = $item->row()->product_number;
 
-$image = Modules::run("images/getFirstImage",$sku,true);
+	$image = Modules::run("images/getFirstImage",$sku,true);
 
  ?>
 
@@ -56,10 +56,39 @@ $image = Modules::run("images/getFirstImage",$sku,true);
 </div>
 
  <div class="col-xs-12 ">
- <form method="post" action=''>
- <div class="form-group">
-<label>Κανονική Τιμή</label>
+ <?php
+     if($skroutzPrice){
+	
+     
+$best_price = json_decode($skroutzPrice['best_price']);
 
+$sklogo = $best_price->shopLogo;
+$sktitle = $best_price->shopTitle;
+$skprice = $best_price->shopPrice;
+$skupdate = strtotime($skroutzPrice['last_update']);
+$skupdate = date( 'H:i d M `y ', $skupdate );
+
+//print_r($best_price);
+     	?>
+ <div class="skroutz_box form-group">
+     
+     <label class='bg-orange' ><a target="_blank" style="color:#fff" href="<?= $skroutzUrl; ?>">1η Τιμή Skroutz <i class="fa fa-external-link"  aria-hidden="true"></i></a></label>   
+
+     
+     <img src="<?= $sklogo; ?>" />
+
+     <!-- <span class='edit-sktitle'><?= $sktitle; ?></span>   --> 
+
+     <span class='edit-skprice'><?= $skprice; ?> €</span>
+     <span class='edit-skupdate'><i class="fa fa-calendar"></i> <?= $skupdate; ?></span>
+
+
+</div>
+
+<?php
+}
+
+?>
 <?php
 $price = '';
 $availability = '';
@@ -73,8 +102,20 @@ if($itemLive){
 	
 	$price = $itemLive->row()->price_tax;
 	$sale_price = $itemLive->row()->sale_price; 
+	$shipping = $itemLive->row()->shipping; 
 	$av = $itemLive->row()->availability;
 	$supplier = $itemLive->row()->supplier;
+	$upcomingDate = $itemLive->row()->upcoming_date;
+	
+
+	if($itemLive->row()->upcoming_date == ''){
+		$upcomingDate = '';
+	}else{
+		$upcomingDate = date('m/d/Y',strtotime($upcomingDate));
+	}
+
+
+	//date( 'H:i d M `y ', $skupdate );
 
 	if($av=='Άμεσα Διαθέσιμο'){
 		$instock = 'selected';
@@ -100,6 +141,10 @@ if($itemLive){
 	$other = '';
 
 ?>
+ <form method="post" action=''>
+ <div class="form-group">
+<label>Κανονική Τιμή</label>
+
 <input class='form-control' type="hidden" name='product_number' value='<?= $pn; ?>'>
 <input class='form-control' type="hidden" name='category' value='<?= $category; ?>'>
 <input class='form-control' type="hidden" name='delete_flag' value='0'>
@@ -115,6 +160,28 @@ if($itemLive){
 
 
 </div>
+<div style=''class="form-group">
+	                  	
+<label>Τιμή Προσφοράς</label>
+
+<div class="input-group">
+    <input class='form-control' name='sale_price' id='sale_price' value='<?= $sale_price; ?>'>
+    <span style="cursor:pointer;color:#dd4b39;" class="input-group-addon" id="basic-addon1" onclick='clearPrice("sale_price");' title="Εκκαθάριση τιμής">X</span>
+</div>
+	
+
+</div>
+<div style=''class="form-group">
+	                  	
+<label>Κόστος Αποστολής</label>
+
+<div class="input-group">
+    <input class='form-control' name='shipping' id='shipping' value='<?= $shipping; ?>'>
+    <span style="cursor:pointer;color:#dd4b39;" class="input-group-addon" id="basic-addon1" onclick='clearPrice("shipping");' title="Εκκαθάριση κόστους αποστολής">X</span>
+</div>
+	
+
+</div>
 <div class="form-group">
 	                  	
 <label>Μέγιστος Αριθμός Άτοκων Δόσεων</label>
@@ -127,17 +194,7 @@ if($itemLive){
 
 
 </div>
-<div style=''class="form-group">
-	                  	
-<label>Τιμή Προσφοράς</label>
 
-<div class="input-group">
-    <input class='form-control' name='sale_price' id='sale_price' value='<?= $sale_price; ?>'>
-    <span style="cursor:pointer;color:#dd4b39;" class="input-group-addon" id="basic-addon1" onclick='clearPrice("sale_price");' title="Εκκαθάριση τιμής">X</span>
-</div>
-	
-
-</div>
 <div class="form-group">
 	                  	
 	                  	<label>Προμυθευτής</label>
@@ -201,15 +258,32 @@ if($itemLive){
 	                  	<label>Διαθεσιμότητα</label>
 	                  	
 	              		  <select class='form-control' name="availability" id="availability">
-	              		  	<option value="">----</option>
-	              		  	<option value="2" <?= $instock; ?>>Διαθέσιμο στο κατάστημα</option>
-	              		  	<option value="1" <?= $outstock; ?>>Μη διαθέσιμο στο κατάστημα / Διαθέσιμο στον προμηθευτή</option>
-	              		  	<option value="0" <?= $outstock2; ?>>Αναμονή παραλαβής</option>
+	              		  	<option onClick='toogleUpcommingDate("false")' value="">----</option>
+	              		  	<option onClick='toogleUpcommingDate("false")' value="2" <?= $instock; ?>>Διαθέσιμο στο κατάστημα</option>
+	              		  	<option onClick='toogleUpcommingDate("false")' value="1" <?= $outstock; ?>>Μη διαθέσιμο στο κατάστημα / Διαθέσιμο στον προμηθευτή</option>
+	              		  	<option onClick='toogleUpcommingDate("true")' value="0" <?= $outstock2; ?>>Αναμονή παραλαβής</option>
 	              		  </select>
 
 	                  	
           
 	        </div>
+	        <div class="form-group upcommingDate">
+	        	
+   
+       <label>Ημ/νία Παραλαβής</label>
+            
+                <div class='input-group date' id='datetimepicker1'>
+                    <input name="upcoming_date" type='text' value="<?php echo $upcomingDate; ?>" class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        
+       
+   
+
+	       
 
 	<button type="submit" class="btn btn-block btn-warning">Ενημέρωση του Eshop</button>
 
@@ -230,6 +304,8 @@ if($itemLive){
     </div>
 
 		<div class=" col-xs-12 col-md-10">
+		<h2><?= $item->row()->title; ?></h2>
+		<div style='border-top:1px solid #888'></div><br />
 		<form  method='post' action="">
 
    <?php
@@ -242,7 +318,7 @@ if($itemLive){
 		}
 		?>
 
-		<div class="col-xs-12 col-md-5">
+		<div class="col-xs-12 col-md-6">
 
 		<div class="col-xs-12 col-md-4">
 		<label><?= ucfirst(str_replace('_', ' ', $key));  ?></label>
@@ -274,6 +350,17 @@ if($itemLive){
 		<?php
 	}
 	?>
+	<div class="col-xs-12 col-md-6">
+
+		<div class="col-xs-12 col-md-4">
+		<label>Skroutz URL 	<a target="_blank" href="<?= $skroutzUrl; ?>"><i class="fa fa-external-link" aria-hidden="true"></i></a></label>
+		</div>
+		<div class="col-xs-12 col-md-8">
+			<input class="form-control edit-form-etd" value="<?= $skroutzUrl; ?>" name="skroutz_url"/>
+		
+		</div>
+	
+	</div>		
 	<button type="submit" class="btn btn-block btn-success">Ενημέρωση</button>
 		</form>
 		</div>

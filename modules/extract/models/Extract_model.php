@@ -69,11 +69,15 @@ class Extract_model extends CI_Model {
             }
         //, i.item_sku, i.image_src
 //INNER JOIN images i ON t.sku = i.item_sku
-        public function allImport($table){
+        public function allImport($table, $numrows, $skus=null){
 
+            if($numrows == 'all'){
+                $numrows = 2500;
+            }
 
             $action = '';
             $allProds = array();
+
             if($table == 'all'){
                 $action = 'all';
                 $tables = Modules::run('categories/fullCategoriesArray');
@@ -84,13 +88,55 @@ class Extract_model extends CI_Model {
                 $tables = array($table);
 
             }
+            
             $f = 0;
             foreach ($tables as $table) {
 
-           
+            if($skus && $skus!=''){
 
+                $skus = str_replace('_', ',', $skus);
                 $query = $this->db->query("
-                     SELECT l.product_number, l.category, l.net_price, l.recycle_tax,l.price_tax,l.sale_price, l.availability, l.supplier, l.status, l.delete_flag, t.*,
+                     SELECT l.id, 
+                            l.product_number, 
+                            l.category, l.net_price, 
+                            l.recycle_tax,
+                            l.price_tax,
+                            l.sale_price, 
+                            l.availability, 
+                            l.upcoming_date, 
+                            l.supplier, 
+                            l.status, 
+                            l.delete_flag,
+                            t.*,
+                            i.installments_count
+
+                     FROM live l
+
+                     INNER JOIN {$table} t ON l.product_number = t.product_number
+                     
+                     LEFT JOIN installments i ON t.sku = i.sku
+
+                     WHERE l.category = '{$table}' AND t.new_item = 0 AND t.sku IN ({$skus})
+
+                     
+                    ");
+
+            }else{
+               
+               $query = $this->db->query("
+                     SELECT l.id,
+                     l.product_number,
+                     l.category,
+                     l.net_price,
+                     l.recycle_tax,
+                     l.price_tax,
+                     l.sale_price,
+                     l.availability,
+                     l.upcoming_date,
+                     l.supplier,
+                     l.status,
+                     l.delete_flag,
+                     t.*,
                      i.installments_count
 
                      FROM live l
@@ -99,10 +145,13 @@ class Extract_model extends CI_Model {
                      
                      LEFT JOIN installments i ON t.sku = i.sku
 
-                     WHERE l.category = '{$table}' AND t.new_item = 0
+                     WHERE l.category = '{$table}' AND t.new_item = 0 ORDER BY t.sku DESC LIMIT {$numrows}
 
                      
                     ");
+            }
+
+                
                $i=1;
                $products = array();
 
@@ -126,21 +175,21 @@ class Extract_model extends CI_Model {
 
 
 
-                $cat = $product['category'];
-                $supplier = $product['supplier'];
-                $pn = $product['product_number'];
-                $sku = $product['sku'];
-                 if(isset($product['brand'])){
-                    $brand = $product['brand'];
-                }else{
-                    $brand = $product['Brand'];
-                }
+                    $cat = $product['category'];
+                    $supplier = $product['supplier'];
+                    $pn = $product['product_number'];
+                    $sku = $product['sku'];
+
+                    if(isset($product['brand'])){
+                        $brand = $product['brand'];
+                    }else{
+                        $brand = $product['Brand'];
+                    }
 
                 
                 
                 
-                 //echo "$sku<br />";
-                 //Price 
+                 
                     if($product['price_tax'] == '' ||  $product['price_tax'] === NULL  ||  $product['price_tax'] == '0.00' || $product['price_tax'] =='0'){
                       
                         $product['price_tax'] = $this->priceTax($product['net_price'],$product['recycle_tax'],$cat);
@@ -195,11 +244,7 @@ class Extract_model extends CI_Model {
                     $etd_title = $product['etd_title'];
                     $skroutz_title = $product['skroutz_title'];
                     $cross = '';
-                    $installments_import = $product['installments_count'];
-
-                    if(!$installments_import){
-                        $installments_import = 12;
-                    }
+                    
 
                 
                 switch ($table) {
@@ -484,7 +529,7 @@ class Extract_model extends CI_Model {
                         }
                     }
 
-                    $cat_check = ''; //to reset the category for next product
+                   // $cat_check = ''; //to reset the category for next product
                 }
 
                 $item = $xml->createElement('item');
@@ -522,7 +567,7 @@ class Extract_model extends CI_Model {
 
 
             }
-$products_count = 0;
+
             if($action == 'all'){
                 $xml = new DomDocument("1.0","UTF-8");//ISO-8859-7
 
@@ -549,84 +594,7 @@ $products_count = 0;
                         }
                     }
 
-                    $sku = $product['sku'];
-
-                    $where = array('sku'=>$sku);
-                    $data = array('new_item'=>0);
-                    Modules::run("crud/update",$table, $where, $data); 
-
-                   
-                    $where = array('meta_value'=>$sku,"meta_key"=>"_sku");
-                    $post_id = Modules::run("crud/getWp","wp_postmeta", $where);
-
-
-
-
-                    if(!is_bool($post_id)){
-                        $post_id = $post_id->result();
-                        $post_id = $post_id[0]->post_id;
-
-                         $where = array('id'=>$post_id);
-                         $post_name = Modules::run("crud/getWp","wp_posts", $where);
-                         $post_name = $post_name->result();
-                         $post_name = $post_name[0]->post_name;
-
-
-                        if($product['status']=='publish'){
-
-                         
-                         $post_name = rtrim($post_name,'__trashed');
-
-
-                         //If Sale Price is SET check
-                         $sale_price = trim($product['sale_price']);
-                         if($sale_price!='' && $sale_price!=0.00 && $sale_price!=0){
-                            $price1 = $sale_price;
-                         }else{
-                            $price1 = $product['price_tax'];
-                         }
-                        
-                        $where = array('post_id'=>$post_id,'meta_key'=>'_regular_price');
-                        $data = array('meta_value'=>$product['price_tax']);                   
-                        Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
-                        $where = array('post_id'=>$post_id,'meta_key'=>'_sale_price');
-                        $data = array('meta_value'=>$sale_price);                   
-                        Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
-                        $where = array('post_id'=>$post_id,'meta_key'=>'_price');
-                        $data = array('meta_value'=>$price1);                   
-                        Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
-                        $where = array('post_id'=>$post_id,'meta_key'=>'custom_availability');
-                        $data = array('meta_value'=>$product['availability']);                   
-                        Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
-                        
-                        $where = array('post_id'=>$post_id,'meta_key'=>'max_installments');
-                        Modules::run("crud/deleteWp","wp_postmeta",  $where);
-                       
-                        $data = array('post_id'=>$post_id,'meta_key'=>'max_installments','meta_value'=>$installments_import);                   
-                        Modules::run("crud/insertWp","wp_postmeta", $data);
-
-
-
-                        echo  $products_count++;
-                        echo ":$sku:".$product['status']."<br />";  
-
-
-                        }
-                        /*$where = array('post_id'=>$post_id,'meta_key'=>'_stock_status');
-                        $data = array('meta_value'=>'instock');                   
-                        Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
-                        $where = array('post_id'=>$post_id,'meta_key'=>'_manage_stock');
-                        $data = array('meta_value'=>'no');                   
-                        Modules::run("crud/updateWp","wp_postmeta",  $where, $data);*/
-                        $where = array('ID'=>$post_id);
-                        $data = array('post_title'=>$product['etd_title'],"post_status"=>$product['status'],"post_name"=>$post_name);                   
-                        Modules::run("crud/updateWp","wp_posts",  $where, $data);
-                        
-
-                       // exit($product['price_tax']); 
-
-                        
-                    }
+                    $this->updateWp($product);
                     
 
                     
@@ -634,7 +602,7 @@ $products_count = 0;
 
                 $item = $xml->createElement('item');
                 $item = $items->appendChild($item);
-                //print_r($query->result_array());
+                
 
                 $xml->FormatOutput = true;
                 $string_value = $xml->saveXML(); 
@@ -645,7 +613,7 @@ $products_count = 0;
 
                 $xml->save($file);
             }
- 
+                echo "<h1>Price and Availability Update Complete.</h1>";
          
         }
 
@@ -671,5 +639,110 @@ $products_count = 0;
             else
                 return false;  
              
+        }
+
+        public function updateWp($product,$customVar=null){
+                    
+                $installments_import = $product['installments_count'];
+
+                    if(!$installments_import){
+                        $installments_import = 12;
+                    }
+
+                    $sku = $product['sku'];
+
+                   /* $where = array('sku'=>$sku);
+                    $data = array('new_item'=>0);
+                    Modules::run("crud/update",$table, $where, $data); */
+
+                   
+                    $where = array('meta_value'=>$sku,"meta_key"=>"_sku");
+                    $post_id = Modules::run("crud/getWp","wp_postmeta", $where);
+
+
+
+
+                    if(!is_bool($post_id)){
+                        $post_id = $post_id->result();
+                        $post_id = $post_id[0]->post_id;
+
+                         $where = array('id'=>$post_id);
+                         $post_name = Modules::run("crud/getWp","wp_posts", $where);
+                         $post_name = $post_name->result();
+                         $post_name = $post_name[0]->post_name;
+
+
+
+
+                        if($product['status']=='publish'){
+
+                         
+                             $post_name = rtrim($post_name,'__trashed');
+
+
+                             //If Sale Price is SET check
+                             $price1 = false;
+                             $sale_price = trim($product['sale_price']);
+                             if($sale_price!='' && $sale_price!=0.00 && $sale_price!=0){
+                                $price1 = $sale_price;
+                             }elseif($product['price_tax']!='' && $product['price_tax']!='0.00'){
+
+                                $price1 = $product['price_tax'];
+                             }
+
+                             $customAvailability = $product['availability'];
+                             $upcommingDate = $product['upcoming_date'];
+
+                             if($customAvailability=='Αναμονή παραλαβής' && $upcommingDate!=''){
+                                $customAvailability.= "^$upcommingDate";
+                                
+                             }
+                            
+                            $where = array('post_id'=>$post_id,'meta_key'=>'_regular_price');
+                            $data = array('meta_value'=>$product['price_tax']);                   
+                            Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
+                            
+                            $where = array('post_id'=>$post_id,'meta_key'=>'_sale_price');
+                            $data = array('meta_value'=>$sale_price);                   
+                            Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
+                            
+                            $where = array('post_id'=>$post_id,'meta_key'=>'_price');
+                            $data = array('meta_value'=>$price1);                   
+                            Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
+                            
+                            $where = array('post_id'=>$post_id,'meta_key'=>'custom_availability');
+                            $data = array('meta_value'=>$customAvailability);                   
+                            Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
+                            
+                            $where = array('post_id'=>$post_id,'meta_key'=>'max_installments');
+                            Modules::run("crud/deleteWp","wp_postmeta",  $where);
+                           
+                            $data = array('post_id'=>$post_id,'meta_key'=>'max_installments','meta_value'=>$installments_import);                   
+                            Modules::run("crud/insertWp","wp_postmeta", $data);
+
+
+
+                            //echo  $products_count++;
+                            //echo ":$sku:".$product['status']."<br />";  
+
+
+                        }
+                        /*$where = array('post_id'=>$post_id,'meta_key'=>'_stock_status');
+                        $data = array('meta_value'=>'instock');                   
+                        Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
+                        $where = array('post_id'=>$post_id,'meta_key'=>'_manage_stock');
+                        $data = array('meta_value'=>'no');                   
+                        Modules::run("crud/updateWp","wp_postmeta",  $where, $data);*/
+                                $where = array('ID'=>$post_id);
+                                $data = array('post_title'=>$product['etd_title'],"post_status"=>$product['status'],"post_name"=>$post_name);                   
+                                Modules::run("crud/updateWp","wp_posts",  $where, $data);
+                        
+
+                       // exit($product['price_tax']); 
+
+                        
+                    } 
+
+                    return true;
         }
     }
