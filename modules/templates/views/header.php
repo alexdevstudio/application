@@ -387,25 +387,6 @@
             </a>
          </li>
          <li class="">
-            <a href="<?php echo base_url();?>problematic">
-              <i class="fa fa-ban"></i> <span>ΠΡΟΒΛΗΜΑΤΙΚΑ</span>
-
- <?php 
-     $count = Modules::run("crud/problematic", array("volumetric_weight"=>''), null, true);
-    if($count){
-      ?>
-              <small class="label pull-right bg-red"><?= $count; ?>  </small>
-
-  <?php
-    }
-    
- ?>
-  
-
-            
-            </a>
-         </li>
-         <li class="">
             <a href="<?php echo base_url();?>msi_price">
               <i class="fa fa-laptop"></i> <span>MSI ΤΙΜΕΣ</span>
             </a>

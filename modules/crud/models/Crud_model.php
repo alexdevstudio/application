@@ -168,35 +168,4 @@ public function insertWp($table, $data){
         return $data;
     }
 
-      public function problematic($where, $problem_type=null, $count = false){
-           
-                  $tables = Modules::run('categories/fullCategoriesArray');
-                  $counter = 0;
-                                   foreach ($tables as $table) {
-                   
-                    $problematics = $this->get($table, $where);
-
-                    if($problematics){
-
-                        $counter += $problematics->num_rows();
-
-                        if(!$count){
-
-
-                            foreach ($problematics->result_array() as $problematic) {
-                                    $result[] = array('sku'=>$problematic['sku'],
-                                                     'category'=>$table,
-                                                     'title'=>$problematic['title'],
-                                                     'type'=>$problem_type);
-                            }
-                              
-                        }else{
-                              $result = $counter;
-                            }
-                     }
-
-            }
-            return $result;
-      }
-
 }

@@ -106,7 +106,6 @@ class Extract_model extends CI_Model {
                             l.upcoming_date, 
                             l.supplier, 
                             l.status, 
-                            l.shipping, 
                             l.delete_flag,
                             t.*,
                             i.installments_count
@@ -136,7 +135,6 @@ class Extract_model extends CI_Model {
                      l.upcoming_date,
                      l.supplier,
                      l.status,
-                     l.shipping,
                      l.delete_flag,
                      t.*,
                      i.installments_count
