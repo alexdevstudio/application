@@ -24,7 +24,7 @@
                 <th  colspan="1" rowspan="1" >SKU</th>
                 <th colspan="1" rowspan="1" >Κατηγορία</th>
                 <th colspan="1" rowspan="1"  >Τίτλος</th>
-                <th colspan="1" rowspan="1"  >Επεξεργασία</th>
+                <th colspan="1" rowspan="1"  >Πρόβλημα</th>
                 
 
                 </tr>
@@ -34,26 +34,26 @@
                 $i = 1;
                 if($errors){
                   foreach ($errors as $error) {
-                   foreach ($error as $key => $value) {
                     if($i>1){
                       $class="even";
+                      $i=2;
                     }else{
                       $class="odd";
+                      $i=1;
                     }
-                    //print_r($item);
+                   // print_r($error);
                     ?>
 
               <tr class=" <?=  $class; ?> " role="row">
-                  <td><?= $key['sku'];?></td>
-                  <td><?= $key['sku'];?></td>
-                  <td><?= $key['sku'];?></td>
-                  <td><?= $key['sku'];?></td>
+                  <td><a href="<?= base_url().'edit/'.$error['category'].'/'.$error['sku'];?>"><?= $error['sku'];?></a></td>
+                  <td><a href="<?= base_url().'edit/'.$error['category'].'/'.$error['sku'];?>"><?= $error['category'];?></a></td>
+                  <td><a href="<?= base_url().'edit/'.$error['category'].'/'.$error['sku'];?>"><?= $error['title'];?></a></td>
+                  <td><?= $error['type'];?></td>
                   
                  
                 </tr>
 
                     <?php
-                  }
 
 
 
@@ -70,7 +70,8 @@
                 <th  colspan="1" rowspan="1" >SKU</th>
                 <th colspan="1" rowspan="1" >Κατηγορία</th>
                 <th colspan="1" rowspan="1"  >Τίτλος</th>
-                <th colspan="1" rowspan="1"  >Επεξεργασία</th>
+                <th colspan="1" rowspan="1"  >Πρόβλημα</th>
+
                 </tr>
                 </tfoot>
               </table>
