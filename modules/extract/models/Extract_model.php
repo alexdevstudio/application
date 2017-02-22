@@ -697,6 +697,8 @@ class Extract_model extends CI_Model {
                                 $customAvailability.= "^$upcommingDate";
                                 
                              }
+
+                             
                             
                             $where = array('post_id'=>$post_id,'meta_key'=>'_regular_price');
                             $data = array('meta_value'=>$product['price_tax']);                   
@@ -712,6 +714,10 @@ class Extract_model extends CI_Model {
                             
                             $where = array('post_id'=>$post_id,'meta_key'=>'custom_availability');
                             $data = array('meta_value'=>$customAvailability);                   
+                            Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
+
+                            $where = array('post_id'=>$post_id,'meta_key'=>'shipping');
+                            $data = array('meta_value'=>$product['shipping']);                   
                             Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
                             
                             $where = array('post_id'=>$post_id,'meta_key'=>'max_installments');
