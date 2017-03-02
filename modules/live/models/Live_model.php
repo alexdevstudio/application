@@ -1796,8 +1796,14 @@ class Live_model extends CI_Model {
 			set_time_limit(50);
 			
 			$cat = (string) trim($product->Item);
+			$pn = (string) trim($product->Code);
 			if (strpos($cat, 'OKI ') !== false || strpos($cat, 'ΟΚΙ') !== false)
-				$c = 'printers';
+			{
+				if(strpos($pn, 'MF') !== false)
+					$c = 'multifunction_printers';
+				else
+					$c = 'printers';
+			}
 			elseif (strpos($cat, 'ΡRΟJΕCΤΟR ') !== false)
 				$c = 'projectors';
 			else
@@ -1812,7 +1818,7 @@ class Live_model extends CI_Model {
 				}
 
 				$code = (string) trim($product->Int_Code);
-				$pn = (string) trim($product->Code);
+				//$pn = (string) trim($product->Code);
 				$title = (string) trim($product->Item);
 				$net_price = trim($product->Price);
 				$recycle_tax = trim($product->Recycle_Price);
