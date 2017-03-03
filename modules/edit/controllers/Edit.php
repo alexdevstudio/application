@@ -9,6 +9,7 @@ class Edit extends MX_Controller {
 
 		$item = Modules::run('crud/get',$category, array('sku'=>$sku));
 		$skroutzUrl = Modules::run('crud/get','skroutz_urls', array('sku'=>$sku));
+		$cross_sells = Modules::run('crud/get','cross_sells', array('sku'=>$sku));
 		
 
 
@@ -165,6 +166,30 @@ class Edit extends MX_Controller {
 				
 
 					$update = Modules::run('crud/update',$category,$where,$post);
+				}else if($post['status']=='related'){
+					unset($post['status']);
+					$products = str_replace(" ", "", $post['cross_sells_products']);
+
+					if(($cross_sells && $cross_sells->row()->products!=$products) || $products==''){
+						$where=array('sku'=>$sku);
+						Modules::run('crud/delete','cross_sells', $where);
+						
+					}
+					
+					if($products!='' && (!$cross_sells || $cross_sells->row()->products!=$products)){
+						
+						$data = array(
+							'sku'=>$sku,
+							'products' => $products
+						);
+
+					    Modules::run('crud/insert','cross_sells', $data);
+
+					}
+
+					$update = true;
+
+						
 				}
 
 				if($update){
@@ -185,6 +210,7 @@ class Edit extends MX_Controller {
 			$data['title'] = 'Επεξεργασία προϊόντος';
 			$data['item'] = $item;
 			$data['skroutzUrl'] = $skroutzUrl;
+			$data['cross_sells'] = $cross_sells;
 
 
 			$skroutzPrice = Modules::run('skroutz/getBestPrice',$sku);
