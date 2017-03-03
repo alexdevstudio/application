@@ -1,62 +1,69 @@
 <?php
 	$tables = Modules::run('categories/fullCategoriesArray');
 ?>
+<?php 
+/*$var = Modules::run('crud/getWp', 'wp_options',array('option_id'=>161176));
+echo "<pre>";
+
+print_r($var->row()->option_name);
+echo "</pre>";*/
+ ?>
 	<div class="suppliers sections col-sm-8 col-xs-12">
 		
 		<section class="content-header">
 	      <h1>1. Ενημέρωση αποθήκης </h1>  
 	      <br>	   
 	    </section> 
-		<div class="supplier-item col-sm-4 col-md-3">
+		<div class="supplier-item col-sm-6 col-md-3">
 			<div class="color-palette-set text-center">
 				<div class="bg-orange-active color-palette ">
 					<a href="./live/index/oktabit" style="color:#fff;display:block"><br /><span >Oktabit</span><br /><br /></a>
 				</div>
 			</div>
 		</div>
-		<div class="supplier-item col-sm-4 col-md-3">
+		<div class="supplier-item col-sm-6 col-md-3">
 			<div class="color-palette-set text-center">
 				<div class="bg-light-blue color-palette ">
 					<a href="./live/index/logicom" style="color:#fff;display:block"><br /><span >Logicom - Enet</span><br /><br /></a>
 				</div>
 			</div>
 		</div> 
-		<div class="supplier-item col-sm-4 col-md-3">
+		<div class="supplier-item col-sm-6 col-md-3">
 			<div class="color-palette-set text-center">
 				<div class="bg-green color-palette ">
 					<a href="./live/index/braintrust" style="color:#fff;display:block"><br /><span >BrainTrust</span><br /><br /></a>
 				</div>
 			</div>
 		</div> 
-		<div class="supplier-item col-sm-4 col-md-3">
+		<div class="supplier-item col-sm-6 col-md-3">
 			<div class="color-palette-set text-center">
 				<div class="bg-red color-palette ">
 					<a href="./live/index/ddc" style="color:#fff;display:block"><br /><span >Digital Data</span><br /><br /></a>
 				</div>
 			</div>
 		</div> 
-		<div class="supplier-item col-sm-4 col-md-3">
+		<div class="supplier-item col-sm-6 col-md-3">
 			<div class="color-palette-set text-center">
 				<div class="bg-navy color-palette ">
 					<a href="./live/index/copiers" style="color:#fff;display:block"><br /><span >Copiers</span><br /><br /></a>
 				</div>
 			</div>
 		</div>
-		<div class="supplier-item col-sm-4 col-md-3">
+		<div class="supplier-item col-sm-6 col-md-3">
 			<div class="color-palette-set text-center">
 				<div class="bg-red color-palette ">
 					<a href="./live/index/cpi" style="color:#fff;display:block"><br /><span >CPI</span><br /><br /></a>
 				</div>
 			</div>
 		</div>
-		<div class="supplier-item col-sm-4 col-md-3">
+		<div class="supplier-item col-sm-6 col-md-3">
 			<div class="color-palette-set text-center">
 				<div class="bg-red color-palette ">
 					<a href="./live/index/westnet" style="color:#fff;display:block"><br /><span >Westnet</span><br /><br /></a>
 				</div>
 			</div>
 		</div>
-		<div class="supplier-item col-sm-4 col-md-3">
+		<div class="supplier-item col-sm-6 col-md-3">
 			<div class="color-palette-set text-center">
 				<div class="bg-orange-active color-palette ">
 					<a href="./live/index/partnernet" style="color:#fff;display:block"><br /><span >PartnerNet</span><br /><br /></a>
@@ -77,7 +84,7 @@
 	      <br>	
 	    </section>
 
-		<div class=" col-sm-4 col-md-2">
+		<div class=" col-sm-12 col-md-3">
 			<div class="form-group">
 				<label>Κατηγορίες Προϊόντων</label>
 				<select id="SelectTable" class="form-control">
@@ -100,7 +107,7 @@
 				<input type="checkbox" name="all_product" value="all" id="isAllSelected"> Όλα τα Προϊόντα<br>
 			</div>
 		</div>
-		<div class="col-sm-4 col-md-2">              
+		<div class="col-sm-12 col-md-3">              
 			<div id='xml_link' style="display:none;">
 				<div class="box box-success box-solid">
 					<div class="box-header with-border">
@@ -144,7 +151,7 @@
 			      <h1>3. Ενημέρωση Χαρακτηριστικών</h1>
 			      <br>	
 			</section>
-			<div class=" col-xs-12 col-sm-6">
+			<div class=" col-sm-12 col-md-6">
 			<div class="form-group">
 				<label>Επιλέξτε τη κατηγορία των προϊόντων που θέλετε να ενημερώσετε</label>
 
@@ -171,77 +178,38 @@
 				</form>
 			</div><!-- <div class="form-group"> -->
 			</div>
-			<script>
-				function category(){
-					return $('#categories').val();
-				}
-						
-				function updateToggle(){
-					$('#uploadSubmit').toggle();
-					$('#updateLoader').toggle();
-				}
-
-				$(function(){
-					var inputFile = $('#updateXml');
-					//var category = $('#categories').val();
-
-					var uloadUri = $('#charUpdate').attr('action');
-
-					$('#uploadSubmit').on('click',function(event){
-
-						updateToggle();
-
-						var fileToUpload = inputFile[0].files[0];
-
-						//check if there is actually file to upload
-						var cat = category();
-						if(cat == ''){
-							alert('Δεν έχετε επιλέξει κατηγορία');
-							updateToggle();
-							return false;
-						}
-						if(fileToUpload !='undefined'){
-
-							var formData = new FormData();
-							
-							formData.append('file', fileToUpload);
-							formData.append('cat', cat);
-
-							$.ajax({
-
-								url: uloadUri,
-								type: 'post',
-								data: formData,
-								processData:false,
-								contentType:false,
-								success: function(data){
-									if(data=='ok'){
-										$('#updateXml').val('');
-										$('#categories').val('');
-										alert('Τα προϊόντα ενημερώθηκαν.');
-										updateToggle();
-									}else{
-										alert(data);
-										updateToggle();
-									}
-								}
-							});
-						}
-						else {
-							alert('Δεν έχετε επιλέξει αρχείο');
-							updateToggle();
-						}
-					});
-				});
-			</script>
+			
 	<div class="clearfix"></div>
 			<section class="content-header">
 		    	<h1>4. Δημιουργία XML για All Import</h1>
 		      	<br>	
 		    </section>
-			<div class="col-sm-6 col-md-6">
+		    <div class="col-sm-6 col-md-3">
 				<div class="form-group">
-					<label>Κατηγορίες Προϊόντων</label>
+					<label>Πόσα προϊόντα να εξαχθούν;</label>
+
+				<select class='form-control allImport_num_rows'>
+						<option value='all' >All</option>
+						<option value='5'>5</option>
+						<option value='10'>10</option>
+						<option value='15'>15</option>
+						<option value='20' selected>20</option>
+					</select>
+					</div>
+
+			</div>
+			<div class="col-sm-6 col-md-3">
+				<div class="form-group">
+					<label>SKU Προϊόντων (με κόμμα):</label>
+
+				<input class='form-control allImport_sku' />
+						
+					</div>
+
+			</div>
+			<div class="col-sm-12 col-md-3">
+				<div class="form-group">
+					<label>Κατηγορίες Προϊόντων:</label>
 					<select class="form-control">
 						<?php
 						foreach($tables as $table){
@@ -251,9 +219,13 @@
 						}
 						?>
 					</select>
+					
 				</div>
+
 			</div>
-		    <div class="col-sm-6 col-md-6">              
+
+
+		    <div class="col-sm-12 col-md-3">              
 		        <div id='xml_link2' style="display:none;">
 		          	<div class="box box-success box-solid">
 		            	<div class="box-header with-border">
@@ -267,18 +239,7 @@
 					</div><!-- /.box -->
 		        </div>
 		  	</div>
-			<script>
-				function allImportGenerator(a){
-					$('#xml_link2').show();
-					$("#xmltitle2").html('Loading...'); 
-					
-					var url = "<?= base_url()?>extract/allImport/"+a;
-					$.post(url, function(data){
-						$("#xmltitle2").html(a); 
-						$("#xml_link2 .box-body").html(data);        
-				    });
-				}
-			</script>
+			
 		</div>
 
 		<div class="sections col-xs-6" style="display: none;">
@@ -302,49 +263,76 @@
 
 		    <?php
 
-		    $where = array(
-		    	'supplier'=>'etd'
-		    	);
+			    $where = array(
+			    	'supplier'=>'etd'
+			    	);
 
-                $stock = Modules::run('crud/get','live',$where);
-               // print_r($stock->result_array());
-                $cat_array = array();
-                $out = '';
-                foreach ($stock->result_array() as $items) {
-                	$category = $items['category'];
-                	$cat_array[] = $category;
-                	
+	                $stock = Modules::run('crud/get','live',$where);
+	               // print_r($stock->result_array());
+	                $cat_array = array();
+	                $out = '';
+	                foreach ($stock->result_array() as $items) {
 
-                	$product_number = $items['product_number'];
-                	$where =array(
-						'product_number'=>$product_number
-                		);
+	                	$category = $items['category'];
+	                	$cat_array[] = $category;
+	                	
 
-                	$item = Modules::run('crud/get', $category, $where);
-                	$sku =  $item->row()->sku;
-                	$title = $item->row()->title;
-                	@$price = $items['price_tax'];
-                	if(!$price){
-                		$price = '<span style="color:red;">Δεν υπάρχει τιμή</span>';
-                	}else{
-                		$price = "€ $price";
-                	}
+	                	$product_number = $items['product_number'];
+	                	$where =array(
+							'product_number'=>$product_number
+	                		);
 
-                	$img = Modules::run('images/getFirstImage', $sku, true);
-					
-					$out.=' <div class="instock_item clearfix" data-category="'.$category.'">
-					                			'.$img.'
-					        <h5><a href="http://etd.gr/xml/edit/'.$category.'/'.$sku.'">'.$title.'</a></h5>
-					        <strong style="color:#0fc504;">SKU: '.$sku.'</strong>
-					        <span class="instock_item_price">
-					        Τιμή στο site: '.$price.'
-					        </span>
+	                	$item = Modules::run('crud/get', $category, $where);
+	                	
 
 
-					        </div>';
-                	
-                	//print_r($item->result_array());
-                }
+	                	$sku =  $item->row()->sku;
+	                	$title = $item->row()->title;
+	                	@$price = ($items['sale_price']=='' || $items['sale_price']<0.01)? $items['price_tax']: $items['sale_price'];
+
+	                	if(!$price){
+	                		$price = '<span style="color:red;">Δεν υπάρχει τιμή</span>';
+	                	}else{
+	                		$price = "€ $price";
+	                	}
+
+
+
+	                	$skroutzPrice = Modules::run('skroutz/getBestPrice',$sku);
+
+						if($skroutzPrice){
+							$skroutzPrice = $skroutzPrice->result_array();
+							$skroutzPrice = $skroutzPrice[0];
+							$best_price = json_decode($skroutzPrice['best_price']);
+
+							$sklogo = $best_price->shopLogo;
+							$sktitle = $best_price->shopTitle;
+							$skprice = $best_price->shopPrice;
+							
+							$skroutzPrice = '<img  class="instosk-sklogo" src="'.$sklogo.'"  /> € '.$skprice.' <br/>';
+
+
+						}else{
+							$skroutzPrice = '';
+						}
+
+
+
+	                	$img = Modules::run('images/getFirstImage', $sku, true);
+						
+						$out.=' <div class="instock_item clearfix" data-category="'.$category.'">
+						                			'.$img.'
+						        <h5><a href="http://etd.gr/xml/edit/'.$category.'/'.$sku.'">'.$title.'</a></h5>
+						        <strong style="color:#0fc504;">SKU: '.$sku.'</strong><br />
+						        <span class="instock_item_price">'.$skroutzPrice.'
+						        Τιμή στο site: '.$price.'
+						        </span>
+
+
+						        </div>';
+	                	
+	                	//print_r($item->result_array());
+               	 }
 
 ?>
 <div class="instock_filter">
@@ -390,3 +378,5 @@ $(document).ready(function(){
 });
 	
 </script>
+
+

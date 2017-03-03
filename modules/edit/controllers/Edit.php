@@ -8,6 +8,16 @@ class Edit extends MX_Controller {
 
 
 		$item = Modules::run('crud/get',$category, array('sku'=>$sku));
+		$skroutzUrl = Modules::run('crud/get','skroutz_urls', array('sku'=>$sku));
+		
+
+
+		if(!$skroutzUrl){
+			$skroutzUrl = '';
+		}else{
+			$skroutzUrl = $skroutzUrl->row()->url;
+		}
+
 		$installments = Modules::run('crud/get','installments', array('sku'=>$sku));
 		if(!$installments){
 				$installments='';
@@ -55,12 +65,22 @@ class Edit extends MX_Controller {
 					$post['status']='publish';
 					$post['delete_flag']= 0;
 
+					if($post['upcoming_date']=='' || $av!='Αναμονή παραλαβής'){
+						unset($post['upcoming_date']);
+					}else{
+						$post['upcoming_date'] = date("Y-m-d",strtotime($post['upcoming_date']));
+					}
+
 					if($post['sale_price']==''){
 						$post['sale_price'] = NULL;
 					}
 
 					if($post['price_tax']==''){
 						$post['price_tax'] = NULL;
+					}
+
+					if($post['shipping']==''){
+						$post['shipping'] = NULL;
 					}
 
 					$where = array('product_number'=>$item->row()->product_number);
@@ -83,6 +103,7 @@ class Edit extends MX_Controller {
 
 					if($exists){
 						$update = Modules::run('crud/update','live',$where,$post);
+						//updateWp($product, $table);
 					}else{
 
 						$update = Modules::run('crud/insert','live', $post);
@@ -94,21 +115,62 @@ class Edit extends MX_Controller {
 				else if($post['status']=='update')
 				{
 					unset ($post['status']);
+
+					$skroutz_url = $post['skroutz_url'];
+					unset ($post['skroutz_url']);
+
+					//Insert or delete Skroutz URL from DB;
+					Modules::run('skroutz/toggleSkroutzUrl', $skroutz_url, $sku);
+					
 					$where = array('sku'=>$sku);
 
-					if($post['shipping_class']==''){
-						$post['shipping_class'] = Modules::run('categories/makeShippingClass',$post,$category);
+					$vweight = trim($post['volumetric_weight']);
+					
+					if($vweight!='' && ($category=='monitors' || $category=='desktops')){
+						
+
+						$post['shipping_class'] = Modules::run('categories/shippingByWeight', $vweight);
+
+					}else{
+
+							if($category!='printers' && $category != 'multifunction_printers'){
+								
+							
+
+
+								if($post['shipping_class']==''){
+									$post['shipping_class'] = Modules::run('categories/makeShippingClass',$post,$category);
+								}
+
+
+
+								if($post['shipping_class']!='' && $post['volumetric_weight']==''){
+									$post['volumetric_weight'] = Modules::run('categories/getWeight',$post['shipping_class']);
+								}
+
+
+							}else{
+								
+								if($post['volumetric_weight']==''){
+									$post['volumetric_weight'] = Modules::run('categories/volumeWeight', $post['dimensions']);
+								}
+
+								$post['shipping_class'] = Modules::run('categories/makeShippingClass',$post,$category);
+
+									
+							}
+
 					}
 
-					if($post['shipping_class']!=''){
-						$post['volumetric_weight'] = Modules::run('categories/getWeight',$post['shipping_class']);
-					}
+				
 
 					$update = Modules::run('crud/update',$category,$where,$post);
 				}
 
 				if($update){
 					echo "<h2>Updated</h2>";
+					unset($post);
+					header("Refresh:0");
 				}
 			}
 
@@ -122,6 +184,18 @@ class Edit extends MX_Controller {
 			$data['category'] = $category;
 			$data['title'] = 'Επεξεργασία προϊόντος';
 			$data['item'] = $item;
+			$data['skroutzUrl'] = $skroutzUrl;
+
+
+			$skroutzPrice = Modules::run('skroutz/getBestPrice',$sku);
+
+			if($skroutzPrice){
+				$skroutzPrice = $skroutzPrice->result_array();
+				$data['skroutzPrice'] = $skroutzPrice[0];
+			}else{
+				$data['skroutzPrice'] = false;
+			}
+
 			$data['installments'] = $installments;
 
 			$this->load->view('templates/header',$data);
@@ -133,6 +207,8 @@ class Edit extends MX_Controller {
 			echo 'Error';
 		}
 	}
+
+
 }
 
 ?>

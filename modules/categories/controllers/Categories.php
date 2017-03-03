@@ -36,7 +36,7 @@ class Categories extends MX_Controller {
 	} 
 
 	 public function categoriesArray(){
-    	$array = array('desktops','laptops','printers', 'multifunction_printers',
+    	$array = array('cable_accessories','desktops','docking_stations','laptops','printers', 'multifunction_printers',
     		'monitors','servers','ups','tablets','smartphones','software',
     		'external_hard_drives','keyboard_mouse','ip_phones','ip_cards','ip_gateways','ip_pbx');
 
@@ -44,8 +44,8 @@ class Categories extends MX_Controller {
     }
 
     public function fullCategoriesArray(){
-    	$array = array('cables','card_readers','carrying_cases','cartridges','cases','cpu',
-    		'desktops','external_hard_drives','fans','flash_drives','graphic_cards',
+    	$array = array('cables','cable_accessories','card_readers','carrying_cases','cartridges','cases','cpu',
+    		'desktops','docking_stations','external_hard_drives','fans','flash_drives','graphic_cards',
     		'keyboard_mouse','laptops','memories','monitors','motherboards','multifunction_printers',
     		'optical_drives','patch_panels','power_bank','power_supplies','printers','racks',
     		'routers','sata_hard_drives','servers','smartphones','software','speakers','ssd',
@@ -66,13 +66,19 @@ class Categories extends MX_Controller {
      public function makeShippingClass($data, $cat, $dynamic = null){
 
      	$this->load->model('categories_model');
-     	echo $this->categories_model->makeShippingClass($data, $cat, $dynamic);
+     	return $this->categories_model->makeShippingClass($data, $cat, $dynamic);
 
      }
 
      function getWeight($shipping_class){
      	$this->load->model('categories_model');
      	return $this->categories_model->getWeight($shipping_class);
+     }
+
+     function volumeWeight($dimensions){
+
+        $this->load->model('categories_model');
+        return $this->categories_model->volumeWeight($dimensions);
      }
 
      function updateweight(){
@@ -82,7 +88,7 @@ class Categories extends MX_Controller {
 
 
 
-     		if($cat=='servers'  ){
+     		if($cat=='monitors'  ){
 
      			$products = Modules::run('crud/get', $cat);
      			$products = $products->result_array();
@@ -91,10 +97,17 @@ class Categories extends MX_Controller {
      				$volumetric_weight = $this->getWeight($product['shipping_class']);
      				Modules::run('crud/update', $cat, array('sku'=>$sku), array('volumetric_weight'=>$volumetric_weight));
      			}
-     			
-     		}
-     		echo "$cat: OK<br />";
+            }
+                 			
      	}
+     		//echo "$cat: OK<br />";
+     }
+
+
+
+     public function shippingByWeight($vweight){
+        $this->load->model('categories_model');
+        return $this->categories_model->shippingByWeight($vweight);
      }
 }
 ?>

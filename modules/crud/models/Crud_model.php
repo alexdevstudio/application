@@ -13,11 +13,11 @@ class Crud_model extends CI_Model {
 
 
   public function update($table, $where, $data){
-		
+    
     $this->dataValidation($table, $data);
-		$this->db->where($where);
-		$this->db->set($data);
-		return $this->db->update($table);
+    $this->db->where($where);
+    $this->db->set($data);
+    return $this->db->update($table);
 
   }
 
@@ -55,12 +55,23 @@ class Crud_model extends CI_Model {
   }
   
 
-  public function get($category, $where=null){
+  public function get($category, $where=null, $order_by=null, $limit=null){
 
+
+        //$this->db->order_by('title', 'DESC');
+        
+
+        
+        
         if($where)
-        {
-        $this->db->where($where);
-        }
+          $this->db->where($where);
+
+        if($order_by)
+          $this->db->order_by($order_by[0], $order_by[1]);
+        
+        if($limit)
+          $this->db->limit($limit);
+        
           $item = $this->db->get($category);
 
           if($item->num_rows()<1){
@@ -156,5 +167,40 @@ public function insertWp($table, $data){
         }
         return $data;
     }
+
+      public function problematic($where, $problem_type=null, $count = false){
+        $where['new_item !='] = 1; 
+           
+                  $tables = Modules::run('categories/fullCategoriesArray');
+                  $counter = 0;
+                  foreach ($tables as $table) {
+
+                  if($table=='copiers')
+                    continue;
+
+                    $problematics = $this->get($table, $where);
+
+                    if($problematics){
+
+                        $counter += $problematics->num_rows();
+
+                        if(!$count){
+
+
+                            foreach ($problematics->result_array() as $problematic) {
+                                    $result[] = array('sku'=>$problematic['sku'],
+                                                     'category'=>$table,
+                                                     'title'=>$problematic['title'],
+                                                     'type'=>$problem_type);
+                            }
+                              
+                        }else{
+                              $result = $counter;
+                            }
+                     }
+
+            }
+            return $result;
+      }
 
 }

@@ -18,7 +18,7 @@ class Crosssales_model extends CI_Model {
     
 
     public function auto_laptop($sku, $brand, $size, $price){
-    	
+
     	if($this->manual_inserted($sku)){
     		return false;
     	}
@@ -293,11 +293,11 @@ class Crosssales_model extends CI_Model {
             $antivs = Modules::run('crud/get', 'live', $where);
 
             $antivs= $antivs->result_array();
-
+                $a=0;
             foreach ($antivs as $antiv) {
 
                 $pn = $antiv['product_number'];
-                echo $pn. ' / ';
+
                 $where  = array(
                     'product_number'=>$pn
                     );
@@ -308,8 +308,7 @@ class Crosssales_model extends CI_Model {
 
                 if($row->brand != 'INTEL'){
                     continue;
-                }
-
+                }                
 
                 if($antiv['availability']=='Άμεσα Διαθέσιμο'){
                     $instock_antivs[] = $antiv_sku;
@@ -317,7 +316,6 @@ class Crosssales_model extends CI_Model {
                     $outofstock_antivs[] = $antiv_sku;
 
                 }
-
             
             //b. Brand
 
@@ -326,7 +324,6 @@ class Crosssales_model extends CI_Model {
                 }else{
                     $dif_brand[] =  $antiv_sku;
                 }
-
                 
             }
 
