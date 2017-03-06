@@ -210,7 +210,7 @@ class Extract_model extends CI_Model {
                             
                         }
                         //Skip product without price....
-                        if(!$product['price_tax'])
+                        if(!$product['price_tax'] && $product['status']=='publish')
                             continue;   
                     }
 
