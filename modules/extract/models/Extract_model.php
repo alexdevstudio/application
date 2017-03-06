@@ -159,6 +159,7 @@ class Extract_model extends CI_Model {
                     $monitors=array();
                     $laptops=array();
 
+
                  foreach ($query->result_array() as $available){
 
                     if($available['category']=='monitors' && $available['availability']=='Άμεσα Διαθέσιμο'){
@@ -167,6 +168,8 @@ class Extract_model extends CI_Model {
                     if($available['category']=='laptops' && $available['availability']=='Άμεσα Διαθέσιμο'){
                         $laptops[] =  $available['sku'];
                     }
+
+
                  }
                 
 
@@ -292,11 +295,7 @@ class Extract_model extends CI_Model {
 
                         $product['cross_sales'] =  Modules::run("crosssales/auto_laptop",$product['sku'], $product['brand'], $product['screen_size'], $product['price_tax']);
                         
-                       /* if(!empty($product['cross_sales'])){
-                            print_r($product['cross_sales']); 
-                            exit();
-                        }*/
-
+                      
                         
                         $product['up_sells'] = implode(",",$laptops);
 
@@ -469,6 +468,12 @@ class Extract_model extends CI_Model {
 
                     $product['etd_title'] =  $etd_title;
                     $product['skroutz_title'] =  $skroutz_title;
+                    $cross_sells = $this->cross_sells($sku);
+                    if($cross_sells){
+                        $product['cross_sells'] = $cross_sells;
+                    }
+                    $product['skroutz_title'] =  $skroutz_title;
+
 
 
 
@@ -617,6 +622,17 @@ class Extract_model extends CI_Model {
          
         }
 
+        private function cross_sells($sku){
+
+            $where = array('sku'=>$sku);    
+            
+            if($cross_sells = Modules::run('crud/get','cross_sells', $where)){
+                return $cross_sells->row()->products;
+            }
+            return;
+
+
+        }
 
         private function priceTax($net, $recycle, $category)
         {

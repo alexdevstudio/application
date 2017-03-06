@@ -306,10 +306,21 @@ if($itemLive){
 		<div class=" col-xs-12 col-md-10">
 		<h2><?= $item->row()->title; ?></h2>
 		<div style='border-top:1px solid #888'></div><br />
-		<form  method='post' action="">
+		<div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">Χαρακτηριστικά</a></li>
+              <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false">Σχετικά Προϊόντα</a></li>
+              
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active" id="tab_1">
+                
+
+               <form  method='post' action="">
 
    <?php
 	$items = $item->result_array();
+	$sku = $item->row()->sku;
 	foreach ($items[0] as $key => $value) {
 		
 		//print_r($item);
@@ -362,7 +373,36 @@ if($itemLive){
 	
 	</div>		
 	<button type="submit" class="btn btn-block btn-success">Ενημέρωση</button>
+		</form> </div>
+              <!-- /.tab-pane -->
+              <div class="tab-pane" id="tab_2">
+              <!-- cross_sells start -->
+              <?php 	
+              	
+              	if(!$cross_sells){
+              		$cross_sells = '';
+              	}else{
+              		$cross_sells = $cross_sells->row()->products;
+              	}
+               ?>
+                <form  method='post' action="">
+		<label>Προϊόντα Παράλληλης Πώλησης <small style="font-weight:normal;color:#888">(με κόμμα)</small></label>
+
+                <input type="text" name="cross_sells_products" class="form-control" value="<?= $cross_sells; ?>" placeholder="1315245, 1312558, 1316956" />
+                <br />
+                <input type="hidden" name="status" value="related">
+                <input type="hidden" name="sku" value="<?= $sku; ?>">
+<button type="submit" class="btn btn-block btn-success ">Ενημέρωση</button>
 		</form>
+              </div>
+              <!-- /.tab-pane -->
+             
+            
+            </div>
+            <!-- /.tab-content -->
+          </div>
+		
+		
 		</div>
 </div>
 
