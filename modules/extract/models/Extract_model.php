@@ -107,6 +107,7 @@ class Extract_model extends CI_Model {
                             l.supplier, 
                             l.status, 
                             l.delete_flag,
+                            l.shipping,
                             t.*,
                             i.installments_count
 
@@ -136,6 +137,7 @@ class Extract_model extends CI_Model {
                      l.supplier,
                      l.status,
                      l.delete_flag,
+                     l.shipping,
                      t.*,
                      i.installments_count
 
@@ -208,7 +210,7 @@ class Extract_model extends CI_Model {
                             
                         }
                         //Skip product without price....
-                        if(!$product['price_tax'])
+                        if(!$product['price_tax'] && $product['status']=='publish')
                             continue;   
                     }
 
