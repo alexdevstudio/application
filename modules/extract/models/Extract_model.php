@@ -295,7 +295,7 @@ class Extract_model extends CI_Model {
                         }
 
 
-                        $product['cross_sales'] =  Modules::run("crosssales/auto_laptop",$product['sku'], $product['brand'], $product['screen_size'], $product['price_tax']);
+                        $product['cross_sells'] =  Modules::run("crosssales/auto_laptop",$product['sku'], $product['brand'], $product['screen_size'], $product['price_tax']);
                         
                       
                         
