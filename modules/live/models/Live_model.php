@@ -234,7 +234,9 @@ class Live_model extends CI_Model {
 
 				$recycle_tax = str_replace(",", ".", $product->anakykl);
 				$pn = (string) trim($product->part_no);
-				$pn = ($pn == '') ? (string) trim($product->code): $pn;
+				if($pn == '')
+					continue;
+				//$pn = ($pn == '') ? (string) trim($product->code): $pn;
 				$description = "";
 				$brand = (string) trim($product->brand);
 				$title = (string) trim($product->titlos);
