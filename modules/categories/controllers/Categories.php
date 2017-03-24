@@ -50,7 +50,7 @@ class Categories extends MX_Controller {
     		'optical_drives','patch_panels','power_bank','power_supplies','printers','racks',
     		'routers','sata_hard_drives','servers','smartphones','software','speakers','ssd',
     		'switches','tablets','toners', 'ups', 'copiers','projectors','hoverboards','ip_phones',
-    		'ip_cards','ip_gateways','ip_pbx','printer_drums','printer_fuser');
+    		'ip_cards','ip_gateways','ip_pbx','printer_drums','printer_fusers');
 
     	return $array;
     }
