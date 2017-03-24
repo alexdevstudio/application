@@ -38,7 +38,7 @@ class Categories extends MX_Controller {
 	 public function categoriesArray(){
     	$array = array('cable_accessories','desktops','docking_stations','laptops','printers', 'multifunction_printers',
     		'monitors','servers','ups','tablets','smartphones','software',
-    		'external_hard_drives','keyboard_mouse','ip_phones','ip_cards','ip_gateways','ip_pbx','printer_drums','printer_fuser');
+    		'external_hard_drives','keyboard_mouse','ip_phones','ip_cards','ip_gateways','ip_pbx','printer_drums','printer_fuser','printer_belts');
 
     	return $array;
     }
@@ -50,7 +50,7 @@ class Categories extends MX_Controller {
     		'optical_drives','patch_panels','power_bank','power_supplies','printers','racks',
     		'routers','sata_hard_drives','servers','smartphones','software','speakers','ssd',
     		'switches','tablets','toners', 'ups', 'copiers','projectors','hoverboards','ip_phones',
-    		'ip_cards','ip_gateways','ip_pbx','printer_drums','printer_fusers');
+    		'ip_cards','ip_gateways','ip_pbx','printer_drums','printer_fusers','printer_belts');
 
     	return $array;
     }
