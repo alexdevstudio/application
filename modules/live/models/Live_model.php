@@ -234,7 +234,9 @@ class Live_model extends CI_Model {
 
 				$recycle_tax = str_replace(",", ".", $product->anakykl);
 				$pn = (string) trim($product->part_no);
-				$pn = ($pn == '') ? (string) trim($product->code): $pn;
+				if($pn == '')
+					continue;
+				//$pn = ($pn == '') ? (string) trim($product->code): $pn;
 				$description = "";
 				$brand = (string) trim($product->brand);
 				$title = (string) trim($product->titlos);
@@ -2216,7 +2218,7 @@ class Live_model extends CI_Model {
 				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c== "desktops" || $c == "tablets"  || $c == "smartphones" ||
 				 $c == "cables" || $c == "patch_panels" || $c == "racks" || $c =="optical_drives" || $c == "card_readers" || $c == "flash_drives" || 
 				 $c == "power_supplies" || $c == "cases" || $c == "fans" || $c == "motherboards" || $c == "graphic_cards" || $c == "cpu" || 
-				 $c == "memories" || $c == "hoverboards"){
+				 $c == "memories" || $c == "hoverboards" || $c =="printer_fusers" || $c =="printer_drums" || $c =="printer_belts"){
 
 
 					$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);

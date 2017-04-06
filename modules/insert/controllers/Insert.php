@@ -114,6 +114,7 @@ class Insert extends MX_Controller {
 
 				$chars = array();
 
+
 				if($cat == 'keyboard_mouse')
 					$chars['type']= $type;
 

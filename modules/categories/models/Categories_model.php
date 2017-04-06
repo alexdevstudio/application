@@ -374,6 +374,24 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 			case 'ip_pbx':
 					$shipping_class = 4636;
 					break;
+			case 'printer_fusers':
+			case 'printer_drums':
+			case 'printer_belts':
+					if(isset($data['volumetric_weight']))
+					{
+						$vweight = (float) $data['volumetric_weight'];
+						if($vweight!=''){
+							$shipping_class=$this->shippingByWeight($vweight);					
+						}else
+						{
+							$shipping_class=$this->shippingByWeight(3);
+						}
+					}
+					else
+					{
+						$shipping_class=$this->shippingByWeight(3);
+					}
+					break;
 			default:
 				return false;
 				break;
