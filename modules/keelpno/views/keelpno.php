@@ -4,7 +4,7 @@
     <style>
     body {
         height: 842px;
-        width: 595px;
+        width: 630px;
         /* to centre page on screen*/
         margin-left: auto;
         margin-right: auto;
@@ -116,6 +116,11 @@
     border:none;
     resize:none;
   }
+  input{
+     border:none;
+     color:red;
+     font-weight: bold;
+  } 
   #tel-fields,
   #voip-fields{
     display:  none;
@@ -124,17 +129,34 @@
 .tech-tasks-category{
   width:50%;
   float:left;
-  margin-bottom:  15px;
+  margin-bottom:  5px;
 }
 .signs{
   overflow: auto;
 }
+section{
+  overflow: auto;
+}
+.checks {
+    min-height: 300px;
+}
+#ticket_nr{
+    width: 65px;
+}
+.signs-item-left img {
+    height: 80px;
+}
 @media print
 {    
-    button,select
+
+    button, #category
     {
         display: none !important;
     }
+    .error{
+      display: none;
+    }
+     
 }
     </style>
 
@@ -142,6 +164,7 @@
   </head>
   <body class=''>
   <img src="assets/images/letterHead.png" alt="">
+  <?php echo validation_errors('<div style="color:red" class="error">', '</div>'); ?>
   <div class='header'style="">
     ΔΕΛΤΙΟ ΤΕΧΝΙΚΗΣ ΕΞΥΠΗΡΕΤΗΣΗΣ – ΥΠΗΡΕΣΙΕΣ ΠΛΗΡΟΦΟΡΙΚΗΣ
   </div>
@@ -149,21 +172,49 @@
   <div class='date-number overflow'>
     <div style="" class='date-number-item'> 
       <div class='date-number-subitem'>ΗΜΕΡΟΜΗΝΙΑ</div>
-      <div class='date-number-subitem date bold'>x - x - 2017</div>
+      <div class='date-number-subitem date bold'>
+        <select name="day" id="">
+        <?php 
+        $i=1;
+        while ($i<32) {
+
+          ?>
+  
+        <option <?=  set_select('day', $i); ?> value="<?= $i; ?>"><?= $i; ?></option>
+
+          <?php
+          $i++;
+        }
+         ?>
+        </select>
+          <select name="month" id="">
+        <?php 
+        $i=1;
+        while ($i<13) {
+          ?>
+  
+        <option <?=  set_select('month', $i); ?> value="<?= $i; ?>"><?= $i; ?></option>
+
+          <?php
+           $i++;
+        }
+         ?>
+        </select>
+        <input type="hidden" name='year' value='<?php echo date("Y"); ?>'>
+      </div>
     </div>
     <div style="" class='date-number-item time'> <span class='bold'>ΩΡΕΣ:</span> 9:30 – 16:30</div>
-    <div style="" class='date-number-item id-number'> No  85142x</div>
+    <div style="" class='date-number-item id-number'> No  <input type="number" id='ticket_nr' value="<?= set_value('ticket_nr'); ?>" name="ticket_nr"></div>
   </div>
  
- <div class='client-description f13 border'>
+ <div class='client-description f13 border p5'>
       
-  ΠΕΛΑΤΗΣ: ΚΕ.ΕΛ.Π.ΝΟ. Ν.Π.Ι.Δ.   <br>  
+  ΠΕΛΑΤΗΣ: ΚΕ.ΕΛ.Π.ΝΟ. Ν.Π.Ι.Δ.   - 
   <span class='bold blue'>  ΔΙΕΥΘΥΝΣΗ: ΑΓΡΑΦΩΝ 3-5 ΜΑΡΟΥΣΙ  </span><br>
   Δ.Ο.Υ.: ΙΑ’ ΑΘΗΝΩΝ   Α.Φ.Μ.: 090193594  ΤΗΛ.: 210.52.12.190  FAX.: 210.52.12.191<br>
   ΥΠΕΥΘΥΝΟΣ: Κος ΠΑΡΙΣΣΗΣ  ΤΟΠΟΣ ΕΡΓΑΣΙΩΝ ΚΤΙΡΙΑΚΕΣ ΕΓΚΑΤΑΣΤΑΣΕΙΣ ΚΕ.ΕΛ.Π.ΝΟ. Ν.Π.Ι.Δ.<br> 
   <span class="bold">ΑΓΡΑΦΩΝ 3-5 ΜΑΡΟΥΣΙ  Υπόγειο, 1ος, 2ος, 3ος, 4ος. Αβέρωφ 10 Αθήνα 
   </span>
-
  </div>
  <div class='technicians f13 overflow'>
    <div class="technicians-item techs">ΤΕΧΝΙΚΟΙ: ΓΙΩΡΓ. ΜΑΡΑΤΟΣ – ΑΛΕΞ. ΤΙΣΑΚΟΒ – ΠΑΝΑΓ. ΚΛΗΜΗΣ           </div>
@@ -172,98 +223,248 @@
  <div class='checks  f11 border p5 overflow'>
  <div style="clear:both;overflow:auto;">
    <div class=' tech-title-tr bold underline'>ΕΡΓΑΣΙΕΣ ΤΕΧΝΙΚΟΥ : </div>
-    <div class="tech-tasks-category"> <select name="category" id="category" >
+    <div class="tech-tasks-category"> 
+    <select name="category" id="category" >
      <option value="Πληροφορική" default>Πληροφορική</option>
      <option  value="Τηλεφωνία">Τηλεφωνία</option>
      <option  value="VOIP">VOIP</option>
    </select> </div>
    </div>
    <div class='cat-tabs' id='pc-fields' > 
-   <div  class='checks-item checks-item-left'>
-<input type="checkbox" name='tasks_lists[]' value="task1"> ΠΡΟΓΡΑΜΜΑΤΙΣΜΟΙ ΚΕΝΤΡΙΚΩΝ SERVERS<br>
-<input type="checkbox" name='tasks_lists[]' value="task2"> ΤΡΟΠΟΠΟΙΗΣΕΙΣ – ΑΝΑΒΑΘΜΙΣΕΙΣ – ΕΛΕΓΧΟΣ & ΕΡΓΑΣΙΕΣ ΣΤΟ SOFTWARE ΤΩΝ SERVERS<br>
-<input type="checkbox" name='tasks_lists[]' value="task3"> SERVICE HARDWARE ΤΩΝ SERVERS  <br>
-<input type="checkbox" name='tasks_lists[]' value="task4"> ΠΡΟΓΡΑΜΜΑΤΙΣΜΟΙ SERVER ΛΟΓΙΣΤΗΡΙΟΥ  <br>
-<input type="checkbox" name='tasks_lists[]' value="task5"> ΕΛΕΓΧΟΣ & ΕΡΓΑΣΙΕΣ ΣΤΟ SOFTWARE SERVER ΛΟΓΙΣΤΗΡΙΟΥ    <br>
-<input type="checkbox" name='tasks_lists[]' value="task6"> ΕΛΕΓΧΟΣ UPS <br>
-<input type="checkbox" name='tasks_lists[]' value="task7"> BACK UP <br>
-<input type="checkbox" name='tasks_lists[]' value="task8"> ΕΛΕΓΧΟΣ INTERNET  <br>
-<input type="checkbox" name='tasks_lists[]' value="task9"> ΕΛΕΓΧΟΣ & ΕΡΓΑΣΙΕΣ ΑΠΟΚΑΤΑΣΤΑΣΗΣ EMAILS <br>
-<input type="checkbox" name='tasks_lists[]' value="task10"> ΕΚΤΡΟΠΗ ΓΡΑΜΜΩΝ INTERNET      <br>
-<input type="checkbox" name='tasks_lists[]' value="task11"> ΣΥΓΧΡΟΝΙΣΜΟΙ ROUTER ΑΝΤΙΜΕΤΩΠΙΣΗ - ΔΗΛΩΣΗ ΒΛΑΒΗΣ ΣΕ ΕΥΘΕΙΕΣ <br>
-<input type="checkbox" name='tasks_lists[]' value="task12"> ΓΡΑΜΜΕΣ ΟΤΕ ΓΙΑ ROUTER      <br>
-<input type="checkbox" name='tasks_lists[]' value="task13"> ΥΠΗΡΕΣΙΕΣ ΗΛΕΚΤΡΟΝΙΚΟΥ ΤΑΧΥΔΡΟΜΕΙΟΥ   <br>
-<input type="checkbox" name='tasks_lists[]' value="task14"> SERVICE – ΑΝΑΒΑΘΜΙΣΗ Η/Υ      <br>
-<input type="checkbox" name='tasks_lists[]' value="task15"> ΕΓΚΑΤΑΣΤΑΣΗ – ΑΝΑΒΑΘΜΙΣΗ SOFTWARE ΣΕ Η/Υ<br>
-<input type="checkbox" name='tasks_lists[]' value="task16"> ΕΓΚΑΤΑΣΤΑΣΗ ΝΕΟΥ H/Y<br>
-<input type="checkbox" name='tasks_lists[]' value="task17"> SERVICE – ΑΝΑΒΑΘΜΙΣΗ SOFTWARE NOTEBOOK<br>
-<input type="checkbox" name='tasks_lists[]' value="task18"> SERVICE ΠΕΡΙΦΕΡΕΙΑΚΩΝ ΟΘΟΝΩΝ<br>
-   </div>
+   <section id='servers'>
+   <div class='  bold underline'>Servers : </div>
+     <?php
+     $i = 1; 
+   foreach ($categories->result() as $category) {
+    if($category->category=='server'){
+      if($i==1){
+        $i++;
+        $class='left';
+      }else{
+        $i=1;
+        $class='right';
+      }
+       ?>
+       <div  class='checks-item checks-item-<?= $class; ?>'>
+      <input type="checkbox" name='tasks_lists[]' <?= set_checkbox('tasks_lists', $category->id); ?> value="<?= $category->id ?>"> <?= $category->name ?>
+      </div>
+      <?php }
+   }
 
-   <div class='checks-item checks-item-right'>
+    ?>
+    </section>
+    <section  id='network'>
+    <div class=' mt15 bold underline'>Δίκτυο : </div>
+     <?php
+     $i = 1; 
+     $patchpanels = array();
+     $patchcords = array();
+     $switches = array();
+      foreach ($categories->result() as $category) {
 
-<input type="checkbox" name='tasks_lists[]' value="task19"> SERVICE ΠΕΡΙΦΕΡΕΙΑΚΩΝ ΕΚΤΥΠΩΤΩΝ<br>
-<input type="checkbox" name='tasks_lists[]' value="task20"> ΕΓΚΑΤΑΣΤΑΣΗ ΕΚΤΥΠΩΤΗ / ΠΟΛΥΜΗΧΑΝΗΜΑΤΟΣ  <br>
-<input type="checkbox" name='tasks_lists[]' value="task21">ΤΟΠΟΘΕΤΗΣΗ ΝΕΟΥ ΕΚΤΥΠΩΤΗ / ΠΟΛΥΜΗΧΑΝΗΜΑΤΟΣ<br>
-<input type="checkbox" name='tasks_lists[]' value="task22"> ΕΡΓΑΣΙΕΣ ΕΛΕΓΧΟΥ ΔΙΚΤΥΑΚΟΥ SOFTWARE <br>
-<input type="checkbox" name='tasks_lists[]' value="task23"> ΕΠΕΞΕΡΓΑΣΙΑ ΕΓΓΡΑΦΩΝ  <br>
-<input type="checkbox" name='tasks_lists[]' value="task24"> ΕΡΓΑΣΙΕΣ ΣΕ TABLET/KINHTO <br>
-<input type="checkbox" name='tasks_lists[]' value="task25"> ΠΡΟΓΡΑΜΜΑΤΙΣΜΟΣ ROUTERS <br>
-<input type="checkbox" name='tasks_lists[]' value="task26"> ΠΡΟΓΡΑΜΜΑΤΙΣΜΟΣ FIREBOX <br>
-<input type="checkbox" name='tasks_lists[]' value="task27"> ΑΝΑΒΑΘΜΙΣΕΙΣ ΠΡΟΓΡΑΜΜΑΤΩΝ MICROSOFT <br>
-SWITCHES ΚΑΤΑΝΕΜΗΤΩΝ:
-  SERVER ROOM<br> <input type="checkbox" name='tasks_lists[]' value="task28">  Υπ. <input type="checkbox" name='tasks_lists[]' value="task29">  1ου <input type="checkbox" name='tasks_lists[]' value="task30">  2ου <input type="checkbox" name='tasks_lists[]' value="task31">  3ου <input type="checkbox" name='tasks_lists[]' value="task32">  4ου <input type="checkbox" name='tasks_lists[]' value="task33"> <br>
-ΑΠΟΚATAΣΤΑΣΗ ΒΛΑΒΗΣ PATCH PANELS:
-  SERVER ROOM<br> <input type="checkbox" name='tasks_lists[]' value="task34">  Υπ. <input type="checkbox" name='tasks_lists[]' value="task35">  1ου <input type="checkbox" name='tasks_lists[]' value="task36">  2ου <input type="checkbox" name='tasks_lists[]' value="task37">  3ου <input type="checkbox" name='tasks_lists[]' value="task38">  4ου <input type="checkbox" name='tasks_lists[]' value="task39"> <br>
-ΕΛΕΓΧΟΣ – ΑΠΟΚATAΣΤΑΣΗ ΚΑΛΩΔΙΩΣΕΩΝ PATCH CORDS:
-  SERVER ROOM<br> <input type="checkbox" name='tasks_lists[]' value="task40">  Υπ. <input type="checkbox" name='tasks_lists[]' value="task41">  1ου <input type="checkbox" name='tasks_lists[]' value="task42">  2ου <input type="checkbox" name='tasks_lists[]' value="task43">  3ου <input type="checkbox" name='tasks_lists[]' value="task44">  4ου <input type="checkbox" name='tasks_lists[]' value="task45"> <br>
-<input type="checkbox" name='tasks_lists[]' value="task46"> ΕΓΚΑΤΑΣΤΑΣΗ ΠΡΟΣΩΡΙΝΟΥ ΔΙΚΤΥΟΥ & INTERNET  <br>
-<input type="checkbox" name='tasks_lists[]' value="task47"> ΚΑΤΑΓΡΑΦΗ ΕΞ/ΣΜΟΥ ΓΙΑ ΚΕΝΤΡΙΚΗ ΒΑΣΗ ΔΕΔΟΜΕΝΩΝ <br>
-<input type="checkbox" name='tasks_lists[]' value="task48"> ΕΡΓΑΣΙΕΣ ΣΤΟ Σ.Κ.Α.Ε. ΑΒΕΡΩΦ 10 ΑΘΗΝΑ  <br>
-<input type="checkbox" name='tasks_lists[]' value="task49"> ΕΡΓΑΣΙΕΣ ΚΕ.ΕΛ.Π.ΝΟ. Γ’ ΣΕΠΤΕΜΒΡΙΟΥ 56 ΑΘΗΝΑ <br>
+    if($category->category=='network'){
+      if( strpos( $category->name, 'SWITCHES' ) !== false ){
+        $category->name = str_replace('SWITCHES', '', $category->name);
+        $switches[]=$category;
+        continue;
+      }elseif(strpos( $category->name, 'PATCH PANELS' ) !== false){
+        $category->name = str_replace('PATCH PANELS', '', $category->name);
+        $patchpanels[]=$category;
+        continue;
+      }elseif(strpos( $category->name, 'PATCH CORDS' ) !== false){
+        $category->name = str_replace('PATCH CORDS', '', $category->name);
+        $patchcords[]=$category;
+        continue;
+      }
+      if($i==1){
+        $i++;
+        $class='left';
+      }else{
+        $i=1;
+        $class='right';
+      }
+       ?>
+       <div  class='checks-item checks-item-<?= $class; ?>'>
+      <input type="checkbox" <?= set_checkbox('tasks_lists', $category->id); ?> name='tasks_lists[]' value="<?= $category->id ?>"> <?= $category->name ?>
+      </div>
+      <?php }
+   }
+   ?>
+  <div  class='checks-item checks-item-<?= $class; ?>'>
+      ΕΛΕΓΧΟΣ/ΕΡΓΑΣΙΕΣ SWITCHES: <br>
+   <?php
+      foreach ($switches as $category) {
+        
+        ?>
+       
+      <input type="checkbox" <?= set_checkbox('tasks_lists', $category->id); ?> name='tasks_lists[]' value="<?= $category->id ?>"> <?= $category->name ?>
+     
+      <?php
+      }
+      if($i==1){
+        $i++;
+        $class='left';
+      }else{
+        $i=1;
+        $class='right';
+      }
+    ?>
+     </div>
+      <div  class='checks-item checks-item-<?= $class; ?>'>
+       ΕΛΕΓΧΟΣ/ΕΡΓΑΣΙΕΣ PATCH PANELS: <br>
+   <?php
+      foreach ($patchpanels as $category) {
+        
+        ?>
+       
+      <input type="checkbox" <?= set_checkbox('tasks_lists', $category->id); ?> name='tasks_lists[]' value="<?= $category->id ?>"> <?= $category->name ?>
+     
+      <?php
+      }
+      if($i==1){
+        $i++;
+        $class='left';
+      }else{
+        $i=1;
+        $class='right';
+      }
+    ?>
+     </div>
+      <div  class='checks-item checks-item-<?= $class; ?>'>
+      ΕΛΕΓΧΟΣ/ΕΡΓΑΣΙΕΣ PATCH CORDS: <br>
+   <?php
+      foreach ($patchcords as $category) {
+        
+        ?>
+       
+      <input type="checkbox" <?= set_checkbox('tasks_lists', $category->id); ?> name='tasks_lists[]' value="<?= $category->id ?>"> <?= $category->name ?>
+     
+      <?php
+      }
+      if($i==1){
+        $i++;
+        $class='left';
+      }else{
+        $i=1;
+        $class='right';
+      }
+    ?>
+     </div>
+    </section>
+     <section id='pc'>
+    <div class='mt15  bold underline'>Υπολογιστές / Laptop : </div>
+     <?php
+     $i = 1; 
+      foreach ($categories->result() as $category) {
+    if($category->category=='pc'){
+      if($i==1){
+        $i++;
+        $class='left';
+      }else{
+        $i=1;
+        $class='right';
+      }
+       ?>
+       <div  class='checks-item checks-item-<?= $class; ?>'>
+      <input type="checkbox" <?= set_checkbox('tasks_lists', $category->id); ?> name='tasks_lists[]' value="<?= $category->id ?>"> <?= $category->name ?>
+      </div>
+      <?php }
+   }
 
-   </div>
+    ?>
+    </section>
+       <section id='printer'>
+    <div class=' mt15 bold underline'>Εκτυπωτές / Πολυμηχανήματα / Φωτοτυπικά  </div>
+     <?php
+     $i = 1; 
+      foreach ($categories->result() as $category) {
+    if($category->category=='printer'){
+      if($i==1){
+        $i++;
+        $class='left';
+      }else{
+        $i=1;
+        $class='right';
+      }
+       ?>
+       <div  class='checks-item checks-item-<?= $class; ?>'>
+      <input type="checkbox" <?= set_checkbox('tasks_lists', $category->id); ?> name='tasks_lists[]' value="<?= $category->id ?>"> <?= $category->name ?>
+      </div>
+      <?php }
+   }
+
+    ?>
+    </section>
+
+
+   
     </div>
     <div class='cat-tabs' id='tel-fields'>
- <div class='checks-item checks-item-left'>
-      <input type="checkbox" name='tasks_lists[]' value="task50"> ΠΡΟΓΡΑΜΜΑΤΙΣΜΟΣ ΕΣΩΤΕΡΙΚΟΥ ΤΗΛΕΦΩΝΟΥ<br>
-      <input type="checkbox" name='tasks_lists[]' value="task51"> ΑΝΤΙΚΑΤΑΣΤΑΣΗ ΕΣΩΤΕΡΙΚΟΥ ΤΗΛΕΦΩΝΟΥ<br>
-      <input type="checkbox" name='tasks_lists[]' value="task52"> ΜΕΤΑΦΟΡΑ ΕΣΩΤΕΡΙΚΟΥ ΤΗΛΕΦΩΝΟΥ<br>
-      
+    <section id='telehpony'>
+   <div class='  bold underline'>Τελεφωνία : </div>
+     <?php
+     $i = 1; 
+   foreach ($categories->result() as $category) {
+    if($category->category=='telephony'){
+      if($i==1){
+        $i++;
+        $class='left';
+      }else{
+        $i=1;
+        $class='right';
+      }
+       ?>
+       <div  class='checks-item checks-item-<?= $class; ?>'>
+      <input type="checkbox" <?= set_checkbox('tasks_lists', $category->id); ?> name='tasks_lists[]' value="<?= $category->id ?>"> <?= $category->name ?>
       </div>
-      <div class='checks-item checks-item-right'>
-      <input type="checkbox" name='tasks_lists[]' value="task53"> ΠΡΟΓΡΑΜΜΑΤΙΣΜΟΣ FAX<br>
-      <input type="checkbox" name='tasks_lists[]' value="task54"> SERVICE FAX<br>
-      </div>
+      <?php }
+   }
+
+    ?>
+    </section>
+ 
 </div>
 <div class='cat-tabs' id='voip-fields'>
- <div class='checks-item checks-item-left'>
-      <input type="checkbox" name='tasks_lists[]' value="task55"> ΠΡΟΓΡΑΜΜΑΤΙΣΜΟΣ ΕΣΩΤΕΡΙΚΟΥ ΤΗΛΕΦΩΝΟΥ<br>
-      <input type="checkbox" name='tasks_lists[]' value="task56"> ΑΝΤΙΚΑΤΑΣΤΑΣΗ ΕΣΩΤΕΡΙΚΟΥ ΤΗΛΕΦΩΝΟΥ<br>
-      <input type="checkbox" name='tasks_lists[]' value="task57"> ΜΕΤΑΦΟΡΑ ΕΣΩΤΕΡΙΚΟΥ ΤΗΛΕΦΩΝΟΥ<br>
-      
+  <section id='voip'>
+   <div class='  bold underline'>VOIP : </div>
+     <?php
+     $i = 1; 
+   foreach ($categories->result() as $category) {
+    if($category->category=='voip'){
+      if($i==1){
+        $i++;
+        $class='left';
+      }else{
+        $i=1;
+        $class='right';
+      }
+       ?>
+      <div  class='checks-item checks-item-<?= $class; ?>'>
+         <input type="checkbox" <?= set_checkbox('tasks_lists', $category->id); ?> name='tasks_lists[]' value="<?= $category->id ?>"> <?= $category->name ?>
       </div>
-      <div class='checks-item checks-item-right'>
-      <input type="checkbox" name='tasks_lists[]' value="task58"> ΕΛΕΓΧΟΣ BACKUP<br>
-      <input type="checkbox" name='tasks_lists[]' value="task59"> ΠΡΟΓΡΑΜΜΑΤΙΣΜΟΣ FAX<br>
-      <input type="checkbox" name='tasks_lists[]' value="task60"> SERVICE FAX<br>
-      </div>
+      <?php }
+   }
+
+    ?>
+    </section>
 </div>
  </div>
  
  <div class='client-text border mt15 p5 overflow'>
    <div class='client-text-heading'>ΣΧΟΛΙΑ – ΠΑΡΑΤΗΡΗΣΕΙΣ ΠΕΛΑΤΗ  </div>
-   <textarea class='f13' name="" id="" style='width:99%' rows="3"></textarea>
+   <textarea class='f13' name="customer_comments" id="" style='width:99%' rows="1"><?= set_value('customer_comments'); ?></textarea>
  </div>
  <div class='tech-text border mt15 p5 overflow'>
    <div class='tech-text-heading'>ΑΛΛΕΣ ΕΡΓΑΣΙΕΣ – ΠΑΡΑΤΗΡΗΣΕΙΣ:  </div>
-   <textarea class='f13' name="" id="" style='width:99%' rows="8"></textarea>
+   <textarea class='f13' name="technician_comments" id="" style='width:99%' rows="7"><?= set_value('technician_comments'); ?></textarea>
     
 
  </div>
  <div class='signs mt15'>
-    <div class='signs-item signs-item-left'>ΥΠΟΓΡΑΦΗ ΤΕΧΝΙΚΟΥ</div>
-    <div class='signs-item signs-item-right'>ΥΠΟΓΡΑΦΗ ΠΕΛΑΤΗ</div>
+    <div style="text-align:center" class='signs-item signs-item-left'>ΥΠΟΓΡΑΦΗ ΤΕΧΝΙΚΟΥ <br>
+   <img src="assets/images/tisakov.jpg" alt="">
+    </div>
+    <div class='signs-item signs-item-right' style="text-align:center">ΥΠΟΓΡΑΦΗ ΥΠΑΛΛΗΛΟΥ ΚΕΕΛΠΝΟ <br> <span class='f11'>(ΓΙΑ ΤΗΝ ΑΠΟΔΟΧΗ ΠΟΙΟΤΗΤΑΣ ΤΗΣ ΠΑΡΑΣΧΕΘΕΙΣΑΣ ΥΠΗΡΕΣΙΑΣ)</span></div>
  </div>
  <button style="clear:both;display:inline-block" type='submit'>Save</button>
  </form>
