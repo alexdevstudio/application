@@ -1,3 +1,21 @@
+ <?php
+//print_r($ticket);
+//$_POST['test'] = 'something';
+    if($this->input->post('year')==''){
+      $_POST['tasks_lists'] = json_decode($ticket[0]['tasks_list']);
+      $_POST['category'] = $ticket[0]['category'];
+      $_POST['technician'] = $ticket[0]['technician'];
+      $_POST['customer_comments'] = $ticket[0]['customer_comments'];
+      $_POST['ticket_nr'] = $ticket[0]['ticket_nr'];
+      $_POST['technician_comments'] = $ticket[0]['technician_comments'];
+      $_POST['day'] = date("d",strtotime($ticket[0]['ticket_date']));
+      $_POST['month'] = date("m",strtotime($ticket[0]['ticket_date']));
+      $_POST['year'] = date("Y",strtotime($ticket[0]['ticket_date']));
+
+    } 
+
+   // print_r($this->input->post());
+  ?>
 <!DOCTYPE html>
 <html>
   <head>
@@ -120,11 +138,39 @@
      border:none;
      color:red;
      font-weight: bold;
-  } 
+  }
+
+  <?php
+  if($this->input->post('category')=='Τηλεφωνία'){
+?>
+#pc-fields, 
+  #voip-fields{
+    display:  none;
+  }
+
+<?php
+  }else if($this->input->post('category')=='VOIP'){
+  ?>
+ #pc-fields, 
+  #tel-fields{
+    display:  none;
+  }
+
+  <?php
+  }else{
+    ?>
+
   #tel-fields,
   #voip-fields{
     display:  none;
   }
+
+
+    <?php
+  }
+  ?>
+ 
+
 .tech-title-tr,
 .tech-tasks-category{
   width:50%;
@@ -162,6 +208,7 @@ section{
 
   
   </head>
+ 
   <body class=''>
   <img src="<?= base_url(); ?>assets/images/letterHead.png" alt="">
   <?php echo validation_errors('<div style="color:red" class="error">', '</div>'); ?>
