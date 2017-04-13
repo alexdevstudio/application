@@ -224,6 +224,7 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					$shipping_class= 4663;
 					break;
 			case 'monitors':
+			case 'tv':
 
 			$vweight = (float) $data['volumetric_weight'];
 				if($vweight!=''){
@@ -472,6 +473,48 @@ public function makeShippingClass($data, $cat, $dynamic = null){
     		case 18:
     			$shipping_class = 10075;
     			break;
+    		case 19:
+    			 $shipping_class = 10870;
+    			 break;
+    		case 20:
+    			 $shipping_class = 10871;
+    			 break;
+    		case 21:
+    			 $shipping_class = 10872;
+    			 break;
+    		case 22:
+    			 $shipping_class = 10873;
+    			 break;
+    		case 23:
+    			 $shipping_class = 10874;
+    			 break;
+    		case 24:
+    			 $shipping_class = 10875;
+    			 break;
+    		case 25:
+    			 $shipping_class = 10876;
+    			 break;
+    		case 26:
+    			 $shipping_class = 10877;
+    			 break;
+    		case 27:
+    			 $shipping_class = 10878;
+    			 break;
+    		case 28:
+    			 $shipping_class = 10879;
+    			 break;
+    		case 29:
+    			 $shipping_class = 10880;
+    			 break;
+    		case 30:
+    			 $shipping_class = 10881;
+    			 break;
+    		case 31:
+    			 $shipping_class = 10882;
+    			 break;
+    		case 32:
+    			 $shipping_class = 10883;
+    			 break;
     		
     		default:
     			$shipping_class = 4679;

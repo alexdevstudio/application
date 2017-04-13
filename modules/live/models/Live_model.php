@@ -1209,6 +1209,13 @@ class Live_model extends CI_Model {
 					else
 						$c = $cat;
 				break;
+				case 'TV':
+					if($brand == 'LG ELECTRONICS')
+						{
+							$brand = 'LG';
+						}
+						$c = 'tv';
+				break;
 				case 'Memory':
 					if($brand == 'CORSAIR MEMORY')
 						$c = 'memories';
@@ -1296,13 +1303,18 @@ class Live_model extends CI_Model {
 					$title = $description;
 
 				}
+				elseif($c == 'tv')
+				{
+					$title = $description;
+
+				}
 				//echo $title.'<br>';
 				$net_price = str_replace(",", ".", $product->timi);
 				$net_price = (string) trim($net_price);
 
 				$availability = $availability;
 				$imageUrl = (string) trim($product->Image);
-				$brand = (string) trim($product->Supplier);
+				//$brand = (string) trim($product->Supplier);
 
 				//1. Live
 				$supplier = 'braintrust';
@@ -2218,7 +2230,7 @@ class Live_model extends CI_Model {
 				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c== "desktops" || $c == "tablets"  || $c == "smartphones" ||
 				 $c == "cables" || $c == "patch_panels" || $c == "racks" || $c =="optical_drives" || $c == "card_readers" || $c == "flash_drives" || 
 				 $c == "power_supplies" || $c == "cases" || $c == "fans" || $c == "motherboards" || $c == "graphic_cards" || $c == "cpu" || 
-				 $c == "memories" || $c == "hoverboards" || $c =="printer_fusers" || $c =="printer_drums" || $c =="printer_belts" || $c=="ups"){
+				 $c == "memories" || $c == "hoverboards" || $c =="printer_fusers" || $c =="printer_drums" || $c =="printer_belts" || $c=="ups" || $c=="tv"){
 
 
 					$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
