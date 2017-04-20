@@ -1312,7 +1312,7 @@ class Live_model extends CI_Model {
 				$net_price = str_replace(",", ".", $product->timi);
 				$net_price = (string) trim($net_price);
 
-				$availability = $availability;
+				//$availability = $availability;
 				$imageUrl = (string) trim($product->Image);
 				//$brand = (string) trim($product->Supplier);
 
