@@ -62,7 +62,12 @@
      <option  <?= set_select('category', 'Τηλεφωνία'); ?> value="Τηλεφωνία">Τηλεφωνία</option>
      <option  <?= set_select('category', 'VOIP'); ?> value="VOIP">VOIP</option>
    </select>
-<input type="number" name="ticket_nr" placeholder='Αριθμός ΔΤΕ'>
+   <?php  
+    $ticket="";
+   if(isset($ticket_nr)){
+        $ticket = $ticket_nr + 1;
+    } ?>
+<input type="number" name="ticket_nr" value="<?= $ticket++; ?>" placeholder='Αριθμός ΔΤΕ'>
 
    <button type="submit">Create</button>
 	</form>
