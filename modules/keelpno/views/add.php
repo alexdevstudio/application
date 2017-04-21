@@ -153,7 +153,8 @@ section{
     {
         display: none !important;
     }
-    .error{
+    .error,
+    #reset{
       display: none;
     }
      
@@ -166,7 +167,18 @@ section{
   <img src="<?= base_url(); ?>assets/images/letterHead.png" alt="">
   <?php echo validation_errors('<div style="color:red" class="error">', '</div>'); ?>
   <div class='header'style="">
-    ΔΕΛΤΙΟ ΤΕΧΝΙΚΗΣ ΕΞΥΠΗΡΕΤΗΣΗΣ – ΥΠΗΡΕΣΙΕΣ ΠΛΗΡΟΦΟΡΙΚΗΣ
+  <?php   
+    $type = $this->session->type;
+
+    if($type == 'Πληροφορική'){
+        $type_show = 'ΠΛΗΡΟΦΟΡΙΚΗΣ';
+    }else if($type == 'Τηλεφωνία'){
+        $type_show = 'ΤΗΛΕΠΙΚΟΙΝΩΝΙΩΝ';
+    }else if($type == 'VOIP'){
+        $type_show = 'VOIP';
+    }
+   ?>
+    ΔΕΛΤΙΟ ΤΕΧΝΙΚΗΣ ΕΞΥΠΗΡΕΤΗΣΗΣ – ΥΠΗΡΕΣΙΕΣ <?= $type_show; ?>
   </div>
   <form action='' method='post'>
   <div class='date-number overflow'>
@@ -240,23 +252,25 @@ section{
   </span>
  </div>
  <div class='technicians f13 overflow'>
-   <div class="technicians-item techs">ΤΕΧΝΙΚΟΙ: ΓΙΩΡΓ. ΜΑΡΑΤΟΣ – ΑΛΕΞ. ΤΙΣΑΚΟΒ – ΠΑΝΑΓ. ΚΛΗΜΗΣ           </div>
+   <div class="technicians-item techs"> 
+   <?php  
+    if($this->session->type=='Τηλεφωνία' || $this->session->type=='VOIP'){
+      $this->session->user = 'Άλεξ';
+      echo "ΤΕΧΝΙΚΟΣ: ΑΛΕΞΑΝΔΡΟΣ ΤΙΣΑΚΟΒ";
+    }else{
+      echo "ΤΕΧΝΙΚΟΙ: ΓΙΩΡΓ. ΜΑΡΑΤΟΣ – ΑΛΕΞ. ΤΙΣΑΚΟΒ – ΠΑΝΑΓ. ΚΛΗΜΗΣ";
+    }
+    ?>
+  
+   </div>
    <div class="technicians-item super">ΕΠΙΒΛΕΨΗ:ΕΥΑΓ. ΜΟΥΡΓΕΛΑΣ </div>
  </div>
  <div class='checks  f11 border p5 overflow'>
  <div style="clear:both;overflow:auto;">
    <div class=' tech-title-tr bold underline'>ΕΡΓΑΣΙΕΣ ΤΕΧΝΙΚΟΥ : </div>
-    <div class="tech-tasks-category"> 
-     <select name="technician" id="technician" >
-     <option <?= set_select('technician', 'Άλεξ'); ?> value="Άλεξ" default>Άλεξ</option>
-     <option  <?= set_select('technician', 'Γιώργος'); ?> value="Γιώργος">Γιώργος</option>
-     <option  <?= set_select('technician', 'Τάκης'); ?> value="Τάκης">Τάκης</option>
-   </select>
-    <select name="category" id="category" >
-     <option <?= set_select('category', 'Πληροφορική'); ?> value="Πληροφορική" default>Πληροφορική</option>
-     <option  <?= set_select('category', 'Τηλεφωνία'); ?> value="Τηλεφωνία">Τηλεφωνία</option>
-     <option  <?= set_select('category', 'VOIP'); ?> value="VOIP">VOIP</option>
-   </select> </div>
+    <input type="hidden" name="technician" value="<?= $this->session->user; ?>"> 
+    <input type="hidden" name="category" value="<?= $this->session->type; ?>"> 
+     
    </div>
    <div class='cat-tabs' id='pc-fields' > 
    <section id='servers'>
@@ -384,14 +398,14 @@ section{
      <?php
      $i = 1; 
       foreach ($categories->result() as $category) {
-    if($category->category=='pc'){
-      if($i==1){
-        $i++;
-        $class='left';
-      }else{
-        $i=1;
-        $class='right';
-      }
+          if($category->category=='pc'){
+            if($i==1){
+              $i++;
+              $class='left';
+            }else{
+              $i=1;
+              $class='right';
+            }
        ?>
        <div  class='checks-item checks-item-<?= $class; ?>'>
       <input type="checkbox" <?= set_checkbox('tasks_lists', $category->id); ?> name='tasks_lists[]' value="<?= $category->id ?>"> <?= $category->name ?>
@@ -454,7 +468,7 @@ section{
 </div>
 <div class='cat-tabs' id='voip-fields'>
   <section id='voip'>
-   <div class='  bold underline'>VOIP : </div>
+   <div class='  bold underline'>VOIP (PRI: 2106863200 και 2105212054) </div> <br>
      <?php
      $i = 1; 
    foreach ($categories->result() as $category) {
@@ -496,15 +510,15 @@ section{
  </div>
  <button style="clear:both;display:inline-block" type='submit'>Save</button>
  </form>
+ <form id="reset" action="<?= base_url(); ?>keelpno/reset" method="post">
+ <br> <br> <br> <br> <br>
+    <input id="" type="submit" value="Go Home">
+ </form>
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 <script>
 $(document).ready(function(){
 
-  $('#category').on('change',function(){
-
-    var a = $(this).val();
-     showCat(a);
-      });
+  showCat("<?= $this->session->type; ?>");
 
 })
   function showCat(a){
@@ -518,7 +532,7 @@ $(document).ready(function(){
         var b = 'voip-fields';
       }
       $('#'+b).show();
-      console.log(a);
+      
   }
 </script>
   </body>

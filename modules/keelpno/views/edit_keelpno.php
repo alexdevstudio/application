@@ -213,7 +213,18 @@ section{
   <img src="<?= base_url(); ?>assets/images/letterHead.png" alt="">
   <?php echo validation_errors('<div style="color:red" class="error">', '</div>'); ?>
   <div class='header'style="">
-    ΔΕΛΤΙΟ ΤΕΧΝΙΚΗΣ ΕΞΥΠΗΡΕΤΗΣΗΣ – ΥΠΗΡΕΣΙΕΣ ΠΛΗΡΟΦΟΡΙΚΗΣ
+    <?php   
+    $type = $ticket[0]['category'];
+
+    if($type == 'Πληροφορική'){
+        $type_show = 'ΠΛΗΡΟΦΟΡΙΚΗΣ';
+    }else if($type == 'Τηλεφωνία'){
+        $type_show = 'ΤΗΛΕΠΙΚΟΙΝΩΝΙΩΝ';
+    }else if($type == 'VOIP'){
+        $type_show = 'VOIP';
+    }
+   ?>
+    ΔΕΛΤΙΟ ΤΕΧΝΙΚΗΣ ΕΞΥΠΗΡΕΤΗΣΗΣ – ΥΠΗΡΕΣΙΕΣ <?= $type_show; ?>
   </div>
   <form action='' method='post'>
   <div class='date-number overflow'>
@@ -539,7 +550,7 @@ section{
     <div style="text-align:center" class='signs-item signs-item-left'>ΥΠΟΓΡΑΦΗ ΤΕΧΝΙΚΟΥ <br>
    <img src="<?= base_url(); ?>assets/images/tisakov.jpg" alt="">
     </div>
-    <div class='signs-item signs-item-right' style="text-align:center">ΥΠΟΓΡΑΦΗ ΥΠΑΛΛΗΛΟΥ ΚΕΕΛΠΝΟ <br> <span class='f11'>(ΓΙΑ ΤΗΝ ΑΠΟΔΟΧΗ ΠΟΙΟΤΗΤΑΣ ΤΗΣ ΠΑΡΑΣΧΕΘΕΙΣΑΣ ΥΠΗΡΕΣΙΑΣ)</span></div>
+    <div class='signs-item signs-item-right' style="text-align:center">ΥΠΟΓΡΑΦΗ ΠΕΛΑΤΗ</div>
  </div>
  <button style="clear:both;display:inline-block" type='submit'>Save</button>
  </form>
