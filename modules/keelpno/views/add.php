@@ -243,22 +243,51 @@ section{
   </div>
  
  <div class='client-description f13 border p5'>
-      
-  ΠΕΛΑΤΗΣ: ΚΕ.ΕΛ.Π.ΝΟ. Ν.Π.Ι.Δ.   - 
-  <span class='bold blue'>  ΔΙΕΥΘΥΝΣΗ: ΑΓΡΑΦΩΝ 3-5 ΜΑΡΟΥΣΙ  </span><br>
+   <?php  
+    if($this->session->client=="vari"){
+
+    ?>   
+  ΠΕΛΑΤΗΣ: Κ.Ε.Δ.Υ. - ΚΕ.ΕΛ.Π.ΝΟ. Ν.Π.Ι.Δ.   - 
+  <span class='bold blue'>  ΔΙΕΥΘΥΝΣΗ: ΦΛΕΜΙΝΓ 34 ΒΑΡΗ ΚΟΡΩΠΙΟΥ  </span><br>
+  Δ.Ο.Υ.: ΙΑ’ ΑΘΗΝΩΝ   Α.Φ.Μ.: 090193594  ΤΗΛ.: 210.88.99.000  <br>
+  ΥΠΕΥΘΥΝΟΣ: Κος ΤΣΕΚΑΣ ΧΡΗΣΤΟΣ  ΤΟΠΟΣ ΕΡΓΑΣΙΩΝ: ΚΤΗΡΙΟ ΚΕΔΥ ΒΑΡΗΣ<br> 
+  
+  <?php   
+    }elseif ($this->session->client=="marousi") {
+     ?>
+<span class='bold blue'>  ΔΙΕΥΘΥΝΣΗ: ΑΓΡΑΦΩΝ 3-5 ΜΑΡΟΥΣΙ  </span><br>
   Δ.Ο.Υ.: ΙΑ’ ΑΘΗΝΩΝ   Α.Φ.Μ.: 090193594  ΤΗΛ.: 210.52.12.190  FAX.: 210.52.12.191<br>
   ΥΠΕΥΘΥΝΟΣ: Κος ΠΑΡΙΣΣΗΣ  ΤΟΠΟΣ ΕΡΓΑΣΙΩΝ ΚΤΙΡΙΑΚΕΣ ΕΓΚΑΤΑΣΤΑΣΕΙΣ ΚΕ.ΕΛ.Π.ΝΟ. Ν.Π.Ι.Δ.<br> 
   <span class="bold">ΑΓΡΑΦΩΝ 3-5 ΜΑΡΟΥΣΙ  Υπόγειο, 1ος, 2ος, 3ος, 4ος. Αβέρωφ 10 Αθήνα 
-  </span>
+</span>
+     <?php
+    }
+   ?>
  </div>
  <div class='technicians f13 overflow'>
    <div class="technicians-item techs"> 
    <?php  
-    if($this->session->type=='Τηλεφωνία' || $this->session->type=='VOIP'){
+    if($this->session->client == 'marousi' && ($this->session->type=='Τηλεφωνία' || $this->session->type=='VOIP')){
       $this->session->user = 'Άλεξ';
       echo "ΤΕΧΝΙΚΟΣ: ΑΛΕΞΑΝΔΡΟΣ ΤΙΣΑΚΟΒ";
     }else{
-      echo "ΤΕΧΝΙΚΟΙ: ΓΙΩΡΓ. ΜΑΡΑΤΟΣ – ΑΛΕΞ. ΤΙΣΑΚΟΒ – ΠΑΝΑΓ. ΚΛΗΜΗΣ";
+      $user = $this->session->user;
+      switch (  $user ) {
+        
+        case 'Γιώργος':
+           echo "ΤΕΧΝΙΚΟΣ: ΓΕΩΡΓΙΟΣ ΜΑΡΑΤΟΣ";
+          break;
+        case 'Τάκης':
+           echo "ΤΕΧΝΙΚΟΣ: ΠΑΝΑΓΙΩΤΗΣ ΚΛΗΜΗΣ";
+          break;
+        case 'Θανάσης':
+           echo "ΤΕΧΝΙΚΟΣ: ΘΑΝΑΣΗΣ ΧΟΥΙΔΗΣ";
+          break;
+        default:
+           echo "ΤΕΧΝΙΚΟΣ: ΑΛΕΞΑΝΔΡΟΣ ΤΙΣΑΚΟΒ";
+          break;
+      }
+      
     }
     ?>
   
