@@ -13,7 +13,13 @@ class Keelpno extends MX_Controller {
 	public function index(){
 		$data['title'] = 'ΔΤΕ';
 		$data['categories'] = $this->keelpno_model->categories();
+
+
 		
+		if(!empty($this->input->post()) && $this->input->post('client')!=''){
+			$this->session->client = $this->input->post('client');
+		}
+
 		if(!empty($this->input->post()) && $this->input->post('user')!=''){
 			$this->session->user = $this->input->post('user');
 		}
@@ -31,6 +37,7 @@ class Keelpno extends MX_Controller {
 	public function reset(){
 		$this->session->unset_userdata('type');
 		$this->session->unset_userdata('user');
+		$this->session->unset_userdata('client');
 
 		redirect(base_url().'keelpno','refresh');
 
