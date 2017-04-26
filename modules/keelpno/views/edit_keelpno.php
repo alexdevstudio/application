@@ -549,7 +549,7 @@ section{
  <div class='signs mt15'>
     <div style="text-align:center" class='signs-item signs-item-left'>ΥΠΟΓΡΑΦΗ ΤΕΧΝΙΚΟΥ <br>
     <?php
-    if ($this->session->user ==  'Άλεξ'; ) 
+    if ($this->session->user ==  'Άλεξ' ) 
       echo '<img src="'. base_url().'assets/images/tisakov.jpg" alt="">';
     ?>
     </div>
