@@ -548,7 +548,10 @@ section{
  </div>
  <div class='signs mt15'>
     <div style="text-align:center" class='signs-item signs-item-left'>ΥΠΟΓΡΑΦΗ ΤΕΧΝΙΚΟΥ <br>
-   <img src="<?= base_url(); ?>assets/images/tisakov.jpg" alt="">
+    <?php
+    if ($this->session->user ==  'Άλεξ'; ) 
+      echo '<img src="'. base_url().'assets/images/tisakov.jpg" alt="">';
+    ?>
     </div>
     <div class='signs-item signs-item-right' style="text-align:center">ΥΠΟΓΡΑΦΗ ΠΕΛΑΤΗ</div>
  </div>
