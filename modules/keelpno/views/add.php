@@ -146,6 +146,9 @@ section{
 .signs-item-left img {
     height: 80px;
 }
+.full{
+  clear:both;
+}
 @media print
 {    
 
@@ -248,7 +251,7 @@ section{
 
     ?>   
   ΠΕΛΑΤΗΣ: Κ.Ε.Δ.Υ. - ΚΕ.ΕΛ.Π.ΝΟ. Ν.Π.Ι.Δ.   - 
-  <span class='bold blue'>  ΔΙΕΥΘΥΝΣΗ: ΦΛΕΜΙΝΓ 34 ΒΑΡΗ ΚΟΡΩΠΙΟΥ  </span><br>
+  <span class='bold blue'>  ΔΙΕΥΘΥΝΣΗ: ΦΛΕΜΙΝΓΚ 34 ΒΑΡΗ ΚΟΡΩΠΙΟΥ  </span><br>
   Δ.Ο.Υ.: ΙΑ’ ΑΘΗΝΩΝ   Α.Φ.Μ.: 090193594  ΤΗΛ.: 210.88.99.000  <br>
   ΥΠΕΥΘΥΝΟΣ: Κος ΤΣΕΚΑΣ ΧΡΗΣΤΟΣ  ΤΟΠΟΣ ΕΡΓΑΣΙΩΝ: ΚΤΗΡΙΟ ΚΕΔΥ ΒΑΡΗΣ<br> 
   
@@ -297,6 +300,8 @@ section{
  <div class='checks  f11 border p5 overflow'>
  <div style="clear:both;overflow:auto;">
    <div class=' tech-title-tr bold underline'>ΕΡΓΑΣΙΕΣ ΤΕΧΝΙΚΟΥ : </div>
+   
+    <input type="hidden" name="client" value="<?= $this->session->client; ?>"> 
     <input type="hidden" name="technician" value="<?= $this->session->user; ?>"> 
     <input type="hidden" name="category" value="<?= $this->session->type; ?>"> 
      
@@ -327,13 +332,16 @@ section{
     <section  id='network'>
     <div class=' mt15 bold underline'>Δίκτυο : </div>
      <?php
+     if($this->session->client=='marousi'){
+
+     
      $i = 1; 
      $patchpanels = array();
      $patchcords = array();
      $switches = array();
       foreach ($categories->result() as $category) {
 
-    if($category->category=='network'){
+    if($category->category=='network' || $category->category=='network_marousi'){
       if( strpos( $category->name, 'SWITCHES' ) !== false ){
         $category->name = str_replace('SWITCHES', '', $category->name);
         $switches[]=$category;
@@ -385,8 +393,8 @@ section{
        ΕΛΕΓΧΟΣ/ΕΡΓΑΣΙΕΣ PATCH PANELS: <br>
    <?php
       foreach ($patchpanels as $category) {
-        
-        ?>
+
+   ?>
        
       <input type="checkbox" <?= set_checkbox('tasks_lists', $category->id); ?> name='tasks_lists[]' value="<?= $category->id ?>"> <?= $category->name ?>
      
@@ -421,6 +429,116 @@ section{
       }
     ?>
      </div>
+     <?php }else if($this->session->client=='vari'){ 
+   
+     $i = 1; 
+     $patchpanels = array();
+     $patchcords = array();
+     $switches = array();
+      foreach ($categories->result() as $category) {
+
+    if($category->category=='network' || $category->category=='network_vari'){
+      if( strpos( $category->name, 'SWITCHES' ) !== false ){
+        $category->name = str_replace('SWITCHES', '', $category->name);
+        $category->name = str_replace('Αριστερό Κτίριο', 'ΑΚ', $category->name);
+        $category->name = str_replace('Δεξί Κτίριο', 'ΔΚ', $category->name);
+        $category->name = str_replace('Ισόγειο', 'εισ.', $category->name);
+        $switches[]=$category;
+        continue;
+      }elseif(strpos( $category->name, 'PATCH PANELS' ) !== false){
+        $category->name = str_replace('PATCH PANELS', '', $category->name);
+        $category->name = str_replace('Αριστερό Κτίριο', 'ΑΚ', $category->name);
+        $category->name = str_replace('Δεξί Κτίριο', 'ΔΚ', $category->name);
+         $category->name = str_replace('Ισόγειο', 'εισ.', $category->name);
+        $patchpanels[]=$category;
+        continue;
+      }elseif(strpos( $category->name, 'PATCH CORDS' ) !== false){
+        $category->name = str_replace('PATCH CORDS', '', $category->name);
+        $category->name = str_replace('Αριστερό Κτίριο', 'ΑΚ', $category->name);
+        $category->name = str_replace('Δεξί Κτίριο', 'ΔΚ', $category->name);
+         $category->name = str_replace('Ισόγειο', 'εισ.', $category->name);
+        $patchcords[]=$category;
+        continue;
+      }
+      if($i==1){
+        $i++;
+        $class='left';
+      }else{
+        $i=1;
+        $class='right';
+      }
+       ?>
+       <div  class='checks-item checks-item-<?= $class; ?>'>
+      <input type="checkbox" <?= set_checkbox('tasks_lists', $category->id); ?> name='tasks_lists[]' value="<?= $category->id ?>"> <?= $category->name ?>
+      </div>
+      <?php }
+   }
+   ?>
+  <div  class='full'>
+  <hr>
+      ΕΛΕΓΧΟΣ/ΕΡΓΑΣΙΕΣ SWITCHES: 
+        
+   <?php
+      foreach ($switches as $category) {
+        
+        ?>
+       
+      <input type="checkbox" <?= set_checkbox('tasks_lists', $category->id); ?> name='tasks_lists[]' value="<?= $category->id ?>"> <?= $category->name ?>
+     
+      <?php
+      }
+      if($i==1){
+        $i++;
+        $class='left';
+      }else{
+        $i=1;
+        $class='right';
+      }
+    ?>
+     </div>
+      <div  class='full'>
+  <hr>
+       ΕΛΕΓΧΟΣ/ΕΡΓΑΣΙΕΣ PATCH PANELS: 
+   <?php
+      foreach ($patchpanels as $category) {
+
+   ?>
+       
+      <input type="checkbox" <?= set_checkbox('tasks_lists', $category->id); ?> name='tasks_lists[]' value="<?= $category->id ?>"> <?= $category->name ?>
+     
+      <?php
+      }
+      if($i==1){
+        $i++;
+        $class='left';
+      }else{
+        $i=1;
+        $class='right';
+      }
+    ?>
+     </div>
+     <hr>
+      <div  class='full'>
+      ΕΛΕΓΧΟΣ/ΕΡΓΑΣΙΕΣ PATCH CORDS: 
+   <?php
+      foreach ($patchcords as $category) {
+        
+        ?>
+       
+      <input type="checkbox" <?= set_checkbox('tasks_lists', $category->id); ?> name='tasks_lists[]' value="<?= $category->id ?>"> <?= $category->name ?>
+     
+      <?php
+      }
+      if($i==1){
+        $i++;
+        $class='left';
+      }else{
+        $i=1;
+        $class='right';
+      }
+    ?>
+     </div>
+     <?php } ?>
     </section>
      <section id='pc'>
     <div class='mt15  bold underline'>Υπολογιστές / Laptop : </div>
@@ -539,7 +657,7 @@ section{
     ?>
    
     </div>
-    <div class='signs-item signs-item-right' style="text-align:center">ΥΠΟΓΡΑΦΗ ΥΠΑΛΛΗΛΟΥ ΚΕΕΛΠΝΟ <br> <span class='f11'>(ΓΙΑ ΤΗΝ ΑΠΟΔΟΧΗ ΠΟΙΟΤΗΤΑΣ ΤΗΣ ΠΑΡΑΣΧΕΘΕΙΣΑΣ ΥΠΗΡΕΣΙΑΣ)</span></div>
+    <div class='signs-item signs-item-right' style="text-align:center">ΥΠΟΓΡΑΦΗ ΥΠΑΛΛΗΛΟΥ <?= ($this->session->client=="marousi")?"ΚΕΕΛΠΝΟ":"ΚΕΔΥ"; ?> <br> <span class='f11'>(ΓΙΑ ΤΗΝ ΑΠΟΔΟΧΗ ΠΟΙΟΤΗΤΑΣ ΤΗΣ ΠΑΡΑΣΧΕΘΕΙΣΑΣ ΥΠΗΡΕΣΙΑΣ)</span></div>
  </div>
  <button style="clear:both;display:inline-block" type='submit'>Save</button>
  </form>
