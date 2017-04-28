@@ -286,7 +286,7 @@ section{
     </div>
     <div style="" class='date-number-item time'> <span class='bold'>ΩΡΕΣ:</span> 9:30 – 16:30</div>
 
-    <div style="" class='date-number-item id-number'> No  <input type="number" id='ticket_nr' value="<?php (set_value('ticket_nr')==0 ?'':set_value('ticket_nr')); ?>" name="ticket_nr"></div>
+    <div style="" class='date-number-item id-number'> No  <input type="number" id='ticket_nr' value="<?php echo (set_value('ticket_nr')=='0' ?'': set_value('ticket_nr')); ?>" name="ticket_nr"></div>
   </div>
  
  <div class='client-description f13 border p5'>
