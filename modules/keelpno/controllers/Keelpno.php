@@ -187,7 +187,9 @@ class Keelpno extends MX_Controller {
 	}
 
 	public function daily(){
-			$data = array();
+
+		$data['lastTickets'] = $this->getLastDailyTickets();
+		
 		if(!empty($this->input->post())){
 			if($result = $this->createDaily()){
 				echo "<div style='color:green'>Created: ".$result->row()->ticket_nr."</div>";
@@ -199,6 +201,35 @@ class Keelpno extends MX_Controller {
 
 		$this->load->view('menu');
 		$this->load->view('daily',$data);
+	}
+
+	private function getLastDailyTickets(){
+
+		
+
+		$categories = array('Πληροφορική', 'Τηλεφωνία', 'VOIP', 'COPIERS');
+		$technicians = array('Άλεξ', 'Γιώργος', 'Τάκης', 'Θανάσης');
+
+		foreach ($categories as $category) {
+			
+			
+			foreach ($technicians as $technician) {
+				$this->db->where('daily', 1);
+				$this->db->where('category', $category);
+				$this->db->order_by('ticket_nr','DESC');
+				$this->db->limit(1);
+				$this->db->where('technician', $technician);
+				$ticket=$this->db->get('services');
+				if($ticket->num_rows()>0){
+					$result[$technician][$category] = $ticket->result();
+				}
+
+			}
+		}
+
+		return $result;
+
+
 	}
 
 	private function createDaily(){
