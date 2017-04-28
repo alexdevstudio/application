@@ -332,6 +332,14 @@ class Keelpno extends MX_Controller {
 				$defaultComments = "Έλεγχος Domain Controller ΚΕΕΛΠΝΟ. Έλεγχος εφαρμογής PRTG.";
 			}
 		}
+		else if($this->input->post('technician') == 'Θανάσης' /*&& $this->input->post('client') == 'vari'*/){
+			$defaultTasks = array();
+			$defaultComments = '';
+			if($this->input->post('category')=='Πληροφορική'){
+				$defaultTasks = array("1","6","7","22");
+				$defaultComments = "Έλεγχος Servers, Firewall, Routers. Έλεγχος λήψης Backup σε Backup_PC & FreeNAS. Έλεγχος εφαρμογής PRTG. Εκτύπωση αναφορών χρήσης δικτύου. ";
+			}
+		}
 
 		$insertData = array(
 					'ticket_nr' => $this->input->post('ticket_nr'),
@@ -342,9 +350,7 @@ class Keelpno extends MX_Controller {
 					'technician_comments' => $comments,
 					'creation_date' => date('Y-m-d H:i:s'),
 					'daily' => '1'
-
 					);
-
 				
 
 		$this->db->insert('services', $insertData);
