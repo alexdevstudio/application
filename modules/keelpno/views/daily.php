@@ -72,4 +72,31 @@
 
    <button type="submit">Create</button>
 	</form>
+   <hr> 
+ <h3> Τελευταία Ημερήσια Δελτία</h3>
+
+  <?php 
+    foreach ($lastTickets as $technician => $categories) {
+      ?>
+   <div style="width:20%;float:left;">
+    <h3 style="clear:both;"><?= $technician; ?>: </h3>
+    <?php 
+    foreach ($categories as $category) {
+
+      ?>
+        <div style="width:33%;">
+            <?=  $category[0]->category."<br>"; ?>
+            <?=  '<strong style="color:red;">'.$category[0]->ticket_nr."</strong><br>"; ?>
+            <?=  date("d-m-Y", strtotime($category[0]->ticket_date)); ?>
+            <br/><br/>
+         </div>
+      <?php
+    }
+      ?>
+   
+  </div>
+
+      <?php
+    }
+   ?>
 </html>
