@@ -228,8 +228,7 @@ class Keelpno extends MX_Controller {
 			$comments .= ' '.$service->technician_comments;
 		}
 		
-		$theDay = $dayofweek = date('N', strtotime($date));
-		
+		$theDay = $dayofweek = date('N', strtotime($date));		
 
 		if($this->input->post('technician') == 'Άλεξ'){
 			$defaultTasks = array();
@@ -293,6 +292,14 @@ class Keelpno extends MX_Controller {
 			}
 			$tasks = array_merge($defaultTasks, $tasks);
 			$comments = $defaultComments.' '.$comments;
+		}
+		else if($this->input->post('technician') == 'Γιώργος'){
+			$defaultTasks = array();
+			$defaultComments = '';
+			if($this->input->post('category')=='Πληροφορική'){
+				$defaultTasks = array("1","6");
+				$defaultComments = "Έλεγχος Domain Controller ΚΕΕΛΠΝΟ. Έλεγχος εφαρμογής PRTG.";
+			}
 		}
 
 		$insertData = array(
