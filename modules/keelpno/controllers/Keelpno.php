@@ -83,6 +83,7 @@ class Keelpno extends MX_Controller {
 				$insertData = array(
 					'ticket_nr' => $this->input->post('ticket_nr'),
 					'ticket_date' => $date,
+					'client' => $this->session->client,
 					'technician' =>  $this->input->post('technician'),
 					'category' => $this->input->post('category'),
 					'tasks_list' => json_encode($this->input->post('tasks_lists')),

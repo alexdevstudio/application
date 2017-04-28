@@ -52,10 +52,11 @@
 		
         <input type="hidden" name='year' value='<?php echo date("Y"); ?>'>
 
-        <select name="technician" id="technician" >
+   <select name="technician" id="technician" >
      <option <?= set_select('technician', 'Άλεξ'); ?> value="Άλεξ" default>Άλεξ</option>
      <option  <?= set_select('technician', 'Γιώργος'); ?> value="Γιώργος">Γιώργος</option>
      <option  <?= set_select('technician', 'Τάκης'); ?> value="Τάκης">Τάκης</option>
+     <option  <?= set_select('technician', 'Θανάσης'); ?> value="Θανάσης">Θανάσης</option>
    </select>
     <select name="category" id="category" >
      <option <?= set_select('category', 'Πληροφορική'); ?> value="Πληροφορική" default>Πληροφορική</option>
