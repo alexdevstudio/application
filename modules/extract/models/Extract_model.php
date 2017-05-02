@@ -663,9 +663,9 @@ class Extract_model extends CI_Model {
                     
                 $installments_import = $product['installments_count'];
 
-                    if(!$installments_import){
+                    /*if(!$installments_import){
                         $installments_import = 12;
-                    }
+                    }*/
 
                     $sku = $product['sku'];
 
