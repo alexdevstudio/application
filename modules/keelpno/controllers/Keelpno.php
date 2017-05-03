@@ -22,6 +22,7 @@ class Keelpno extends MX_Controller {
 
 		if(!empty($this->input->post()) && $this->input->post('user')!=''){
 			$this->session->user = $this->input->post('user');
+			$this->load->view('menu', $data);
 		}
 
 		if(!empty($this->input->post()) && $this->input->post('type')!=''){
@@ -30,7 +31,7 @@ class Keelpno extends MX_Controller {
 
 
 
-		$this->load->view('menu', $data);
+		
 		$this->load->view('home', $data);
 	}
 
@@ -92,6 +93,10 @@ class Keelpno extends MX_Controller {
 					'creation_date' => date('Y-m-d H:i:s')
 
 					);
+				if($this->input->post('category')=="UPS")
+				{
+					$insertData ['daily'] =1;
+				}
 
 				
 
@@ -122,12 +127,15 @@ class Keelpno extends MX_Controller {
 				exit('The ticket does not exist');
 			}
 
-			$data['ticket'] = $ticket->result_array();
-		}
+			$data['ticket'] = $ticket->result()[0];
 
+			
+			$this->session->set_userdata('client',$data['ticket']->client);
+			$this->session->set_userdata('user' ,$data['ticket']->technician) ;
+			$this->session->set_userdata('type' ,$data['ticket']->category) ;
 		
+		}else{
 
-		if(!empty($this->input->post())){
 			$this->load->library('form_validation');
 			
 				$this->form_validation->set_rules('tasks_lists[]', 'Κατηγορία', 'required',
@@ -135,7 +143,7 @@ class Keelpno extends MX_Controller {
 	                );
 
 				$this->form_validation->set_rules('technician_comments', 'Σχόλια Τεχνικού', 'required|trim',
-	                        array('required' => 'Συμπλιρώστε τα %s.')
+	                        array('required' => 'Συμπληρώστε τα %s.')
 	                );
 
 				 if ($this->form_validation->run() == FALSE)
@@ -203,33 +211,25 @@ class Keelpno extends MX_Controller {
 		$this->load->view('daily',$data);
 	}
 
-	private function getLastDailyTickets(){
+	public function getLastDailyTickets(){
 
-		
-
-		$categories = array('Πληροφορική', 'Τηλεφωνία', 'VOIP', 'COPIERS');
-		$technicians = array('Άλεξ', 'Γιώργος', 'Τάκης', 'Θανάσης');
+		$categories = array('Πληροφορική', 'Τηλεφωνία', 'VOIP', 'COPIERS', 'UPS');
+		//$technicians = array('Άλεξ', 'Γιώργος', 'Τάκης', 'Θανάσης');
 
 		foreach ($categories as $category) {
 			
-			
-			foreach ($technicians as $technician) {
-				$this->db->where('daily', 1);
-				$this->db->where('category', $category);
-				$this->db->order_by('ticket_nr','DESC');
-				$this->db->limit(1);
-				$this->db->where('technician', $technician);
-				$ticket=$this->db->get('services');
-				if($ticket->num_rows()>0){
-					$result[$technician][$category] = $ticket->result();
-				}
-
+			$this->db->where('daily', 1);
+			$this->db->where('client', $this->session->userdata('client'));
+			$this->db->where('category', $category);
+			$this->db->order_by('ticket_nr','DESC');
+			$this->db->limit(1);
+			$this->db->where('technician',$this->session->userdata('user'));
+			$ticket=$this->db->get('services');
+			if($ticket->num_rows()>0){
+				$result[$category] = $ticket->result();
 			}
 		}
-
 		return $result;
-
-
 	}
 
 	private function createDaily(){
@@ -245,6 +245,7 @@ class Keelpno extends MX_Controller {
 		$this->db->where('ticket_date',$date);
 		$this->db->where('category',$this->input->post('category'));
 		$this->db->where('technician',$this->input->post('technician'));
+		$this->db->where('client', $this->input->post('client'));
 		$this->db->where('daily', '0');
 		$services = $this->db->get('services');
 		//print_r($services->result());
@@ -260,10 +261,11 @@ class Keelpno extends MX_Controller {
 		}
 		
 		$theDay = $dayofweek = date('N', strtotime($date));		
+		$defaultTasks = array();
+		$defaultComments = '';
 
-		if($this->input->post('technician') == 'Άλεξ'){
-			$defaultTasks = array();
-			$defaultComments = '';
+		if($this->input->post('technician') == 'Άλεξ' && $this->input->post('client') == 'marousi'){
+			
 			if($theDay==1){
 				if($this->input->post('category')=='Πληροφορική'){
 					$defaultTasks = array("34","35","36","39","40","41");
@@ -321,10 +323,9 @@ class Keelpno extends MX_Controller {
 					$defaultComments = " Ο έλεγχος εκτροπής 2105212054 στο 2106863200 πραγματοποιήθηκε και λειτουργεί σωστά. Έλεγχος καταγραφής κλήσεων. ΕΛΕΓΧΟΣ ΑΣΦΑΛΕΙΑΣ ΤΗΛΕΠΙΚΟΙΝΩΝΙΑΚΩΝ ΔΙΚΤΥΩΝ";
 				}
 			}
-			$tasks = array_merge($defaultTasks, $tasks);
-			$comments = $defaultComments.' '.$comments;
+			
 		}
-		else if($this->input->post('technician') == 'Γιώργος'){
+		else if($this->input->post('technician') == 'Γιώργος' && $this->input->post('client') == 'marousi'){
 			$defaultTasks = array();
 			$defaultComments = '';
 			if($this->input->post('category')=='Πληροφορική'){
@@ -332,7 +333,7 @@ class Keelpno extends MX_Controller {
 				$defaultComments = "Έλεγχος Domain Controller ΚΕΕΛΠΝΟ. Έλεγχος εφαρμογής PRTG.";
 			}
 		}
-		else if($this->input->post('technician') == 'Θανάσης' /*&& $this->input->post('client') == 'vari'*/){
+		else if($this->input->post('technician') == 'Θανάσης' && $this->input->post('client') == 'vari'){
 			$defaultTasks = array();
 			$defaultComments = '';
 			if($this->input->post('category')=='Πληροφορική'){
@@ -340,6 +341,9 @@ class Keelpno extends MX_Controller {
 				$defaultComments = "Έλεγχος Servers, Firewall, Routers. Έλεγχος λήψης Backup σε Backup_PC & FreeNAS. Έλεγχος εφαρμογής PRTG. Εκτύπωση αναφορών χρήσης δικτύου. ";
 			}
 		}
+
+		$tasks = array_merge($defaultTasks, $tasks);
+		$comments = $defaultComments.' '.$comments;
 
 		$insertData = array(
 					'ticket_nr' => $this->input->post('ticket_nr'),
@@ -349,6 +353,7 @@ class Keelpno extends MX_Controller {
 					'tasks_list' => json_encode($tasks),
 					'technician_comments' => $comments,
 					'creation_date' => date('Y-m-d H:i:s'),
+					'client' => $this->input->post('client'),
 					'daily' => '1'
 					);
 				
@@ -363,6 +368,7 @@ class Keelpno extends MX_Controller {
 		return $result;
 
 	}
+
 
 }
 

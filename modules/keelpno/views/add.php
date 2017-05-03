@@ -141,7 +141,7 @@ section{
     min-height: 300px;
 }
 #ticket_nr{
-    width: 65px;
+    width: 80px;
 }
 .signs-item-left img {
     height: 80px;
@@ -179,6 +179,10 @@ section{
         $type_show = 'ΤΗΛΕΠΙΚΟΙΝΩΝΙΩΝ';
     }else if($type == 'VOIP'){
         $type_show = 'VOIP';
+    }else if($type == 'Copiers'){
+        $type_show = 'COPIERS';
+    }else if($type == 'UPS'){
+        $type_show = 'UPS';
     }
    ?>
     ΔΕΛΤΙΟ ΤΕΧΝΙΚΗΣ ΕΞΥΠΗΡΕΤΗΣΗΣ – ΥΠΗΡΕΣΙΕΣ <?= $type_show; ?>
@@ -242,6 +246,15 @@ section{
       </div>
     </div>
     <div style="" class='date-number-item time'> <span class='bold'>ΩΡΕΣ:</span> 9:30 – 16:30</div>
+    <?php 
+        if($this->session->userdata("type")=="UPS")
+        {
+          if(!isset($_POST ['ticket_nr']))
+          {
+           $_POST ['ticket_nr'] = intval(Modules::run('keelpno/getLastDailyTickets')['UPS'][0]->ticket_nr)+1;
+          }
+        }
+     ?>
     <div style="" class='date-number-item id-number'> No  <input type="number" id='ticket_nr' value="<?= set_value('ticket_nr'); ?>" name="ticket_nr"></div>
   </div>
  
@@ -260,7 +273,16 @@ section{
      ?>
 <span class='bold blue'>  ΔΙΕΥΘΥΝΣΗ: ΑΓΡΑΦΩΝ 3-5 ΜΑΡΟΥΣΙ  </span><br>
   Δ.Ο.Υ.: ΙΑ’ ΑΘΗΝΩΝ   Α.Φ.Μ.: 090193594  ΤΗΛ.: 210.52.12.190  FAX.: 210.52.12.191<br>
-  ΥΠΕΥΘΥΝΟΣ: Κος ΠΑΡΙΣΣΗΣ  ΤΟΠΟΣ ΕΡΓΑΣΙΩΝ ΚΤΙΡΙΑΚΕΣ ΕΓΚΑΤΑΣΤΑΣΕΙΣ ΚΕ.ΕΛ.Π.ΝΟ. Ν.Π.Ι.Δ.<br> 
+  ΥΠΕΥΘΥΝΟΣ: 
+  <?php
+  if($this->session->type=='UPS')
+    echo ' Κος ΛΙΑΣΚΟΣ  ';
+  else if($this->session->type=='Copiers')
+    echo ' Κα ΣΠΗΛΙΟΠΟΥΛΟΥ  ';
+  else
+    echo ' Κος ΠΑΡΙΣΣΗΣ  ';
+  ?>
+  ΤΟΠΟΣ ΕΡΓΑΣΙΩΝ ΚΤΙΡΙΑΚΕΣ ΕΓΚΑΤΑΣΤΑΣΕΙΣ ΚΕ.ΕΛ.Π.ΝΟ. Ν.Π.Ι.Δ.<br> 
   <span class="bold">ΑΓΡΑΦΩΝ 3-5 ΜΑΡΟΥΣΙ  Υπόγειο, 1ος, 2ος, 3ος, 4ος. Αβέρωφ 10 Αθήνα 
 </span>
      <?php
@@ -285,6 +307,9 @@ section{
           break;
         case 'Θανάσης':
            echo "ΤΕΧΝΙΚΟΣ: ΘΑΝΑΣΗΣ ΧΟΥΙΔΗΣ";
+          break;
+          case 'Γιάννης':
+           echo "ΤΕΧΝΙΚΟΣ: ΓΙΑ ΤΗΝ <span style='font-size:11px';>EPSILON TELEDATA</span> ΕΤΑΙΡΙΑ ANDOR Κος ΓΙΑΝΝΗΣ ΖΟΥΡΑΣ";
           break;
         default:
            echo "ΤΕΧΝΙΚΟΣ: ΑΛΕΞΑΝΔΡΟΣ ΤΙΣΑΚΟΒ";
@@ -584,8 +609,6 @@ section{
 
     ?>
     </section>
-
-
    
     </div>
     <div class='cat-tabs' id='tel-fields'>
@@ -593,8 +616,10 @@ section{
    <div class='  bold underline'>Τελεφωνία : </div>
      <?php
      $i = 1; 
+     $client_category = 'telephony_'.$this->session->userdata('client');
    foreach ($categories->result() as $category) {
-    if($category->category=='telephony'){
+
+    if($category->category=='telephony' || $category->category==$client_category){
       if($i==1){
         $i++;
         $class='left';
@@ -637,6 +662,75 @@ section{
     ?>
     </section>
 </div>
+<!-- Copiers-->
+<div class='cat-tabs' id='copiers-fields'>
+  <section id='copiers'>
+   <div class='  bold underline'>Φωτοτυπικά: </div> <br>
+     <?php
+     $i = 1; 
+     $client_category = 'copiers_'.$this->session->userdata('client');
+   foreach ($categories->result() as $category) {
+    if($category->category==$client_category){
+      if($i==1){
+        $i++;
+        $class='left';
+      }else{
+        $i=1;
+        $class='right';
+      }
+       ?>
+      <div  class='checks-item checks-item-<?= $class; ?>'>
+         <input type="checkbox" <?= set_checkbox('tasks_lists', $category->id); ?> name='tasks_lists[]' value="<?= $category->id ?>"> <?= $category->name ?>
+      </div>
+      <?php }
+   }
+   ?>
+   </section>
+   <section id='copiers_tasks'>
+   <div class='mt15  bold underline'>Εργασίες: </div> <br>
+   <?php
+   foreach ($categories->result() as $category) {
+     if($category->category=='copiers' ){
+        if($i==1){
+          $i++;
+          $class='left';
+        }else{
+          $i=1;
+          $class='right';
+        }
+         ?>
+        <div  class='checks-item checks-item-<?= $class; ?>'>
+           <input type="checkbox" <?= set_checkbox('tasks_lists', $category->id); ?> name='tasks_lists[]' value="<?= $category->id ?>"> <?= $category->name ?>
+        </div>
+        <?php }
+      }
+    ?>
+    </section>
+</div>
+<!-- UPS -->
+<div class='cat-tabs' id='ups-fields'>
+  <section id='ups'>
+     <?php
+     $i = 1; 
+    // $client_category = 'ups_'.$this->session->userdata('client');
+   foreach ($categories->result() as $category) {
+    if($category->category=='UPS' ){
+      if($i==1){
+        $i++;
+        $class='left';
+      }else{
+        $i=1;
+        $class='right';
+      }
+       ?>
+      <div  class='checks-item checks-item-<?= $class; ?>'>
+         <input type="checkbox" <?= set_checkbox('tasks_lists', $category->id); ?> name='tasks_lists[]' value="<?= $category->id ?>"> <?= $category->name ?>
+      </div>
+      <?php }
+   }
+   ?>
+   </section>
+</div>
  </div>
  
  <div class='client-text border mt15 p5 overflow'>
@@ -650,14 +744,35 @@ section{
 
  </div>
  <div class='signs mt15'>
-    <div style="text-align:center" class='signs-item signs-item-left'>ΥΠΟΓΡΑΦΗ ΤΕΧΝΙΚΟΥ <br>
     <?php
+    if ($this->session->type=="UPS") {
+        ?>
+        <div style="text-align:center" class='signs-item signs-item-left f13'>ΥΠΟΓΡΑΦΗ ΓΙΑ ΤΗΝ EPSILON TELEDATA <br> ΙΩΑΝΝΗΣ ΖΟΥΡΑΣ
+        <?php
+      } else {
+        ?>
+        <div style="text-align:center" class='signs-item signs-item-left'>ΥΠΟΓΡΑΦΗ ΤΕΧΝΙΚΟΥ <br>
+        <?php
+      }
+
     if ($this->session->user ==  'Άλεξ' ) 
       echo '<img src="'. base_url().'assets/images/tisakov.jpg" alt="">';
     ?>
    
     </div>
-    <div class='signs-item signs-item-right' style="text-align:center">ΥΠΟΓΡΑΦΗ ΥΠΑΛΛΗΛΟΥ <?= ($this->session->client=="marousi")?"ΚΕΕΛΠΝΟ":"ΚΕΔΥ"; ?> <br> <span class='f11'>(ΓΙΑ ΤΗΝ ΑΠΟΔΟΧΗ ΠΟΙΟΤΗΤΑΣ ΤΗΣ ΠΑΡΑΣΧΕΘΕΙΣΑΣ ΥΠΗΡΕΣΙΑΣ)</span></div>
+    <?php
+      if ($this->session->type=="UPS") {
+        ?>
+        <div class='signs-item signs-item-right f13' style="text-align:center">ΥΠΟΓΡΑΦΗ ΟΝΟΜΑ ΥΠΕΥΘΥΝΟΥ ΠΕΛΑΤΗ<br> <span class='f11'>(ΓΙΑ ΤΗΝ ΑΠΟΔΟΧΗ ΥΛΟΠΟΙΗΣΗΣ ΤΗΣ ΥΠΗΡΕΣΙΑΣ)</span></div>
+        <?php
+      } else {
+        ?>
+        <div class='signs-item signs-item-right' style="text-align:center">ΥΠΟΓΡΑΦΗ ΥΠΑΛΛΗΛΟΥ <?= ($this->session->client=="marousi")?"ΚΕΕΛΠΝΟ":"ΚΕΔΥ"; ?> <br> <span class='f11'>(ΓΙΑ ΤΗΝ ΑΠΟΔΟΧΗ ΠΟΙΟΤΗΤΑΣ ΤΗΣ ΠΑΡΑΣΧΕΘΕΙΣΑΣ ΥΠΗΡΕΣΙΑΣ)</span></div>
+        <?php
+      }
+      
+    ?>
+    
  </div>
  <button style="clear:both;display:inline-block" type='submit'>Save</button>
  </form>
@@ -681,7 +796,12 @@ $(document).ready(function(){
         var b = 'tel-fields';
       }else if(a=='VOIP'){
         var b = 'voip-fields';
+      }else if(a=='Copiers'){
+        var b = 'copiers-fields';
+      }else if(a=='UPS'){
+        var b = 'ups-fields';
       }
+
       $('#'+b).show();
       
   }

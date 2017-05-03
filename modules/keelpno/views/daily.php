@@ -51,17 +51,15 @@
         </select>
 		
         <input type="hidden" name='year' value='<?php echo date("Y"); ?>'>
+        <input type="hidden" name='client' value='<?php echo $this->session->userdata("client"); ?>'>
+        <input type="hidden" name='technician' value='<?php echo $this->session->userdata("user"); ?>'>
 
-   <select name="technician" id="technician" >
-     <option <?= set_select('technician', 'Άλεξ'); ?> value="Άλεξ" default>Άλεξ</option>
-     <option  <?= set_select('technician', 'Γιώργος'); ?> value="Γιώργος">Γιώργος</option>
-     <option  <?= set_select('technician', 'Τάκης'); ?> value="Τάκης">Τάκης</option>
-     <option  <?= set_select('technician', 'Θανάσης'); ?> value="Θανάσης">Θανάσης</option>
-   </select>
     <select name="category" id="category" >
      <option <?= set_select('category', 'Πληροφορική'); ?> value="Πληροφορική" default>Πληροφορική</option>
      <option  <?= set_select('category', 'Τηλεφωνία'); ?> value="Τηλεφωνία">Τηλεφωνία</option>
      <option  <?= set_select('category', 'VOIP'); ?> value="VOIP">VOIP</option>
+     <option  <?= set_select('category', 'Copiers'); ?> value="Copiers">Copiers</option>
+     <option  <?= set_select('category', 'UPS'); ?> value="UPS">UPS</option>
    </select>
    <?php  
     $ticket="";
@@ -73,30 +71,30 @@
    <button type="submit">Create</button>
 	</form>
    <hr> 
- <h3> Τελευταία Ημερήσια Δελτία</h3>
+ <h3> Τελευταία Ημερήσια Δελτία: <?= $this->session->userdata('user'); ?></h3>
 
-  <?php 
-    foreach ($lastTickets as $technician => $categories) {
-      ?>
-   <div style="width:20%;float:left;">
-    <h3 style="clear:both;"><?= $technician; ?>: </h3>
-    <?php 
-    foreach ($categories as $category) {
+  <div >
 
+    <?php
+    foreach ($lastTickets as $category) {
       ?>
-        <div style="width:33%;">
+        <div style="width:20%;float:left;">
             <?=  $category[0]->category."<br>"; ?>
             <?=  '<strong style="color:red;">'.$category[0]->ticket_nr."</strong><br>"; ?>
             <?=  date("d-m-Y", strtotime($category[0]->ticket_date)); ?>
             <br/><br/>
          </div>
-      <?php
-    }
-      ?>
-   
-  </div>
 
       <?php
     }
    ?>
+   
+  </div>
+
+
+   <form style="display:block; clear:both;" id="reset" action="<?= base_url(); ?>keelpno/reset" method="post">
+ <br> <br> <br> <br> <br>
+    <input style="color:#fff;background:red;" id="" type="submit" value="Reset">
+ </form>
+ </body>
 </html>
