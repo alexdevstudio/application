@@ -149,6 +149,7 @@ section{
 .full{
   clear:both;
 }
+
 @media print
 {    
 
@@ -192,22 +193,6 @@ section{
     <div style="" class='date-number-item'> 
       <div class='date-number-subitem'>ΗΜΕΡΟΜΗΝΙΑ</div>
       <div class='date-number-subitem date bold'>
-
-      <?php 
-      /*$value= array();
-      $i=1;
-      while ($i<32) {
-
-          
-          $value[] = sprintf('%02d', $i);
-          //$value[] = trim($value);
-          $i++;
-        }
-        echo form_dropdown('shirts', $value, date('d',strtotime($ticket->ticket_date)));*/
-          ?>
-          
-
-
         <select name="day" id="">
         <?php 
         $i=1;
@@ -221,10 +206,10 @@ section{
         <option 
          <?php 
         if($this->input->post('day')){ 
-         echo set_select('day', date('d',strtotime($ticket->ticket_date)));
+         echo set_select('day', $value);
          }else{
-          if($value == date('d',strtotime($ticket->ticket_date))){
-           echo ' selected ';
+          if($value == date('d')){
+           echo 'selected';
             }
           } ?> value="<?= $value; ?>"><?= trim($value);  ?></option>
 
@@ -824,3 +809,6 @@ $(document).ready(function(){
 </script>
   </body>
 </html>
+
+<?php 
+$this->session->unset_userdata('type'); ?>
