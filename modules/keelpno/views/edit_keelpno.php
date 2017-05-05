@@ -149,6 +149,7 @@ section{
 .full{
   clear:both;
 }
+
 @media print
 {    
 
@@ -192,22 +193,6 @@ section{
     <div style="" class='date-number-item'> 
       <div class='date-number-subitem'>ΗΜΕΡΟΜΗΝΙΑ</div>
       <div class='date-number-subitem date bold'>
-
-      <?php 
-      /*$value= array();
-      $i=1;
-      while ($i<32) {
-
-          
-          $value[] = sprintf('%02d', $i);
-          //$value[] = trim($value);
-          $i++;
-        }
-        echo form_dropdown('shirts', $value, date('d',strtotime($ticket->ticket_date)));*/
-          ?>
-          
-
-
         <select name="day" id="">
         <?php 
         $i=1;
@@ -221,10 +206,10 @@ section{
         <option 
          <?php 
         if($this->input->post('day')){ 
-         echo set_select('day', date('d',strtotime($ticket->ticket_date)));
+         echo set_select('day', $value);
          }else{
-          if($value == date('d',strtotime($ticket->ticket_date))){
-           echo ' selected ';
+          if($value == date('d')){
+           echo 'selected';
             }
           } ?> value="<?= $value; ?>"><?= trim($value);  ?></option>
 
@@ -763,7 +748,7 @@ section{
     <?php
     if ($this->session->type=="UPS") {
         ?>
-        <div style="text-align:center" class='signs-item signs-item-left f13'>ΥΠΟΓΡΑΦΗ ΓΙΑ ΤΗΝ EPSILON TELEDATA <br> ΙΩΑΝΝΗΣ ΖΟΥΡΑΣ
+        <div style="text-align:center" class='signs-item signs-item-left f13'>ΥΠΟΓΡΑΦΗ ΓΙΑ ΤΗΝ EPSILON TELEDATA
         <?php
       } else {
         ?>
@@ -777,9 +762,19 @@ section{
    
     </div>
     <?php
-      if ($this->session->type=="UPS") {
+      if ($this->input->post('daily')=="1") {
+        if($this->session->type=="UPS"){
+          ?>
+              <div class='signs-item signs-item-right f13' style="text-align:center">ΥΠΟΓΡΑΦΗ ΟΝΟΜΑ ΥΠΕΥΘΥΝΟΥ ΠΕΛΑΤΗ<br> <span class='f11'>(ΓΙΑ ΤΗΝ ΑΠΟΔΟΧΗ ΥΛΟΠΟΙΗΣΗΣ ΤΗΣ ΥΠΗΡΕΣΙΑΣ)</span></div>
+          <?php
+        }else{
+          ?>
+        <div class='signs-item signs-item-right' style="text-align:center">ΥΠΟΓΡΑΦΗ ΠΕΛΑΤΗ  </div>
+
+          <?php
+        }
         ?>
-        <div class='signs-item signs-item-right f13' style="text-align:center">ΥΠΟΓΡΑΦΗ ΟΝΟΜΑ ΥΠΕΥΘΥΝΟΥ ΠΕΛΑΤΗ<br> <span class='f11'>(ΓΙΑ ΤΗΝ ΑΠΟΔΟΧΗ ΥΛΟΠΟΙΗΣΗΣ ΤΗΣ ΥΠΗΡΕΣΙΑΣ)</span></div>
+        
         <?php
       } else {
         ?>
@@ -824,3 +819,6 @@ $(document).ready(function(){
 </script>
   </body>
 </html>
+
+<?php 
+$this->session->unset_userdata('type'); ?>
