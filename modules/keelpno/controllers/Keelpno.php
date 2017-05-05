@@ -99,10 +99,12 @@ class Keelpno extends MX_Controller {
 					'creation_date' => date('Y-m-d H:i:s')
 
 					);
-				if($this->input->post('category')=="UPS")
+				if($this->input->post('category')=="UPS" || $this->input->post('category')=="Copiers")
 				{
-					$insertData ['daily'] =1;
+					$insertData ['daily'] = 1;
 				}
+
+				
 
 				
 
@@ -145,6 +147,7 @@ class Keelpno extends MX_Controller {
 					$_POST['day'] = date('d',strtotime($ticket->ticket_date));
 					$_POST['month'] = date('m',strtotime($ticket->ticket_date));
 					$_POST['year'] = date('Y',strtotime($ticket->ticket_date));
+					$_POST['daily'] = $ticket->daily;
 					
 
 
