@@ -16,18 +16,24 @@ class Keelpno extends MX_Controller {
 
 
 		
-		if(!empty($this->input->post()) && $this->input->post('client')!=''){
+		if(!isset($this->session->client)){
 			$this->session->client = $this->input->post('client');
-		}
-
-		if(!empty($this->input->post()) && $this->input->post('user')!=''){
+		}else{
+			if(!isset($this->session->user)){
 			$this->session->user = $this->input->post('user');
+			
+			}
+
+			if(!isset($this->session->type)){
+				$this->session->type = $this->input->post('type');
+
+			}
+
 			$this->load->view('menu', $data);
+			$data['tickets'] = $this->showTickets()->result();
 		}
 
-		if(!empty($this->input->post()) && $this->input->post('type')!=''){
-			$this->session->type = $this->input->post('type');
-		}
+		
 
 
 
@@ -127,12 +133,25 @@ class Keelpno extends MX_Controller {
 				exit('The ticket does not exist');
 			}
 
-			$data['ticket'] = $ticket->result()[0];
+			$ticket = $ticket->result()[0];
+			$ticket_nr = ($ticket->daily=='0' ? null : $ticket->ticket_nr);
+
+					$_POST['ticket_nr'] = $ticket_nr;
+					$_POST['technician'] = $ticket->technician;
+					$_POST['category'] = $ticket->category;
+					$_POST['tasks_lists'] = json_decode($ticket->tasks_list);
+					$_POST['customer_comments'] = $ticket->customer_comments;
+					$_POST['technician_comments'] = $ticket->technician_comments;
+					$_POST['day'] = date('d',strtotime($ticket->ticket_date));
+					$_POST['month'] = date('m',strtotime($ticket->ticket_date));
+					$_POST['year'] = date('Y',strtotime($ticket->ticket_date));
+					
+
 
 			
-			$this->session->set_userdata('client',$data['ticket']->client);
-			$this->session->set_userdata('user' ,$data['ticket']->technician) ;
-			$this->session->set_userdata('type' ,$data['ticket']->category) ;
+			$this->session->set_userdata('client',$ticket->client);
+			$this->session->set_userdata('user' ,$ticket->technician) ;
+			$this->session->set_userdata('type' ,$ticket->category) ;
 		
 		}else{
 
@@ -166,18 +185,17 @@ class Keelpno extends MX_Controller {
 				$insertData = array(
 					'ticket_nr' => $this->input->post('ticket_nr'),
 					'ticket_date' => $date,
-					'technician' => 'Alex Tisakov',
+					'technician' => $this->input->post('technician'),
 					'category' => $this->input->post('category'),
 					'tasks_list' => json_encode($this->input->post('tasks_lists')),
 					'customer_comments' => $this->input->post('customer_comments'),
 					'technician_comments' => $this->input->post('technician_comments'),
-					'creation_date' => date('Y-m-d H:i:s')
+					
 
 					);
 
-				
-
-					$this->db->insert('services', $insertData);
+					$this->db->where('id',$id);
+					$this->db->update('services', $insertData);
 					redirect(base_url().'keelpno','refresh');
                 }
 			
@@ -370,9 +388,27 @@ class Keelpno extends MX_Controller {
 	}
 
 
+	private function showTickets(){
+		$technician = $this->session->userdata('user');
+		$client = $this->session->userdata('client');
+
+		$this->db->where('technician',$technician);
+		$this->db->where('client',$client);
+		$this->db->order_by('id','DESC');
+		$this->db->limit(100);
+		return $this->db->get('services');
+
+	}
+
+	public function ttruncat($text,$numb) {
+		if (strlen($text) > $numb) { 
+		  $text = substr($text, 0, $numb); 
+		  $text = substr($text,0,strrpos($text," ")); 
+		  $etc = " ...";  
+		  $text = $text.$etc; 
+		  }
+		return $text; 
+	}
+
 }
-
-
-
-
 ?> 
