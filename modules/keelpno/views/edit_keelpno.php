@@ -748,7 +748,7 @@ section{
     <?php
     if ($this->session->type=="UPS") {
         ?>
-        <div style="text-align:center" class='signs-item signs-item-left f13'>ΥΠΟΓΡΑΦΗ ΓΙΑ ΤΗΝ EPSILON TELEDATA <br> ΙΩΑΝΝΗΣ ΖΟΥΡΑΣ
+        <div style="text-align:center" class='signs-item signs-item-left f13'>ΥΠΟΓΡΑΦΗ ΓΙΑ ΤΗΝ EPSILON TELEDATA
         <?php
       } else {
         ?>
@@ -762,9 +762,19 @@ section{
    
     </div>
     <?php
-      if ($this->session->type=="UPS") {
+      if ($this->input->post('daily')=="1") {
+        if($this->session->type=="UPS"){
+          ?>
+              <div class='signs-item signs-item-right f13' style="text-align:center">ΥΠΟΓΡΑΦΗ ΟΝΟΜΑ ΥΠΕΥΘΥΝΟΥ ΠΕΛΑΤΗ<br> <span class='f11'>(ΓΙΑ ΤΗΝ ΑΠΟΔΟΧΗ ΥΛΟΠΟΙΗΣΗΣ ΤΗΣ ΥΠΗΡΕΣΙΑΣ)</span></div>
+          <?php
+        }else{
+          ?>
+        <div class='signs-item signs-item-right' style="text-align:center">ΥΠΟΓΡΑΦΗ ΠΕΛΑΤΗ  </div>
+
+          <?php
+        }
         ?>
-        <div class='signs-item signs-item-right f13' style="text-align:center">ΥΠΟΓΡΑΦΗ ΟΝΟΜΑ ΥΠΕΥΘΥΝΟΥ ΠΕΛΑΤΗ<br> <span class='f11'>(ΓΙΑ ΤΗΝ ΑΠΟΔΟΧΗ ΥΛΟΠΟΙΗΣΗΣ ΤΗΣ ΥΠΗΡΕΣΙΑΣ)</span></div>
+        
         <?php
       } else {
         ?>
