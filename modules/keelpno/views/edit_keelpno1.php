@@ -1,3 +1,21 @@
+ <?php
+//print_r($ticket);
+//$_POST['test'] = 'something';
+    if($this->input->post('year')==''){
+      $_POST['tasks_lists'] = json_decode($ticket[0]['tasks_list']);
+      $_POST['category'] = $ticket[0]['category'];
+      $_POST['technician'] = $ticket[0]['technician'];
+      $_POST['customer_comments'] = $ticket[0]['customer_comments'];
+      $_POST['ticket_nr'] = $ticket[0]['ticket_nr'];
+      $_POST['technician_comments'] = $ticket[0]['technician_comments'];
+      $_POST['day'] = date("d",strtotime($ticket[0]['ticket_date']));
+      $_POST['month'] = date("m",strtotime($ticket[0]['ticket_date']));
+      $_POST['year'] = date("Y",strtotime($ticket[0]['ticket_date']));
+
+    } 
+
+   // print_r($this->input->post());
+  ?>
 <!DOCTYPE html>
 <html>
   <head>
@@ -120,11 +138,39 @@
      border:none;
      color:red;
      font-weight: bold;
-  } 
+  }
+
+  <?php
+  if($this->input->post('category')=='Τηλεφωνία'){
+?>
+#pc-fields, 
+  #voip-fields{
+    display:  none;
+  }
+
+<?php
+  }else if($this->input->post('category')=='VOIP'){
+  ?>
+ #pc-fields, 
+  #tel-fields{
+    display:  none;
+  }
+
+  <?php
+  }else{
+    ?>
+
   #tel-fields,
   #voip-fields{
     display:  none;
   }
+
+
+    <?php
+  }
+  ?>
+ 
+
 .tech-title-tr,
 .tech-tasks-category{
   width:50%;
@@ -146,9 +192,6 @@ section{
 .signs-item-left img {
     height: 80px;
 }
-.full{
-  clear:both;
-}
 @media print
 {    
 
@@ -156,8 +199,7 @@ section{
     {
         display: none !important;
     }
-    .error,
-    #reset{
+    .error{
       display: none;
     }
      
@@ -166,12 +208,13 @@ section{
 
   
   </head>
+ 
   <body class=''>
   <img src="<?= base_url(); ?>assets/images/letterHead.png" alt="">
   <?php echo validation_errors('<div style="color:red" class="error">', '</div>'); ?>
   <div class='header'style="">
-  <?php   
-    $type = $this->session->type;
+    <?php   
+    $type = $ticket[0]['category'];
 
     if($type == 'Πληροφορική'){
         $type_show = 'ΠΛΗΡΟΦΟΡΙΚΗΣ';
@@ -179,10 +222,6 @@ section{
         $type_show = 'ΤΗΛΕΠΙΚΟΙΝΩΝΙΩΝ';
     }else if($type == 'VOIP'){
         $type_show = 'VOIP';
-    }else if($type == 'Copiers'){
-        $type_show = 'COPIERS';
-    }else if($type == 'UPS'){
-        $type_show = 'UPS';
     }
    ?>
     ΔΕΛΤΙΟ ΤΕΧΝΙΚΗΣ ΕΞΥΠΗΡΕΤΗΣΗΣ – ΥΠΗΡΕΣΙΕΣ <?= $type_show; ?>
@@ -192,22 +231,6 @@ section{
     <div style="" class='date-number-item'> 
       <div class='date-number-subitem'>ΗΜΕΡΟΜΗΝΙΑ</div>
       <div class='date-number-subitem date bold'>
-
-      <?php 
-      /*$value= array();
-      $i=1;
-      while ($i<32) {
-
-          
-          $value[] = sprintf('%02d', $i);
-          //$value[] = trim($value);
-          $i++;
-        }
-        echo form_dropdown('shirts', $value, date('d',strtotime($ticket->ticket_date)));*/
-          ?>
-          
-
-
         <select name="day" id="">
         <?php 
         $i=1;
@@ -221,10 +244,10 @@ section{
         <option 
          <?php 
         if($this->input->post('day')){ 
-         echo set_select('day', date('d',strtotime($ticket->ticket_date)));
+         echo set_select('day', $value);
          }else{
-          if($value == date('d',strtotime($ticket->ticket_date))){
-           echo ' selected ';
+          if($value == date('d')){
+           echo 'selected';
             }
           } ?> value="<?= $value; ?>"><?= trim($value);  ?></option>
 
@@ -262,90 +285,37 @@ section{
       </div>
     </div>
     <div style="" class='date-number-item time'> <span class='bold'>ΩΡΕΣ:</span> 9:30 – 16:30</div>
-    <?php 
-        if($this->session->userdata("type")=="UPS")
-        {
-          if(!isset($_POST ['ticket_nr']))
-          {
-           $_POST ['ticket_nr'] = intval(Modules::run('keelpno/getLastDailyTickets')['UPS'][0]->ticket_nr)+1;
-          }
-        }
-     ?>
-    <div style="" class='date-number-item id-number'> No  <input type="number" id='ticket_nr' value="<?= set_value('ticket_nr'); ?>" name="ticket_nr"></div>
+
+    <div style="" class='date-number-item id-number'> No  <input type="number" id='ticket_nr' value="<?php echo (set_value('ticket_nr')=='0' ?'': set_value('ticket_nr')); ?>" name="ticket_nr"></div>
   </div>
  
  <div class='client-description f13 border p5'>
-   <?php  
-    if($this->session->client=="vari"){
-
-    ?>   
-  ΠΕΛΑΤΗΣ: Κ.Ε.Δ.Υ. - ΚΕ.ΕΛ.Π.ΝΟ. Ν.Π.Ι.Δ.   - 
-  <span class='bold blue'>  ΔΙΕΥΘΥΝΣΗ: ΦΛΕΜΙΝΓΚ 34 ΒΑΡΗ ΚΟΡΩΠΙΟΥ  </span><br>
-  Δ.Ο.Υ.: ΙΑ’ ΑΘΗΝΩΝ   Α.Φ.Μ.: 090193594  ΤΗΛ.: 210.88.99.000  <br>
-  ΥΠΕΥΘΥΝΟΣ: Κος ΤΣΕΚΑΣ ΧΡΗΣΤΟΣ  ΤΟΠΟΣ ΕΡΓΑΣΙΩΝ: ΚΤΗΡΙΟ ΚΕΔΥ ΒΑΡΗΣ<br> 
-  
-  <?php   
-    }elseif ($this->session->client=="marousi") {
-     ?>
-<span class='bold blue'>  ΔΙΕΥΘΥΝΣΗ: ΑΓΡΑΦΩΝ 3-5 ΜΑΡΟΥΣΙ  </span><br>
+      
+  ΠΕΛΑΤΗΣ: ΚΕ.ΕΛ.Π.ΝΟ. Ν.Π.Ι.Δ.   - 
+  <span class='bold blue'>  ΔΙΕΥΘΥΝΣΗ: ΑΓΡΑΦΩΝ 3-5 ΜΑΡΟΥΣΙ  </span><br>
   Δ.Ο.Υ.: ΙΑ’ ΑΘΗΝΩΝ   Α.Φ.Μ.: 090193594  ΤΗΛ.: 210.52.12.190  FAX.: 210.52.12.191<br>
-  ΥΠΕΥΘΥΝΟΣ: 
-  <?php
-  if($this->session->type=='UPS')
-    echo ' Κος ΛΙΑΣΚΟΣ  ';
-  else if($this->session->type=='Copiers')
-    echo ' Κα ΣΠΗΛΙΟΠΟΥΛΟΥ  ';
-  else
-    echo ' Κος ΠΑΡΙΣΣΗΣ  ';
-  ?>
-  ΤΟΠΟΣ ΕΡΓΑΣΙΩΝ ΚΤΙΡΙΑΚΕΣ ΕΓΚΑΤΑΣΤΑΣΕΙΣ ΚΕ.ΕΛ.Π.ΝΟ. Ν.Π.Ι.Δ.<br> 
+  ΥΠΕΥΘΥΝΟΣ: Κος ΠΑΡΙΣΣΗΣ  ΤΟΠΟΣ ΕΡΓΑΣΙΩΝ ΚΤΙΡΙΑΚΕΣ ΕΓΚΑΤΑΣΤΑΣΕΙΣ ΚΕ.ΕΛ.Π.ΝΟ. Ν.Π.Ι.Δ.<br> 
   <span class="bold">ΑΓΡΑΦΩΝ 3-5 ΜΑΡΟΥΣΙ  Υπόγειο, 1ος, 2ος, 3ος, 4ος. Αβέρωφ 10 Αθήνα 
-</span>
-     <?php
-    }
-   ?>
+  </span>
  </div>
  <div class='technicians f13 overflow'>
-   <div class="technicians-item techs"> 
-   <?php  
-    if($this->session->client == 'marousi' && ($this->session->type=='Τηλεφωνία' || $this->session->type=='VOIP')){
-      $this->session->user = 'Άλεξ';
-      echo "ΤΕΧΝΙΚΟΣ: ΑΛΕΞΑΝΔΡΟΣ ΤΙΣΑΚΟΒ";
-    }else{
-      $user = $this->session->user;
-      switch (  $user ) {
-        
-        case 'Γιώργος':
-           echo "ΤΕΧΝΙΚΟΣ: ΓΕΩΡΓΙΟΣ ΜΑΡΑΤΟΣ";
-          break;
-        case 'Τάκης':
-           echo "ΤΕΧΝΙΚΟΣ: ΠΑΝΑΓΙΩΤΗΣ ΚΛΗΜΗΣ";
-          break;
-        case 'Θανάσης':
-           echo "ΤΕΧΝΙΚΟΣ: ΘΑΝΑΣΗΣ ΧΟΥΙΔΗΣ";
-          break;
-          case 'Γιάννης':
-           echo "ΤΕΧΝΙΚΟΣ: ΓΙΑ ΤΗΝ <span style='font-size:11px';>EPSILON TELEDATA</span> ΕΤΑΙΡΙΑ ANDOR Κος ΓΙΑΝΝΗΣ ΖΟΥΡΑΣ";
-          break;
-        default:
-           echo "ΤΕΧΝΙΚΟΣ: ΑΛΕΞΑΝΔΡΟΣ ΤΙΣΑΚΟΒ";
-          break;
-      }
-      
-    }
-    ?>
-  
-   </div>
+   <div class="technicians-item techs">ΤΕΧΝΙΚΟΙ: ΓΙΩΡΓ. ΜΑΡΑΤΟΣ – ΑΛΕΞ. ΤΙΣΑΚΟΒ – ΠΑΝΑΓ. ΚΛΗΜΗΣ           </div>
    <div class="technicians-item super">ΕΠΙΒΛΕΨΗ:ΕΥΑΓ. ΜΟΥΡΓΕΛΑΣ </div>
  </div>
  <div class='checks  f11 border p5 overflow'>
  <div style="clear:both;overflow:auto;">
    <div class=' tech-title-tr bold underline'>ΕΡΓΑΣΙΕΣ ΤΕΧΝΙΚΟΥ : </div>
-   
-    <input type="hidden" name="client" value="<?= $this->session->client; ?>"> 
-    <input type="hidden" name="technician" value="<?= $this->session->user; ?>"> 
-    <input type="hidden" name="category" value="<?= $this->session->type; ?>"> 
-     
+    <div class="tech-tasks-category"> 
+     <select name="technician" id="technician" >
+     <option <?= set_select('technician', 'Άλεξ'); ?> value="Άλεξ" default>Άλεξ</option>
+     <option  <?= set_select('technician', 'Γιώργος'); ?> value="Γιώργος">Γιώργος</option>
+     <option  <?= set_select('technician', 'Τάκης'); ?> value="Τάκης">Τάκης</option>
+   </select>
+    <select name="category" id="category" >
+     <option <?= set_select('category', 'Πληροφορική'); ?> value="Πληροφορική" default>Πληροφορική</option>
+     <option  <?= set_select('category', 'Τηλεφωνία'); ?> value="Τηλεφωνία">Τηλεφωνία</option>
+     <option  <?= set_select('category', 'VOIP'); ?> value="VOIP">VOIP</option>
+   </select> </div>
    </div>
    <div class='cat-tabs' id='pc-fields' > 
    <section id='servers'>
@@ -373,16 +343,13 @@ section{
     <section  id='network'>
     <div class=' mt15 bold underline'>Δίκτυο : </div>
      <?php
-     if($this->session->client=='marousi'){
-
-     
      $i = 1; 
      $patchpanels = array();
      $patchcords = array();
      $switches = array();
       foreach ($categories->result() as $category) {
 
-    if($category->category=='network' || $category->category=='network_marousi'){
+    if($category->category=='network'){
       if( strpos( $category->name, 'SWITCHES' ) !== false ){
         $category->name = str_replace('SWITCHES', '', $category->name);
         $switches[]=$category;
@@ -434,8 +401,8 @@ section{
        ΕΛΕΓΧΟΣ/ΕΡΓΑΣΙΕΣ PATCH PANELS: <br>
    <?php
       foreach ($patchpanels as $category) {
-
-   ?>
+        
+        ?>
        
       <input type="checkbox" <?= set_checkbox('tasks_lists', $category->id); ?> name='tasks_lists[]' value="<?= $category->id ?>"> <?= $category->name ?>
      
@@ -470,130 +437,20 @@ section{
       }
     ?>
      </div>
-     <?php }else if($this->session->client=='vari'){ 
-   
-     $i = 1; 
-     $patchpanels = array();
-     $patchcords = array();
-     $switches = array();
-      foreach ($categories->result() as $category) {
-
-    if($category->category=='network' || $category->category=='network_vari'){
-      if( strpos( $category->name, 'SWITCHES' ) !== false ){
-        $category->name = str_replace('SWITCHES', '', $category->name);
-        $category->name = str_replace('Αριστερό Κτίριο', 'ΑΚ', $category->name);
-        $category->name = str_replace('Δεξί Κτίριο', 'ΔΚ', $category->name);
-        $category->name = str_replace('Ισόγειο', 'εισ.', $category->name);
-        $switches[]=$category;
-        continue;
-      }elseif(strpos( $category->name, 'PATCH PANELS' ) !== false){
-        $category->name = str_replace('PATCH PANELS', '', $category->name);
-        $category->name = str_replace('Αριστερό Κτίριο', 'ΑΚ', $category->name);
-        $category->name = str_replace('Δεξί Κτίριο', 'ΔΚ', $category->name);
-         $category->name = str_replace('Ισόγειο', 'εισ.', $category->name);
-        $patchpanels[]=$category;
-        continue;
-      }elseif(strpos( $category->name, 'PATCH CORDS' ) !== false){
-        $category->name = str_replace('PATCH CORDS', '', $category->name);
-        $category->name = str_replace('Αριστερό Κτίριο', 'ΑΚ', $category->name);
-        $category->name = str_replace('Δεξί Κτίριο', 'ΔΚ', $category->name);
-         $category->name = str_replace('Ισόγειο', 'εισ.', $category->name);
-        $patchcords[]=$category;
-        continue;
-      }
-      if($i==1){
-        $i++;
-        $class='left';
-      }else{
-        $i=1;
-        $class='right';
-      }
-       ?>
-       <div  class='checks-item checks-item-<?= $class; ?>'>
-      <input type="checkbox" <?= set_checkbox('tasks_lists', $category->id); ?> name='tasks_lists[]' value="<?= $category->id ?>"> <?= $category->name ?>
-      </div>
-      <?php }
-   }
-   ?>
-  <div  class='full'>
-  <hr>
-      ΕΛΕΓΧΟΣ/ΕΡΓΑΣΙΕΣ SWITCHES: 
-        
-   <?php
-      foreach ($switches as $category) {
-        
-        ?>
-       
-      <input type="checkbox" <?= set_checkbox('tasks_lists', $category->id); ?> name='tasks_lists[]' value="<?= $category->id ?>"> <?= $category->name ?>
-     
-      <?php
-      }
-      if($i==1){
-        $i++;
-        $class='left';
-      }else{
-        $i=1;
-        $class='right';
-      }
-    ?>
-     </div>
-      <div  class='full'>
-  <hr>
-       ΕΛΕΓΧΟΣ/ΕΡΓΑΣΙΕΣ PATCH PANELS: 
-   <?php
-      foreach ($patchpanels as $category) {
-
-   ?>
-       
-      <input type="checkbox" <?= set_checkbox('tasks_lists', $category->id); ?> name='tasks_lists[]' value="<?= $category->id ?>"> <?= $category->name ?>
-     
-      <?php
-      }
-      if($i==1){
-        $i++;
-        $class='left';
-      }else{
-        $i=1;
-        $class='right';
-      }
-    ?>
-     </div>
-     <hr>
-      <div  class='full'>
-      ΕΛΕΓΧΟΣ/ΕΡΓΑΣΙΕΣ PATCH CORDS: 
-   <?php
-      foreach ($patchcords as $category) {
-        
-        ?>
-       
-      <input type="checkbox" <?= set_checkbox('tasks_lists', $category->id); ?> name='tasks_lists[]' value="<?= $category->id ?>"> <?= $category->name ?>
-     
-      <?php
-      }
-      if($i==1){
-        $i++;
-        $class='left';
-      }else{
-        $i=1;
-        $class='right';
-      }
-    ?>
-     </div>
-     <?php } ?>
     </section>
      <section id='pc'>
     <div class='mt15  bold underline'>Υπολογιστές / Laptop : </div>
      <?php
      $i = 1; 
       foreach ($categories->result() as $category) {
-          if($category->category=='pc'){
-            if($i==1){
-              $i++;
-              $class='left';
-            }else{
-              $i=1;
-              $class='right';
-            }
+    if($category->category=='pc'){
+      if($i==1){
+        $i++;
+        $class='left';
+      }else{
+        $i=1;
+        $class='right';
+      }
        ?>
        <div  class='checks-item checks-item-<?= $class; ?>'>
       <input type="checkbox" <?= set_checkbox('tasks_lists', $category->id); ?> name='tasks_lists[]' value="<?= $category->id ?>"> <?= $category->name ?>
@@ -625,6 +482,8 @@ section{
 
     ?>
     </section>
+
+
    
     </div>
     <div class='cat-tabs' id='tel-fields'>
@@ -632,10 +491,8 @@ section{
    <div class='  bold underline'>Τελεφωνία : </div>
      <?php
      $i = 1; 
-     $client_category = 'telephony_'.$this->session->userdata('client');
    foreach ($categories->result() as $category) {
-
-    if($category->category=='telephony' || $category->category==$client_category){
+    if($category->category=='telephony'){
       if($i==1){
         $i++;
         $class='left';
@@ -656,7 +513,7 @@ section{
 </div>
 <div class='cat-tabs' id='voip-fields'>
   <section id='voip'>
-   <div class='  bold underline'>VOIP (PRI: 2106863200 και 2105212054) </div> <br>
+   <div class='  bold underline'>VOIP : </div>
      <?php
      $i = 1; 
    foreach ($categories->result() as $category) {
@@ -678,75 +535,6 @@ section{
     ?>
     </section>
 </div>
-<!-- Copiers-->
-<div class='cat-tabs' id='copiers-fields'>
-  <section id='copiers'>
-   <div class='  bold underline'>Φωτοτυπικά: </div> <br>
-     <?php
-     $i = 1; 
-     $client_category = 'copiers_'.$this->session->userdata('client');
-   foreach ($categories->result() as $category) {
-    if($category->category==$client_category){
-      if($i==1){
-        $i++;
-        $class='left';
-      }else{
-        $i=1;
-        $class='right';
-      }
-       ?>
-      <div  class='checks-item checks-item-<?= $class; ?>'>
-         <input type="checkbox" <?= set_checkbox('tasks_lists', $category->id); ?> name='tasks_lists[]' value="<?= $category->id ?>"> <?= $category->name ?>
-      </div>
-      <?php }
-   }
-   ?>
-   </section>
-   <section id='copiers_tasks'>
-   <div class='mt15  bold underline'>Εργασίες: </div> <br>
-   <?php
-   foreach ($categories->result() as $category) {
-     if($category->category=='copiers' ){
-        if($i==1){
-          $i++;
-          $class='left';
-        }else{
-          $i=1;
-          $class='right';
-        }
-         ?>
-        <div  class='checks-item checks-item-<?= $class; ?>'>
-           <input type="checkbox" <?= set_checkbox('tasks_lists', $category->id); ?> name='tasks_lists[]' value="<?= $category->id ?>"> <?= $category->name ?>
-        </div>
-        <?php }
-      }
-    ?>
-    </section>
-</div>
-<!-- UPS -->
-<div class='cat-tabs' id='ups-fields'>
-  <section id='ups'>
-     <?php
-     $i = 1; 
-    // $client_category = 'ups_'.$this->session->userdata('client');
-   foreach ($categories->result() as $category) {
-    if($category->category=='UPS' ){
-      if($i==1){
-        $i++;
-        $class='left';
-      }else{
-        $i=1;
-        $class='right';
-      }
-       ?>
-      <div  class='checks-item checks-item-<?= $class; ?>'>
-         <input type="checkbox" <?= set_checkbox('tasks_lists', $category->id); ?> name='tasks_lists[]' value="<?= $category->id ?>"> <?= $category->name ?>
-      </div>
-      <?php }
-   }
-   ?>
-   </section>
-</div>
  </div>
  
  <div class='client-text border mt15 p5 overflow'>
@@ -760,47 +548,25 @@ section{
 
  </div>
  <div class='signs mt15'>
+    <div style="text-align:center" class='signs-item signs-item-left'>ΥΠΟΓΡΑΦΗ ΤΕΧΝΙΚΟΥ <br>
     <?php
-    if ($this->session->type=="UPS") {
-        ?>
-        <div style="text-align:center" class='signs-item signs-item-left f13'>ΥΠΟΓΡΑΦΗ ΓΙΑ ΤΗΝ EPSILON TELEDATA <br> ΙΩΑΝΝΗΣ ΖΟΥΡΑΣ
-        <?php
-      } else {
-        ?>
-        <div style="text-align:center" class='signs-item signs-item-left'>ΥΠΟΓΡΑΦΗ ΤΕΧΝΙΚΟΥ <br>
-        <?php
-      }
-
     if ($this->session->user ==  'Άλεξ' ) 
       echo '<img src="'. base_url().'assets/images/tisakov.jpg" alt="">';
     ?>
-   
     </div>
-    <?php
-      if ($this->session->type=="UPS") {
-        ?>
-        <div class='signs-item signs-item-right f13' style="text-align:center">ΥΠΟΓΡΑΦΗ ΟΝΟΜΑ ΥΠΕΥΘΥΝΟΥ ΠΕΛΑΤΗ<br> <span class='f11'>(ΓΙΑ ΤΗΝ ΑΠΟΔΟΧΗ ΥΛΟΠΟΙΗΣΗΣ ΤΗΣ ΥΠΗΡΕΣΙΑΣ)</span></div>
-        <?php
-      } else {
-        ?>
-        <div class='signs-item signs-item-right' style="text-align:center">ΥΠΟΓΡΑΦΗ ΥΠΑΛΛΗΛΟΥ <?= ($this->session->client=="marousi")?"ΚΕΕΛΠΝΟ":"ΚΕΔΥ"; ?> <br> <span class='f11'>(ΓΙΑ ΤΗΝ ΑΠΟΔΟΧΗ ΠΟΙΟΤΗΤΑΣ ΤΗΣ ΠΑΡΑΣΧΕΘΕΙΣΑΣ ΥΠΗΡΕΣΙΑΣ)</span></div>
-        <?php
-      }
-      
-    ?>
-    
+    <div class='signs-item signs-item-right' style="text-align:center">ΥΠΟΓΡΑΦΗ ΠΕΛΑΤΗ</div>
  </div>
  <button style="clear:both;display:inline-block" type='submit'>Save</button>
- </form>
- <form id="reset" action="<?= base_url(); ?>keelpno/reset" method="post">
- <br> <br> <br> <br> <br>
-    <input id="" type="submit" value="Go Home">
  </form>
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 <script>
 $(document).ready(function(){
 
-  showCat("<?= $this->session->type; ?>");
+  $('#category').on('change',function(){
+
+    var a = $(this).val();
+     showCat(a);
+      });
 
 })
   function showCat(a){
@@ -812,14 +578,9 @@ $(document).ready(function(){
         var b = 'tel-fields';
       }else if(a=='VOIP'){
         var b = 'voip-fields';
-      }else if(a=='Copiers'){
-        var b = 'copiers-fields';
-      }else if(a=='UPS'){
-        var b = 'ups-fields';
       }
-
       $('#'+b).show();
-      
+      console.log(a);
   }
 </script>
   </body>

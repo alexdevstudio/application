@@ -18,6 +18,7 @@
 	 	<option value="Γιώργος">Γιώργος</option>
 	 	<option value="Τάκης">Τάκης</option>
 	 	<option value="Θανάσης">Θανάσης</option>
+	 	<option value="Γιάννης">Γιάννης</option>
 	 </select>
 	 <input type="submit" value="Επιλογή">
  </form>
@@ -33,6 +34,8 @@ if(!isset($this->session->type)){
 	 		 <option  value="Πληροφορική" default>Πληροφορική</option>
     		 <option   value="Τηλεφωνία">Τηλεφωνία</option>
     		 <option   value="VOIP">VOIP</option>
+    		 <option   value="Copiers">Copiers</option>
+    		 <option   value="UPS">UPS</option>
 	 </select>
 	 <input type="submit" value="Επιλογή">
  </form>
