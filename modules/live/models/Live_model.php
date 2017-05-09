@@ -576,10 +576,10 @@ class Live_model extends CI_Model {
 				case 'Networking- / Switching':
 					$c = 'switches';
 					break;
-				/*case 'Peripherals- / Accessories- / Keyboards':
+				case 'Peripherals- / Accessories- / Keyboards':
 				case 'Peripherals- / Accessories- / Mouse':
 					$c = 'keyboard_mouse';
-					break;*/
+					break;
 				case 'Peripherals- / Power Protection- / UPS':
 					$c = 'ups';
 					break;
