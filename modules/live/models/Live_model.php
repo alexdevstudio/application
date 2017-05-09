@@ -530,9 +530,9 @@ class Live_model extends CI_Model {
 
 			switch ($cat) {
 
-				/*case 'Computers- / Accessories- / Bags and Cases':
+				case 'Computers- / Accessories- / Bags and Cases':
 					$c = 'carrying_cases';
-					break;*/
+					break;
 				case 'Computers- / Computers- / All In One':
 				case 'Computers- / Computers- / Desktop':
 				case 'Computers- / Computers- / Mini PC':
