@@ -570,13 +570,13 @@ class Live_model extends CI_Model {
 				case 'Consumables- / Laserjet Cartridges- / HP':
 					$c = 'toners';
 					break;
-				/*case 'Networking- / Routing':
+				case 'Networking- / Routing':
 					$c = 'routers';
 					break;
 				case 'Networking- / Switching':
 					$c = 'switches';
 					break;
-				case 'Peripherals- / Accessories- / Keyboards':
+				/*case 'Peripherals- / Accessories- / Keyboards':
 				case 'Peripherals- / Accessories- / Mouse':
 					$c = 'keyboard_mouse';
 					break;*/
