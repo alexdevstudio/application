@@ -2047,11 +2047,12 @@ class Live_model extends CI_Model {
 			{	
 				if($row->category == 'tv')
 				{
-					$tvs = Modules::run("crud/get",'tv',array('product_number' => $pn))->result();
-					if($tvs->brand == 'SKYWORTH')
+					$tvs = Modules::run("crud/get",'tv',array('product_number' => $pn));
+					$tvs = $tvs->row()->brand;
+					if($tvs == 'SKYWORTH')
 						return false;
 				}
-				
+
 				if($row->supplier == 'etd' || $row->supplier == 'out' ){
 					return false;
 				} 
