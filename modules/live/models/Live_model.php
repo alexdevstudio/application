@@ -1159,7 +1159,7 @@ class Live_model extends CI_Model {
 
 			switch ($cat) {
 				case 'Notebook':
-					if($brand == 'MSI')// || $brand == 'ACER')
+					if($brand == 'MSI' || $brand == 'ACER')
 						$c = 'laptops';
 					else
 						$c = $cat;
@@ -1207,7 +1207,10 @@ class Live_model extends CI_Model {
 						$brand = 'LG';
 					}
 					else
-						$c = $cat;
+					{
+						$c = 'monitors';
+						//$c = $cat;
+					}
 				break;
 				case 'TV':
 					if($brand == 'LG ELECTRONICS')
@@ -1257,8 +1260,8 @@ class Live_model extends CI_Model {
 						$title = substr($description, $first, $diff);
 					if($brand == 'MSI')
 						$title = "MSI ".$title;
-					/*elseif($brand == 'ACER')
-						$title = "ACER ".$title;*/
+					elseif($brand == 'ACER')
+						$title = "ACER ".$title;
 				}
 				elseif($c == 'desktops')
 				{
@@ -1291,22 +1294,18 @@ class Live_model extends CI_Model {
 				elseif($c == 'monitors')
 				{
 					$title = $description;
-
 				}
 				elseif($c == 'memories')
 				{
 					$title = $description;
-
 				}
 				elseif($c == 'power_supplies')
 				{
 					$title = $description;
-
 				}
 				elseif($c == 'tv')
 				{
 					$title = $description;
-
 				}
 				//echo $title.'<br>';
 				$net_price = str_replace(",", ".", $product->timi);
@@ -2045,31 +2044,32 @@ class Live_model extends CI_Model {
     	if($query->num_rows()>0){
 
     		foreach ($query->result() as $row)
-
-				{	
-
-					if($row->supplier == 'etd' || $row->supplier == 'out' ){
-
+			{	
+				if($row->category == 'tv')
+				{
+					$tvs = Modules::run("crud/get",'tv',array('product_number' => $pn))->result();
+					if($tvs->brand == 'SKYWORTH')
 						return false;
-					} 
-
-
-					
-					$price = (float) $price;
-					// Check if product has lower price from a product already is stock and supplier = etd.
-				        
-				    if($row->net_price >= $price || $row->supplier == $supplier){
-
-				        $this->db->where('id',$row->id);
-				        $this->db->delete('live');
-				        return true;
-				    }else{
-				        return false;
-				    }
-
 				}
+				
+				if($row->supplier == 'etd' || $row->supplier == 'out' ){
+					return false;
+				} 
+				
+				$price = (float) $price;
+				// Check if product has lower price from a product already is stock and supplier = etd.
+			        
+			    if($row->net_price >= $price || $row->supplier == $supplier){
 
-    	}else{
+			        $this->db->where('id',$row->id);
+			        $this->db->delete('live');
+			        return true;
+			    }else{
+			        return false;
+			    }
+			}
+    	}
+    	else{
     		return true;
     	}
 	
