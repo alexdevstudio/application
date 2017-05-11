@@ -1214,9 +1214,9 @@ class Live_model extends CI_Model {
 				break;
 				case 'TV':
 					if($brand == 'LG ELECTRONICS')
-						{
-							$brand = 'LG';
-						}
+					{
+						$brand = 'LG';
+					}
 						$c = 'tv';
 				break;
 				case 'Memory':
@@ -1337,6 +1337,16 @@ class Live_model extends CI_Model {
 					$this->db->insert('live', $live);
 
 					unset($live);
+				}
+				if($brand == 'SKYWORTH')
+				{
+					$live = array(
+						'status' => 'publish',
+						'delete_flag'=>0
+					);
+
+					$this->db->where('product_number', $pn);
+					$this->db->update('live', $live);
 				}
 
 				//Array for categories table
