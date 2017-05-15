@@ -215,7 +215,4 @@ http://etd.gr/xml/live/updateAvPraxis/delete/"sku"*/
 	}
 }
 
-
-
-
 ?>

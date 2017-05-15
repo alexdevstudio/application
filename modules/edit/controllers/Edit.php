@@ -100,6 +100,15 @@ class Edit extends MX_Controller {
 					Modules::run('crud/insert','installments',array('sku'=>$sku,'installments_count'=>$installments_count));
 					unset($post['installments']);
 
+					$where_in_etd_prices = array('sku'=>$sku);
+					$exist_in_etd_prices = Modules::run("crud/get","etd_prices",$where_in_etd_prices);
+					
+					if($exist_in_etd_prices)
+						$update_etd_prices = Modules::run('crud/update','etd_prices',$where_in_etd_prices,array('price_tax'=>$post['price_tax']));
+					else
+						$update_etd_prices = Modules::run('crud/insert','etd_prices',array('sku'=>$post['sku'],'price_tax'=>$post['price_tax']));
+
+					unset ($post['price_tax']);
 
 
 					if($exists){
@@ -163,6 +172,18 @@ class Edit extends MX_Controller {
 
 					}
 
+					$where_in_etd_prices = array('sku'=>$sku);
+					$exist_in_etd_prices = Modules::run("crud/get","etd_prices",$where_in_etd_prices);
+
+					if($exist_in_etd_prices)
+						$update_etd_prices = Modules::run('crud/update','etd_prices',$where_in_etd_prices,array('price_tax'=>$post['price_tax']));
+					else
+						$update_etd_prices = Modules::run('crud/insert','etd_prices',array('sku'=>$post['sku'],'price_tax'=>$post['price_tax']));
+
+					unset ($post['price_tax']);
+
+
+
 				
 
 					$update = Modules::run('crud/update',$category,$where,$post);
@@ -204,7 +225,7 @@ class Edit extends MX_Controller {
 
 		if($item){
 			 	//Check if item is Live
-
+			$data['price_tax'] = Modules::run('crud/get','etd_prices', array('sku'=>$sku));
 			$data['itemLive'] = Modules::run('crud/get','live', array('product_number'=>$item->row()->product_number));
 			$data['category'] = $category;
 			$data['title'] = 'Επεξεργασία προϊόντος';

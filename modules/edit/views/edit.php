@@ -98,9 +98,13 @@ $instock = '';
 $outstock = '';
 $outstock2 = '';
 
+if($price_tax != NULL)
+	$price = $price_tax->row()->price_tax;
+
 if($itemLive){
 	
-	$price = $itemLive->row()->price_tax;
+	//$price = $itemLive->row()->price_tax;
+
 	$sale_price = $itemLive->row()->sale_price; 
 	$shipping = $itemLive->row()->shipping; 
 	$av = $itemLive->row()->availability;

@@ -100,7 +100,7 @@ class Extract_model extends CI_Model {
                             l.product_number, 
                             l.category, l.net_price, 
                             l.recycle_tax,
-                            l.price_tax,
+                            /*l.price_tax,*/
                             l.sale_price, 
                             l.availability, 
                             l.upcoming_date, 
@@ -109,13 +109,15 @@ class Extract_model extends CI_Model {
                             l.delete_flag,
                             l.shipping,
                             t.*,
-                            i.installments_count
+                            i.installments_count,
+                            e.price_tax
 
                      FROM live l
 
                      INNER JOIN {$table} t ON l.product_number = t.product_number
                      
                      LEFT JOIN installments i ON t.sku = i.sku
+                     LEFT JOIN etd_prices e ON t.sku = e.sku
 
                      WHERE l.category = '{$table}' AND t.new_item = 0 AND t.sku IN ({$skus})
 
@@ -130,7 +132,7 @@ class Extract_model extends CI_Model {
                      l.category,
                      l.net_price,
                      l.recycle_tax,
-                     l.price_tax,
+                     /*l.price_tax,*/
                      l.sale_price,
                      l.availability,
                      l.upcoming_date,
@@ -139,13 +141,15 @@ class Extract_model extends CI_Model {
                      l.delete_flag,
                      l.shipping,
                      t.*,
-                     i.installments_count
+                     i.installments_count,
+                     e.price_tax
 
                      FROM live l
 
                      INNER JOIN {$table} t ON l.product_number = t.product_number
                      
                      LEFT JOIN installments i ON t.sku = i.sku
+                     LEFT JOIN etd_prices e ON t.sku = e.sku
 
                      WHERE l.category = '{$table}' AND t.new_item = 0 ORDER BY t.sku DESC LIMIT {$numrows}
 
@@ -195,7 +199,7 @@ class Extract_model extends CI_Model {
                 
                 
                  
-                    if($product['price_tax'] == '' ||  $product['price_tax'] === NULL  ||  $product['price_tax'] == '0.00' || $product['price_tax'] =='0'){
+                    if(!isset($product['price_tax']) || $product['price_tax'] == '' ||  $product['price_tax'] === NULL  ||  $product['price_tax'] == '0.00' || $product['price_tax'] =='0'){
                       
                         $product['price_tax'] = $this->priceTax($product['net_price'],$product['recycle_tax'],$cat);
 
