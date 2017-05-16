@@ -144,7 +144,7 @@ section{
     width: 80px;
 }
 .signs-item-left img {
-    height: 80px;
+    height: 110px;
 }
 .full{
   clear:both;
