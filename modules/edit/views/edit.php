@@ -97,6 +97,7 @@ $supplier = '';
 $instock = '';
 $outstock = '';
 $outstock2 = '';
+$shipping = '';
 
 if($etd_prices != NULL)
 {
