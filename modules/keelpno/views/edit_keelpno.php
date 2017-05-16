@@ -190,7 +190,7 @@ section{
   </div>
   <form action='' method='post'>
   <div class='date-number overflow'>
-    <div style="" class='date-number-item'> 
+    <div style="width:40%;" class='date-number-item'> 
       <div class='date-number-subitem'>ΗΜΕΡΟΜΗΝΙΑ</div>
       <div class='date-number-subitem date bold'>
         <select name="day" id="">
@@ -242,11 +242,11 @@ section{
         }
          ?>
         </select>
-
+ - <?php echo date("Y"); ?>
         <input type="hidden" name='year' value='<?php echo date("Y"); ?>'>
       </div>
     </div>
-    <div style="" class='date-number-item time'> <span class='bold'>ΩΡΕΣ:</span> 9:30 – 16:30</div>
+    <div style="width:30%;"  class='date-number-item time'> <span class='bold'>ΩΡΕΣ:</span> 9:30 – 16:30</div>
     <?php 
         if($this->session->userdata("type")=="UPS")
         {
@@ -256,7 +256,7 @@ section{
           }
         }
      ?>
-    <div style="" class='date-number-item id-number'> No  <input type="number" id='ticket_nr' value="<?= set_value('ticket_nr'); ?>" name="ticket_nr"></div>
+    <div style="width:30%;"  class='date-number-item id-number'> No  <input type="number" id='ticket_nr' value="<?= set_value('ticket_nr'); ?>" name="ticket_nr"></div>
   </div>
  
  <div class='client-description f13 border p5'>
