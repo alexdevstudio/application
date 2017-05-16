@@ -117,7 +117,7 @@ class Edit extends MX_Controller {
 					}
 					else if($post['price_tax'] != '' || $post['shipping'] != '' || $post['sale_price'] != '')
 					{
-						$update_etd_prices = Modules::run('crud/insert','etd_prices',array('sku'=>$post['sku'],'price_tax'=>$post['price_tax'], 'sale_price'=>$post['sale_price'], 'shipping'=>$post['shipping'], 'date_last_edited'=>date('Y-m-d H:i:s')));
+						$update_etd_prices = Modules::run('crud/insert','etd_prices',array('sku'=>$sku,'price_tax'=>$post['price_tax'], 'sale_price'=>$post['sale_price'], 'shipping'=>$post['shipping'], 'date_last_edited'=>date('Y-m-d H:i:s')));
 					}
 					
 
