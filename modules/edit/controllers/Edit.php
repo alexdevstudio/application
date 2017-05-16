@@ -187,32 +187,6 @@ class Edit extends MX_Controller {
 
 					}
 
-					$where_in_etd_prices = array('sku'=>$sku);
-					$exist_in_etd_prices = Modules::run("crud/get","etd_prices",$where_in_etd_prices);
-
-					if($exist_in_etd_prices)
-					{
-						if($post['price_tax'] == 0 || $post['price_tax'] == NULL )
-						{
-							$update_etd_prices = Modules::run('crud/delete','etd_prices',$where_in_etd_prices);
-						}
-						else
-						{
-							$update_etd_prices = Modules::run('crud/update','etd_prices',$where_in_etd_prices,array('price_tax'=>$post['price_tax'],'date_last_edited'=>date('Y-m-d H:i:s')));
-						}
-					}
-					else if($post['price_tax'] != 0 && $post['price_tax'] != NULL )
-					{
-						$update_etd_prices = Modules::run('crud/insert','etd_prices',array('sku'=>$sku,'price_tax'=>$post['price_tax'],'date_last_edited'=>date('Y-m-d H:i:s')));
-					}
-
-					unset ($post['price_tax']);				
-
-					$update = Modules::run('crud/update',$category,$where,$post);
-
-					//For auto update the WP with update_wp
-					Modules::run('extract/allImport',$category,'one',$sku);
-
 				}else if($post['status']=='related'){
 					unset($post['status']);
 					$products = str_replace(" ", "", $post['cross_sells_products']);
