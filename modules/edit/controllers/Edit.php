@@ -100,26 +100,30 @@ class Edit extends MX_Controller {
 					Modules::run('crud/insert','installments',array('sku'=>$sku,'installments_count'=>$installments_count));
 					unset($post['installments']);
 
+
 					$where_in_etd_prices = array('sku'=>$sku);
 					$exist_in_etd_prices = Modules::run("crud/get","etd_prices",$where_in_etd_prices);
 					
 					if($exist_in_etd_prices)
 					{
-						if($post['price_tax'] == 0 || $post['price_tax'] == NULL )
+						if(($post['price_tax'] == 0 || $post['price_tax'] == '') && ($post['sale_price'] == 0 || $post['sale_price'] == '') && ($post['shipping'] == ''))
 						{
 							$update_etd_prices = Modules::run('crud/delete','etd_prices',$where_in_etd_prices);
 						}
 						else
 						{
-							$update_etd_prices = Modules::run('crud/update','etd_prices',$where_in_etd_prices,array('price_tax'=>$post['price_tax'],'date_last_edited'=>date('Y-m-d H:i:s')));
+							$update_etd_prices = Modules::run('crud/update','etd_prices',$where_in_etd_prices,array('price_tax'=>$post['price_tax'], 'sale_price'=>$post['sale_price'], 'shipping'=>$post['shipping'], 'date_last_edited'=>date('Y-m-d H:i:s')));
 						}
 					}
-					else if($post['price_tax'] != 0 && $post['price_tax'] != NULL )
+					else if($post['price_tax'] != '' || $post['shipping'] != '' || $post['sale_price'] != '')
 					{
-						$update_etd_prices = Modules::run('crud/insert','etd_prices',array('sku'=>$sku,'price_tax'=>$post['price_tax'],'date_last_edited'=>date('Y-m-d H:i:s')));
+						$update_etd_prices = Modules::run('crud/insert','etd_prices',array('sku'=>$post['sku'],'price_tax'=>$post['price_tax'], 'sale_price'=>$post['sale_price'], 'shipping'=>$post['shipping'], 'date_last_edited'=>date('Y-m-d H:i:s')));
 					}
+					
 
 					unset ($post['price_tax']);
+					unset ($post['shipping']);
+					unset ($post['sale_price']);
 
 
 					if($exists){
@@ -225,7 +229,7 @@ class Edit extends MX_Controller {
 
 		if($item){
 			 	//Check if item is Live
-			$data['price_tax'] = Modules::run('crud/get','etd_prices', array('sku'=>$sku));
+			$data['etd_prices'] = Modules::run('crud/get','etd_prices', array('sku'=>$sku));
 			$data['itemLive'] = Modules::run('crud/get','live', array('product_number'=>$item->row()->product_number));
 			$data['category'] = $category;
 			$data['title'] = 'Επεξεργασία προϊόντος';

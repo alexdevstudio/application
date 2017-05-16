@@ -98,15 +98,18 @@ $instock = '';
 $outstock = '';
 $outstock2 = '';
 
-if($price_tax != NULL)
-	$price = $price_tax->row()->price_tax;
+if($etd_prices != NULL)
+{
+	$price = $etd_prices->row()->price_tax;
+	$sale_price = $etd_prices->row()->sale_price;
+	$shipping = $etd_prices->row()->shipping;
+}
 
 if($itemLive){
 	
 	//$price = $itemLive->row()->price_tax;
-
-	$sale_price = $itemLive->row()->sale_price; 
-	$shipping = $itemLive->row()->shipping; 
+	//$sale_price = $itemLive->row()->sale_price; 
+	//$shipping = $itemLive->row()->shipping; 
 	$av = $itemLive->row()->availability;
 	$supplier = $itemLive->row()->supplier;
 	$upcomingDate = $itemLive->row()->upcoming_date;
