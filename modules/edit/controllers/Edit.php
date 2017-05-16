@@ -130,6 +130,10 @@ class Edit extends MX_Controller {
 						$update = Modules::run('crud/insert','live', $post);
 
 					}
+
+					//For auto update the WP with update_wp
+					Modules::run('extract/allImport',$category,'one',$sku);
+
 					unset($post);
 					header("Refresh:0");
 				}
@@ -205,6 +209,10 @@ class Edit extends MX_Controller {
 					unset ($post['price_tax']);				
 
 					$update = Modules::run('crud/update',$category,$where,$post);
+
+					//For auto update the WP with update_wp
+					Modules::run('extract/allImport',$category,'one',$sku);
+
 				}else if($post['status']=='related'){
 					unset($post['status']);
 					$products = str_replace(" ", "", $post['cross_sells_products']);

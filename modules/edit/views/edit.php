@@ -146,6 +146,8 @@ if($itemLive){
 
 ?>
  <form method="post" action=''>
+ <div>Οι παρακάτω τιμές ενημέρωνουν απευθείας το site όταν το προϊόν υπάρχει στο site. </div>
+ <br/>
  <div class="form-group">
 <label>Κανονική Τιμή</label>
 
