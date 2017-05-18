@@ -37,8 +37,8 @@ class Edit extends MX_Controller {
 				{
 					$post['status'] = 'trash';
 					$post['delete_flag'] = 100;
-					$post['price_tax'] = NULL;
-					$post['sale_price'] = NULL;
+					/*$post['price_tax'] = NULL;
+					$post['sale_price'] = NULL;*/
 					$post['availability'] = 0;
 					$where = array('product_number'=>$post['product_number'], 'category'=>$post['category']);
 					$exists = Modules::run('crud/get','live',$where);
@@ -49,6 +49,12 @@ class Edit extends MX_Controller {
 					}
 					else
 						echo "Το προϊόν δεν βρέθηκε στο STOCK.";
+
+					$exists_in_etd_prices = Modules::run('crud/get','etd_prices',array('sku'=>$sku));
+					if ($exists_in_etd_prices)
+					{
+						Modules::run('crud/delete','etd_prices',array('sku'=>$sku));	
+					}
 
 
 					Modules::run('crud/delete','installments',array('sku'=>$sku));
