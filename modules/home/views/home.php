@@ -288,8 +288,14 @@ echo "</pre>";*/
 
 	                	$sku =  $item->row()->sku;
 	                	$title = $item->row()->title;
-	                	@$price = ($items['sale_price']=='' || $items['sale_price']<0.01)? $items['price_tax']: $items['sale_price'];
 
+	                	$etd_prices = Modules::run('crud/get', 'etd_prices', array('sku'=>$sku ));
+
+	                	if($etd_prices){
+	                		$sale_price = $etd_prices->row()->sale_price;
+	                		$price_tax = $etd_prices->row()->price_tax;
+	                		@$price = ($sale_price=='' || $sale_price<0.01) ? $price_tax: $sale_price;
+	                	}
 	                	if(!$price){
 	                		$price = '<span style="color:red;">Δεν υπάρχει τιμή</span>';
 	                	}else{
