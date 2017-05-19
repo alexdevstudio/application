@@ -37,8 +37,8 @@ class Edit extends MX_Controller {
 				{
 					$post['status'] = 'trash';
 					$post['delete_flag'] = 100;
-					$post['price_tax'] = NULL;
-					$post['sale_price'] = NULL;
+					/*$post['price_tax'] = NULL;
+					$post['sale_price'] = NULL;*/
 					$post['availability'] = 0;
 					$where = array('product_number'=>$post['product_number'], 'category'=>$post['category']);
 					$exists = Modules::run('crud/get','live',$where);
@@ -49,6 +49,12 @@ class Edit extends MX_Controller {
 					}
 					else
 						echo "Το προϊόν δεν βρέθηκε στο STOCK.";
+
+					$exists_in_etd_prices = Modules::run('crud/get','etd_prices',array('sku'=>$sku));
+					if ($exists_in_etd_prices)
+					{
+						Modules::run('crud/delete','etd_prices',array('sku'=>$sku));	
+					}
 
 
 					Modules::run('crud/delete','installments',array('sku'=>$sku));
@@ -100,15 +106,30 @@ class Edit extends MX_Controller {
 					Modules::run('crud/insert','installments',array('sku'=>$sku,'installments_count'=>$installments_count));
 					unset($post['installments']);
 
+
 					$where_in_etd_prices = array('sku'=>$sku);
 					$exist_in_etd_prices = Modules::run("crud/get","etd_prices",$where_in_etd_prices);
 					
 					if($exist_in_etd_prices)
-						$update_etd_prices = Modules::run('crud/update','etd_prices',$where_in_etd_prices,array('price_tax'=>$post['price_tax']));
-					else
-						$update_etd_prices = Modules::run('crud/insert','etd_prices',array('sku'=>$post['sku'],'price_tax'=>$post['price_tax']));
+					{
+						if(($post['price_tax'] == 0 || $post['price_tax'] == '') && ($post['sale_price'] == 0 || $post['sale_price'] == '') && ($post['shipping'] == ''))
+						{
+							$update_etd_prices = Modules::run('crud/delete','etd_prices',$where_in_etd_prices);
+						}
+						else
+						{
+							$update_etd_prices = Modules::run('crud/update','etd_prices',$where_in_etd_prices,array('price_tax'=>$post['price_tax'], 'sale_price'=>$post['sale_price'], 'shipping'=>$post['shipping'], 'date_last_edited'=>date('Y-m-d H:i:s')));
+						}
+					}
+					else if($post['price_tax'] != '' || $post['shipping'] != '' || $post['sale_price'] != '')
+					{
+						$update_etd_prices = Modules::run('crud/insert','etd_prices',array('sku'=>$sku,'price_tax'=>$post['price_tax'], 'sale_price'=>$post['sale_price'], 'shipping'=>$post['shipping'], 'date_last_edited'=>date('Y-m-d H:i:s')));
+					}
+					
 
 					unset ($post['price_tax']);
+					unset ($post['shipping']);
+					unset ($post['sale_price']);
 
 
 					if($exists){
@@ -119,6 +140,10 @@ class Edit extends MX_Controller {
 						$update = Modules::run('crud/insert','live', $post);
 
 					}
+
+					//For auto update the WP with update_wp
+					Modules::run('extract/allImport',$category,'one',$sku);
+
 					unset($post);
 					header("Refresh:0");
 				}
@@ -172,21 +197,6 @@ class Edit extends MX_Controller {
 
 					}
 
-					$where_in_etd_prices = array('sku'=>$sku);
-					$exist_in_etd_prices = Modules::run("crud/get","etd_prices",$where_in_etd_prices);
-
-					if($exist_in_etd_prices)
-						$update_etd_prices = Modules::run('crud/update','etd_prices',$where_in_etd_prices,array('price_tax'=>$post['price_tax']));
-					else
-						$update_etd_prices = Modules::run('crud/insert','etd_prices',array('sku'=>$post['sku'],'price_tax'=>$post['price_tax']));
-
-					unset ($post['price_tax']);
-
-
-
-				
-
-					$update = Modules::run('crud/update',$category,$where,$post);
 				}else if($post['status']=='related'){
 					unset($post['status']);
 					$products = str_replace(" ", "", $post['cross_sells_products']);
@@ -225,7 +235,7 @@ class Edit extends MX_Controller {
 
 		if($item){
 			 	//Check if item is Live
-			$data['price_tax'] = Modules::run('crud/get','etd_prices', array('sku'=>$sku));
+			$data['etd_prices'] = Modules::run('crud/get','etd_prices', array('sku'=>$sku));
 			$data['itemLive'] = Modules::run('crud/get','live', array('product_number'=>$item->row()->product_number));
 			$data['category'] = $category;
 			$data['title'] = 'Επεξεργασία προϊόντος';

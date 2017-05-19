@@ -97,16 +97,20 @@ $supplier = '';
 $instock = '';
 $outstock = '';
 $outstock2 = '';
+$shipping = '';
 
-if($price_tax != NULL)
-	$price = $price_tax->row()->price_tax;
+if($etd_prices != NULL)
+{
+	$price = $etd_prices->row()->price_tax;
+	$sale_price = $etd_prices->row()->sale_price;
+	$shipping = $etd_prices->row()->shipping;
+}
 
 if($itemLive){
 	
 	//$price = $itemLive->row()->price_tax;
-
-	$sale_price = $itemLive->row()->sale_price; 
-	$shipping = $itemLive->row()->shipping; 
+	//$sale_price = $itemLive->row()->sale_price; 
+	//$shipping = $itemLive->row()->shipping; 
 	$av = $itemLive->row()->availability;
 	$supplier = $itemLive->row()->supplier;
 	$upcomingDate = $itemLive->row()->upcoming_date;
@@ -146,6 +150,8 @@ if($itemLive){
 
 ?>
  <form method="post" action=''>
+ <div>Οι παρακάτω τιμές ενημέρωνουν απευθείας το site όταν το προϊόν υπάρχει στο site. </div>
+ <br/>
  <div class="form-group">
 <label>Κανονική Τιμή</label>
 

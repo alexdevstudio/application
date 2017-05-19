@@ -81,9 +81,9 @@ class Extract_model extends CI_Model {
             if($table == 'all'){
                 $action = 'all';
                 $tables = Modules::run('categories/fullCategoriesArray');
-                
-
             }else{
+                if($numrows == 'one')
+                    $action = 'all';
 
                 $tables = array($table);
 
@@ -101,16 +101,18 @@ class Extract_model extends CI_Model {
                             l.category, l.net_price, 
                             l.recycle_tax,
                             /*l.price_tax,*/
-                            l.sale_price, 
+                            /*l.sale_price, */
                             l.availability, 
                             l.upcoming_date, 
                             l.supplier, 
                             l.status, 
                             l.delete_flag,
-                            l.shipping,
+                            /*l.shipping,*/
                             t.*,
                             i.installments_count,
-                            e.price_tax
+                            e.price_tax,
+                            e.shipping,
+                            e.sale_price
 
                      FROM live l
 
@@ -133,16 +135,18 @@ class Extract_model extends CI_Model {
                      l.net_price,
                      l.recycle_tax,
                      /*l.price_tax,*/
-                     l.sale_price,
+                     /*l.sale_price,*/
                      l.availability,
                      l.upcoming_date,
                      l.supplier,
                      l.status,
                      l.delete_flag,
-                     l.shipping,
+                     /*l.shipping,*/
                      t.*,
                      i.installments_count,
-                     e.price_tax
+                     e.price_tax,
+                     e.shipping,
+                     e.sale_price
 
                      FROM live l
 
