@@ -99,11 +99,11 @@ class Edit extends MX_Controller {
 					$installments_q = Modules::run('crud/delete','installments',array('sku'=>$sku));
 					$installments_count = $post['installments'];
 					
-					if($installments_count=='' || $installments_count=='0'){
-						$installments_count = 12;
+					if($installments_count!='0' && $installments_count != ''){
+						Modules::run('crud/insert','installments',array('sku'=>$sku,'installments_count'=>$installments_count));
 					}
 
-					Modules::run('crud/insert','installments',array('sku'=>$sku,'installments_count'=>$installments_count));
+					
 					unset($post['installments']);
 
 
