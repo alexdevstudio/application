@@ -1552,13 +1552,13 @@ class Live_model extends CI_Model {
 
 				
 
-				$Name = (string) trim($product->Name);
+				$title = (string) trim($product->title);
 				$Image = (string) trim($product->Image);
 				$PRODUCT_URL = (string) trim($product->PRODUCT_URL);
 				$PRODUCT_URL_PDF = (string) trim($product->PRODUCT_URL_PDF);
 				$URL_SUPPORT = (string) trim($product->URL_SUPPORT);
 				$THL__SUPPORT = (string) trim($product->THL__SUPPORT);
-				$Brand = (string) trim($product->Brand);
+				$brand = (string) trim($product->brand);
 				$copying_process = (string) trim($product->copying_process);
 				$Toner_Writing_System = (string) trim($product->Toner_Writing_System);
 				$Colour = (string) trim($product->Colour);
@@ -1660,7 +1660,7 @@ class Live_model extends CI_Model {
 				$supplier = 'konica';
 
 				if($this->checkLiveProduct($pn, '', $supplier)){
-
+					
 					$live = array(
 						'category'=>$c ,
 						'product_number'=>$pn ,
@@ -1674,8 +1674,10 @@ class Live_model extends CI_Model {
 
 					$this->db->where('product_number', $pn);
 					$this->db->where('supplier', $supplier);
-					$this->db->delete('live', $live);
+					$this->db->delete('live');
+
 					$this->db->insert('live', $live);
+					echo "test:".$live['product_number'].'<br>';
 
 					unset($live);
 				}
@@ -1684,12 +1686,12 @@ class Live_model extends CI_Model {
 				$copiers_product = array(
 					'category' => $c,
 					'product_number'=>$pn ,
-					'Name' => $Name ,
+					'title' => $title ,
 					'PRODUCT_URL' => $PRODUCT_URL ,
 					'PRODUCT_URL_PDF' => $PRODUCT_URL_PDF ,
 					'URL_SUPPORT' => $URL_SUPPORT ,
 					'THL__SUPPORT' => $THL__SUPPORT ,
-					'Brand' => $Brand ,
+					'brand' => $brand ,
 					'copying_process' => $copying_process ,
 					'Toner_Writing_System' => $Toner_Writing_System ,
 					'Colour' => $Colour ,
@@ -2286,9 +2288,11 @@ class Live_model extends CI_Model {
 			{
 				$categoryData ['new_item'] = 1;
 			}
-			
+			if(isset($product['brand'] )){	
 			$product['brand'] = strtoupper($product['brand']);
-
+			}else{
+			$product['brand'] = strtoupper($product['Brand']);
+			}
 			switch ($product['brand']) {
 				case 'APC':
 					$categoryData['support_url'] = 'http://www.schneider-electric.gr/sites/greece/gr/support/contact/we-care.page';
@@ -2493,7 +2497,7 @@ class Live_model extends CI_Model {
     		$imageData = array(
 							'src' => $f,
 							'sku' => $sku ,
-							'brand' => $product['Brand'] ,
+							'brand' => $product['brand'] ,
 							'part_number' => $product['product_number'] ,
 							'tail' => ''
 						);
