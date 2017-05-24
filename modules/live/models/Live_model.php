@@ -1649,7 +1649,10 @@ class Live_model extends CI_Model {
 
 
 				$pn = (string) trim($product->product_number);
-
+				if($pn==''){
+					echo $title.': has empty PN';
+					continue;
+				}
 				
 
 				$imageUrl = $Image;

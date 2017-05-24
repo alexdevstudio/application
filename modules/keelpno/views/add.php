@@ -245,7 +245,19 @@ section{
         <input type="hidden" name='year' value='<?php echo date("Y"); ?>'>
       </div>
     </div>
-    <div  style="width:30%;"  class='date-number-item time'> <span class='bold'>ΩΡΕΣ:</span> 9:30 – 16:30</div>
+     <?php  
+    if($this->session->client=="vari"){
+
+    ?>   
+     <div  style="width:30%;"  class='date-number-item time'> <span class='bold'>ΩΡΕΣ:</span> 9:00 – 16:30</div>
+  <?php   
+    }elseif ($this->session->client=="marousi") {
+     ?>
+      <div  style="width:30%;"  class='date-number-item time'> <span class='bold'>ΩΡΕΣ:</span> 9:30 – 16:30</div>
+   <?php
+    }
+   ?>
+   
     <?php 
         if($this->session->userdata("type")=="UPS")
         {
