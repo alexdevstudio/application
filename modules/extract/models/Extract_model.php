@@ -160,7 +160,6 @@ class Extract_model extends CI_Model {
                      
                     ");
             }
-
                 
                $i=1;
                $products = array();
@@ -218,7 +217,7 @@ class Extract_model extends CI_Model {
                             
                         }
                         //Skip product without price....
-                        if(!$product['price_tax'] && $product['status']=='publish')
+                        if($product['supplier']!='konica' && !$product['price_tax'] && $product['status']=='publish')
                             continue;   
                     }
 
@@ -443,7 +442,7 @@ class Extract_model extends CI_Model {
                              $skroutz_title = "$model  $color ($pn)";
 
                            break;
-                           case 'copiers':
+                           /*case 'copiers':
                         
                        
                         $pn    =  $product['product_number'];
@@ -451,13 +450,13 @@ class Extract_model extends CI_Model {
                        
                                               
                          if($etd_title == '')                            
-                             $etd_title = $product['Name'];
+                             $etd_title = $product['title'];
                         
 
                         if($skroutz_title == '')                             
                              $skroutz_title = $product['Name'];
 
-                           break;
+                           break;*/
                         default:
                             $etd_title = $product['title'];
                             $skroutz_title = $product['title'];
