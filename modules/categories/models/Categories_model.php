@@ -218,7 +218,6 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 						else
 							$shipping_class= 10063;
 					}
-				}
 					break;
 
 			case 'routers':
