@@ -36,7 +36,7 @@ class Categories extends MX_Controller {
 	} 
 
 	 public function categoriesArray(){
-    	$array = array('cable_accessories','desktops','docking_stations','laptops','printers', 'multifunction_printers',
+    	$array = array('cable_accessories','copiers','desktops','docking_stations','laptops','printers', 'multifunction_printers',
     		'monitors','servers','ups','tablets','smartphones','software',
     		'external_hard_drives','keyboard_mouse','ip_phones','ip_cards','ip_gateways','ip_pbx','printer_drums','printer_fuser','printer_belts','tv');
 

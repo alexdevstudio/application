@@ -160,7 +160,6 @@ class Extract_model extends CI_Model {
                      
                     ");
             }
-
                 
                $i=1;
                $products = array();
@@ -205,7 +204,7 @@ class Extract_model extends CI_Model {
                  
                     if(!isset($product['price_tax']) || $product['price_tax'] == '' ||  $product['price_tax'] === NULL  ||  $product['price_tax'] == '0.00' || $product['price_tax'] =='0'){
                       
-                        $product['price_tax'] = $this->priceTax($product['net_price'],$product['recycle_tax'],$cat);
+                        $product['price_tax'] = $this->priceTax($product);
 
                         if(($supplier=='braintrust' || $supplier=='etd') && $cat == 'laptops' && $brand == 'MSI'){
                             $msi = Modules::run("crud/get",'msi_price',array('sku'=>$sku));
@@ -218,7 +217,7 @@ class Extract_model extends CI_Model {
                             
                         }
                         //Skip product without price....
-                        if(!$product['price_tax'] && $product['status']=='publish')
+                        if($product['supplier']!='konica' && !$product['price_tax'] && $product['status']=='publish')
                             continue;   
                     }
 
@@ -443,7 +442,7 @@ class Extract_model extends CI_Model {
                              $skroutz_title = "$model  $color ($pn)";
 
                            break;
-                           case 'copiers':
+                           /*case 'copiers':
                         
                        
                         $pn    =  $product['product_number'];
@@ -451,13 +450,13 @@ class Extract_model extends CI_Model {
                        
                                               
                          if($etd_title == '')                            
-                             $etd_title = $product['Name'];
+                             $etd_title = $product['title'];
                         
 
                         if($skroutz_title == '')                             
                              $skroutz_title = $product['Name'];
 
-                           break;
+                           break;*/
                         default:
                             $etd_title = $product['title'];
                             $skroutz_title = $product['title'];
@@ -644,13 +643,26 @@ class Extract_model extends CI_Model {
 
         }
 
-        private function priceTax($net, $recycle, $category)
+        private function priceTax($product)
         {
            //  echo $category_rate;
-
+             $net  = $product['net_price'];
+             $recycle = $product['recycle_tax'];
+             $category = $product['category'];
+             $brand = (isset($product['brand']) ? $product['brand'] : $product['Brand'] );
              $net_price = $net + $recycle;
 
-             $category_rate = Modules::run("profit_rates/getCategoryRate",$category);
+             $category_brand = $category."_".$brand;
+             $category_brand_rate = Modules::run("profit_rates/getCategoryRate",$category_brand);
+             
+             if($category_brand_rate && $category_brand_rate!='' && $category_brand_rate!='0'){
+                $category_rate = $category_brand_rate;
+             }else{
+                $category_rate = Modules::run("profit_rates/getCategoryRate",$category);
+
+             }
+
+             
              $category_rate = number_format((float)$category_rate, 3, '.', '');
 
              $etd_price = $net_price*(1 + $category_rate);

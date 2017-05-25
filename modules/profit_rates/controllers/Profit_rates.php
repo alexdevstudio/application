@@ -44,7 +44,7 @@ class Profit_rates extends MX_Controller {
 */
 	private function getRatesTable()
 	{
-		$profit_table = Modules::run("crud/get",'profit');
+		$profit_table = Modules::run("crud/get",'profit', '',array('category','ASC'));
 
 		return $profit_table;
 	}
@@ -54,22 +54,32 @@ class Profit_rates extends MX_Controller {
 		$where = array('category'=>$category);
 
 		$profit_category = Modules::run("crud/get",'profit',$where);
-		$row = $profit_category->row();
-    	$rate = $row->rate;
-
-		return $rate;
+		if($profit_category){
+			return $profit_category->row()->rate;
+		}
+		return false;
 	}
 
 	public function updateRate()
 	{
+		$rate = trim($_POST['rate']);
+		if($rate=='0' || $rate==''){
+			$rate='';
+		}else{
+			$rate = $rate/100;
+		}
+
 
 		$category = $_POST['category'];
-		$rate = $_POST['rate'];
-		$rate = $rate/100;
+		$parent = Modules::run('crud/get', 'profit', array('category'=>$category));
 
-		if(trim($rate)=='')
-			$rate = '0.06';
+		if($parent->row()->parent == ''){ //if does not have parent
+			if($rate==''){
+				$rate = '0.06';
+			}
+		}
 
+		
 		$data=array(
 			'category'=>$category,
 			'rate'=>$rate

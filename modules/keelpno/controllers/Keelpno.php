@@ -383,6 +383,7 @@ class Keelpno extends MX_Controller {
 		$this->db->where('daily','1');
 		$this->db->where('category',$this->input->post('category'));
 		$this->db->where('technician',$this->input->post('technician'));
+		$this->db->where('client',$this->input->post('client'));
 		$this->db->limit(1);
 		$this->db->order_by('ticket_nr', 'DESC');
 		$result = $this->db->get('services');
