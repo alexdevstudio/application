@@ -195,7 +195,9 @@ class Edit extends MX_Controller {
 									
 							}
 
+
 					}
+					$update = Modules::run('crud/update',$category,$where,$post);
 
 				}else if($post['status']=='related'){
 					unset($post['status']);
@@ -222,6 +224,7 @@ class Edit extends MX_Controller {
 
 						
 				}
+
 
 				if($update){
 					echo "<h2>Updated</h2>";
