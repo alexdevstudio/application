@@ -98,7 +98,8 @@ class Extract_model extends CI_Model {
                 $query = $this->db->query("
                      SELECT l.id, 
                             l.product_number, 
-                            l.category, l.net_price, 
+                            l.category, 
+                            l.net_price, 
                             l.recycle_tax,
                             /*l.price_tax,*/
                             /*l.sale_price, */
@@ -160,7 +161,7 @@ class Extract_model extends CI_Model {
                      
                     ");
             }
-                
+
                $i=1;
                $products = array();
 
@@ -184,8 +185,6 @@ class Extract_model extends CI_Model {
 
 
                foreach ($query->result_array() as $product) {
-
-
 
                     $cat = $product['category'];
                     $supplier = $product['supplier'];
@@ -256,9 +255,7 @@ class Extract_model extends CI_Model {
                     $etd_title = $product['etd_title'];
                     $skroutz_title = $product['skroutz_title'];
                     $cross = '';
-                    
-
-                
+                                   
                 switch ($table) {
                         case 'laptops':
                         $cpu =   str_replace(' ','',$product['cpu_model']); 
@@ -500,7 +497,6 @@ class Extract_model extends CI_Model {
 
 
                }
-
 
                 $xml = new DomDocument("1.0","UTF-8");//ISO-8859-7
 

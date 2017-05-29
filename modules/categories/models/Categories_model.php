@@ -168,105 +168,69 @@ public function volumeWeight($dimensions){
 
 public function makeShippingClass($data, $cat, $dynamic = null){
 
-	
+	$vweight = (float) $data['volumetric_weight'];
 
+
+	if($vweight > 0 && $vweight!='')
+	{
+		$shipping_class=$this->shippingByWeight($vweight);
+	}
+	else
+	{
 		switch ($cat) {
 
-			case 'printers':
-			case 'multifunction_printers':
-						
-						$vweight = (int) $data['volumetric_weight'];
-
-
-
-						if($vweight > 35)
-							$shipping_class= 9974;
-						elseif($vweight > 30)
-							$shipping_class= 4682;
-						elseif($vweight > 26)
-							$shipping_class= 4681;
-						elseif($vweight > 23)
-							$shipping_class= 4680;
-						elseif($vweight > 20)
-							$shipping_class= 4679;
-						elseif($vweight > 17)
-							$shipping_class= 4678;
-						elseif($vweight > 14)
-							$shipping_class= 4654;
-						elseif($vweight > 11)
-							$shipping_class= 4653;
-						elseif($vweight > 8)
-							$shipping_class= 4652;
-						elseif($vweight > 5)
-							$shipping_class= 4651;
-						else
-							$shipping_class= 4650;
-						break;
-
 			case 'laptops':
-					$shipping_class= 4636;
+					$shipping_class= 10063;
 					break;
 			case 'software':
-					$shipping_class= 4644;
+					$shipping_class= 10646;
 					break;
 			case 'carrying_cases':
-					$shipping_class= 4636;
+					$shipping_class= 10063;
 					break;
 			case 'desktops':
-					$shipping_class= 4661;
+					$shipping_class= 10070;
 					if($data['type']=='Mini Pc')
-						$shipping_class= 4660;
+						$shipping_class= 10066;
 					else
-						$shipping_class= 4661;
-
+						$shipping_class= 10070;
 					break;
 			case 'power_bank':
-					$shipping_class= 4663;
+					$shipping_class= 10650;
 					break;
 			case 'monitors':
 			case 'tv':
-
-			$vweight = (float) $data['volumetric_weight'];
-				if($vweight!=''){
-					$shipping_class=$this->shippingByWeight($vweight);					
-				}else{
-
 					$size = (float) $data['screen_size'];
 					$pn = $data['product_number'];
 					if($data['brand']=='DELL' && $size >= 24 && $size <= 25 && (substr($pn, 0, 1) === 'U' || substr($pn, 0, 1) === 'u') ){
-									
-						$shipping_class= 9393;
-						
+						$shipping_class= 10073;
 					}
-						
 					else
 					{
 						if($size >= 42)
 							$shipping_class= 4667;
 						elseif($size >= 32)
-							$shipping_class= 4666;
+							$shipping_class= 10883;
 						elseif($size >= 25)
-							$shipping_class= 4665;
+							$shipping_class= 10870;
 						elseif($size >= 22)
 							$shipping_class= 10019;
 						else
-							$shipping_class= 4664;
+							$shipping_class= 10063;
 					}
-
-				}
 					break;
 
 			case 'routers':
-					$shipping_class= 4671;
+					$shipping_class= 10650;
 					break;
 			case 'switches':
 					
 					$ports=(int) $data['ports'];
 					
 					if( $ports >= 16)
-						$shipping_class= 4636;
+						$shipping_class= 10063;
 					else
-						$shipping_class= 4671;
+						$shipping_class= 10650;
 					break;
 			case 'ups':
 					$strength=(int) $data['strength'];
@@ -274,130 +238,118 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					if( $strength >= 3001)
 						$shipping_class= 9974;
 					elseif( $strength >= 1501)
-						$shipping_class = 4669;
+						$shipping_class = 10883;
 					else
-						$shipping_class = 4661;
+						$shipping_class = 10070;
 					break;
 			
 			case 'servers':
 					$shipping_class= 4669;
 					break;
 			case 'speakers':
-					$shipping_class= 4636;
+					$shipping_class= 10063;
 					break;
 			case 'external_hard_drives':
-					$shipping_class= 4671;
+					$shipping_class= 10650;
 					break;
 			case 'sata_hard_drives':
-					$shipping_class= 4662;
+					$shipping_class= 10650;
 					break;
 			case 'ssd':
-					$shipping_class= 4672;
+					$shipping_class= 10647;
 					break;
 			case 'keyboard_mouse':
 					if($data['type']=='Mouse')
-						$shipping_class = 4671;
+						$shipping_class = 10650;
 					else
-						$shipping_class = 4636;
+						$shipping_class = 10063;
 					break;
 			case 'tablets':
-					$shipping_class= 4662;
+					$shipping_class= 10650;
 					break;
 			case 'cartridges':
-					$shipping_class= 4677;
+					$shipping_class= 10646;
 					break;
 			case 'toners':
 					$title = $data['title'];
 					if(strpos($title, 'Tri-Pack'))
-						$shipping_class = 4686;
+						$shipping_class = 10652;
 					elseif(strpos($title, 'Dual Pack') || strpos($title, '2-pack'))
-						$shipping_class = 4676;
+						$shipping_class = 10650;
 					else
-						$shipping_class = 4675;
+						$shipping_class = 10650;
 					break;
 			case 'smartphones':
-					$shipping_class= 4663;
+					$shipping_class= 10650;
 					break;
 
 			case 'cables':
 			case 'cable_accessories':
-					$shipping_class= 4644;
+					$shipping_class= 10646;
 					break;
 			case 'patch_panels':
-					$shipping_class= 4675;
+					$shipping_class= 10650;
 					break;
 			case 'racks':
 					$shipping_class= 9974;
 					break;
 			case 'optical_drives':
-					$shipping_class = 4662;
+					$shipping_class = 10650;
 					break;
 			case 'card_readers':
-					$shipping_class = 4671;
+					$shipping_class = 10650;
 					break;
 			case 'flash_drives':
-					$shipping_class = 4644;
+					$shipping_class = 10646;
 					break;
 			case 'power_supplies':
-					$shipping_class = 4636;
+					$shipping_class = 10063;
 					break;
 			case 'cases':
-					$shipping_class = 4661;
+					$shipping_class = 10070;
 					break;
 			case 'fans':
-					$shipping_class = 4671;
+					$shipping_class = 10650;
 					break;
 			case 'motherboards':
-					$shipping_class = 4636;
+					$shipping_class = 10063;
 					break;
 			case 'graphic_cards':
-					$shipping_class = 4662;
+					$shipping_class = 10650;
 					break;
 			case 'cpu':
-					$shipping_class = 4636;
+					$shipping_class = 10063;
 					break;
 			case 'memories':
-					$shipping_class = 4644;
+					$shipping_class = 10646;
 					break;
 			case 'hoverboards':
-					$shipping_class = 4661;
+					$shipping_class = 10070;
 					break;
 			case 'ip_cards':
 					$shipping_class = 4672;
 					break;
 			case 'ip_gateways':
-					$shipping_class = 4636;
+					$shipping_class = 10063;
 					break;
 		    case 'ip_phones':
 		    case 'docking_stations':
-					$shipping_class = 4676;
+					$shipping_class = 10650;
 					break;
 			case 'ip_pbx':
-					$shipping_class = 4636;
+					$shipping_class = 10063;
 					break;
 			case 'printer_fusers':
 			case 'printer_drums':
 			case 'printer_belts':
-					if(isset($data['volumetric_weight']))
-					{
-						$vweight = (float) $data['volumetric_weight'];
-						if($vweight!=''){
-							$shipping_class=$this->shippingByWeight($vweight);					
-						}else
-						{
-							$shipping_class=$this->shippingByWeight(3);
-						}
-					}
-					else
-					{
-						$shipping_class=$this->shippingByWeight(3);
-					}
+					$shipping_class = 10651;
 					break;
 			default:
 				return false;
 				break;
 	
 			}
+		}
 	
 		
      
