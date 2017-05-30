@@ -71,26 +71,31 @@ class Descriptions extends MX_Controller {
 		$this->form_validation->set_rules('description', 'Περιγραφή', 'trim|required');
 	    //$this->form_validation->set_rules('image', 'Φωτογραφία', 'trim|required');
 
-	     $config['upload_path']          = './uploads/descriptions';
-                $config['allowed_types']        = 'jpeg|jpg|png';
-                $config['max_size']             = 1000;
-                $config['max_width']            = 1024;
-                $config['max_height']           = 768;
+	    $file_name1 = preg_replace("/[^a-zA-Z0-9-_]/", "", $this->input->post('char'));
+	    $file_name2 = preg_replace("/[^a-zA-Z0-9-_]/", "", $this->input->post('char_spec'));
+	    $file_name = $file_name1.'_'.$file_name2;
 
-                $this->load->library('upload', $config);
+	    $config['upload_path']          = '.images/descriptions';
+        $config['allowed_types']        = 'jpeg|jpg|png';
+        $config['file_name']			= $file_name;
+        $config['max_size']             = 1000;
+        $config['max_width']            = 1024;
+        $config['max_height']           = 768;
 
-                if ( ! $this->upload->do_upload('userfile'))
-                {
-                        $error = array('error' => $this->upload->display_errors());
+        $this->load->library('upload', $config);
 
-                        $this->load->view('upload_form', $error);
-                }
-                else
-                {
-                        $data = array('upload_data' => $this->upload->data());
+        if ( ! $this->upload->do_upload('userfile'))
+        {
+                $error = array('error' => $this->upload->display_errors());
 
-                        $this->load->view('upload_success', $data);
-                }
+                $this->load->view('upload_form', $error);
+        }
+        else
+        {
+                $data = array('upload_data' => $this->upload->data());
+
+                $this->load->view('upload_success', $data);
+        }
 
 	    if($this->form_validation->run()){
 	    	echo "success"; 
