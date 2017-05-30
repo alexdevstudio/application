@@ -75,26 +75,27 @@ class Descriptions extends MX_Controller {
 	    $file_name2 = preg_replace("/[^a-zA-Z0-9-_]/", "", $this->input->post('char_spec'));
 	    $file_name = $file_name1.'_'.$file_name2;
 
-	    $config['upload_path']          = '.images/descriptions';
+	    $config['upload_path']          = './images/descriptions/';
         $config['allowed_types']        = 'jpeg|jpg|png';
         $config['file_name']			= $file_name;
-        $config['max_size']             = 1000;
+        $config['max_size']             = '1000KB';
         $config['max_width']            = 1024;
         $config['max_height']           = 768;
 
         $this->load->library('upload', $config);
 
-        if ( ! $this->upload->do_upload('userfile'))
+        if ( ! $this->upload->do_upload('image'))
         {
                 $error = array('error' => $this->upload->display_errors());
+                print_r($error);
 
-                $this->load->view('upload_form', $error);
+                //$this->load->view('upload_form', $error);
         }
         else
         {
                 $data = array('upload_data' => $this->upload->data());
 
-                $this->load->view('upload_success', $data);
+                //$this->load->view('upload_success', $data);
         }
 
 	    if($this->form_validation->run()){
