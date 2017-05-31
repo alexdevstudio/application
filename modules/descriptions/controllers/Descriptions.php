@@ -3,6 +3,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Descriptions extends MX_Controller {
 
+	public function __construct()
+    {
+        parent::__construct();
+        
+        $this->load->model('Descriptions_model');
+       // $this->load->model('crud/Crud_model');
+    }
+
 	
  
 	public function index()
@@ -17,6 +25,77 @@ class Descriptions extends MX_Controller {
 
 	public function add()
 	{
+		if ($this->input->server('REQUEST_METHOD') === 'POST')
+		{
+			$file_name0 = preg_replace("/[^a-zA-Z0-9-_]/", "", $this->input->post('category'));
+			$file_name1 = preg_replace("/[^a-zA-Z0-9-_]/", "", $this->input->post('char'));
+		    $file_name2 = preg_replace("/[^a-zA-Z0-9-_]/", "", $this->input->post('char_spec'));
+		    $file_name = $file_name0.'-'.$file_name1.'_'.$file_name2;
+
+		    $config['upload_path']          = './images/descriptions/';
+	        $config['allowed_types']        = 'jpeg|jpg|png';
+	        $config['file_name']			= $file_name;
+	        $config['max_size']             = '1000KB';
+	        $config['max_width']            = 1024;
+	        $config['max_height']           = 768;
+	        $config['overwrite']     		= TRUE;
+
+	        $this->load->library('upload', $config);
+
+	        if($this->upload->do_upload('image'))
+            {
+            	$data = array('upload_data' => $this->upload->data());
+                $image_name = $data['upload_data']['file_name'];
+
+                $this->form_validation->set_rules('category', 'Κατηγορία', 'trim|required');
+				$this->form_validation->set_rules('char', 'Τύπος Χαρακτηριστικού', 'trim|required');
+				$this->form_validation->set_rules('char_spec', 'Χαρακτηριστικό', 'trim|required');
+				$this->form_validation->set_rules('title', 'Τίτλος', 'trim|required');
+				$this->form_validation->set_rules('description', 'Περιγραφή', 'trim|required');
+				$this->form_validation->set_rules('text_color', 'Χρώμα Κειμένου', 'trim|required');
+				$this->form_validation->set_rules('background_color', 'Χρώμα Πλαισίου', 'trim|required');
+				//$this->form_validation->set_rules('image', 'Φωτογραφία', 'trim|required');
+				$this->form_validation->set_rules('important', 'Προτεραιότητα', 'trim|required');
+
+				$this->form_validation->set_error_delimiters('<div class="alert alert-danger"><span class="close" data-dismiss="alert">&times</span><strong>', '</strong></div>');
+
+				 if($this->form_validation->run()){
+				 	$data_to_store = array(
+                        'category' => $this->input->post('category'),
+                        'char' => $this->input->post('char'),
+                        'char_spec' => $this->input->post('char_spec'),
+                        'title' => $this->input->post('title'),
+                        'description' => $this->input->post('description'),
+                        'text_color' => $this->input->post('text_color'),
+                        'background_color' => $this->input->post('background_color'),
+                        'image' =>  $image_name,
+                        'important' => $this->input->post('important')
+                    );
+
+                    //if($this->Crud_model->insert('char_blocks_basic', $data_to_store))
+                    if($this->Descriptions_model->store_chars('char_blocks_basic', $data_to_store))
+                    {
+                    	$FlashData['Message']= 'Τα χαρακτηριστικά <strong>"'. $data_to_store['char'] .'-'.$data_to_store['char_spec'].'"</strong> αποθηκεύτηκε με επιτυχία.';
+                        $FlashData['type'] = 'success';
+                    }else{
+                        $FlashData['Message']= '<strong>Kάτι πήγε λάθος!</strong> Ελέγξτε τα στοιχεία και δοκιμάστε πάλι.';
+                        $FlashData['type'] = 'danger';
+                    }
+                    $this->session->set_flashdata('flash_message', $FlashData);
+			    
+			    }
+
+            }
+	        else 
+	        {
+	                $FlashData['Message']= '<strong>Η φωτογραφία δεν αποθηκεύτηκε</strong>'.$this->upload->display_errors();
+	                $FlashData['type'] = 'danger';
+	                $this->session->set_flashdata('flash_message', $FlashData);
+
+	                $error = array('error' => $this->upload->display_errors());
+	        }
+		}
+
 		$data['title'] = 'Νέα Περιγραφή';
 		$data['categories'] = Modules::run('categories/fullCategoriesArray');
 		
@@ -24,6 +103,93 @@ class Descriptions extends MX_Controller {
 		$this->load->view('add');
 		$this->load->view('templates/footer');
 	}
+
+	public function update()
+    {
+        $id = $this->uri->segment(4);
+        $table = $this->uri->segment(3);
+
+        if ($this->input->server('REQUEST_METHOD') === 'POST')
+        {
+        	$file_name0 = preg_replace("/[^a-zA-Z0-9-_]/", "", $this->input->post('category'));
+        	$file_name1 = preg_replace("/[^a-zA-Z0-9-_]/", "", $this->input->post('char'));
+		    $file_name2 = preg_replace("/[^a-zA-Z0-9-_]/", "", $this->input->post('char_spec'));
+		    $file_name = $file_name0.'-'.$file_name1.'_'.$file_name2;
+
+		    $config['upload_path']          = './images/descriptions/';
+	        $config['allowed_types']        = 'jpeg|jpg|png';
+	        $config['file_name']			= $file_name;
+	        $config['max_size']             = '1000KB';
+	        $config['max_width']            = 1024;
+	        $config['max_height']           = 768;
+	        $config['overwrite']     		= TRUE;
+
+	        $this->load->library('upload', $config);
+
+	        if($this->upload->do_upload('image'))
+            {
+            	$data = array('upload_data' => $this->upload->data());
+                $image_name = $data['upload_data']['file_name'];
+
+                $this->form_validation->set_rules('category', 'Κατηγορία', 'trim|required');
+				$this->form_validation->set_rules('char', 'Τύπος Χαρακτηριστικού', 'trim|required');
+				$this->form_validation->set_rules('char_spec', 'Χαρακτηριστικό', 'trim|required');
+				$this->form_validation->set_rules('title', 'Τίτλος', 'trim|required');
+				$this->form_validation->set_rules('description', 'Περιγραφή', 'trim|required');
+				$this->form_validation->set_rules('text_color', 'Χρώμα Κειμένου', 'trim|required');
+				$this->form_validation->set_rules('background_color', 'Χρώμα Πλαισίου', 'trim|required');
+				//$this->form_validation->set_rules('image', 'Φωτογραφία', 'trim|required');
+				$this->form_validation->set_rules('important', 'Προτεραιότητα', 'trim|required');
+
+				$this->form_validation->set_error_delimiters('<div class="alert alert-danger"><span class="close" data-dismiss="alert">&times</span><strong>', '</strong></div>');
+
+				 if($this->form_validation->run()){
+				 	$data_to_store = array(
+                        'category' => $this->input->post('category'),
+                        'char' => $this->input->post('char'),
+                        'char_spec' => $this->input->post('char_spec'),
+                        'title' => $this->input->post('title'),
+                        'description' => $this->input->post('description'),
+                        'text_color' => $this->input->post('text_color'),
+                        'background_color' => $this->input->post('background_color'),
+                        'image' =>  $image_name,
+                        'important' => $this->input->post('important')
+                    );
+
+                    //if($this->Crud_model->insert('char_blocks_basic', $data_to_store))
+                    if($this->Descriptions_model->store_chars($table, $data_to_store))
+                    {
+                    	$FlashData['Message']= 'Τα χαρακτηριστικά <strong>"'. $data_to_store['char'] .'-'.$data_to_store['char_spec'].'"</strong> αποθηκεύτηκε με επιτυχία.';
+                        $FlashData['type'] = 'success';
+                    }else{
+                        $FlashData['Message']= '<strong>Kάτι πήγε λάθος!</strong> Ελέγξτε τα στοιχεία και δοκιμάστε πάλι.';
+                        $FlashData['type'] = 'danger';
+                    }
+                    $this->session->set_flashdata('flash_message', $FlashData);
+			    
+			    }
+
+            }
+	        else 
+	        {
+	                $FlashData['Message']= '<strong>Η φωτογραφία δεν αποθηκεύτηκε</strong>'.$this->upload->display_errors();
+	                $FlashData['type'] = 'danger';
+	                $this->session->set_flashdata('flash_message', $FlashData);
+
+	                $error = array('error' => $this->upload->display_errors());
+	        }
+
+        }
+
+        $data['title'] = 'Νέα Περιγραφή';
+		$data['categories'] = Modules::run('categories/fullCategoriesArray');
+		$data['chars_data'] = $this->Descriptions_model->get_chars_by_id($table, $id);
+		
+		$this->load->view('templates/header' ,$data);
+		$this->load->view('edit');
+		$this->load->view('templates/footer');
+
+    }
 
 
 	public function getChars($type, $value){
@@ -57,54 +223,6 @@ class Descriptions extends MX_Controller {
 
 
 	}
-	public function addBasic(){
-
-
-		if(empty($this->input->post())){
-			exit('Stop Submitting!!!');
-		}
-		
-		$this->form_validation->set_rules('category', 'Κατηγορία', 'trim|required');
-		$this->form_validation->set_rules('char', 'Τύπος Χαρακτηριστικού', 'trim|required');
-		$this->form_validation->set_rules('char_spec', 'Χαρακτηριστικό', 'trim|required');
-		$this->form_validation->set_rules('title', 'Τίτλος', 'trim|required');
-		$this->form_validation->set_rules('description', 'Περιγραφή', 'trim|required');
-	    //$this->form_validation->set_rules('image', 'Φωτογραφία', 'trim|required');
-
-	     $config['upload_path']          = './uploads/descriptions';
-                $config['allowed_types']        = 'jpeg|jpg|png';
-                $config['max_size']             = 1000;
-                $config['max_width']            = 1024;
-                $config['max_height']           = 768;
-
-                $this->load->library('upload', $config);
-
-                if ( ! $this->upload->do_upload('userfile'))
-                {
-                        $error = array('error' => $this->upload->display_errors());
-
-                        $this->load->view('upload_form', $error);
-                }
-                else
-                {
-                        $data = array('upload_data' => $this->upload->data());
-
-                        $this->load->view('upload_success', $data);
-                }
-
-	    if($this->form_validation->run()){
-	    	echo "success"; 
-	    
-	    }else{
-	    	$this->add();
-	    }
-
-
-		
-
-
-	}
-
 
 
 	public function ifExistsBasic($table, $type, $char){
@@ -121,7 +239,7 @@ class Descriptions extends MX_Controller {
 			}
 	}
 
-	public function do_upload()
+	/*public function do_upload()
         {
                 $config['upload_path']          = './uploads/descriptions';
                 $config['allowed_types']        = 'jpeg|jpg|png';
@@ -143,7 +261,7 @@ class Descriptions extends MX_Controller {
 
                         $this->load->view('upload_success', $data);
                 }
-        }
+        }*/
 }
 
 ?> 
