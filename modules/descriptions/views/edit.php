@@ -19,29 +19,15 @@
 			<div class="form-group">
 	                  	
 	                  	<label>1. Επιλέγξτε κατηγορία *</label>
-		                  <select onchange="getChars('categories')" id="categories" name="category" class="form-control">
-		                  <option  value="">----</option>
-							
-		                    <?php
-							if($this->input->post()){
-								$category = $this->input->post('category');
-								?>
-										<option value="<?= $category; ?>" <?=  set_select('category', $category, TRUE); ?>><?= $category; ?></option>
-								<?php
-								
-							}
-								foreach($categories as $category){
-							
-							?>
+	                  	<?php
 
-								<option  onclick=""  value="<?= $category; ?>"><?= ucfirst($category); ?></option>
+	                  		foreach ($categories as $value) {
+	                  			$new_category[$value] = $value;
+	                  		}
 
-							<?php
-
-								}
-		                  	?>
-		                   
-		                  </select>
+	                  		echo form_dropdown('category', $new_category, $chars_data[0]['category'], 'class="form-control" id="categories" onchange="getChars(\'categories\')"');
+	                  	?>
+		                  
 	        </div>
 	       
 	      
@@ -52,18 +38,10 @@
 			<div class="form-group">
 	                  	
 	                  	<label>2. Τύπος Χαρακτηριστικού *</label>
-		                  <select onchange="getChars('chars')" id="chars" name="char" class="form-control">
-		                  <option value="">----</option>
-		                    <?php
-							if($this->input->post()){
-								$char = $this->input->post('char');
-								?>
-										<option value="<?= $char; ?>" <?=  set_select('char', $char, TRUE); ?>><?= $char; ?></option>
-								<?php
-								
-							}
-							?>
-		                  </select>
+	                  	<?php
+	                  	echo $chars_data[0]['char'];
+	                  		echo form_dropdown('char', '', $chars_data[0]['char'], 'class="form-control" id="chars" onchange="getChars(\'chars\')"');
+	                  	?>
 	        </div>
 
 	</div>
@@ -72,18 +50,10 @@
 		 <div class="form-group">
 	                  	
 	                  	<label>3. Χαρακτηριστικό *</label>
-		                  <select onchange="checkIfExists()"  id="type"  name="char_spec" class="form-control">
-		                  	<option value="">----</option>
-		                  	<?php
-							if($this->input->post()){
-								$char_spec = $this->input->post('char_spec');
-								?>
-										<option value="<?= $char_spec; ?>" <?=  set_select('char_spec', $char_spec, TRUE); ?>><?= $char_spec; ?></option>
-								<?php
-								
-							}
-							?>
-		                  </select>
+	                  	<?php
+	                  	echo $chars_data[0]['char_spec'];
+	                  		echo form_dropdown('char_spec', '', $chars_data[0]['char_spec'], 'class="form-control" id="type" onchange="checkIfExists()"');
+	                  	?>
 		                  <p id="exist_error" style="display:none; color:red;"></p>
 	        </div>
 
@@ -91,13 +61,13 @@
 	<div class="col-sm-12 col-md-9">
 	<label>Τίτλος *</label>
 		<div class="form-group">
-			<input type="text" class="form-control " value="<?= set_value('title'); ?>" name="title" id="title">
+			<input type="text" class="form-control " value="<?= $chars_data[0]['title']; ?>" name="title" id="title">
 		</div>
 		</div>
 	<div class="col-sm-12 col-md-6">
 	<label>Περιγραφή *</label>
 		<div class="form-group">
-			<textarea type="" rows="12" class="form-control " name="description" id="description"><?= set_value('description'); ?></textarea>
+			<textarea type="" rows="12" class="form-control " name="description" id="description"><?= $chars_data[0]['description']; ?></textarea>
 		</div>
 	</div>
 	<div class="col-sm-12 col-md-3">
@@ -107,18 +77,20 @@
 		</div>
 		<label>Χρώμα Πλαισίου *</label>
 		<div class="form-group">
-			<input type="text" class="form-control " value="<?= set_value('background_color'); ?>" name="background_color" id="background_color">
+			<input type="text" class="form-control " value="<?= $chars_data[0]['background_color']; ?>" name="background_color" id="background_color">
 		</div>
 <label>Χρώμα Κειμένου </label>
 		<div class="form-group">
-			<input type="text" class="form-control " value="<?= set_value('text_color'); ?>" name="text_color" id="text_color">
+			<input type="text" class="form-control " value="<?= $chars_data[0]['text_color']; ?>" name="text_color" id="text_color">
 		</div>
 <label>Προτεραιότητα </label>
 		<div class="form-group">
-			<select name="important" class="form-control" id="important">
-				<option <?=  set_select('important','primary' , TRUE); ?> value="primary">Primary</option>
-				<option <?=  set_select('important', 'secondary'); ?> value="secondary">Secondary</option>
-			</select>
+			<?php
+			print_r($chars_data[0]['important']);
+			$importance = array('primary' =>'primary','secondary' =>'secondary');
+			echo form_dropdown('important', $importance, $chars_data[0]['important'], 'class="form-control" id="important" ');
+			?>
+
 		</div>
 	</div>
 	
@@ -134,6 +106,10 @@
 
 
 	<script>
+	 $(document).ready( function() {
+	 	getChars('categories');
+	 	getChars('chars');
+	 });
 
 	function checkIfExists(){
 		$('#exist_error').hide();
