@@ -182,13 +182,42 @@ class Descriptions extends MX_Controller {
         }
 
         $data['title'] = 'Νέα Περιγραφή';
+        $data['chars_data'] = $this->Descriptions_model->get_chars_by_id($table, $id);
+        $data['form_url'] = $table.'/'. $id;
+
 		$data['categories'] = Modules::run('categories/fullCategoriesArray');
-		$data['chars_data'] = $this->Descriptions_model->get_chars_by_id($table, $id);
+		$table_full = $data['chars_data'][0]['category'];
+
+		$data['category_char'] = $this->getCategoryChars($table_full, 'list_chars');
+		$data['category_char_spec'] = $this->getCategoryChars($table_full, $data['chars_data'][0]['char']);
+		
 		
 		$this->load->view('templates/header' ,$data);
 		$this->load->view('edit');
 		$this->load->view('templates/footer');
 
+    }
+
+    public function getCategoryChars($category, $char){
+    	if($char == 'list_chars')
+    	{
+    		$result = $this->db->query("SELECT `COLUMN_NAME` 
+				FROM `INFORMATION_SCHEMA`.`COLUMNS` 
+				WHERE `TABLE_SCHEMA`='etd67140_xml'
+			    AND `TABLE_NAME`='$category';");
+
+    		$excludes = array(	'id','sku','product_number','brand','title','model','description','warranty','year_warranty','doa','volumetric_weight','shipping_class','etd_title','skroutz_title','supplier_product_url','product_url','product_url_pdf','support_tel','support_url','new_item');
+
+    		$char_type = array();
+    		foreach ($result->result() as $key => $value) {
+	    		if(!in_array($value->COLUMN_NAME, $excludes))
+	    			$char_type[$value->COLUMN_NAME] = $value->COLUMN_NAME;
+	    	}
+
+    		return $char_type;
+    	}
+    	else
+    		return $this->db->query("SELECT DISTINCT (".$char.") from ".$category." ORDER BY ".$char." ASC")->result_array();
     }
 
 
@@ -203,25 +232,18 @@ class Descriptions extends MX_Controller {
 			
 			$excludes = array(	'id','sku','product_number','brand','title','model','description','warranty','year_warranty','doa','volumetric_weight','shipping_class','etd_title','skroutz_title','supplier_product_url','product_url','product_url_pdf','support_tel','support_url','new_item');
 			foreach ($result->result() as $key => $value) {
-
 				if(!in_array($value->COLUMN_NAME, $excludes))
 					$return .= '<option  onclick=""  value="'.$value->COLUMN_NAME.'">'.ucfirst($value->COLUMN_NAME).'</option>';
-
 			}
-			
 			
 		}else{
 			$result = $this->db->query("SELECT DISTINCT (".$value.") from ".$this->session->table." ORDER BY ".$value." ASC");
 			foreach ($result->result() as $key => $char) {
 				if($char->$value!='')
 					$return .= '<option  onclick=""  value="'.$char->$value.'">'.ucfirst($char->$value).'</option>';
-
 			}
 		}
-
-			echo $return;
-
-
+		echo $return;
 	}
 
 
