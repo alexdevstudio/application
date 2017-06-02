@@ -500,7 +500,8 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 						'4677' =>2,
 						'4686' =>4,
 						'9393' =>16,
-						'10019' =>6
+						'10019' =>6,
+						'10063'	=>5
 						);
 
     	return $sc_array[$shipping_class];
