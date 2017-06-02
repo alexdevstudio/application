@@ -10,6 +10,7 @@
       echo '</div>'; 
     }
 ?>
+
 <form  method="POST" enctype="multipart/form-data" action="<?= base_url(); ?>descriptions/update/<?= $form_url?>">
 <div class="errors">
 	<?php echo validation_errors(); ?>
@@ -61,85 +62,11 @@
 	                  		$char_spec_value = ($this->input->post('char_spec')!='') ? $this->input->post('char_spec') : $chars_data[0]['char_spec'];
 	                  		if($this->input->post('char_spec')!='')
 	                  		{
+	                  			$category_char_spec = array();
 	                  			$category_char_spec_array = Modules::run('descriptions/getCategoryChars',$category_value, $char_value);
 	                  			foreach ($category_char_spec_array as $value) {
-	                  				$category_char_spec[$value[$char_value]]=$value[$char_value];
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	                  				
+	                  				if($value != '')
+	                  					$category_char_spec[$value]=$value;
 	                  			}
 	                  		}
 
@@ -205,7 +132,7 @@
 	<div style="clear:left" class="col-sm-6 col-md-3">
 
 			<div class="form-group">
-	                  <button type="submit" class="btn btn-success btn-md" >Εισαγωγή</button> 
+	                  <button type="submit" class="btn btn-success btn-md" >Ενημέρωση</button> 
 	        </div>
 
 	</div>
@@ -235,7 +162,6 @@
 	}
 
 	function getChars(a){
-		console.log(a);
 		var b = $('#'+a).val();
 		var url = "<?= base_url()?>descriptions/getChars/"+a+"/"+b;
 		
@@ -243,6 +169,7 @@
 			//$("#xmltitle").html(a); 
 			if(a == 'categories'){
 				$('#chars').html(data);
+				$('#type').html('');
 			}    
 
 			if(a == 'chars'){

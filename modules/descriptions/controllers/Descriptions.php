@@ -75,7 +75,7 @@ class Descriptions extends MX_Controller {
                     //if($this->Crud_model->insert('char_blocks_basic', $data_to_store))
                     if($this->Descriptions_model->store_chars('char_blocks_basic', $data_to_store))
                     {
-                    	$FlashData['Message']= 'Τα χαρακτηριστικά <strong>"'. $data_to_store['char'] .'-'.$data_to_store['char_spec'].'"</strong> αποθηκεύτηκε με επιτυχία.';
+                    	$FlashData['Message']= 'Τα χαρακτηριστικά <strong>"'. $data_to_store['category'] .'-'.$data_to_store['char'] .'-'.$data_to_store['char_spec'].'"</strong> αποθηκεύτηκε με επιτυχία.';
                         $FlashData['type'] = 'success';
                     }else{
                         $FlashData['Message']= '<strong>Kάτι πήγε λάθος!</strong> Ελέγξτε τα στοιχεία και δοκιμάστε πάλι.';
@@ -111,25 +111,40 @@ class Descriptions extends MX_Controller {
 
         if ($this->input->server('REQUEST_METHOD') === 'POST')
         {
-        	$file_name0 = preg_replace("/[^a-zA-Z0-9-_]/", "", $this->input->post('category'));
-        	$file_name1 = preg_replace("/[^a-zA-Z0-9-_]/", "", $this->input->post('char'));
-		    $file_name2 = preg_replace("/[^a-zA-Z0-9-_]/", "", $this->input->post('char_spec'));
-		    $file_name = $file_name0.'-'.$file_name1.'_'.$file_name2;
+        	/*echo 'Test Image:';
+        	print_r($this->input->post('image'));
+        	exit();*/
+        	$update_image = false;
+        	$image_name ='';
+        	if($this->input->post('image') != '')
+        	{
+	        	$file_name0 = preg_replace("/[^a-zA-Z0-9-_]/", "", $this->input->post('category'));
+	        	$file_name1 = preg_replace("/[^a-zA-Z0-9-_]/", "", $this->input->post('char'));
+			    $file_name2 = preg_replace("/[^a-zA-Z0-9-_]/", "", $this->input->post('char_spec'));
+			    $file_name = $file_name0.'-'.$file_name1.'_'.$file_name2;
 
-		    $config['upload_path']          = './images/descriptions/';
-	        $config['allowed_types']        = 'jpeg|jpg|png';
-	        $config['file_name']			= $file_name;
-	        $config['max_size']             = '1000KB';
-	        $config['max_width']            = 1024;
-	        $config['max_height']           = 768;
-	        $config['overwrite']     		= TRUE;
+			    $config['upload_path']          = './images/descriptions/';
+		        $config['allowed_types']        = 'jpeg|jpg|png';
+		        $config['file_name']			= $file_name;
+		        $config['max_size']             = '1000KB';
+		        $config['max_width']            = 1024;
+		        $config['max_height']           = 768;
+		        $config['overwrite']     		= TRUE;
 
-	        $this->load->library('upload', $config);
+		        $this->load->library('upload', $config);
 
-	        if($this->upload->do_upload('image'))
+		        if($this->upload->do_upload('image') )
+	            {
+            		$data = array('upload_data' => $this->upload->data());
+                	$image_name = $data['upload_data']['file_name'];
+
+                	$update_image = true;
+	            }
+
+			}
+
+	        if($update_image || $this->input->post('image') == '')
             {
-            	$data = array('upload_data' => $this->upload->data());
-                $image_name = $data['upload_data']['file_name'];
 
                 $this->form_validation->set_rules('category', 'Κατηγορία', 'trim|required');
 				$this->form_validation->set_rules('char', 'Τύπος Χαρακτηριστικού', 'trim|required');
@@ -155,11 +170,13 @@ class Descriptions extends MX_Controller {
                         'image' =>  $image_name,
                         'important' => $this->input->post('important')
                     );
+                    if(!$update_image)
+                    	unset($data_to_store['image']);
 
                     //if($this->Crud_model->insert('char_blocks_basic', $data_to_store))
-                    if($this->Descriptions_model->store_chars($table, $data_to_store))
+                    if($this->Descriptions_model->store_chars($table, $data_to_store, $id))
                     {
-                    	$FlashData['Message']= 'Τα χαρακτηριστικά <strong>"'. $data_to_store['char'] .'-'.$data_to_store['char_spec'].'"</strong> αποθηκεύτηκε με επιτυχία.';
+                    	$FlashData['Message']= 'Τα χαρακτηριστικά <strong>"'. $data_to_store['category'] .'-'.$data_to_store['char'] .'-'.$data_to_store['char_spec'].'"</strong> ενημερώθηκε με επιτυχία.';
                         $FlashData['type'] = 'success';
                     }else{
                         $FlashData['Message']= '<strong>Kάτι πήγε λάθος!</strong> Ελέγξτε τα στοιχεία και δοκιμάστε πάλι.';
@@ -217,7 +234,18 @@ class Descriptions extends MX_Controller {
     		return $char_type;
     	}
     	else
-    		return $this->db->query("SELECT DISTINCT (".$char.") from ".$category." ORDER BY ".$char." ASC")->result_array();
+    	{
+    		$result =  $this->db->query("SELECT DISTINCT (".$char.") from ".$category." ORDER BY ".$char." ASC");
+
+    		$char_type_spec = array();
+
+    		foreach ($result->result_array() as $key => $value) {
+
+	    			$char_type_spec[$value[$char]] = $value[$char];
+	    	}
+
+    		return $char_type_spec;
+    	}
     }
 
 
