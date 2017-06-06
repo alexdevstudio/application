@@ -159,6 +159,7 @@
 			//$("#xmltitle").html(a); 
 			if(a == 'categories'){
 				$('#chars').html(data);
+				$('#type').html('');
 			}    
 
 			if(a == 'chars'){
