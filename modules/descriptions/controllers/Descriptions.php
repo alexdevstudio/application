@@ -23,7 +23,7 @@ class Descriptions extends MX_Controller {
 		$this->load->view('templates/footer');
 	} 
 
-	public function add()
+	public function add($table='basic')
 	{
 		if ($this->input->server('REQUEST_METHOD') === 'POST')
 		{
@@ -56,6 +56,11 @@ class Descriptions extends MX_Controller {
 				$this->form_validation->set_rules('background_color', 'Χρώμα Πλαισίου', 'trim|required');
 				//$this->form_validation->set_rules('image', 'Φωτογραφία', 'trim|required');
 				$this->form_validation->set_rules('important', 'Προτεραιότητα', 'trim|required');
+				if($table == 'specific')
+				{
+					$this->form_validation->set_rules('sku', 'SKU', 'trim|required');
+					$this->form_validation->set_rules('brand', 'Brand', 'trim|required');
+				}
 
 				$this->form_validation->set_error_delimiters('<div class="alert alert-danger"><span class="close" data-dismiss="alert">&times</span><strong>', '</strong></div>');
 
@@ -71,9 +76,14 @@ class Descriptions extends MX_Controller {
                         'image' =>  $image_name,
                         'important' => $this->input->post('important')
                     );
+                    if($table == 'specific')
+					{
+						$data_to_store ['sku'] = $this->input->post('sku');
+						$data_to_store ['brand'] = $this->input->post('brand');
+					}
 
                     //if($this->Crud_model->insert('char_blocks_basic', $data_to_store))
-                    if($this->Descriptions_model->store_chars('char_blocks_basic', $data_to_store))
+                    if($this->Descriptions_model->store_chars($table, $data_to_store))
                     {
                     	$FlashData['Message']= 'Τα χαρακτηριστικά <strong>"'. $data_to_store['category'] .'-'.$data_to_store['char'] .'-'.$data_to_store['char_spec'].'"</strong> αποθηκεύτηκε με επιτυχία.';
                         $FlashData['type'] = 'success';
@@ -98,6 +108,7 @@ class Descriptions extends MX_Controller {
 
 		$data['title'] = 'Νέα Περιγραφή';
 		$data['categories'] = Modules::run('categories/fullCategoriesArray');
+		$data['table'] = $table;
 		
 		$this->load->view('templates/header' ,$data);
 		$this->load->view('add');
@@ -200,7 +211,8 @@ class Descriptions extends MX_Controller {
 
         $data['title'] = 'Νέα Περιγραφή';
         $data['chars_data'] = $this->Descriptions_model->get_chars_by_id($table, $id);
-        $data['form_url'] = $table.'/'. $id;
+        $data['table'] = $table;
+        $data['id'] = $id;
 
 		$data['categories'] = Modules::run('categories/fullCategoriesArray');
 		$table_full = $data['chars_data'][0]['category'];

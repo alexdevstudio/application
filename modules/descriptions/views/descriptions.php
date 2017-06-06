@@ -3,7 +3,8 @@
 
 if($basic_templates){
 	?>
-	<div class='row'>
+	<div>
+		<h3> Βασικά χαρακτηριστικά </h3>
 		<div class="col-md-12 table-data">
           	<table id="basic" class="table table-hover table-condensed datagrid">
 	            <thead>
@@ -46,12 +47,13 @@ if($basic_templates){
 	</div>
 	<?php
 }else{
-		echo '<p>No basic templates yet.</p>';
+		echo '<p>Χωρίς βασικά χαρακτηριστικά.</p>';
 }
 
 if($specific_templates){
 	?>
-	<div class='row'>
+	<div>
+	<h3> Συγκεκριμένα χαρακτηριστικά </h3>
 	<div class="col-md-12">
 		<div class="table-data">
           	<table id="specific" class="table table-hover table-condensed datagrid">
@@ -101,7 +103,7 @@ if($specific_templates){
 	<?php
 }
 else{
-		echo '<p>No specific templates yet.</p>';
+		echo '<p>Χωρίς συγκεκριμένα χαρακτηριστικά.</p>';
 }
  ?>
  </div>
