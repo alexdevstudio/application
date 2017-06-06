@@ -198,7 +198,45 @@ class Edit extends MX_Controller {
 
 					}
 					$update = Modules::run('crud/update',$category,$where,$post);
+					$auto_description = '';
+					foreach ($post as $key => $value) {
+						
+						//1. if SKU specific description available
+						$where = array('sku'=>$sku,'category'=>$category,'char'=>$key, 'char_spec'=>$value);
+						$res = Modules::run('crud/get', 'char_blocks_specific', $where);
+						if(!$res){
 
+							//2. if BRAND specific description available
+							$where = array('brand'=>$post['brand'],'category'=>$category,'char'=>$key, 'char_spec'=>$value);
+							$res = Modules::run('crud/get', 'char_blocks_specific', $where);
+
+							if(!$res){
+								//3. if basic  description available
+							$where = array('category'=>$category,'char'=>$key, 'char_spec'=>$value);
+							$res = Modules::run('crud/get', 'char_blocks_basic', $where);
+							}
+						}
+
+						if($res){
+							$auto_description .= "<div class='row custom_description_block' style='background:".$res->row()->background_color."'>
+									<div class='col-6 custom_description_block_text' style='color:".$res->row()->text_color."'>
+										<h3 class='custom_description_block_title'>".$res->row()->title."</h3>
+										<p class='custom_description_block_descr'>".$res->row()->description."</p>
+									</div>
+									<div class='col-6 custom_description_block_img' style='min-height:350px;background-image:url(".base_url()."images/descriptions/".$res->row()->image.")'></div>
+							</div>";
+						}
+					}
+					if($auto_description!=''){
+						$data = array(
+						        'sku' => $sku,
+						        'html'  => $auto_description
+						        );
+
+						$this->db->replace('descriptions_html', $data);
+					} else{
+						echo 'nothing to show';
+					}
 				}else if($post['status']=='related'){
 					unset($post['status']);
 					$products = str_replace(" ", "", $post['cross_sells_products']);
