@@ -386,6 +386,11 @@
               <i class="fa fa-edit"></i> <span>ΠΡΟΙΟΝ</span>
             </a>
          </li>
+          <li class="">
+            <a href="<?php echo base_url();?>descriptions">
+              <i class="fa  fa-bars"></i> <span>ΠΕΡΙΓΡΑΦΕΣ</span>
+            </a>
+         </li>
          <li class="">
             <a href="<?php echo base_url();?>msi_price">
               <i class="fa fa-laptop"></i> <span>MSI ΤΙΜΕΣ</span>
