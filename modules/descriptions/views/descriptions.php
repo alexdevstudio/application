@@ -67,7 +67,7 @@ if($basic_templates){
 	</div>
 	<div class="tab-pane active" id="tab_2">
 		<div class="">
-		<div class="box-header"><h3 class="box-title">Στοχευμένα χαρακτηριστικά <a class="btn btn-success btn-xs" href="<?= base_url().'descriptions/add/speci+ fic' ?>">+ Προσθήκη</a></h3></div>
+		<div class="box-header"><h3 class="box-title">Στοχευμένα χαρακτηριστικά <a class="btn btn-success btn-xs" href="<?= base_url().'descriptions/add/specific' ?>">+ Προσθήκη</a></h3></div>
 <?php
 if($specific_templates){
 	?>

@@ -144,7 +144,7 @@
 				</div>
 				<label>Χρώμα Πλαισίου *</label>
 				<div id="bg-color" class="form-group">
-					<input type="text" class="form-control " value="<?= set_value('background_color'); ?>" name="background_color" id="background_color">
+					<input type="text" class="form-control " value="<?= set_value('background_color','#ffffff'); ?>" name="background_color" id="background_color">
 				</div>
 				<script>
 				    $(function() {
@@ -153,7 +153,7 @@
 				</script>
 				<label>Χρώμα Κειμένου </label>
 				<div id="txt-color" class="form-group">
-					<input type="text" class="form-control " value="<?= set_value('text_color'); ?>" name="text_color" id="text_color">
+					<input type="text" class="form-control " value="<?= set_value('text_color','#00000'); ?>" name="text_color" id="text_color">
 				</div>
 				<script>
 				    $(function() {
