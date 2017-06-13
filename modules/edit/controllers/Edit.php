@@ -161,7 +161,7 @@ class Edit extends MX_Controller {
 
 					$vweight = trim($post['volumetric_weight']);
 					
-					if($vweight!='' && ($category=='monitors' || $category=='desktops' || $category=='tv')){
+					if($vweight!='' /*&& ($category=='monitors' || $category=='desktops' || $category=='tv')*/){
 						
 
 						$post['shipping_class'] = Modules::run('categories/shippingByWeight', $vweight);

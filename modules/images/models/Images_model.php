@@ -79,6 +79,54 @@ class Images_model extends CI_Model {
 
     }
 
+    public function getExternalImagesFromUrl($sku, $url){
+
+    	// Create DOM from URL or file
+		$html = file_get_html($url);
+
+		// Find all images
+		echo $html;
+		$shopData = array();
+		$i = 0;
+
+		foreach($html->find('#imageBlock_feature_div script') as $element){
+			/*if($i==0)
+				continue;*/
+			
+		    $the_script = $element->innertext;
+
+		    //iconv(mb_detect_encoding($the_script, mb_detect_order(), true), "UTF-8", $the_script);
+
+			$i++;
+		}
+		//echo $the_script;
+		$the_script = ltrim($the_script, "P.when('A').register(\"ImageBlockATF\", function(A){ var data = { 'colorImages': { 'initial':");
+				    //$the_script = "{'colorImages'".$the_script;
+
+		$the_script = rtrim($the_script, ", 'colorToAsin': {'initial': {}}, 'holderRatio': 1.0, 'holderMaxHeight': 700, 'heroImage': {'initial': []}, 'heroVideo': {'initial': []}, 'weblabs' : {} }; A.trigger('P.AboveTheFold'); // trigger ATF event. return data; }); ");
+
+
+	     $the_script = explode('},{', $the_script);
+
+	     foreach ($the_script as $string) {
+	     	$string = preg_replace('/"hiRes":/', '', $string);
+	     	//$string = ltrim($string, '"hiRes":');
+	     	$Arraystring = explode(',', $string);
+	     	if($Arraystring[0] != 'null')
+			{
+				$Arraystring[0] = preg_replace('/\[\{/', '', $Arraystring[0]);
+				$NewImage[] = preg_replace('/"/', '', $Arraystring[0]);
+	     	}
+
+	     }
+
+	    echo '<pre>';
+	    print_r ($NewImage);
+
+    	return "Ψάχνεις για φωτογραφία με ".$sku." από το ".$url;
+
+    }
+
    
 
 }

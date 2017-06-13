@@ -542,6 +542,9 @@ class Live_model extends CI_Model {
 				case 'Computers- / Computers- / Notebooks':
 					$c = 'laptops';
 					break;
+				case 'Computers- / Accessories- / Notebook Options':
+					$c = 'laptops_accessories';
+					break;
 				case 'Computers- / Computers- / Tablet':
 					$c = 'tablets';
 					break;
@@ -617,6 +620,9 @@ class Live_model extends CI_Model {
 	    		$availability = $availability;
 	    		$recycle_tax = $prd["RT"];
 	    		$ManufacturerList = (string) trim($product->Details->ManufacturerList->attributes()->{'Name'});
+
+	    		if($c == 'laptops_accessories' && $ManufacturerList != 'MICROSOFT- / Accessories- / Notebook Options')
+	    			continue;
 
 
 	    		if(strpos($title, 'Ent') && $c == 'multifunction_printers'){
@@ -699,8 +705,6 @@ class Live_model extends CI_Model {
 
 				if ($insert)
 				{
-
-
 					if(isset ($newProducts[$c])){
 						$newProducts[$c] = $newProducts[$c]+1; 
 					}
@@ -2246,7 +2250,7 @@ class Live_model extends CI_Model {
 				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c== "desktops" || $c == "tablets"  || $c == "smartphones" ||
 				 $c == "cables" || $c == "patch_panels" || $c == "racks" || $c =="optical_drives" || $c == "card_readers" || $c == "flash_drives" || 
 				 $c == "power_supplies" || $c == "cases" || $c == "fans" || $c == "motherboards" || $c == "graphic_cards" || $c == "cpu" || 
-				 $c == "memories" || $c == "hoverboards" || $c =="printer_fusers" || $c =="printer_drums" || $c =="printer_belts" || $c=="ups" || $c=="tv"){
+				 $c == "memories" || $c == "hoverboards" || $c =="printer_fusers" || $c =="printer_drums" || $c =="printer_belts" || $c=="ups" || $c=="tv" || $c=="laptops_accessories"){
 
 
 					$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);

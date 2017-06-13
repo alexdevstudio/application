@@ -386,6 +386,11 @@
               <i class="fa fa-edit"></i> <span>ΠΡΟΙΟΝ</span>
             </a>
          </li>
+         <li class="">
+            <a href="<?php echo base_url();?>problematic">
+              <i class="fa  fa-ban"></i> <span>ΠΡΟΒΛΗΜΑΤΙΚΑ</span>
+            </a>
+         </li>
           <li class="">
             <a href="<?php echo base_url();?>descriptions">
               <i class="fa  fa-bars"></i> <span>ΠΕΡΙΓΡΑΦΕΣ</span>
