@@ -15,6 +15,8 @@
 
 	$image = Modules::run("images/getFirstImage",$sku,true);
 
+	//echo Modules::run("images/getAmazonImages", $sku, "https://www.amazon.com/Dell-i5559-7080SLV-Touchscreen-RealSense-Generation/dp/B015JVFE0A");
+
  ?>
 
  <div class="col-xs-12 bottom-margin  image-fix">
