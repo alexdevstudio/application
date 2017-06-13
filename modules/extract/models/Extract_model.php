@@ -101,19 +101,17 @@ class Extract_model extends CI_Model {
                             l.category, 
                             l.net_price, 
                             l.recycle_tax,
-                            /*l.price_tax,*/
-                            /*l.sale_price, */
                             l.availability, 
                             l.upcoming_date, 
                             l.supplier, 
                             l.status, 
                             l.delete_flag,
-                            /*l.shipping,*/
                             t.*,
                             i.installments_count,
                             e.price_tax,
                             e.shipping,
-                            e.sale_price
+                            e.sale_price,
+                            h.html as auto_descr
 
                      FROM live l
 
@@ -121,6 +119,7 @@ class Extract_model extends CI_Model {
                      
                      LEFT JOIN installments i ON t.sku = i.sku
                      LEFT JOIN etd_prices e ON t.sku = e.sku
+                     LEFT JOIN descriptions_html h ON h.sku = t.sku
 
                      WHERE l.category = '{$table}' AND t.new_item = 0 AND t.sku IN ({$skus})
 
@@ -135,19 +134,17 @@ class Extract_model extends CI_Model {
                      l.category,
                      l.net_price,
                      l.recycle_tax,
-                     /*l.price_tax,*/
-                     /*l.sale_price,*/
                      l.availability,
                      l.upcoming_date,
                      l.supplier,
                      l.status,
                      l.delete_flag,
-                     /*l.shipping,*/
                      t.*,
                      i.installments_count,
                      e.price_tax,
                      e.shipping,
-                     e.sale_price
+                     e.sale_price,
+                     h.html as auto_descr
 
                      FROM live l
 
@@ -155,6 +152,7 @@ class Extract_model extends CI_Model {
                      
                      LEFT JOIN installments i ON t.sku = i.sku
                      LEFT JOIN etd_prices e ON t.sku = e.sku
+                     LEFT JOIN descriptions_html h ON h.sku = t.sku
 
                      WHERE l.category = '{$table}' AND t.new_item = 0 ORDER BY t.sku DESC LIMIT {$numrows}
 
@@ -528,10 +526,11 @@ class Extract_model extends CI_Model {
 
                             }
 
-                            if($key == 'description' && $table == 'laptops')// for insert the description without strip_tags
-                                $attr = $xml->createElement($key, trim(htmlspecialchars($value)));
-                            else
+                            if(($key == 'description' && $table == 'laptops') || $key == 'auto_descr' )// for insert the description without strip_tags
+                              {  $attr = $xml->createElement($key, trim(htmlspecialchars($value)));}
+                            else{
                                 $attr = $xml->createElement($key, trim(htmlspecialchars(strip_tags($value))));
+                            }
 
                             $attr = $item->appendChild($attr);   
 

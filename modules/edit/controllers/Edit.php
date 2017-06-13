@@ -199,6 +199,8 @@ class Edit extends MX_Controller {
 					}
 					$update = Modules::run('crud/update',$category,$where,$post);
 
+					$this->createHtmlDescription($sku,$category, $post);
+					
 				}else if($post['status']=='related'){
 					unset($post['status']);
 					$products = str_replace(" ", "", $post['cross_sells_products']);
@@ -267,7 +269,70 @@ class Edit extends MX_Controller {
 			echo 'Error';
 		}
 	}
+	private function createHtmlDescription($sku,$category,$post){
+					$auto_description = '';
+					foreach ($post as $key => $value) {
+						
+						//1. if SKU specific description available
+						$where = array('sku'=>$sku,'category'=>$category,'char'=>$key, 'char_spec'=>$value);
+						$res = Modules::run('crud/get', 'char_blocks_specific', $where);
+						if(!$res){
 
+							//2. if BRAND specific description available
+							$where = array('brand'=>$post['brand'],'category'=>$category,'char'=>$key, 'char_spec'=>$value);
+							$res = Modules::run('crud/get', 'char_blocks_specific', $where);
+
+							if(!$res){
+								//3. if basic  description available
+							$where = array('category'=>$category,'char'=>$key, 'char_spec'=>$value);
+							$res = Modules::run('crud/get', 'char_blocks_basic', $where);
+							}
+						}
+
+						if($res){
+
+							$text = $res->row()->description;
+							preg_match_all("/\[([^\]]*)\]/", $text, $matches);
+							if(!empty($matches[1])){
+								$chars = $this->getChar($sku, $category);
+								foreach ($matches[1] as $value) {
+									
+									$text = preg_replace('/\['.$value.']/', $chars->row()->$value, $text);
+
+								}
+								
+							}
+
+							$text_color = $res->row()->text_color;
+							if(($res->row()->background_color == '#fff' || $res->row()->background_color == '#ffffff') && ($res->row()->text_color == '#000' || $res->row()->text_color == '#000000')){
+								$text_color = '#444';
+							}
+							$auto_description .= "<div class='row custom_description_block' style='background:".$res->row()->background_color."'>
+									<div class='col-sm-6 col-xs-12 custom_description_block_text' style='margin-top: 4%;' >
+										<h3 class='custom_description_block_title' style='text-align:center;color:".$res->row()->text_color."'>".$res->row()->title."</h3>
+										<p class='custom_description_block_descr' style='text-align:center;color:".$text_color."'>".$text."</p>
+									</div>
+									<div class='col-sm-6 col-xs-12 custom_description_block_img' style=''><img src='https://etd.gr/xml/images/descriptions/".$res->row()->image."' /></div>
+							</div>";
+							/*<div class='col-sm-6 col-xs-12 custom_description_block_img' style='background-position: center center;min-height:350px;background-image:url(".base_url()."images/descriptions/".$res->row()->image.")'></div>*/
+						}
+					}
+					if($auto_description!=''){
+						$data = array(
+						        'sku' => $sku,
+						        'html'  => $auto_description,
+						        'edited' => date('Y-m-d H:i:s')
+						        );
+
+						$this->db->replace('descriptions_html', $data);
+					} else{
+						echo 'nothing to show';
+					}
+	}
+
+	private function getChar($sku, $category){
+		return Modules::run('crud/get',$category,array('sku'=>$sku));
+	}
 
 }
 

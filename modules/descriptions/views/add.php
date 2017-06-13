@@ -94,10 +94,10 @@
 							if($this->input->post()){
 								$char_spec = $this->input->post('char_spec');
 								?>
-										<option value="<?= $char_spec; ?>" <?=  set_select('char_spec', $char_spec, TRUE); ?>><?= $char_spec; ?></option>*/
-								<?php
+										<option value="<?= $char_spec; ?>" <?=  set_select('char_spec', $char_spec, TRUE); ?>><?= $char_spec; ?></option>
 								
-							}
+								
+							}*/
 							?>
 					    </select>
 				    </div>
@@ -111,10 +111,9 @@
 							if($this->input->post()){
 								$char_spec = $this->input->post('char_spec');
 								?>
-										<option value="<?= $char_spec; ?>" <?=  set_select('char_spec', $char_spec, TRUE); ?>><?= $char_spec; ?></option>*/
-								<?php
-								
-							}
+										<option value="<?= $char_spec; ?>" <?=  set_select('char_spec', $char_spec, TRUE); ?>><?= $char_spec; ?></option>
+							
+							}*/
 							?>
 					    </select>
 				    </div>
@@ -144,13 +143,23 @@
 					<input type="file" name="image">
 				</div>
 				<label>Χρώμα Πλαισίου *</label>
-				<div class="form-group">
-					<input type="text" class="form-control " value="<?= set_value('background_color'); ?>" name="background_color" id="background_color">
+				<div id="bg-color" class="form-group">
+					<input type="text" class="form-control " value="<?= set_value('background_color','#ffffff'); ?>" name="background_color" id="background_color">
 				</div>
+				<script>
+				    $(function() {
+				        $('#background_color').colorpicker();
+				    });
+				</script>
 				<label>Χρώμα Κειμένου </label>
-				<div class="form-group">
-					<input type="text" class="form-control " value="<?= set_value('text_color'); ?>" name="text_color" id="text_color">
+				<div id="txt-color" class="form-group">
+					<input type="text" class="form-control " value="<?= set_value('text_color','#00000'); ?>" name="text_color" id="text_color">
 				</div>
+				<script>
+				    $(function() {
+				        $('#text_color').colorpicker();
+				    });
+				</script>
 				<label>Προτεραιότητα </label>
 				<div class="form-group">
 					<select name="important" class="form-control" id="important">

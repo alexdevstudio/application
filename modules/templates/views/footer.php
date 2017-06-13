@@ -7,6 +7,7 @@
 
 <!-- jQuery UI 1.11.4 -->
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+  <link rel="stylesheet" href="<?= base_url()?>/assets/css/bootstrap-colorpicker.min.css">
  
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
@@ -38,6 +39,7 @@
 <!-- AdminLTE for demo purposes -->
 <script src="<?= base_url()?>assets/dist/js/demo.js"></script>
 <script src="<?= base_url()?>assets/js/etd.js"></script>
+<script src="<?= base_url()?>assets/js/bootstrap-colorpicker.min.js"></script>
  <script type="text/javascript">
 
 

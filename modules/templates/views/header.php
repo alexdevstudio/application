@@ -30,7 +30,7 @@
   <!-- bootstrap wysihtml5 - text editor -->
   <link rel="stylesheet" href="<?= base_url()?>/assets/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
 
-  <link rel="stylesheet" href="<?= base_url()?>/assets/main.css">
+  <link rel="stylesheet" href="<?= base_url()?>/assets/css/main.css">
 
 <!-- jQuery 2.2.0 -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
@@ -384,6 +384,11 @@
          <li class="">
             <a href="<?php echo base_url();?>insert">
               <i class="fa fa-edit"></i> <span>ΠΡΟΙΟΝ</span>
+            </a>
+         </li>
+          <li class="">
+            <a href="<?php echo base_url();?>descriptions">
+              <i class="fa  fa-bars"></i> <span>ΠΕΡΙΓΡΑΦΕΣ</span>
             </a>
          </li>
          <li class="">

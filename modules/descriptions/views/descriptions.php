@@ -1,12 +1,25 @@
-<div>
+
+<div class="col-md-12 table-data">
+		<hr>
+		<div class='nav-tabs-custom'>
+		<ul class="nav nav-tabs">
+              <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">Βασικά</a></li>
+              <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false">Στοχευμένα</a></li>
+              
+            </ul>
+		<div class="tab-content">
+            
+		<div class="tab-pane active" id="tab_1">
+		<div class="">
+		<div class="box-header"><h3 class="box-title">Βασικά χαρακτηριστικά <a class="btn btn-success btn-xs" href="<?= base_url().'descriptions/add' ?>">+ Προσθήκη</a></h3></div>
 <?php 
 
 if($basic_templates){
 	?>
-	<div>
-		<h3> Βασικά χαρακτηριστικά </h3>
-		<div class="col-md-12 table-data">
-          	<table id="basic" class="table table-hover table-condensed datagrid">
+	
+		  
+		
+          	<table id="basic" class="table table-striped table-bordered table-hover dataTable datagrid">
 	            <thead>
 	              <tr class="header">
 	                <!--<th>#</th>-->
@@ -26,6 +39,7 @@ if($basic_templates){
 
 	            foreach ($basic_templates->result_array() as $item) {
 
+
 	            	echo '<tr id="' . $item['id'] . '">';
 	            	//echo '<tr class="clickable-row" data-href="'.base_url().'descriptions/update/'.$item['id'].'">';
 		            	echo '<td>'.$item['category'].'</td>';
@@ -43,13 +57,18 @@ if($basic_templates){
 	            ?>
 	         	</tbody>
 	      	</table>
-		</div>
-	</div>
+		
 	<?php
 }else{
 		echo '<p>Χωρίς βασικά χαρακτηριστικά.</p>';
 }
-
+?>
+		</div>
+	</div>
+	<div class="tab-pane active" id="tab_2">
+		<div class="">
+		<div class="box-header"><h3 class="box-title">Στοχευμένα χαρακτηριστικά <a class="btn btn-success btn-xs" href="<?= base_url().'descriptions/add/specific' ?>">+ Προσθήκη</a></h3></div>
+<?php
 if($specific_templates){
 	?>
 	<div>
@@ -105,8 +124,14 @@ if($specific_templates){
 else{
 		echo '<p>Χωρίς συγκεκριμένα χαρακτηριστικά.</p>';
 }
+
  ?>
- </div>
+		 </div>
+		 </div>
+  </div>
+  </div>
+  </div>
+
 
  <script>
   $(".datagrid").delegate('tbody tr', 'click', function(e) {

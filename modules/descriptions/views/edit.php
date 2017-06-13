@@ -79,10 +79,10 @@
 							if($this->input->post()){
 								$char_spec = $this->input->post('char_spec');
 								?>
-										<option value="<?= $char_spec; ?>" <?=  set_select('char_spec', $char_spec, TRUE); ?>><?= $char_spec; ?></option>*/
-								<?php
+										<option value="<?= $char_spec; ?>" <?=  set_select('char_spec', $char_spec, TRUE); ?>><?= $char_spec; ?></option>
 								
-							}
+								
+							}*/
 							?>
 					    </select>
 				    </div>
@@ -96,10 +96,10 @@
 							if($this->input->post()){
 								$char_spec = $this->input->post('char_spec');
 								?>
-										<option value="<?= $char_spec; ?>" <?=  set_select('char_spec', $char_spec, TRUE); ?>><?= $char_spec; ?></option>*/
-								<?php
+										<option value="<?= $char_spec; ?>" <?=  set_select('char_spec', $char_spec, TRUE); ?>><?= $char_spec; ?></option>
 								
-							}
+								
+							}*/
 							?>
 					    </select>
 				    </div>
