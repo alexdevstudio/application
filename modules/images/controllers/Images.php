@@ -50,7 +50,7 @@ class Images extends MX_Controller {
 			   return $output;
 
 			} else {
-			    $output ="<img  src='assets/images/no-image.png' />";
+			    $output ="<img  src='".base_url()."assets/images/no-image.png' />";
 			   return $output;
 			}
 
