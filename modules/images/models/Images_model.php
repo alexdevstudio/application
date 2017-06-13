@@ -82,7 +82,18 @@ class Images_model extends CI_Model {
     public function getExternalImagesFromUrl($sku, $url){
 
     	// Create DOM from URL or file
-		$html = file_get_html($url);
+    	$opts = array(
+			'http'=>array(
+				/*'proxy'=>'85.72.61.177:80',
+				'request_fulluri' => true,*/
+			'method'=>"GET",
+			'header'=>"User-Agent: User-Agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.52 Safari/536.5\r\n"
+			)
+			);
+
+			$context = stream_context_create($opts);
+		$html = file_get_html($url, 0, $context);
+		//$html = file_get_html($url);
 
 		// Find all images
 		echo $html;

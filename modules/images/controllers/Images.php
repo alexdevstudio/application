@@ -59,9 +59,9 @@ class Images extends MX_Controller {
 
 	public function getExternalImagesFromUrl($sku=null, $url=null){
 		$this->load->model('images_model');
-		//echo $this->images_model->getExternalImagesFromUrl('155', 'https://www.amazon.co.uk/Dell-Inspiron-Laptop-Graphics-Anti-Glare/dp/B017URDNS6/ref=sr_1_3?ie=UTF8&qid=1497345644&sr=8-3&keywords=dell++5559');
-		echo $this->images_model->getExternalImagesFromUrl('155', 'https://www.amazon.com/Dell-i3567-5185BLK-PUS-Inspiron-Laptop-Graphics/dp/B06X9TH2RX/ref=sr_1_3?ie=UTF8&qid=1497356042&sr=8-3&keywords=dell+3567');
-		//echo $this->images_model->getExternalImagesFromUrl('155', 'https://etd.gr');
+//echo $this->images_model->getExternalImagesFromUrl('155', 'https://www.amazon.co.uk/Dell-Inspiron-Laptop-Graphics-Anti-Glare/dp/B017URDNS6/ref=sr_1_3?ie=UTF8&qid=1497345644&sr=8-3&keywords=dell++5559');
+		//echo $this->images_model->getExternalImagesFromUrl('155', 'https://www.amazon.com/Dell-i3567-5185BLK-PUS-Inspiron-Laptop-Graphics/dp/B06X9TH2RX/ref=sr_1_3?ie=UTF8&qid=1497356042&sr=8-3&keywords=dell+3567');
+		echo $this->images_model->getExternalImagesFromUrl('155', 'http://www.amazon.com/Dell-XPS9560-7001SLV-PUS-Laptop-Nvidia-Gaming/dp/B01N1Q0M4O/ref=sr_1_11?ie=UTF8&qid=1497360063&sr=8-11&keywords=dell+xps');
 
     }
 
