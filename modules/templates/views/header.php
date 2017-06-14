@@ -387,8 +387,12 @@
             </a>
          </li>
          <li class="">
+           <?php
+            $Num_problematics = Modules::run("crud/problematic", array("volumetric_weight"=>'',"volumetric_weight"=>'0'), '', true);
+           ?>
             <a href="<?php echo base_url();?>problematic">
               <i class="fa  fa-ban"></i> <span>ΠΡΟΒΛΗΜΑΤΙΚΑ</span>
+              <small class="label pull-right bg-red"><?=$Num_problematics ?></small>
             </a>
          </li>
           <li class="">

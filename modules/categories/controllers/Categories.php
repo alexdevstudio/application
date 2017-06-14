@@ -44,13 +44,12 @@ class Categories extends MX_Controller {
     }
 
     public function fullCategoriesArray(){
-    	$array = array('cables','cable_accessories','card_readers','carrying_cases','cartridges','cases','cpu',
-    		'desktops','docking_stations','external_hard_drives','fans','flash_drives','graphic_cards',
-    		'keyboard_mouse','laptops','accessories','memories','monitors','motherboards','multifunction_printers',
-    		'optical_drives','patch_panels','power_bank','power_supplies','printers','racks',
+    	$array = array('accessories','cables','cable_accessories','card_readers','carrying_cases','cartridges','cases','copiers','cpu',
+    		'desktops','docking_stations','external_hard_drives','fans','flash_drives','graphic_cards','hoverboards','ip_phones',
+            'ip_cards','ip_gateways','ip_pbx', 'keyboard_mouse','laptops','memories','monitors','motherboards','multifunction_printers',
+    		'optical_drives','patch_panels','power_bank','power_supplies','printers','printer_drums','printer_fusers','printer_belts','projectors','racks',
     		'routers','sata_hard_drives','servers','smartphones','software','speakers','ssd',
-    		'switches','tablets','toners', 'ups', 'copiers','projectors','hoverboards','ip_phones',
-    		'ip_cards','ip_gateways','ip_pbx','printer_drums','printer_fusers','printer_belts','tv');
+    		'switches','tablets','toners', 'tv', 'ups');
 
     	return $array;
     }
