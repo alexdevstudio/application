@@ -81,26 +81,49 @@ class Images_model extends CI_Model {
 
     public function getExternalImagesFromUrl($sku, $url){
 
-    	// Create DOM from URL or file
-    	$opts = array(
-			'http'=>array(
-				/*'proxy'=>'85.72.61.177:80',
-				'request_fulluri' => true,*/
-			'method'=>"GET",
-			'header'=>"User-Agent: User-Agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.52 Safari/536.5\r\n"
-			)
-			);
 
-			$context = stream_context_create($opts);
-		$html = file_get_html($url, 0, $context);
-		//$html = file_get_html($url);
+
+
+    	$opts = [
+		    "http" => [
+		        "method" => "GET",
+		        "header" => "Accept-language: en\r\n" .
+		            "Cookie: foo=bar\r\n"
+		    ]
+		];
+
+		$context = stream_context_create($opts);
+
+		// Open the file using the HTTP headers set above
+		$html = file_get_contents($url, false, $context);
+
+		if (!file_exists('files/tmp')) {
+		    mkdir('files/tmp', 0777, true);
+		}
+
+
+		if (!file_exists('files/tmp/'.$sku)) {
+		    mkdir('files/tmp/'.$sku, 0777, true);
+		}
+		file_put_contents('files/tmp/'.$sku.'/images.html', $html);
+
+
+
+
+		//$context = stream_context_create($opts);
+		//$html2 = file_get_contents('files/tmp/'.$sku.'/images');
+
+
+		$html2 = str_get_html(base_url().'files/tmp/'.$sku.'/images.html');
+		$html2 = file_get_html($html2)->plaintext;
 
 		// Find all images
-		echo $html;
+		var_dump ($html2);
+		exit();
 		$shopData = array();
 		$i = 0;
 
-		foreach($html->find('#imageBlock_feature_div script') as $element){
+		foreach($html2->find('#imageBlock_feature_div script') as $element){
 			/*if($i==0)
 				continue;*/
 			
@@ -137,6 +160,27 @@ class Images_model extends CI_Model {
     	return "Ψάχνεις για φωτογραφία με ".$sku." από το ".$url;
 
     }
+
+     public function getExternalImagesFromUrl2($sku, $url){
+
+     	// Create a stream
+$opts = [
+    "http" => [
+        "method" => "GET",
+        "header" => "Accept-language: en\r\n" .
+            "Cookie: foo=bar\r\n"
+    ]
+];
+
+$context = stream_context_create($opts);
+
+// Open the file using the HTTP headers set above
+$file = file_get_contents($url, false, $context);
+
+     	//$file = file_get_contents($url);
+     	echo $file;
+
+     }
 
    
 

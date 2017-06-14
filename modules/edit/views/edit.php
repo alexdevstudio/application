@@ -326,6 +326,7 @@ if($itemLive){
             <ul class="nav nav-tabs">
               <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">Χαρακτηριστικά</a></li>
               <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false">Σχετικά Προϊόντα</a></li>
+              <li class=""><a href="#tab_3" data-toggle="tab" aria-expanded="false">Φωτογραφίες</a></li>
               
             </ul>
             <div class="tab-content">
@@ -418,14 +419,20 @@ if($itemLive){
 		</form>
               </div>
               <!-- /.tab-pane -->
-             
-            
+             <div class="tab-pane active" id="tab_3">
+             	<form action="" method="post">
+             		
+             	</form>
+             </div>
+             <!-- /.tab-pane 3-->
             </div>
             <!-- /.tab-content -->
           </div>
 		
 		
 		</div>
+
+
 </div>
 
 
