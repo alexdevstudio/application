@@ -543,7 +543,8 @@ class Live_model extends CI_Model {
 					$c = 'laptops';
 					break;
 				case 'Computers- / Accessories- / Notebook Options':
-					$c = 'laptops_accessories';
+					$c = 'accessories';
+					$sc = 'laptops';
 					break;
 				case 'Computers- / Computers- / Tablet':
 					$c = 'tablets';
@@ -621,7 +622,7 @@ class Live_model extends CI_Model {
 	    		$recycle_tax = $prd["RT"];
 	    		$ManufacturerList = (string) trim($product->Details->ManufacturerList->attributes()->{'Name'});
 
-	    		if($c == 'laptops_accessories' && $ManufacturerList != 'MICROSOFT- / Accessories- / Notebook Options')
+	    		if($c == 'accessories' && $ManufacturerList != 'MICROSOFT- / Accessories- / Notebook Options')
 	    			continue;
 
 
@@ -696,6 +697,10 @@ class Live_model extends CI_Model {
 					else
 						$log_product['dist_type'] = '';
 
+				}
+				else if($c == 'accessories')
+				{
+					$log_product['type'] = $sc;
 				}
 
 				//2. New products for charateristics tables that load Sku module
