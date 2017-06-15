@@ -270,7 +270,7 @@ class Descriptions extends MX_Controller {
 			WHERE `TABLE_SCHEMA`='etd67140_xml'
 			    AND `TABLE_NAME`='$value';");
 			
-			$excludes = array(	'id','sku','product_number','brand','title','model','description','warranty','year_warranty','doa','volumetric_weight','shipping_class','etd_title','skroutz_title','supplier_product_url','product_url','product_url_pdf','support_tel','support_url','new_item');
+			$excludes = array(	'id','sku','product_number','brand','title',/*'model',*/'description','warranty','year_warranty','doa','volumetric_weight','shipping_class','etd_title','skroutz_title','supplier_product_url','product_url','product_url_pdf','support_tel','support_url','new_item');
 			foreach ($result->result() as $key => $value) {
 				if(!in_array($value->COLUMN_NAME, $excludes))
 					$return .= '<option  onclick=""  value="'.$value->COLUMN_NAME.'">'.ucfirst($value->COLUMN_NAME).'</option>';
