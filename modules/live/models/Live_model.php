@@ -298,8 +298,8 @@ class Live_model extends CI_Model {
 				{
 					$okt_product['type'] = $sc;
 					$okt_product['dist_type'] = $dist_type;
-					$okt_product['shipping_class'] = 4644;
-					$okt_product['volumetric_weight'] = 2;
+					$okt_product['shipping_class'] = 10646;
+					$okt_product['volumetric_weight'] = 0.2;
 
 					if (strstr ($title,'DSP'))
 						$okt_product['dist_type'] = 'DSP';
@@ -688,8 +688,8 @@ class Live_model extends CI_Model {
 				if ($c == 'software')
 				{
 					$log_product['type'] = $sc;
-					$log_product['shipping_class'] = 4644;
-					$log_product['volumetric_weight'] = 2;
+					$log_product['shipping_class'] = 10646;
+					$log_product['volumetric_weight'] = 0.2;
 					if (strstr ($title,'DSP'))
 						$log_product['dist_type'] = 'DSP';
 					elseif(strstr ($title,'Reseller Option Kit') || strstr ($title,'ROK'))
@@ -1791,7 +1791,7 @@ class Live_model extends CI_Model {
 					'Safety' => $Safety ,
 					'Accounts' => $Accounts ,
 					'Accounts_Software' => $Accounts_Software,
-					'shipping_class' => 4682
+					'shipping_class' => 9974
 					//'volumetric_weight'???
 				);
 

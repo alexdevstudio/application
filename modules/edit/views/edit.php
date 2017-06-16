@@ -320,6 +320,16 @@ if($itemLive){
     </div>
 
 		<div class=" col-xs-12 col-md-10">
+			<?php
+			if ($supplier == 'out')
+			{ ?>
+			<div class="alert alert-danger">
+            	<a class="close" data-dismiss="alert">×</a>
+            	Το συγκεκριμένο προϊόν έχει επιλεχθεί από εμάς να μήν εμφανίζεται στο site .
+            </div>
+            <?php
+        	}
+        	?>
 		<h2><?= $item->row()->title; ?></h2>
 		<div style='border-top:1px solid #888'></div><br />
 		<div class="nav-tabs-custom">

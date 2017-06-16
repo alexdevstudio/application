@@ -78,9 +78,14 @@ $fa = 0;
     						exit();
     				}*/
     			$data['new_item']=0;
-    			if($table=="desktops" || $table == "monitors" || $table == "ups" ){
+
+    			/*if($table=="desktops" || $table == "monitors" || $table == "ups" ){
     			    $data['shipping_class'] = $this->makeShippingClass($data, $table);
     			}
+    			else if($table == "printers" || $table == "multifunction_printers"){
+    				$data['shipping_class'] = $this->makeShippingClass($data, $table);
+    			}*/
+    			$data['shipping_class'] = $this->makeShippingClass($data, $table);
     			$vw = $data['volumetric_weight'];
 
     			if($vw=='' || $vw == 0 ){
@@ -105,9 +110,7 @@ $fa = 0;
     			}
 
 
-    			if($table == "printers" || $table == "multifunction_printers"){
-    				$data['shipping_class'] = $this->makeShippingClass($data, $table);
-    			}
+    			
 
 
 				
@@ -244,7 +247,11 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					break;
 			
 			case 'servers':
-					$shipping_class= 4669;
+					$server_formfactor = $data['form_factor'];
+					if($server_formfactor != 'Rack' && $server_formfactor != 'Tower')
+						$shipping_class= 10070;
+					else
+						$shipping_class= 4669;
 					break;
 			case 'speakers':
 					$shipping_class= 10063;
@@ -260,15 +267,15 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					break;
 			case 'keyboard_mouse':
 					if($data['type']=='Mouse')
-						$shipping_class = 10650;
+						$shipping_class = 10648;
 					else
-						$shipping_class = 10063;
+						$shipping_class = 10651;
 					break;
 			case 'tablets':
 					$shipping_class= 10650;
 					break;
 			case 'cartridges':
-					$shipping_class= 10646;
+					$shipping_class= 10647;
 					break;
 			case 'toners':
 					$title = $data['title'];
@@ -327,7 +334,7 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					$shipping_class = 10070;
 					break;
 			case 'ip_cards':
-					$shipping_class = 4672;
+					$shipping_class = 10650;
 					break;
 			case 'ip_gateways':
 					$shipping_class = 10063;
@@ -467,9 +474,15 @@ public function makeShippingClass($data, $cat, $dynamic = null){
     		case 32:
     			 $shipping_class = 10883;
     			 break;
+    		case 40:
+    			 $shipping_class = 4669; //servers
+    			 break;
+    		case 46:
+    			 $shipping_class = 4667; //TV > 42 inch and more
+    			 break;
     		
     		default:
-    			$shipping_class = 4679;
+    			$shipping_class = 9974; //Overload
     			break;
     	}
     			//exit($shipping_class);
