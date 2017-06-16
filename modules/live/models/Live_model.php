@@ -401,13 +401,12 @@ class Live_model extends CI_Model {
 
 			$net_price = str_replace(".", "", $product->price);
 			$net_price = str_replace("€", "", $net_price);
-			$net_price = (float) $net_price;
+
+			$net_price = str_replace(",", ".", $net_price); //for floatval to work
+			$net_price = floatval ($net_price);
 
 			$pn = (string) trim($product->sku);
 			$model = (string) trim($product->model);
-
-			
-
 
 			if($pn=='' || $pn!=$model)
 				continue;
