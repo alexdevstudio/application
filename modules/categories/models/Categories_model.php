@@ -474,12 +474,6 @@ public function makeShippingClass($data, $cat, $dynamic = null){
     		case 32:
     			 $shipping_class = 10883;
     			 break;
-    		case 40:
-    			 $shipping_class = 4669; //servers
-    			 break;
-    		case 46:
-    			 $shipping_class = 4667; //TV > 42 inch and more
-    			 break;
     		
     		default:
     			$shipping_class = 9974; //Overload
