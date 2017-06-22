@@ -1950,22 +1950,24 @@ class Live_model extends CI_Model {
 			$type = $colour = '';
 
 			switch ($cat) {
+				case "Tablets":
+					$c = 'tablets';
+					break;
+				case "Smartphones":
+					$c = 'smartphones';
+					break;
 				case "Card Reader":
 					$c = 'card_readers';
 					break;
 				case "OTHER GAMING ACC.":
-					$c = 'carrying_cases';
-					break;
 				case "Bags/Cases":
-					$c = 'carrying_cases';
-					break;
 				case "NB CASES":
 					$c = 'carrying_cases';
 					break;
 				case "Inkjet":
 					$sc_upper = strtoupper($sc);
 					if (strpos($sc_upper, 'INK') !== false || strpos($sc_upper, 'MULTI') !== false || strpos($sc_upper, 'PACK') !== false || strpos($sc_upper, 'CARTRIDGE') !== false)
-						$c = 'cartridges';
+						$c = $cat;
 					else
 					{
 						$type = 'Inkjet';
@@ -1984,13 +1986,14 @@ class Live_model extends CI_Model {
 					$c = 'desktops';
 					break;
 				case "HDD 2.5 External":
-					$c = 'external_hard_drives';
+					$c = $cat;
 					break;
 				case "USB-Stick":
 					$c = 'flash_drives';
 					break;
 				case "PCX":
-					$c = 'graphic_cards';
+					//$c = 'graphic_cards';
+					$c = $cat;
 					break;
 				case "Mouse":
 				case "Mouse for Notebooks":
@@ -2006,23 +2009,34 @@ class Live_model extends CI_Model {
 					$c = 'keyboard_mouse';
 					$type = 'Keyboard';
 					break;
-				case "12.0":
-				case "13.3ΆΆ":
-				case "10,2":
-				case "12.1":
-				case "13,3":
-				case "14.0":
-				case "14.1":
-				case "15.4":
-				case "17.0":
-				case "17,1":
+				case '12.0':
+				case '12.0"':
+				case '13.3ΆΆ':
+				case '13.3ΆΆ"':
+				case '10,2':
+				case '10,2"':
+				case '12.1':
+				case '12.1"':
+				case '13,3':
+				case '13,3"':
+				case '14.0':
+				case '14.0"':
+				case '14.1':
+				case '14.1"':
+				case '15.4':
+				case '15.4"':
+				case '17.0':
+				case '17.0"':
+				case '17,1':
+				case '17,1"':
 					$c = 'laptops';
 					break;
 				case "Ram DDR2":
 				case "Μνήμες Desktop Branded":
 				case "Μνήμες Notebook Branded":
 				case "Ram DDR3":
-					$c = 'memories';
+					//$c = 'memories';
+					$c = $cat;
 					break;
 				case "LCD 17":
 				case "LCD 19":
@@ -2064,6 +2078,8 @@ class Live_model extends CI_Model {
 						$c = 'printers';
 					break;
 				case "Router":
+				case "Expander":
+				case "Access Point":
 					$c = 'routers';
 					break;
 				case "HDD 3.5 SATA":
@@ -2097,7 +2113,7 @@ class Live_model extends CI_Model {
 					$c = 'switches';
 					break;
 				case "Laserjet":
-					$c = 'toners';
+					$c = $cat;
 					break;
 				case "19''":
 				case "22''":
@@ -2110,6 +2126,12 @@ class Live_model extends CI_Model {
 				case "60''":
 				case "65''":
 					$c = 'tv';
+					break;
+				case "SMART HOME":
+					if(strpos($sc, 'PowerCube') !== false || strpos($sc, 'PowerBank') !== false)
+						$c = 'ups';
+					else
+						$c = $cat;
 					break;
 				case "UPS":
 					$c = 'ups';
