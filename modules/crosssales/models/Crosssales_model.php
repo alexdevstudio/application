@@ -40,15 +40,11 @@ class Crosssales_model extends CI_Model {
         
 
     	foreach ($bags as $bag) {
-
-
-
     		$pn = $bag['product_number'];
 
     		$the_bag = Modules::run('crud/get', 'carrying_cases', array('product_number'=>$bag['product_number']));
     		$row = $the_bag->row();
     		$bag_sku = $row->sku;
-
 
     		//a. Availabilty
     		if($bag['availability']=='Άμεσα Διαθέσιμο'){
