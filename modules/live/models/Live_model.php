@@ -2019,6 +2019,7 @@ class Live_model extends CI_Model {
 				case '12.1"':
 				case '13,3':
 				case '13,3"':
+				case '14ΆΆ':
 				case '14.0':
 				case '14.0"':
 				case '14.1':
