@@ -285,7 +285,6 @@ echo "</pre>";*/
 	                	$item = Modules::run('crud/get', $category, $where);
 	                	
 
-
 	                	$sku =  $item->row()->sku;
 	                	$title = $item->row()->title;
 
