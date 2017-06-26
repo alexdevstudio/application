@@ -213,6 +213,11 @@ class Live extends MX_Controller {
 /*http://etd.gr/xml/live/updateAvPraxis/insert/"sku"
 http://etd.gr/xml/live/updateAvPraxis/delete/"sku"*/
 	}
+
+	 public function AddProductImages($product, $f, $supplier='etd', $sku){
+	 	$this->load->model('live_model');
+	 	$this->live_model->AddProductImages($product, $f, $supplier, $sku);
+	 }
 }
 
 ?>
