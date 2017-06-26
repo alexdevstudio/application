@@ -2394,7 +2394,8 @@ class Live_model extends CI_Model {
 					'title' => $title,
 					'description' => $description,
 					'product_url' => '',
-					'net_price'=>$net_price
+					'net_price'=> $net_price,
+					'new_item'=> 1
 				);
 
 				if ($type != '')
