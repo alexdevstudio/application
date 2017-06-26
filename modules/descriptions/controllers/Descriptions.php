@@ -262,7 +262,8 @@ class Descriptions extends MX_Controller {
 
 
 	public function getChars($type, $value){
-		$return = '';
+		//$return = '';
+		$return = '<option value="">----</option>';
 		if($type == "categories"){
 			$this->session->set_userdata('table',$value);
 			$result = $this->db->query("SELECT `COLUMN_NAME` 

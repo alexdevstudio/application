@@ -298,8 +298,8 @@ class Live_model extends CI_Model {
 				{
 					$okt_product['type'] = $sc;
 					$okt_product['dist_type'] = $dist_type;
-					$okt_product['shipping_class'] = 4644;
-					$okt_product['volumetric_weight'] = 2;
+					$okt_product['shipping_class'] = 10646;
+					$okt_product['volumetric_weight'] = 0.2;
 
 					if (strstr ($title,'DSP'))
 						$okt_product['dist_type'] = 'DSP';
@@ -401,13 +401,12 @@ class Live_model extends CI_Model {
 
 			$net_price = str_replace(".", "", $product->price);
 			$net_price = str_replace("€", "", $net_price);
-			$net_price = (float) $net_price;
+
+			$net_price = str_replace(",", ".", $net_price); //for floatval to work
+			$net_price = floatval ($net_price);
 
 			$pn = (string) trim($product->sku);
 			$model = (string) trim($product->model);
-
-			
-
 
 			if($pn=='' || $pn!=$model)
 				continue;
@@ -688,8 +687,8 @@ class Live_model extends CI_Model {
 				if ($c == 'software')
 				{
 					$log_product['type'] = $sc;
-					$log_product['shipping_class'] = 4644;
-					$log_product['volumetric_weight'] = 2;
+					$log_product['shipping_class'] = 10646;
+					$log_product['volumetric_weight'] = 0.2;
 					if (strstr ($title,'DSP'))
 						$log_product['dist_type'] = 'DSP';
 					elseif(strstr ($title,'Reseller Option Kit') || strstr ($title,'ROK'))
@@ -1791,7 +1790,7 @@ class Live_model extends CI_Model {
 					'Safety' => $Safety ,
 					'Accounts' => $Accounts ,
 					'Accounts_Software' => $Accounts_Software,
-					'shipping_class' => 4682
+					'shipping_class' => 9974
 					//'volumetric_weight'???
 				);
 
@@ -1948,22 +1947,211 @@ class Live_model extends CI_Model {
 			$cat = (string) trim($product->Item_Category);
 			$sc = (string) trim($product->Description);
 			$c = '';
+			$type = $colour = '';
 
 			switch ($cat) {
+				case "Tablets":
+					$c = 'tablets';
+					break;
+				case "Smartphones":
+					$c = 'smartphones';
+					break;
+				case "Card Reader":
+					$c = 'card_readers';
+					break;
+				case "OTHER GAMING ACC.":
+				case "Bags/Cases":
+				case "NB CASES":
+					$c = 'carrying_cases';
+					break;
+				case "Inkjet":
+					$sc_upper = strtoupper($sc);
+					if (strpos($sc_upper, 'INK') !== false || strpos($sc_upper, 'MULTI') !== false || strpos($sc_upper, 'PACK') !== false || strpos($sc_upper, 'CARTRIDGE') !== false)
+						$c = $cat;
+					else
+					{
+						$type = 'Inkjet';
+						$colour = 'Έγχρωμο';
+
+						if (strpos($sc_upper, 'MFP') !== false)
+							$c = 'multifunction_printers';
+						else
+							$c = 'printers';	
+					}
+					break;
+				case "All In One PC":
+					$c = 'desktops';
+					break;
+				case "PC Desktop":
+					$c = 'desktops';
+					break;
+				case "HDD 2.5 External":
+					$c = $cat;
+					break;
+				case "USB-Stick":
+					$c = 'flash_drives';
+					break;
+				case "PCX":
+					//$c = 'graphic_cards';
+					$c = $cat;
+					break;
+				case "Mouse":
+				case "Mouse for Notebooks":
+					$c = 'keyboard_mouse';
+					$type = 'Mouse';
+					break;
+				case "SET KEYBOARD & MOUSE":
+					$c = 'keyboard_mouse';
+					$type = 'Set mouse / keyboard';
+					break;
+				case "KEYBOARD":
+				case "KEYBOARDS":
+					$c = 'keyboard_mouse';
+					$type = 'Keyboard';
+					break;
+				case '12.0':
+				case '12.0"':
+				case '13.3ΆΆ':
+				case '13.3ΆΆ"':
+				case '10,2':
+				case '10,2"':
+				case '12.1':
+				case '12.1"':
+				case '13,3':
+				case '13,3"':
+				case '14ΆΆ':
+				case '14.0':
+				case '14.0"':
+				case '14.1':
+				case '14.1"':
+				case '15.4':
+				case '15.4"':
+				case '17.0':
+				case '17.0"':
+				case '17,1':
+				case '17,1"':
+					$c = 'laptops';
+					break;
+				case "Ram DDR2":
+				case "Μνήμες Desktop Branded":
+				case "Μνήμες Notebook Branded":
+				case "Ram DDR3":
+					//$c = 'memories';
+					$c = $cat;
+					break;
+				case "LCD 17":
+				case "LCD 19":
+				case "LCD 20":
+				case "LCD 21":
+				case "LCD 22":
+				case "LCD 23":
+				case "LCD 24":
+				case "LCD 30":
+					$c = 'monitors';
+					break;
+				case "LCD TV 22":
+				case "LCD TV 24":
+				case "LCD TV 26":
+				case "LCD TV 27":
+					$c = 'monitors';
+					$type = 'Monitor TV';
+					break;
+				case "POWER BANKS":
+					$c = 'power_bank';
+					break;
+				case "Fuser":
+					$c = 'printer_fusers';
+					break;
+				case "Laser Color":
+					$type = 'Laser';
+					$colour = 'Έγχρωμο';
+					if (strpos($sc, 'MFP') !== false)
+						$c = 'multifunction_printers';
+					else
+						$c = 'printers';
+					break;
+				case "Laser Mono":
+					$type = 'Laser';
+					$colour = 'Μονόχρωμο';
+					if (strpos($sc, 'MFP') !== false)
+						$c = 'multifunction_printers';
+					else
+						$c = 'printers';
+					break;
+				case "Router":
+				case "Expander":
+				case "Access Point":
+					$c = 'routers';
+					break;
+				case "HDD 3.5 SATA":
+					$c = 'sata_hard_drives';
+					break;
+				case "Rackmount":
+				case "Tower":
+					$c = 'servers';
+					break;
+				case "Antivirus & Security":
+					$c = 'software';
+					$type = 'Antivirus';
+					break;
+				case "Windows for PC":
+					$c = 'software';
+					$type = 'Λειτουργικά Συστήματα';
+					break;
+				case "Application":
+					$c = 'software';
+					$type = 'Εφαρμογές γραφείου';
+					break;
+				case "Headset":
+				case "HEADSETS":
+				case "SPEAKERS":
+					$c = 'speakers';
+					break;
+				case "SSD 2,5ΆΆ":
+					$c = 'ssd';
+					break;
+				case "Hub/Switch":
+					$c = 'switches';
+					break;
+				case "Laserjet":
+					$c = $cat;
+					break;
+				case "19''":
+				case "22''":
+				case "26''":
+				case "32''":
+				case "40''":
+				case "42''":
+				case "50''":
+				case "55''":
+				case "60''":
+				case "65''":
+					$c = 'tv';
+					break;
+				case "SMART HOME":
+					if(strpos($sc, 'PowerCube') !== false || strpos($sc, 'PowerBank') !== false)
+						$c = 'ups';
+					else
+						$c = $cat;
+					break;
+				case "UPS":
+					$c = 'ups';
+					break;
 				case 'GADGETS':
 					if (strpos($sc, 'SCOOTER') !== false){
 						$title = $description = str_replace('MINI SCOOTER ', '', $sc);
 						$c = 'hoverboards';
 					}
 					else
-						$c = '';
+						$c = $cat;
 					break;
 				default:
 					$c = $cat;
 					break;
 			}
 
-			if($c=='hoverboards'){
+			//if($c=='hoverboards'){
+			if($c!=$cat){
 
 				$availability = $this->makeAvailability((string) trim($product->Stock_Status), 'westnet');
 
@@ -1980,14 +2168,196 @@ class Live_model extends CI_Model {
 					$title = (string) trim($product->Description);
 
 				$net_price = trim($product->Final_Price);
+				if($net_price <= 1.00 || $net_price == '')
+					continue;
+
 				$recycle_tax = '';
 				
 				if ($description=='')
 					$description = (string) trim($product->Description);
 
 				$brand = (string) trim($product->Manufacturer);
-				if($brand == "LL")
-					$brand = 'Lexgo';
+				switch ($brand) {
+					case "3C":
+						$brand = "3Com";
+						break;
+					case "AL":
+						$brand = "Allocacoc";
+						break;
+					case "OC":
+						$brand = "AOC";
+						break;
+					case "DX":
+						$brand = "Arozzi";
+						break;
+					case "AS":
+						$brand = "Asus";
+						break;
+					case "AV":
+						$brand = "Avocent";
+						break;
+					case "CA":
+						$brand = "Canon";
+						break;
+					case "CB":
+						$brand = "CB";
+						break;
+					case "CH":
+						$brand = "Cipherlab";
+						break;
+					case "CI":
+						$brand = "Cisco";
+						break;
+					case "CR":
+						$brand = "Creative";
+						break;
+					case "CY":
+						$brand = "Cygnett";
+						break;
+					case "DV":
+						$brand = "Devolo";
+						break;
+					case "DL":
+						$brand = "Dlink";
+						break;
+					case "ES":
+						$brand = "eset";
+						break;
+					case "ET":
+						$brand = "eSTAR";
+						break;
+					case "FL":
+						$brand = "Finlux";
+						break;
+					case "FS":
+						$brand = "Fujitsu";
+						break;
+					case "GE":
+						$brand = "Genius";
+						break;
+					case "LA":
+						$brand = "Genius";
+						break;
+					case "GH":
+						$brand = "Ghostek";
+						break;
+					case "GB":
+						$brand = "Gigabyte";
+						break;
+					case "GS":
+						$brand = "G-Style";
+						break;
+					case "GT":
+						$brand = "G-Tech";
+						break;
+					case "HP":
+					case "H0":
+					case "HW":
+						$brand = "HP";
+						break;
+					case "H1":
+						$brand = "HPE";
+						break;
+					case "HI":
+						$brand = "Hitachi";
+						break;
+					case "KA":
+						$brand = "Kaspersky";
+						break;
+					case "KN":
+						$brand = "Kingston";
+						break;
+					case "LV":
+					case "IB":
+						$brand = "Lenovo";
+						break;
+					case "LL":
+						$brand = "Lexgo";
+						break;
+					case "LX":
+						$brand = "Lexmark";
+						break;
+					case "LG":
+						$brand = "LG";
+						break;
+					case "LN":
+						$brand = "Linksys";
+						break;
+					case "LO":
+						$brand = "Logitech";
+						break;
+					case "MY":
+						$brand = "MaCally";
+						break;
+					case "MC":
+						$brand = "Mcab";
+						break;
+					case "MS":
+						$brand = "MicroSoft";
+						break;
+					case "NG":
+						$brand = "Netgear";
+						break;
+					case "OK":
+						$brand = "OKI";
+						break;
+					case "PA":
+						$brand = "Panda";
+						break;
+					case "PH":
+						$brand = "Philips";
+						break;
+					case "PN":
+						$brand = "PNY";
+						break;
+					case "PO":
+						$brand = "Polaroid";
+						break;
+					case "SM":
+						$brand = "Samsung";
+						break;
+					case "SK":
+						$brand = "SkyViper";
+						break;
+					case "SO":
+						$brand = "Sony";
+						break;
+					case "SU":
+						$brand = "Sun";
+						break;
+					case "TS":
+						$brand = "Toshiba";
+						break;
+					case "TP":
+						$brand = "TP-Link";
+						break;
+					case "TR":
+						$brand = "Trust";
+						break;
+					case "TO":
+						$brand = "Tucano";
+						break;
+					case "TU":
+						$brand = "TurtleBeach";
+						break;
+					case "WD":
+						$brand = "Western Digital";
+						break;
+					case "WO":
+						$brand = "WOWEE";
+						break;
+					case "XR":
+						$brand = "Xerox";
+						break;
+					case "XO":
+						$brand = "X-One";
+						break;
+					default:
+						$brand = "";
+						break;
+				}
+				if($brand == "")
+					continue;
 
 				$supplier = 'westnet';
 
@@ -2024,8 +2394,24 @@ class Live_model extends CI_Model {
 					'title' => $title,
 					'description' => $description,
 					'product_url' => '',
-					'net_price'=>$net_price
+					'net_price'=> $net_price,
+					'new_item'=> 1
 				);
+
+				if ($type != '')
+					$westnet_product['type'] = $type;
+
+				if($c == 'multifunction_printers' || $c == 'printers')
+					$westnet_product['colour'] = $colour;
+
+				if($c == 'software')
+				{
+					$westnet_product['dist_type'] = '';
+					$shipping_class = Modules::run('categories/makeShippingClass', $westnet_product, $c);
+					$volumetric_weight = Modules::run('categories/getWeight', $shipping_class);
+					$westnet_product['shipping_class'] = $shipping_class;
+					$westnet_product['volumetric_weight'] = $volumetric_weight;
+				}
 
 				//2. New products for charateristics tables that load Sku module
 				$insert = $this->addProduct ($westnet_product, array(), $imageUrl, $supplier);
@@ -2198,7 +2584,6 @@ class Live_model extends CI_Model {
 				);
 			}
 			elseif($c == 'software'){
-
 				$categoryData = array(
 				'brand'=> $product['brand'],
 				'sku'=> $sku,
@@ -2243,8 +2628,6 @@ class Live_model extends CI_Model {
 				'shipping_class' => $shipping_class,
 				'volumetric_weight' => $volumetric_weight
 				);
-
-
 			}
 			else
 			{
@@ -2255,7 +2638,7 @@ class Live_model extends CI_Model {
 				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c== "desktops" || $c == "tablets"  || $c == "smartphones" ||
 				 $c == "cables" || $c == "patch_panels" || $c == "racks" || $c =="optical_drives" || $c == "card_readers" || $c == "flash_drives" || 
 				 $c == "power_supplies" || $c == "cases" || $c == "fans" || $c == "motherboards" || $c == "graphic_cards" || $c == "cpu" || 
-				 $c == "memories" || $c == "hoverboards" || $c =="printer_fusers" || $c =="printer_drums" || $c =="printer_belts" || $c=="ups" || $c=="tv" || $c=="accessories"){
+				 $c == "memories" || $c == "hoverboards" || $c =="printer_fusers" || $c =="printer_drums" || $c =="printer_belts" || $c=="ups" || $c=="tv" || $c=="accessories" || $c=="cable_accessories"){
 
 
 					$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
@@ -4350,9 +4733,9 @@ class Live_model extends CI_Model {
 				case 'OK':
 					$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
 					break;
-				case 'N/A':
+				/*case 'N/A':
 					$av = 'Κατόπιν παραγγελίας χωρίς διαθεσιμότητα';
-					break;
+					break;*/
 				default:
 	    			return false;
 	    			break;

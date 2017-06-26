@@ -320,6 +320,16 @@ if($itemLive){
     </div>
 
 		<div class=" col-xs-12 col-md-10">
+			<?php
+			if ($supplier == 'out')
+			{ ?>
+			<div class="alert alert-danger">
+            	<a class="close" data-dismiss="alert">×</a>
+            	Το συγκεκριμένο προϊόν έχει επιλεχθεί από εμάς να μήν εμφανίζεται στο site .
+            </div>
+            <?php
+        	}
+        	?>
 		<h2><?= $item->row()->title; ?></h2>
 		<div style='border-top:1px solid #888'></div><br />
 		<div class="nav-tabs-custom">
@@ -364,6 +374,10 @@ if($itemLive){
 </div>
 <?php
 }else if($key == 'volumetric_weight'){
+
+	if($value >= 33)
+		$value = 33;
+	
 	$selected_value = (isset($_POST[$key]))?$_POST[$key]:$value;
 	$volumetric_weight_array = array('0'=>'Δεν έχει οριστεί','0.2'=>'0.2','0.3'=>'0.3','0.5'=>'0.5','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'6','7'=>'7','8'=>'8','9'=>'9','10'=>'10','11'=>'11','12'=>'12','13'=>'13','14'=>'14','15'=>'15','16'=>'16','17'=>'17','18'=>'18','19'=>'19','20'=>'20','21'=>'21','22'=>'22','23'=>'23','24'=>'24','25'=>'25','26'=>'26','27'=>'27','28'=>'28','29'=>'29','30'=>'30','31'=>'31','32'=>'32','33'=>'Υπέρβαρο');
 	echo form_dropdown($key, $volumetric_weight_array, $selected_value, 'class="form-control"');
