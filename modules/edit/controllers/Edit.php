@@ -10,6 +10,7 @@ class Edit extends MX_Controller {
 		$item = Modules::run('crud/get',$category, array('sku'=>$sku));
 		$skroutzUrl = Modules::run('crud/get','skroutz_urls', array('sku'=>$sku));
 		$cross_sells = Modules::run('crud/get','cross_sells', array('sku'=>$sku));
+		$images = Modules::run('crud/get','images', array('item_sku'=>$sku));
 		
 
 
@@ -33,7 +34,59 @@ class Edit extends MX_Controller {
 
 			if(isset($post['status'])){
 
-				if($post['status']=='delete')
+				if($post['status']=='deleteAllImages'){
+
+					Modules::run('crud/delete', 'images', array('item_sku'=>$sku));
+					$dirPath = 'images/'.$sku;
+					if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
+				        $dirPath .= '/';
+				    }
+				    $files = glob($dirPath . '*', GLOB_MARK);
+				    foreach ($files as $file) {
+				        if (is_dir($file)) {
+				            self::deleteDir($file);
+				        } else {
+				            unlink($file);
+				        }
+				    }
+				    rmdir($dirPath);
+					 
+
+				}else if($post['status']=='images')
+				{
+		
+
+					if($post['imageUrl']!=''){
+						$imageArray = Modules::run('images/getExternalImagesFromUrl',$sku, $post['imageUrl']);
+							
+
+						if(!empty($imageArray)){
+							/*print_r($item->row());
+							echo '<br>/';
+							print_r($imageArray);*/
+							$imageItem['brand'] = $item->row()->brand;
+							$imageItem['product_number'] = $item->row()->product_number;
+							
+							Modules::run('live/AddProductImages', $imageItem	, $imageArray, 'etd', $sku);
+							$FlashData['Message']= '<strong>Οι Φωτογραφίες ενημερώθηκαν</strong>';
+                            $FlashData['type'] = 'success';
+						}else{
+					    	$FlashData['Message']= '<strong>Ελέγξτε το URL</strong>';
+                            $FlashData['type'] = 'danger';
+						}
+
+					}else{
+						$FlashData['Message']= '<strong>Kάτι πήγε λάθος!</strong> Το URL δεν μπορεί να είναι άδειο.';
+                        $FlashData['type'] = 'danger';
+
+					}
+
+					if(isset($FlashData)){
+	                    $this->session->set_flashdata('flash_message', $FlashData);
+					}
+
+
+				}else if($post['status']=='delete')
 				{
 					$post['status'] = 'trash';
 					$post['delete_flag'] = 100;
@@ -247,6 +300,7 @@ class Edit extends MX_Controller {
 			$data['item'] = $item;
 			$data['skroutzUrl'] = $skroutzUrl;
 			$data['cross_sells'] = $cross_sells;
+			$data['images'] = $images;
 
 
 			$skroutzPrice = Modules::run('skroutz/getBestPrice',$sku);
@@ -332,6 +386,17 @@ class Edit extends MX_Controller {
 
 	private function getChar($sku, $category){
 		return Modules::run('crud/get',$category,array('sku'=>$sku));
+	}
+
+	public function deleteImg($sku, $src){
+
+
+
+			Modules::run('crud/delete','images',array('item_sku'=>$sku, 'image_src'=>$src));
+			$path = 'images/'.$sku.'/'.$src.'.jpg';
+			unlink($path);
+		    exit ('ok'); 
+		
 	}
 
 }

@@ -321,6 +321,16 @@ if($itemLive){
 
 		<div class=" col-xs-12 col-md-10">
 			<?php
+   			 //flash messages
+			    if($this->session->flashdata('flash_message')){
+
+			      echo '<div class="alert alert-'. $this->session->flashdata('flash_message')['type'].'">';
+			      echo '<a class="close" data-dismiss="alert">&times</a>';
+			      echo $this->session->flashdata('flash_message')['Message'];   
+			      echo '</div>'; 
+			    }
+			?>
+			<?php
 			if ($supplier == 'out')
 			{ ?>
 			<div class="alert alert-danger">
@@ -336,7 +346,7 @@ if($itemLive){
             <ul class="nav nav-tabs">
               <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">Χαρακτηριστικά</a></li>
               <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false">Σχετικά Προϊόντα</a></li>
-              
+               <li class=""><a href="#tab_3" data-toggle="tab" aria-expanded="false">Φωτογραφίες</a></li>
             </ul>
             <div class="tab-content">
               <div class="tab-pane active" id="tab_1">
@@ -432,7 +442,73 @@ if($itemLive){
 		</form>
               </div>
               <!-- /.tab-pane -->
+             <div class="tab-pane" id="tab_3">
              
+             	
+             
+             <?php 
+				if($images){
+					//print_r($images->num_rows());
+					//http://etd.gr/xml/images/1320604/PNY_FD8GBATT4-EF.jpg
+					?>
+					<div class='itemImages row'>
+					<?php
+					foreach ($images->result() as $image) {
+						?>
+						<div class='imageItem col-sm-2 col-xs-4'>
+							<img style="width:100%;" src="<?= base_url().'/images/'.$sku.'/'.$image->image_src.'.jpg'; ?>" alt="">
+							<div  title='Διαγραφή αυτής της φωτογραφίας!' class='deleteImg' data-src='<?= $image->image_src; ?>' data-sku='<?= $sku; ?>'>x</div>
+						</div>
+						<?php
+					}
+					?>
+					
+					</div>
+					
+					<?php 
+             	echo form_open('edit/'.$category.'/'.$sku, 'class="imageForm" id="imageForm"');
+             	echo	form_hidden('status', 'deleteAllImages');
+             	$data = array(
+			        'name'          => 'button',
+			        'id'            => 'button',
+			        'value'         => '',
+			        'type'          => 'submit',
+			        'class'			=> 'btn pull-right  btn-danger ',
+			        'content'		=> 'Διαγραφή Φωτογραφιών',
+			        'onclick'		=> "return confirm('Είστε σίγουροι;')"
+			);
+				echo form_button($data);
+             	echo form_close();
+             	echo '<br><br>';
+             	 ?>
+					<?php
+				}
+              ?>
+             	<?php 
+             	echo form_open('edit/'.$category.'/'.$sku, 'class="imageForm" id="imageForm"');
+             	echo	form_hidden('status', 'images');
+             		$data = array(
+				        'type'  => 'text',
+				        'name'  => 'imageUrl',
+				        'id'    => 'hiddenemail',
+				        'placeholder' => 'Amazon URL',
+				        'class' => 'form-control'
+				);
+
+				echo form_input($data);
+							$data = array(
+			        'name'          => 'button',
+			        'id'            => 'button',
+			        'value'         => 'Υποβολή',
+			        'type'          => 'submit',
+			        'class'			=> 'btn  btn-success ',
+			        'content'		=> 'Υποβολή'
+			);
+							echo '<br>';
+			echo form_button($data);
+             	echo form_close();
+             	 ?>
+             </div>
             
             </div>
             <!-- /.tab-content -->

@@ -79,20 +79,26 @@ class Images_model extends CI_Model {
 
     }
 
-    public function getExternalImagesFromUrl($sku, $url){
+    public function getExternalImagesFromUrl_OLD($sku, $url){
 
     	// Create DOM from URL or file
-    	$opts = array(
-			'http'=>array(
-				/*'proxy'=>'85.72.61.177:80',
-				'request_fulluri' => true,*/
-			'method'=>"GET",
-			'header'=>"User-Agent: User-Agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.52 Safari/536.5\r\n"
-			)
-			);
+    
 
-			$context = stream_context_create($opts);
-		$html = file_get_html($url, 0, $context);
+			$opts = [
+			    "http" => [
+			        "method" => "GET",
+			        "header" => "Accept-language: en\r\n" .
+			            "Cookie: foo=bar\r\n"
+			    ]
+			];
+
+		$context = stream_context_create($opts);
+
+		//$html = file_get_contents($html,'',);
+		echo $html;
+		
+		print_r($context);
+		//$html = file_get_html($url, 0, $context);
 		//$html = file_get_html($url);
 
 		// Find all images
@@ -101,8 +107,8 @@ class Images_model extends CI_Model {
 		$i = 0;
 
 		foreach($html->find('#imageBlock_feature_div script') as $element){
-			/*if($i==0)
-				continue;*/
+			if($i==0)
+				continue;
 			
 		    $the_script = $element->innertext;
 
@@ -138,6 +144,68 @@ class Images_model extends CI_Model {
 
     }
 
+
+    public function getExternalImagesFromUrl($sku, $base){
+    	//base url
+//$base = 'https://www.amazon.com/Dell-i3567-5185BLK-PUS-Inspiron-Laptop-Graphics/dp/B06X9TH2RX/ref=sr_1_3?ie=UTF8&qid=1497356042&sr=8-3&keywords=dell+3567';
+//$base = 'http://www.amazon.com/Dell-XPS9560-7001SLV-PUS-Laptop-Nvidia-Gaming/dp/B01N1Q0M4O/ref=sr_1_11?ie=UTF8&qid=1497360063&sr=8-11&keywords=dell+xps';
+//$base = 'https://www.amazon.co.uk/Dell-Inspiron-Laptop-Graphics-Anti-Glare/dp/B017URDNS6/ref=sr_1_3?ie=UTF8&qid=1497345644&sr=8-3&keywords=dell++5559';
+
+$curl = curl_init();
+curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+curl_setopt($curl, CURLOPT_HEADER, false);
+curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+curl_setopt($curl, CURLOPT_URL, $base);
+curl_setopt($curl, CURLOPT_REFERER, $base);
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+$str = curl_exec($curl);
+curl_close($curl);
+
+// Create a DOM object
+$html_base = new simple_html_dom();
+// Load HTML from a string
+$html_base->load($str);
+$i=0;
+foreach($html_base->find('#imageBlock_feature_div script') as $element){
+			/*if($i==0)
+				continue;*/
+			
+		    $the_script = $element->innertext;
+
+		    //iconv(mb_detect_encoding($the_script, mb_detect_order(), true), "UTF-8", $the_script);
+
+			$i++;
+		}
+		//echo $the_script;
+		$the_script = ltrim($the_script, "P.when('A').register(\"ImageBlockATF\", function(A){ var data = { 'colorImages': { 'initial':");
+				    //$the_script = "{'colorImages'".$the_script;
+
+		$the_script = rtrim($the_script, ", 'colorToAsin': {'initial': {}}, 'holderRatio': 1.0, 'holderMaxHeight': 700, 'heroImage': {'initial': []}, 'heroVideo': {'initial': []}, 'weblabs' : {} }; A.trigger('P.AboveTheFold'); // trigger ATF event. return data; }); ");
+
+
+	     $the_script = explode('},{', $the_script);
+
+	     foreach ($the_script as $string) {
+	     	$string = preg_replace('/"hiRes":/', '', $string);
+	     	//$string = ltrim($string, '"hiRes":');
+	     	$Arraystring = explode(',', $string);
+	     	if($Arraystring[0] != 'null')
+			{
+				$Arraystring[0] = preg_replace('/\[\{/', '', $Arraystring[0]);
+				$NewImage[] = preg_replace('/"/', '', $Arraystring[0]);
+	     	}
+
+	     }
+
+	    echo '<pre>';
+	    print_r ($NewImage);
+
+    	return $NewImage;
+
+
+
+
+}
    
 
 }
