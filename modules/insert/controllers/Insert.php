@@ -44,11 +44,11 @@ class Insert extends MX_Controller {
 			if($cat == 'keyboard_mouse')
 				$type = trim(strip_tags($_POST['type']));
 
-			$image1=trim($_POST['image1']);
+			/*$image1=trim($_POST['image1']);
 			$image2=trim($_POST['image2']);
 			$image3=trim($_POST['image3']);
 			$image4=trim($_POST['image4']);
-			$image5=trim($_POST['image5']);
+			$image5=trim($_POST['image5']);*/
 
 			$product = array(
 				'category' => $cat,
@@ -110,7 +110,7 @@ class Insert extends MX_Controller {
 
 			//Create SKU if Not existing, add to categories table, upload images
 
-				$images = array($image1,$image2,$image3,$image4,$image5);
+				//$images = array($image1,$image2,$image3,$image4,$image5);
 
 				$chars = array();
 
