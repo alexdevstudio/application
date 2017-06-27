@@ -223,7 +223,15 @@ echo "</pre>";*/
 				</div>
 
 			</div>
+			<div class="clearfix"></div>
+	<div class="col-sm-12 col-md-3">
+				<div class="form-group">
+					
+					<input type="checkbox" name='imagesOnly' id='imagesOnly' value='1' class=''/>		
+					Μόνο Φωτογραφίες			
+				</div>
 
+			</div>
 
 		    <div class="col-sm-12 col-md-3">              
 		        <div id='xml_link2' style="display:none;">
@@ -249,7 +257,7 @@ echo "</pre>";*/
 		    </section>
 
 		    <div class="col-sm-4">
-		    	<a href="http://etd.gr/xml/extract/allImport/all" target="_blank" class="btn pull-left btn-danger" role="button">Ενημέρωση</a>
+		    	<a href="<?= base_url(); ?>extract/allImport/all" target="_blank" class="btn pull-left btn-danger" role="button">Ενημέρωση</a>
 			</div>
 			
 		

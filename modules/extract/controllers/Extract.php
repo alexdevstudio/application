@@ -31,10 +31,10 @@ class Extract extends MX_Controller {
 	}
 
 
-	public function allImport($table, $numrows, $skus=null){
+	public function allImport($table, $numrows, $imagesOnly, $skus=null){
 
 		 
-		 echo $this->extract_model->allImport($table, $numrows, $skus);
+		 echo $this->extract_model->allImport($table, $numrows, $imagesOnly, $skus);
 	}
 
 
