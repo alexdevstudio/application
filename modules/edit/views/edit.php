@@ -451,20 +451,28 @@ if($itemLive){
 					//print_r($images->num_rows());
 					//http://etd.gr/xml/images/1320604/PNY_FD8GBATT4-EF.jpg
 					?>
-					<div class='itemImages row'>
+					<div class="col-xs-12">
+					<div class='itemImages row '>
 					<?php
+					$i=0;
 					foreach ($images->result() as $image) {
+						if($i==6){
+						?>
+							<div class='clearfix'></div>
+						<?php
+						}
 						?>
 						<div class='imageItem col-sm-2 col-xs-4'>
 							<img style="width:100%;" src="<?= base_url().'/images/'.$sku.'/'.$image->image_src.'.jpg'; ?>" alt="">
 							<div  title='Διαγραφή αυτής της φωτογραφίας!' class='deleteImg' data-src='<?= $image->image_src; ?>' data-sku='<?= $sku; ?>'>x</div>
 						</div>
 						<?php
+						$i++;
 					}
 					?>
 					
 					</div>
-					
+					</div>
 					<?php 
              	echo form_open('edit/'.$category.'/'.$sku, 'class="imageForm" id="imageForm"');
              	echo	form_hidden('status', 'deleteAllImages');

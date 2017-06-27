@@ -165,18 +165,23 @@ curl_close($curl);
 $html_base = new simple_html_dom();
 // Load HTML from a string
 $html_base->load($str);
-$i=0;
+
 foreach($html_base->find('#imageBlock_feature_div script') as $element){
-			/*if($i==0)
-				continue;*/
+			
 			
 		    $the_script = $element->innertext;
 
 		    //iconv(mb_detect_encoding($the_script, mb_detect_order(), true), "UTF-8", $the_script);
 
-			$i++;
+			
 		}
 		//echo $the_script;
+
+		//$the_script = ltrim($the_script, "maintainHeight = function(){ var mainHolder = document.getElementById(\"main-image-container\"); var imgTagWrapperId = document.getElementById(\"imgTagWrapperId\"); if(mainHolder && typeof mainHolder != 'undefined'){ var ratio = 0.77; var shouldAutoPlay = false; var naturalMainImageSize = false; var videoSizes = [[342, 196], [385, 221], [425, 244], [466, 267], [522, 300]]; var width = mainHolder.offsetWidth; var containerHeight = width/ratio; containerHeight = Math.min(containerHeight, 700); var aspectRatio = 522/300 var landingImage = document.getElementById(\"landingImage\"); var imageHeight = containerHeight; var imageWidth = width; if(!shouldAutoPlay) { imageHeight = Math.min(imageHeight, 300); imageWidth = Math.min(imageWidth, 522); } var imageWidthBasedOnHeight = imageHeight * aspectRatio; var imageHeightBasedOnWidth = imageWidth / aspectRatio; imageHeight = Math.min(imageHeight, imageHeightBasedOnWidth); imageWidth = Math.min(imageWidth, imageWidthBasedOnHeight); if(typeof mainImgMaxHeight !== 'undefined' && mainImgMaxHeight){ containerHeight = Math.min(mainImgMaxHeight, containerHeight); } mainHolder.style.height = containerHeight + \"px\"; if(imgTagWrapperId && typeof imgTagWrapperId !== 'undefined' ){ imgTagWrapperId.style.height = containerHeight + \"px\"; } if(landingImage && !naturalMainImageSize) { landingImage.style.maxHeight = imageHeight + \"px\"; landingImage.style.maxWidth = imageWidth + \"px\"; } if(shouldAutoPlay){ if(landingImage){ landingImage.style.height = imageHeight + \"px\"; landingImage.style.width = imageWidth + \"px\"; } } } }; maintainHeight(); window.onresize = function(){ maintainHeight(); };");
+
+		$where = strpos($the_script, "P.when('A').register(\"ImageBlockATF\", function(A){ var data = { 'colorImages': { 'initial':");
+
+		$the_script = substr($the_script, $where);
 		$the_script = ltrim($the_script, "P.when('A').register(\"ImageBlockATF\", function(A){ var data = { 'colorImages': { 'initial':");
 				    //$the_script = "{'colorImages'".$the_script;
 
@@ -186,26 +191,63 @@ foreach($html_base->find('#imageBlock_feature_div script') as $element){
 	     $the_script = explode('},{', $the_script);
 
 	     foreach ($the_script as $string) {
-	     	$string = preg_replace('/"hiRes":/', '', $string);
+
+
+
+	     	$stringHiRes= preg_replace('/"hiRes":/', '', $string);
+	     	$stringHiRes= preg_replace('/"large":/', '', $stringHiRes);
+	     	//$stringLargeRes = preg_replace('/"hiRes":/', '', $string);
 	     	//$string = ltrim($string, '"hiRes":');
-	     	$Arraystring = explode(',', $string);
-	     	if($Arraystring[0] != 'null')
-			{
-				$Arraystring[0] = preg_replace('/\[\{/', '', $Arraystring[0]);
-				$NewImage[] = preg_replace('/"/', '', $Arraystring[0]);
-	     	}
+	     	$ArrayHiRes = explode(',', $stringHiRes);
+	     	/*echo '<pre>';
+	     	print_r($ArrayHiRes);
+	     	exit();*/
+
+	     	$the_key = (strpos($ArrayHiRes[0], 'null') === FALSE ? 0 : 2);
+
+	     	
+				//exit('nooooot');
+				$ArrayHiRes[$the_key] = preg_replace('/\[\{/', '', $ArrayHiRes[$the_key]);
+				//var_dump( $ArrayHiRes[$the_key]);
+				$tmpUrl = preg_replace('/"/', '', $ArrayHiRes[$the_key]);
+				if($this->validUrl($tmpUrl)){
+					$NewImage[] = $tmpUrl;
+				}
+				
 
 	     }
 
-	    echo '<pre>';
-	    print_r ($NewImage);
-
+	    /*echo '<pre>';
+	    print_r($NewImage);
+	    exit ();
+*/
     	return $NewImage;
 
 
 
 
-}
+		}
+
+		private function validUrl($url){
+			$handle = curl_init($url);
+			curl_setopt($handle,  CURLOPT_RETURNTRANSFER, TRUE);
+
+			/* Get the HTML or whatever is linked in $url. */
+			$response = curl_exec($handle);
+
+			/* Check for 404 (file not found). */
+			$httpCode = curl_getinfo($handle, CURLINFO_HTTP_CODE);
+			curl_close($handle);
+			if($httpCode == 200) {
+
+			    return true;
+			}
+
+			return;
+
+		}
+		
+
    
 
 }
