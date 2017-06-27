@@ -69,7 +69,7 @@ class Extract_model extends CI_Model {
             }
         //, i.item_sku, i.image_src
 //INNER JOIN images i ON t.sku = i.item_sku
-        public function allImport($table, $numrows, $skus=null){
+        public function allImport($table, $numrows, $imagesOnly, $skus=null){
 
             if($numrows == 'all'){
                 $numrows = 2500;
@@ -558,6 +558,8 @@ class Extract_model extends CI_Model {
                 if (!file_exists('files/updates')) {
                 mkdir('files/updates', 0777, true);
                 }
+
+                $table = ($imagesOnly==1 ? 'imagesOnly': $table);
 
                 $file = "./files/updates/".$table."_ALL_IMPORT.xml";
 
