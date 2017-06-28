@@ -2801,7 +2801,7 @@ class Live_model extends CI_Model {
     }
 
 
-    private function AddProductImages($product, $f, $supplier, $sku){
+    public function AddProductImages($product, $f, $supplier, $sku){
 
     	
 
@@ -2863,7 +2863,7 @@ class Live_model extends CI_Model {
     	{
     		$i=0;
     		foreach($f as $image){
-		    				
+    		
 
 						if($i=="0"){
 							$tail='';
@@ -2879,12 +2879,13 @@ class Live_model extends CI_Model {
 							'tail' => $tail
 						);
 						
-						
 						if(!$exists=Modules::run('images/getImage',$imageData)){
 							break;
 						}
 
 					$i++;
+
+
     		}//foreach($f as $image){
     	}//elseif( $supplier == 'etd')
     	elseif( $supplier == 'konica')

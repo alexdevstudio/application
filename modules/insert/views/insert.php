@@ -70,22 +70,22 @@ $tables = Modules::run('categories/fullCategoriesArray');
 	        </div>
 
 	</div>
-	<div class="col-sm-6 col-md-3">
+<!-- 	<div class="col-sm-6 col-md-3">
 
-			<div class="form-group">
-	                  	
-	                  	<label>3. Συμπληρώστε 5 URL φωτογραφειών </label>
+		<div class="form-group">
+                  	
+                  	<label>3. Συμπληρώστε 5 URL φωτογραφειών </label>
 
-	                  		  <input type="text" class="form-control" value="" placeholder="Φώτο 1" id="image1" name="image1"/>
-	                  	<br /><input type="text" class="form-control" value="" placeholder="Φώτο 2" id="image2" name="image2"/>
-	                  	<br /><input type="text" class="form-control" value="" placeholder="Φώτο 3" id="image3" name="image3"/>
-	                  	<br /><input type="text" class="form-control" value="" placeholder="Φώτο 4" id="image4" name="image4"/>
-	                  	<br /><input type="text" class="form-control" value="" placeholder="Φώτο 5" id="image5" name="image5"/>
+                  		  <input type="text" class="form-control" value="" placeholder="Φώτο 1" id="image1" name="image1"/>
+                  	<br /><input type="text" class="form-control" value="" placeholder="Φώτο 2" id="image2" name="image2"/>
+                  	<br /><input type="text" class="form-control" value="" placeholder="Φώτο 3" id="image3" name="image3"/>
+                  	<br /><input type="text" class="form-control" value="" placeholder="Φώτο 4" id="image4" name="image4"/>
+                  	<br /><input type="text" class="form-control" value="" placeholder="Φώτο 5" id="image5" name="image5"/>
 
           
-	        </div>
+        </div>
 
-	</div>
+</div> -->
 	<!-- <div class="col-sm-6 col-md-3">
 
 			<div class="form-group">
