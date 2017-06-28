@@ -1172,6 +1172,12 @@ class Live_model extends CI_Model {
 					else
 						$c = $cat;
 				break;
+				case 'Notebook Options':
+					if($brand == 'COOLERMASTER')
+						$c = 'cooling_pads';
+					else
+						$c = $cat;
+				break;
 				case 'Desktop/Tower':
 					if($brand == 'MSI')
 						$c = 'desktops';
@@ -1314,6 +1320,13 @@ class Live_model extends CI_Model {
 				elseif($c == 'tv')
 				{
 					$title = $description;
+				}
+				elseif($c == 'cooling_pads')
+				{
+					if (strpos($description,'NOTEPAL') > 0 || strpos($description,'notepal') > 0)
+						$title = $description;
+					else
+						continue;					
 				}
 				//echo $title.'<br>';
 				$net_price = str_replace(",", ".", $product->timi);
@@ -2145,6 +2158,9 @@ class Live_model extends CI_Model {
 					else
 						$c = $cat;
 					break;
+				case 'COOLING STANDS':
+					$c = 'cooling_pads';
+					break;
 				default:
 					$c = $cat;
 					break;
@@ -2638,7 +2654,7 @@ class Live_model extends CI_Model {
 				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c== "desktops" || $c == "tablets"  || $c == "smartphones" ||
 				 $c == "cables" || $c == "patch_panels" || $c == "racks" || $c =="optical_drives" || $c == "card_readers" || $c == "flash_drives" || 
 				 $c == "power_supplies" || $c == "cases" || $c == "fans" || $c == "motherboards" || $c == "graphic_cards" || $c == "cpu" || 
-				 $c == "memories" || $c == "hoverboards" || $c =="printer_fusers" || $c =="printer_drums" || $c =="printer_belts" || $c=="ups" || $c=="tv" || $c=="accessories" || $c=="cable_accessories"){
+				 $c == "memories" || $c == "hoverboards" || $c =="printer_fusers" || $c =="printer_drums" || $c =="printer_belts" || $c=="ups" || $c=="tv" || $c=="accessories" || $c=="cable_accessories" || $c=="cooling_pads"){
 
 
 					$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
