@@ -57,7 +57,7 @@ class Edit extends MX_Controller {
 		
 
 					if($post['imageUrl']!=''){
-						$imageArray = Modules::run('images/getExternalImagesFromUrl',$sku, $post['imageUrl']);
+						$imageArray = Modules::run('images/getExternalImagesFromUrl', $post['imageUrl']);
 							
 							/*print_r($imageArray);
 							exit();*/

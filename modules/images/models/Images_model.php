@@ -68,9 +68,7 @@ class Images_model extends CI_Model {
 
 		    $this->db->insert('images', $data);
 
-		   
-
-		    return true;
+		   		 return true;
 
 		    }
 		    
@@ -79,84 +77,32 @@ class Images_model extends CI_Model {
 
     }
 
-    public function getExternalImagesFromUrl_OLD($sku, $url){
+public function getExternalImagesFromUrl($url){
+	if (strpos($url, 'www.amazon') !== false) {
+    	return $this->getImagesFromAmazon($url);
+	}else{
+		return $this->getNewImageByUrl($url);
+	}
 
-    	// Create DOM from URL or file
-    
+	return;
+}
 
-			$opts = [
-			    "http" => [
-			        "method" => "GET",
-			        "header" => "Accept-language: en\r\n" .
-			            "Cookie: foo=bar\r\n"
-			    ]
-			];
+private function getNewImageByUrl($url){
+	if($this->validUrl($url)){
+		$newImage[] = $url;
+		return	$newImage;
+	}
+	return;
+}
 
-		$context = stream_context_create($opts);
-
-		//$html = file_get_contents($html,'',);
-		echo $html;
-		
-		print_r($context);
-		//$html = file_get_html($url, 0, $context);
-		//$html = file_get_html($url);
-
-		// Find all images
-		echo $html;
-		$shopData = array();
-		$i = 0;
-
-		foreach($html->find('#imageBlock_feature_div script') as $element){
-			if($i==0)
-				continue;
-			
-		    $the_script = $element->innertext;
-
-		    //iconv(mb_detect_encoding($the_script, mb_detect_order(), true), "UTF-8", $the_script);
-
-			$i++;
-		}
-		//echo $the_script;
-		$the_script = ltrim($the_script, "P.when('A').register(\"ImageBlockATF\", function(A){ var data = { 'colorImages': { 'initial':");
-				    //$the_script = "{'colorImages'".$the_script;
-
-		$the_script = rtrim($the_script, ", 'colorToAsin': {'initial': {}}, 'holderRatio': 1.0, 'holderMaxHeight': 700, 'heroImage': {'initial': []}, 'heroVideo': {'initial': []}, 'weblabs' : {} }; A.trigger('P.AboveTheFold'); // trigger ATF event. return data; }); ");
-
-
-	     $the_script = explode('},{', $the_script);
-
-	     foreach ($the_script as $string) {
-	     	$string = preg_replace('/"hiRes":/', '', $string);
-	     	//$string = ltrim($string, '"hiRes":');
-	     	$Arraystring = explode(',', $string);
-	     	if($Arraystring[0] != 'null')
-			{
-				$Arraystring[0] = preg_replace('/\[\{/', '', $Arraystring[0]);
-				$NewImage[] = preg_replace('/"/', '', $Arraystring[0]);
-	     	}
-
-	     }
-
-	    echo '<pre>';
-	    print_r ($NewImage);
-
-    	return "Ψάχνεις για φωτογραφία με ".$sku." από το ".$url;
-
-    }
-
-
-    public function getExternalImagesFromUrl($sku, $base){
-    	//base url
-//$base = 'https://www.amazon.com/Dell-i3567-5185BLK-PUS-Inspiron-Laptop-Graphics/dp/B06X9TH2RX/ref=sr_1_3?ie=UTF8&qid=1497356042&sr=8-3&keywords=dell+3567';
-//$base = 'http://www.amazon.com/Dell-XPS9560-7001SLV-PUS-Laptop-Nvidia-Gaming/dp/B01N1Q0M4O/ref=sr_1_11?ie=UTF8&qid=1497360063&sr=8-11&keywords=dell+xps';
-//$base = 'https://www.amazon.co.uk/Dell-Inspiron-Laptop-Graphics-Anti-Glare/dp/B017URDNS6/ref=sr_1_3?ie=UTF8&qid=1497345644&sr=8-3&keywords=dell++5559';
+private function getImagesFromAmazon($url){
 
 $curl = curl_init();
 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
 curl_setopt($curl, CURLOPT_HEADER, false);
 curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-curl_setopt($curl, CURLOPT_URL, $base);
-curl_setopt($curl, CURLOPT_REFERER, $base);
+curl_setopt($curl, CURLOPT_URL, $url);
+curl_setopt($curl, CURLOPT_REFERER, $url);
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
 $str = curl_exec($curl);
 curl_close($curl);

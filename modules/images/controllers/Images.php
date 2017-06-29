@@ -57,9 +57,9 @@ class Images extends MX_Controller {
 
 	}
 
-	public function getExternalImagesFromUrl($sku, $url){
+	public function getExternalImagesFromUrl($url){
 		$this->load->model('images_model');
-		return $this->images_model->getExternalImagesFromUrl($sku, $url);
+		return $this->images_model->getExternalImagesFromUrl($url);
 
     }
 
