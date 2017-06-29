@@ -82,8 +82,10 @@ class Extract_model extends CI_Model {
                 $action = 'all';
                 $tables = Modules::run('categories/fullCategoriesArray');
             }else{
-                if($numrows == 'one')
+                if($numrows == 'one'){
                     $action = 'all';
+                    $numrows = 1;
+                }
 
                 $tables = array($table);
 

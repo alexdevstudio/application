@@ -20,32 +20,37 @@ class Rest extends MX_Controller {
 	 */
 	
 
-	public function index($s)//$s stands for supplier
+	public function index()//$s stands for supplier
 	{	
-			
+		
 	}
 
-	public function productImages($sku){
-
+	public function productImages($sku, $sec_key=null){
+		if(!$sec_key)
+			die('dead end');
+		/*if(! $this->input->is_ajax_request()) {
+		    redirect('https://etd.gr');
+		}*/
+		//echo $_SESSION['myKey'];
 		$images = Modules::run('crud/get', 'images', array('item_sku'=>$sku));
 		if($images){
 			$result	= "<div id='product-large-images-light-box' class='product-large-images'>";
+			$thumbs = '';
 			foreach ($images->result() as $image) {
 				$result .= '
-    <div>
-	    <a href="http://etd.gr/xml/images/'.$sku.'/'.$image->image_src.'.jpg">
-	    	<img data-lazy="http://etd.gr/xml/images/'.$sku.'/'.$image->image_src.'.jpg" data-id="">
-	    </a>
-	</div>';
+						    <div>
+							    <a href="https://etd.gr/xml/images/'.$sku.'/'.$image->image_src.'.jpg">
+							    	<img data-lazy="https://etd.gr/xml/images/'.$sku.'/'.$image->image_src.'.jpg" data-id="">
+							    </a>
+							</div>';
+
+				$thumbs .= '<div>
+						    	<img data-lazy="https://etd.gr/xml/images/'.$sku.'/'.$image->image_src.'.jpg">
+							</div>';
 			}
 
 			$result .='</div>';
-			$result .= '<div class="product-large-images-thumbs">
-	<div>
-    	<img data-lazy="http://etd.gr/xml/images/'.$sku.'/'.$image->image_src.'.jpg">
-	</div>
-		<div><img data-lazy="http://etd.gr/xml/images/'.$sku.'/'.$image->image_src.'.jpg"/></div>
-	</div>';
+			$result .= '<div class="product-large-images-thumbs">'.$thumbs.'</div>';
 
 		}else{
 			
@@ -53,7 +58,7 @@ class Rest extends MX_Controller {
 		
 		}
 
-		echo $result;
+		echo  $result;
 	}
 
 
