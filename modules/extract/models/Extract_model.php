@@ -69,7 +69,7 @@ class Extract_model extends CI_Model {
             }
         //, i.item_sku, i.image_src
 //INNER JOIN images i ON t.sku = i.item_sku
-        public function allImport($table, $numrows, $imagesOnly, $skus=null){
+        public function allImport($table, $numrows, $imagesOnly=null, $skus=null){
 
             if($numrows == 'all'){
                 $numrows = 2500;
