@@ -35,9 +35,7 @@ class Images_model extends CI_Model {
 
 			$newFileName = $brand.'_'.$pn.''.$tail;
 			
-		    $target_path = './images/'.$sku.'/'.$newFileName.'.jpg';
-			
-			
+		    $target_path = './images/'.$sku.'/'.$newFileName.'.jpg';		
 
 		   /* $config_manip = array(
 		        'image_library' => 'ImageMagick',
@@ -50,14 +48,90 @@ class Images_model extends CI_Model {
 		        'width' => 600,
 		        'height' => 600
 		    );*/
-		    
+		    //$this->load->library('image_lib', $config);
+
+			//$this->image_lib->resize();
 		   // $this->image_lib->initialize($config_manip);
 
 		    if (copy($src, $target_path)) {
 
 		    	echo $target_path.' : '.$src.'<br/>';
-		       
-		    
+
+			//Test with Imagick
+		    //600x600 Image
+		    $target_img_path = './images/'.$sku.'/'.$newFileName.'_600.jpg';
+			
+			$config_manip = array(
+		        'image_library' => 'ImageMagick',
+		        'library_path' => '/usr/bin',
+		        'source_image' => $target_path,
+		        'new_image' => $target_img_path,
+		        'maintain_ratio' => TRUE,
+		        'create_thumb' => TRUE,
+		        'thumb_marker' => '',
+		        'allowed_types' => 'jpg|jpeg|gif|png',
+		        'width' => 600,
+		        'height' => 600
+		    );
+		    //$this->load->library('image_lib', $config_manip);
+		    $this->image_lib->initialize($config_manip);
+
+			if ( ! $this->image_lib->resize())
+				echo $this->image_lib->display_errors();
+
+			$this->image_lib->clear();
+			unset ($config_manip);
+
+			//300x300 Image
+		    $target_img_path = './images/'.$sku.'/'.$newFileName.'_300.jpg';
+			
+			$config_manip = array(
+		        'image_library' => 'ImageMagick',
+		        'library_path' => '/usr/bin',
+		        'source_image' => $target_path,
+		        'new_image' => $target_img_path,
+		        'maintain_ratio' => TRUE,
+		        'create_thumb' => TRUE,
+		        'thumb_marker' => '',
+		        'allowed_types' => 'jpg|jpeg|gif|png',
+		        'width' => 300,
+		        'height' => 300
+		    );
+		    //$this->load->library('image_lib', $config_manip);
+		    $this->image_lib->initialize($config_manip);
+
+			if ( ! $this->image_lib->resize())
+				echo $this->image_lib->display_errors();
+
+			$this->image_lib->clear();
+			unset ($config_manip);
+
+			//THUMB Image
+			$target_thumb_path = './images/'.$sku.'/'.$newFileName.'_thumb.jpg';
+			
+			$config_manip = array(
+		        'image_library' => 'ImageMagick',
+		        'library_path' => '/usr/bin',
+		        'source_image' => $target_path,
+		        'new_image' => $target_thumb_path,
+		        'maintain_ratio' => TRUE,
+		        'create_thumb' => TRUE,
+		        'thumb_marker' => '',
+		        'allowed_types' => 'jpg|jpeg|gif|png',
+		        'width' => 70,
+		        'height' => 70
+		    );
+		    //$this->load->library('image_lib', $config_manip);
+		    $this->image_lib->initialize($config_manip);
+
+			if ( ! $this->image_lib->resize())
+				echo $this->image_lib->display_errors();
+
+			$this->image_lib->clear();
+			unset ($config_manip);
+
+			//End of Test with Imagick		    	
+
 		    // clear //
 		  //  $this->image_lib->clear();
 
@@ -69,6 +143,7 @@ class Images_model extends CI_Model {
 		    $this->db->insert('images', $data);
 
 		   		 return true;
+
 
 		    }
 		    

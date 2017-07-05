@@ -197,7 +197,7 @@ class Edit extends MX_Controller {
 					}
 
 					//For auto update the WP with update_wp
-					Modules::run('extract/allImport',$category,'one',$sku);
+					Modules::run('extract/allImport',$category,'one',0,$sku);
 
 					unset($post);
 					header("Refresh:0");
