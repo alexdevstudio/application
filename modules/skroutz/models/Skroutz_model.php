@@ -34,6 +34,9 @@ class Skroutz_model extends CI_Model {
 		
 		foreach ($items->result_array() as $keys => $values) {
 
+			// If produc is not live then skip this loop
+			if($this->notLive($values['sku']))
+				continue;
 			
 
 			$id = $values['id'];
@@ -55,7 +58,8 @@ class Skroutz_model extends CI_Model {
 				   /* $shopData['shopLogo'] = $element->find('.js-lazy')->src;
 				    $shopData['shopTitle'] = $element->find('.shop')->plaintext;
 */
-				    
+				    if(!isset($element->find('img',0)->src) || !isset($element->find('a.product-link',0)->innertext) || !isset($element->find('.shop-details a[title]',0)->plaintext))
+				    	continue;
 				    $shopData['shopLogo'] = $element->find('img',0)->src;
 				    $shopData['shopTitle'] = $element->find('.shop-details a[title]',0)->plaintext;
 				    $shopData['shopPrice'] =  $this->skroutzPrizeSanitize ( $element->find('a.product-link',0)->innertext);
@@ -140,5 +144,16 @@ class Skroutz_model extends CI_Model {
 		return $price;
 
 	} 
+
+	private function notLive($sku){
+		$pn = Modules::run('crud/get','sku',array('id'=>$sku))->row()->product_number;
+
+		if(Modules::run('crud/get', 'live', array('product_number'=>$pn)))
+			return;
+		else
+			return  true;
+	}
+
+	
 
 }
