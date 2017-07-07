@@ -230,7 +230,9 @@ public function insertWp($table, $data){
                                                      'category'=>$table,
                                                      'title'=>$problematic->title,
                                                      'type'=>$problem_type);
-                              
+                              if($counter>19)
+                                break;
+
                             }else{
                               $result = $counter;
                             }
