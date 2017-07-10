@@ -62,7 +62,9 @@ class Problematic extends MX_Controller {
 		$images = array();
 		$count = 0;
 		foreach ($skus->result() as $sku) {
-
+			if($sku->category=='ip_pbx'){
+				continue;
+			}
 			if(file_exists('images/'.$sku->id)){
 
 				$dir = scandir('images/'.$sku->id);
