@@ -150,12 +150,12 @@ public function volumeWeight($dimensions){
 	//Create an array
 	$da = explode("x",$dimensions);
 	
-	if(count($da) != 3){
+	if(count($da) != 3){ 
 
 		return false;
 	}
 
-	$vweight = (((int) $da[0]/10+10)*((int) $da[1]/10+10)*((int) $da[2]/10+10))/5000;
+	$vweight = (((int) $da[0]/10)*((int) $da[1]/10)*((int) $da[2]/10))/5000;
 
 	$vweight = ceil($vweight);
 	
