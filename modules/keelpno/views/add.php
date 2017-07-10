@@ -33,7 +33,7 @@
   
   float:left;
   text-align:center;
-  font-size: 13px
+  font-size: 12px
 }
 .date-number-subitem{
   width:50%;
