@@ -25,6 +25,25 @@ class Rest extends MX_Controller {
 		
 	}
 
+	public function featuredImage($sku, $sec_key=null){
+		if(!$sec_key)
+			die('dead end');
+
+		$images = Modules::run('crud/get', 'images', array('item_sku'=>$sku), array('id', 'ASC'), 1);
+
+		/*foreach ($images->result() as $image) {
+			$name = $images->image_src;
+		}*/
+		if($images){
+			$name = $images->row()->image_src.'.jpg';
+			$name = '<img  src="https://etd.gr/xml/images/'.$sku.'/'.$name.'" >';
+		}else{
+			$name = '<img src="https://etd.gr/wp-content/plugins/woocommerce/assets/images/placeholder.png" >';
+		}
+
+		echo $name;
+	}
+
 	public function productImages($sku, $sec_key=null){
 		if(!$sec_key)
 			die('dead end');
