@@ -69,9 +69,9 @@ class Problematic extends MX_Controller {
 
 				$dir = scandir('images/'.$sku->id);
 
-				if(isset($dir[3])){
+				if(isset($dir[4])){
 					$image1 = md5(file_get_contents('images/'.$sku->id.'/'.$dir[2]));
-					$image2 = md5(file_get_contents('images/'.$sku->id.'/'.$dir[3]));
+					$image2 = md5(file_get_contents('images/'.$sku->id.'/'.$dir[4]));
 
 					if($image1 == $image2){
 						$images[] = array('category'=>$sku->category, 'sku'=>$sku->id, 'dir'=>scandir('images/'.$sku->id));
@@ -90,6 +90,20 @@ class Problematic extends MX_Controller {
 		return $images;
 
 
+	}
+
+	public function nomodel(){
+		$laptops = Modules::run('crud/get', 'live',array('category'=>'laptops'));
+		foreach ($laptops->result() as $laptop) {
+			$item = Modules::run('crud/get', 'laptops', array('product_number' => $laptop->product_number));
+
+			if($item->row()->model==''){ 
+				Modules::run('crud/update','live', array('product_number' => $laptop->product_number), array('status'=>'trash'));
+
+				Modules::run('crud/update','laptops', array('product_number' => $laptop->product_number), array('new_item'=>1));
+			} 
+
+		}
 	}
 	
 
