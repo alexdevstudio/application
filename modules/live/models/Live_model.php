@@ -415,6 +415,15 @@ class Live_model extends CI_Model {
 			$description = "";
 			$brand = (string) trim($product->manufacturer);
 			$title = (string) trim($product->name);
+
+
+			$status = 'publish';
+			$flag = 0;
+
+			if (strpos($title, '3CX') !== false) {
+				    $status = 'trash';
+				    $flag  = 1;
+				}
 			//$product_url = "";
 
 			//Insert into live
@@ -423,6 +432,8 @@ class Live_model extends CI_Model {
 				
 				if($this->checkLiveProduct($pn, $net_price, $supplier)){
 
+
+
 					$live = array(
 						'category'=>$c,
 						'product_number'=>$pn ,
@@ -430,8 +441,8 @@ class Live_model extends CI_Model {
 						'availability'=>$availability,
 						'recycle_tax'=>'',
 						'supplier' =>$supplier,
-						'status' => 'publish',
-						'delete_flag'=>0
+						'status' => $status,
+						'delete_flag'=>$flag
 						);
 
 					$this->db->where('product_number', $pn);
