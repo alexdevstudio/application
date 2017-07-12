@@ -72,7 +72,7 @@ class Extract_model extends CI_Model {
         public function allImport($table, $numrows, $imagesOnly=null, $skus=null){
 
             if($numrows == 'all'){
-                $numrows = 2500;
+                $numrows = 5500;
             }
 
             $action = '';
