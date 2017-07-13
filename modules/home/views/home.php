@@ -331,10 +331,10 @@ echo "</pre>";*/
 
 
 
-	                	$img = Modules::run('images/getFirstImage', $sku, true);
+	                	$img = Modules::run('images/getFirstImage', $sku, false);
 						
 						$out.=' <div class="instock_item clearfix" data-category="'.$category.'">
-						                			'.$img.'
+						                			<img data-original="'.$img.'" class="lazyimg" />
 						        <h5><a href="http://etd.gr/xml/edit/'.$category.'/'.$sku.'">'.$title.'</a></h5>
 						        <strong style="color:#0fc504;">SKU: '.$sku.'</strong><br />
 						        <span class="instock_item_price">'.$skroutzPrice.'

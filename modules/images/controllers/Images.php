@@ -39,12 +39,13 @@ class Images extends MX_Controller {
 			if (file_exists($filename)) {
 			   $files = scandir ($filename);
 			   $firstFile =$files[2];// because [0] = "." [1] = ".." 
-
-			   if(!$html)
-			   	return $firstFile;
-
 			   $src = $filename.'/'.$firstFile;
 			   $src = "http://etd.gr/xml".ltrim($src,".");
+
+			   if(!$html)
+			   	return $src;
+
+			   
 
 			   $output ="<img  src='$src' />";
 			   return $output;
