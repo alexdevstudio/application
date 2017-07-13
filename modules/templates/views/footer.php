@@ -40,8 +40,11 @@
 <script src="<?= base_url()?>assets/dist/js/demo.js"></script>
 <script src="<?= base_url()?>assets/js/etd.js"></script>
 <script src="<?= base_url()?>assets/js/bootstrap-colorpicker.min.js"></script>
+<script src="<?= base_url()?>assets/js/lazy.js"></script>
  <script type="text/javascript">
-
+$(function() {
+    $("img.lazyimg").lazyload();
+});
 
         </script>
 </body>
