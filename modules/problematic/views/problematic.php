@@ -18,7 +18,12 @@
               </div>
               <div class="row">
               <div class="col-sm-12">
-              <table  id="msiTable" class="table table-bordered table-hover dataTable">
+             
+                <?php 
+                $i = 1;
+                if($errors && is_array($errors)){
+                  ?>
+                   <table  id="msiTable" class="table table-bordered table-hover dataTable">
                 <thead>
                 <tr role="row">
                 <th  colspan="1" rowspan="1" >SKU</th>
@@ -30,9 +35,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <?php 
-                $i = 1;
-                if($errors){
+                <?php
                   foreach ($errors as $error) {
                     if($i>1){
                       $class="even";
@@ -54,17 +57,9 @@
                 </tr>
 
                     <?php
-
-
-
-
-
                   }
-                }
-                 ?>
-                
-
-              </tbody>
+                  ?>
+ </tbody>
                 <tfoot>
                 <tr role="row">
                 <th  colspan="1" rowspan="1" >SKU</th>
@@ -75,6 +70,16 @@
                 </tr>
                 </tfoot>
               </table>
+
+                  <?php
+                }else{
+                  echo "<h3>Δεν υπάρχουν προβληματικά προϊόντα</h3>";
+                  }
+                 ?>
+                
+                
+
+             
 
             </div>
             <!-- /.box-body -->
