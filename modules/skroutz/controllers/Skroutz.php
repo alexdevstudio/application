@@ -8,8 +8,9 @@ class Skroutz extends MX_Controller {
 	function __construct(){
 		parent::__construct();
 		$this->load->model('skroutz_model');
-
 	} 
+
+
 
 	public function index($disabled=null){
 
@@ -29,6 +30,7 @@ class Skroutz extends MX_Controller {
 	public function parsing(){	
 			
 		 $this->skroutz_model->parsing();
+
 	
 	}
 

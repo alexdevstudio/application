@@ -105,14 +105,20 @@ class Edit extends MX_Controller {
 					else
 						echo "Το προϊόν δεν βρέθηκε στο STOCK.";
 
+					//Remove from etd_prices table
 					$exists_in_etd_prices = Modules::run('crud/get','etd_prices',array('sku'=>$sku));
 					if ($exists_in_etd_prices)
 					{
 						Modules::run('crud/delete','etd_prices',array('sku'=>$sku));	
 					}
 
-
+					//Remove from Installments Table
 					Modules::run('crud/delete','installments',array('sku'=>$sku));
+
+					//Disable active url from skroutz_irls table to avoid further price update
+					
+					$this->skroutzParsingDeactivate($sku);
+
 				}
 				else if($post['status']=='add')
 				{
@@ -199,6 +205,12 @@ class Edit extends MX_Controller {
 					//For auto update the WP with update_wp
 					Modules::run('extract/allImport',$category,'one',0,$sku);
 
+					//Toggle skroutz parsing if the URL was set from before
+					if($post['supplier']=='etd'){
+						$this->skroutzParsingDeactivate($sku, true);
+					}else{
+						$this->skroutzParsingDeactivate($sku);
+					}
 					unset($post);
 					header("Refresh:0");
 				}
@@ -399,6 +411,16 @@ class Edit extends MX_Controller {
 			unlink($path);
 		    exit ('ok'); 
 		
+	}
+
+	public function skroutzParsingDeactivate($sku, $activate=null){
+		if(!$activate){
+			Modules::run('crud/update', 'skroutz_urls', array('sku'=>$sku), array('active'=>0));
+		}else{
+			Modules::run('crud/update', 'skroutz_urls', array('sku'=>$sku), array('active'=>1));
+		}
+		return true;
+
 	}
 
 }

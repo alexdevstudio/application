@@ -69,10 +69,10 @@ class Extract_model extends CI_Model {
             }
         //, i.item_sku, i.image_src
 //INNER JOIN images i ON t.sku = i.item_sku
-        public function allImport($table, $numrows, $imagesOnly, $skus=null){
+        public function allImport($table, $numrows, $imagesOnly=null, $skus=null){
 
             if($numrows == 'all'){
-                $numrows = 2500;
+                $numrows = 5500;
             }
 
             $action = '';
@@ -208,7 +208,11 @@ class Extract_model extends CI_Model {
                         if(($supplier=='braintrust' || $supplier=='etd') && $cat == 'laptops' && $brand == 'MSI'){
                             $msi = Modules::run("crud/get",'msi_price',array('sku'=>$sku));
                            
+                            if($msi)
                             $msi_price = $msi->row()->price;
+                            else
+                            echo $sku.': THIS MSI HAS NO PRICE<br>'; break;
+
                             
                             if($msi_price!='0.00' && $msi_price!='' && $msi_price!='0'){
                                 $product['price_tax'] = $msi_price;

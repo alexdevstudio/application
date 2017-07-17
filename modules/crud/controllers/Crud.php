@@ -18,10 +18,17 @@ class Crud extends MX_Controller {
 		return $this->crud_model->update($table, $where, $data);
 	}
 
-	public function problematic($where, $problematic_type, $count)
+	public function problematicWeight($where, $problematic_type, $count)
 	{
 
-		return $this->crud_model->problematic($where, $problematic_type, $count);
+		return $this->crud_model->problematicWeight($where, $problematic_type, $count);
+
+	}
+
+
+
+	public function noImages($where,$tables=null, $problem_type=null, $count = false){
+		return $this->crud_model->noImages($where,  $tables, $problem_type, $count);
 
 	}
 

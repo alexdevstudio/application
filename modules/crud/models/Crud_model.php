@@ -168,7 +168,7 @@ public function insertWp($table, $data){
         return $data;
     }
 
-      public function problematic($where, $problem_type=null, $count = false){
+      public function problematicWeight($where, $problem_type=null, $count = false){
         $where['new_item !='] = 1; 
            
                   $tables = Modules::run('categories/fullCategoriesArray');
@@ -200,6 +200,49 @@ public function insertWp($table, $data){
                      }
 
             }
+            return $result;
+      }
+
+       public function noImages($where,  $tables=null, $problem_type=null, $count = false){
+       
+
+       $where['new_item !='] = 1; 
+                  if(!$tables){
+                    $tables = Modules::run('categories/fullCategoriesArray');
+                  }else{
+                    $tab[]= $tables;
+                    $tables = $tab;
+                  }
+                 
+                  $counter = 0;
+                  foreach ($tables as $table) {
+
+                    
+
+                    $problematics = $this->get($table, array('sku >'=>'1'));
+                      
+                      foreach ($problematics->result() as $problematic) {
+                       if(!Modules::run('crud/get', 'images',array('item_sku'=>$problematic->sku))){
+                          $counter++;
+                          if(!$count){
+
+                                    $result[] = array('sku'=>$problematic->sku,
+                                                     'category'=>$table,
+                                                     'title'=>$problematic->title,
+                                                     'type'=>$problem_type);
+                              if($counter>19)
+                                break;
+
+                            }else{
+                              $result = $counter;
+                            }
+
+                        }
+                       }
+                    }
+
+
+                        
             return $result;
       }
 

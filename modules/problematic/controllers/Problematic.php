@@ -8,12 +8,12 @@ class Problematic extends MX_Controller {
 	function __construct(){
 		parent::__construct();
 
+
 	} 
 
-	public function index(){
-
+	public function index($type=null, $category=null){
 		$data['title'] = 'Προβληματικά Προϊόντα';
-		$data['errors'] = $this->problematicWeight();
+		$data['errors'] = $this->problematic($type, $category);
 
 
 			$this->load->view('templates/header',$data);
@@ -21,11 +21,90 @@ class Problematic extends MX_Controller {
 			$this->load->view('templates/footer',$data);
 	}
 
-	public function problematicWeight(){
+	private function problematic($type=null,  $tables=null){
+
+		if(!$type){
+			return $this->problematicWeight($tables);
+		}else if($type=='images'){
+			
+			return $this->noImages($tables);
+		}
+	}
+
+	private function problematicWeight(){
 		$this->load->model('problematic_model');
+
 		return $this->problematic_model->weight();
 	}
 
+	private function noImages($tables=null){
+		
+		$this->load->model('problematic_model');
+
+		return $this->problematic_model->noImages($tables);
+	}
+
+
+	public function same(){
+		$data['title'] = 'Ίδιες Φωτογραφίες';
+		$data['errors'] = $this->compare();
+
+
+			$this->load->view('templates/header',$data);
+			$this->load->view('same', $data);
+			$this->load->view('templates/footer',$data);
+	}
+
+
+	private function compare(){
+
+		$skus = Modules::run('crud/get','sku');
+		$images = array();
+		$count = 0;
+		foreach ($skus->result() as $sku) {
+			if($sku->category=='ip_pbx'){
+				continue;
+			}
+			if(file_exists('images/'.$sku->id)){
+
+				$dir = scandir('images/'.$sku->id);
+
+				if(isset($dir[4])){
+					$image1 = md5(file_get_contents('images/'.$sku->id.'/'.$dir[2]));
+					$image2 = md5(file_get_contents('images/'.$sku->id.'/'.$dir[4]));
+
+					if($image1 == $image2){
+						$images[] = array('category'=>$sku->category, 'sku'=>$sku->id, 'dir'=>scandir('images/'.$sku->id));
+						$count++;
+					}
+				}
+
+				
+			}
+
+			if($count>19)
+				break;
+		}
+
+
+		return $images;
+
+
+	}
+
+	public function nomodel(){
+		$laptops = Modules::run('crud/get', 'live',array('category'=>'laptops'));
+		foreach ($laptops->result() as $laptop) {
+			$item = Modules::run('crud/get', 'laptops', array('product_number' => $laptop->product_number));
+
+			if($item->row()->model==''){ 
+				Modules::run('crud/update','live', array('product_number' => $laptop->product_number), array('status'=>'trash'));
+
+				Modules::run('crud/update','laptops', array('product_number' => $laptop->product_number), array('new_item'=>1));
+			} 
+
+		}
+	}
 	
 
 
