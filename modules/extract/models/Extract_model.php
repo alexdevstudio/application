@@ -428,12 +428,14 @@ class Extract_model extends CI_Model {
                            break;
                            case 'smartphones':
                         
+                        $title =  $product['title']; 
                         $color =  $product['color']; 
                         $model =  $product['model'];   
                         $pn    =  $product['product_number'];
 
                         if($model=='')
                             $model = ltrim($title, 'Smartphone ' );
+                            $model = ltrim($model, 'SMARTPHONE ' );
                                               
                          if($etd_title == '')                            
                              $etd_title = "$model $color ($pn)";

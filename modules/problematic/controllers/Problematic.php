@@ -92,7 +92,8 @@ class Problematic extends MX_Controller {
 
 	}
 
-	public function nomodel(){
+	//nomodel was created to find all products from WEstnet without characteristics
+	/*public function nomodel(){
 		$laptops = Modules::run('crud/get', 'live',array('category'=>'laptops'));
 		foreach ($laptops->result() as $laptop) {
 			$item = Modules::run('crud/get', 'laptops', array('product_number' => $laptop->product_number));
@@ -104,8 +105,22 @@ class Problematic extends MX_Controller {
 			} 
 
 		}
-	}
+	}*/
 	
+	//Change all shipping classes that are less then 2kg volumetric weight to 0.2kg = 10646 shipping class ID
+	public function shippingchange(){
+		$cats = Modules::run('categories/fullCategoriesArray');
+		foreach ($cats as $cat) {
+			$tmp= Modules::run('crud/get',$cat,array('volumetric_weight <' => 1));
+			if($tmp ){
+				foreach ($tmp->result() as $item) {
+
+					Modules::run('crud/update', $cat, array('sku'=>$item->sku), array('shipping_class'=>10646));
+				}
+			}
+		}
+		
+	}
 
 
 
