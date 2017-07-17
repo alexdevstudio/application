@@ -183,23 +183,24 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 		switch ($cat) {
 
 			case 'laptops':
-					$shipping_class= 10063;
+					$shipping_class= 10652;
 					break;
 			case 'software':
 					$shipping_class= 10646;
 					break;
 			case 'carrying_cases':
-					$shipping_class= 10650;
+					$shipping_class= 10646;
+					//$shipping_class= 10650;
 					break;
 			case 'desktops':
-					$shipping_class= 10070;
+					$shipping_class= 10065;
 					if($data['type']=='Mini Pc')
-						$shipping_class= 10066;
+						$shipping_class= 10651;
 					else
-						$shipping_class= 10070;
+						$shipping_class= 10065;
 					break;
 			case 'power_bank':
-					$shipping_class= 10650;
+					$shipping_class= 10646;
 					break;
 			case 'monitors':
 			case 'tv':
@@ -257,25 +258,32 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					$shipping_class= 10063;
 					break;
 			case 'external_hard_drives':
-					$shipping_class= 10650;
+					//$shipping_class= 10650;
+					$shipping_class= 10646;
 					break;
 			case 'sata_hard_drives':
-					$shipping_class= 10650;
+					//$shipping_class= 10650;
+					$shipping_class= 10646;
 					break;
 			case 'ssd':
-					$shipping_class= 10647;
+					$shipping_class= 10646;
+					//$shipping_class= 10650;
 					break;
 			case 'keyboard_mouse':
 					if($data['type']=='Mouse')
-						$shipping_class = 10648;
+						$shipping_class = 10646;
+						//$shipping_class = 10648;
 					else
-						$shipping_class = 10651;
+						$shipping_class = 10646;
+						//$shipping_class = 10651;
 					break;
 			case 'tablets':
 					$shipping_class= 10650;
 					break;
 			case 'cartridges':
-					$shipping_class= 10647;
+
+					$shipping_class= 10646;
+					//$shipping_class= 10647;
 					break;
 			case 'toners':
 					$title = $data['title'];
@@ -304,7 +312,8 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					$shipping_class = 10650;
 					break;
 			case 'card_readers':
-					$shipping_class = 10650;
+					$shipping_class = 10646;
+					//$shipping_class = 10650;
 					break;
 			case 'flash_drives':
 					$shipping_class = 10646;
@@ -313,10 +322,11 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					$shipping_class = 10063;
 					break;
 			case 'cases':
-					$shipping_class = 10070;
+					$shipping_class = 10065;
 					break;
 			case 'fans':
-					$shipping_class = 10650;
+					$shipping_class = 10646;
+				//	$shipping_class = 10650;
 					break;
 			case 'motherboards':
 					$shipping_class = 10063;
@@ -325,7 +335,9 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					$shipping_class = 10650;
 					break;
 			case 'cpu':
-					$shipping_class = 10063;
+
+					$shipping_class = 10646;
+					//$shipping_class = 10063;
 					break;
 			case 'memories':
 					$shipping_class = 10646;
@@ -334,10 +346,13 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					$shipping_class = 10070;
 					break;
 			case 'ip_cards':
-					$shipping_class = 10650;
+
+					$shipping_class = 10646;
+					//$shipping_class = 10650;
 					break;
 			case 'ip_gateways':
-					$shipping_class = 10063;
+					$shipping_class = 10646;
+					//$shipping_class = 10063;
 					break;
 		    case 'ip_phones':
 		    case 'docking_stations':
@@ -406,7 +421,7 @@ public function makeShippingClass($data, $cat, $dynamic = null){
     			$shipping_class = 10065;
     			break;
     		case 9:
-    			$shipping_class = 10066;
+    			$shipping_class = 10651;
     			break;
     		case 10:
     			$shipping_class = 10067;
