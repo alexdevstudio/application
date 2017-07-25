@@ -61,7 +61,7 @@ $fa = 0;
 
     			foreach ($product as $key => $value) {
     				
-    				if($key != 'description' && $key!='shipping_class'){
+    				if(/*$key != 'description' && */$key!='shipping_class'){
 
     					$data[$key]=$value;
 

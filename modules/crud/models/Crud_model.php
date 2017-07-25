@@ -247,3 +247,5 @@ public function insertWp($table, $data){
       }
 
 }
+
+?>

@@ -352,7 +352,7 @@ if($itemLive){
               <div class="tab-pane active" id="tab_1">
                 
 
-               <form  method='post' action="">
+               <form  method='post' id="chars_form" action="">
 
    <?php
 	$items = $item->result_array();
@@ -527,13 +527,30 @@ if($itemLive){
 </div>
 
 
-<script type="text/javascript">
-	/*$(document).ready(function(){*/
+<script>
 
-			function clearPrice(a){
-				$('#'+a).val('');
-			}
+		function clearPrice(a){
+			$('#'+a).val('');
+		}
 
-/*});*/
+		//escape any double quotes or other illigal characters
+		$('#chars_form').on('submit',function(e){
+			
+			$('#chars_form input').each(function(){
+				tmp = $(this).val();
+				if(tmp != ''){
+				 newTemp = tmp.replace(/"/g, "'");
+				 $(this).val(newTemp);
+				}
+			});
+			$('#chars_form').submit();
+		});
+
+
+
+
+
+
+
 
 </script>
