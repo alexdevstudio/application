@@ -61,7 +61,7 @@ $fa = 0;
 
     			foreach ($product as $key => $value) {
     				
-    				if(/*$key != 'description' && */$key!='shipping_class'){
+    				if($key != 'description' && $key!='shipping_class'){
 
     					$data[$key]=$value;
 
@@ -71,7 +71,6 @@ $fa = 0;
     			}
 
     			$sku = $data['sku'];
-
     				/*if($sku == '1313329'){
     					echo "<pre />";
     						print_r($data);
