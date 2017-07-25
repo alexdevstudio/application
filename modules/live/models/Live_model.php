@@ -362,17 +362,16 @@ class Live_model extends CI_Model {
 			
 			$c_array = explode(">", $cat);
 			$c_array[0] = trim($c_array[0]);
-			if($c_array[0]!='Telephony'){
+			if($c_array[0]!='Telephony' && $c_array[0]!='Conferencing'){
 				continue;
 			}else{
 				$cat = trim($c_array[1]);
-
 			}
 
-			
-			
+			if($c_array[0]=='Conferencing'){
+				$cat = "Conference";
+			}
 
-			
 			switch ($cat) {
 				case 'Asterisk Cards':
 					$c='ip_cards';
@@ -385,6 +384,7 @@ class Live_model extends CI_Model {
 					break;
 				case 'IP Phones':
 				case 'IP Video Phones':
+				case 'Conference':
 					$c='ip_phones';
 					break;
 				default:
