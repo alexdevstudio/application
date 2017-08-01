@@ -344,6 +344,7 @@ class Edit extends MX_Controller {
 						//1. if SKU specific description available
 						$where = array('sku'=>$sku,'category'=>$category,'char'=>$key, 'char_spec'=>$value);
 						$res = Modules::run('crud/get', 'char_blocks_specific', $where);
+
 						if(!$res){
 
 							//2. if BRAND specific description available
@@ -352,17 +353,30 @@ class Edit extends MX_Controller {
 
 							if(!$res){
 								//3. if basic  description available
+
 							$where = array('category'=>$category,'char'=>$key, 'char_spec'=>$value);
 							$res = Modules::run('crud/get', 'char_blocks_basic', $where);
-							}
-						}
 
+
+
+							}
+
+
+						}
+						if(!$res)
+							continue;
+						/*	echo $key.":<br />";
+						print_r($res->result());
+						exit();*/
 						if($res){
 
 							$text = $res->row()->description;
 							preg_match_all("/\[([^\]]*)\]/", $text, $matches);
 							if(!empty($matches[1])){
 								$chars = $this->getChar($sku, $category);
+								/*echo "<pre>";
+								print_r( $matches[1]);
+								exit();*/
 								foreach ($matches[1] as $value) {
 									
 									$text = preg_replace('/\['.$value.']/', $chars->row()->$value, $text);
@@ -380,7 +394,8 @@ class Edit extends MX_Controller {
 										<h3 class='custom_description_block_title' style='text-align:center;color:".$res->row()->text_color."'>".$res->row()->title."</h3>
 										<p class='custom_description_block_descr' style='text-align:center;color:".$text_color."'>".$text."</p>
 									</div>
-									<div class='col-sm-6 col-xs-12 custom_description_block_img' style=''><img src='https://etd.gr/xml/images/descriptions/".$res->row()->image."' /></div>
+									<div class='col-sm-6 col-xs-12 custom_description_block_img' style=''>
+									<img src='https://etd.gr/xml/images/descriptions/".$res->row()->image."' /></div>
 							</div>";
 							/*<div class='col-sm-6 col-xs-12 custom_description_block_img' style='background-position: center center;min-height:350px;background-image:url(".base_url()."images/descriptions/".$res->row()->image.")'></div>*/
 						}

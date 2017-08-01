@@ -235,7 +235,7 @@ class Descriptions extends MX_Controller {
 				WHERE `TABLE_SCHEMA`='etd67140_xml'
 			    AND `TABLE_NAME`='$category';");
 
-    		$excludes = array(	'id','sku','product_number','brand','title','model','description','warranty','year_warranty','doa','volumetric_weight','shipping_class','etd_title','skroutz_title','supplier_product_url','product_url','product_url_pdf','support_tel','support_url','new_item');
+    		$excludes = array(	'id','sku','product_number','brand','title','description','warranty','year_warranty','doa','volumetric_weight','shipping_class','etd_title','skroutz_title','supplier_product_url','product_url','product_url_pdf','support_tel','support_url','new_item');
 
     		$char_type = array();
     		foreach ($result->result() as $key => $value) {
