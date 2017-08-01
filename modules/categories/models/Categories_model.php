@@ -71,7 +71,6 @@ $fa = 0;
     			}
 
     			$sku = $data['sku'];
-
     				/*if($sku == '1313329'){
     					echo "<pre />";
     						print_r($data);
