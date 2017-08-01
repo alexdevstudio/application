@@ -115,6 +115,9 @@ class Edit extends MX_Controller {
 					//Remove from Installments Table
 					Modules::run('crud/delete','installments',array('sku'=>$sku));
 
+					//For auto update the WP with update_wp
+					Modules::run('extract/allImport',$category,'one',0,$sku);
+
 					//Disable active url from skroutz_irls table to avoid further price update
 					
 					$this->skroutzParsingDeactivate($sku);
@@ -175,16 +178,22 @@ class Edit extends MX_Controller {
 					{
 						if(($post['price_tax'] == 0 || $post['price_tax'] == '') && ($post['sale_price'] == 0 || $post['sale_price'] == '') && ($post['shipping'] == ''))
 						{
-							$update_etd_prices = Modules::run('crud/delete','etd_prices',$where_in_etd_prices);
+							Modules::run('crud/delete','etd_prices', $where_in_etd_prices);
 						}
 						else
 						{
-							$update_etd_prices = Modules::run('crud/update','etd_prices',$where_in_etd_prices,array('price_tax'=>$post['price_tax'], 'sale_price'=>$post['sale_price'], 'shipping'=>$post['shipping'], 'date_last_edited'=>date('Y-m-d H:i:s')));
+							Modules::run('crud/update','etd_prices', $where_in_etd_prices,array('price_tax'=>$post['price_tax'], 'sale_price'=>$post['sale_price'], 'shipping'=>$post['shipping'], 'date_last_edited'=>date('Y-m-d H:i:s')));
 						}
 					}
 					else if($post['price_tax'] != '' || $post['shipping'] != '' || $post['sale_price'] != '')
 					{
-						$update_etd_prices = Modules::run('crud/insert','etd_prices',array('sku'=>$sku,'price_tax'=>$post['price_tax'], 'sale_price'=>$post['sale_price'], 'shipping'=>$post['shipping'], 'date_last_edited'=>date('Y-m-d H:i:s')));
+						Modules::run('crud/insert',
+							'etd_prices',
+							 array('sku'=>$sku,
+							 	'price_tax'=>$post['price_tax'],
+							 	 'sale_price'=>$post['sale_price'],
+							 	  'shipping'=>$post['shipping'],
+							 	   'date_last_edited'=>date('Y-m-d H:i:s')));
 					}
 					
 
