@@ -115,6 +115,9 @@ class Edit extends MX_Controller {
 					//Remove from Installments Table
 					Modules::run('crud/delete','installments',array('sku'=>$sku));
 
+					//For auto update the WP with update_wp
+					Modules::run('extract/allImport',$category,'one',0,$sku);
+
 					//Disable active url from skroutz_irls table to avoid further price update
 					
 					$this->skroutzParsingDeactivate($sku);
@@ -175,16 +178,22 @@ class Edit extends MX_Controller {
 					{
 						if(($post['price_tax'] == 0 || $post['price_tax'] == '') && ($post['sale_price'] == 0 || $post['sale_price'] == '') && ($post['shipping'] == ''))
 						{
-							$update_etd_prices = Modules::run('crud/delete','etd_prices',$where_in_etd_prices);
+							Modules::run('crud/delete','etd_prices', $where_in_etd_prices);
 						}
 						else
 						{
-							$update_etd_prices = Modules::run('crud/update','etd_prices',$where_in_etd_prices,array('price_tax'=>$post['price_tax'], 'sale_price'=>$post['sale_price'], 'shipping'=>$post['shipping'], 'date_last_edited'=>date('Y-m-d H:i:s')));
+							Modules::run('crud/update','etd_prices', $where_in_etd_prices,array('price_tax'=>$post['price_tax'], 'sale_price'=>$post['sale_price'], 'shipping'=>$post['shipping'], 'date_last_edited'=>date('Y-m-d H:i:s')));
 						}
 					}
 					else if($post['price_tax'] != '' || $post['shipping'] != '' || $post['sale_price'] != '')
 					{
-						$update_etd_prices = Modules::run('crud/insert','etd_prices',array('sku'=>$sku,'price_tax'=>$post['price_tax'], 'sale_price'=>$post['sale_price'], 'shipping'=>$post['shipping'], 'date_last_edited'=>date('Y-m-d H:i:s')));
+						Modules::run('crud/insert',
+							'etd_prices',
+							 array('sku'=>$sku,
+							 	'price_tax'=>$post['price_tax'],
+							 	 'sale_price'=>$post['sale_price'],
+							 	  'shipping'=>$post['shipping'],
+							 	   'date_last_edited'=>date('Y-m-d H:i:s')));
 					}
 					
 
@@ -344,6 +353,7 @@ class Edit extends MX_Controller {
 						//1. if SKU specific description available
 						$where = array('sku'=>$sku,'category'=>$category,'char'=>$key, 'char_spec'=>$value);
 						$res = Modules::run('crud/get', 'char_blocks_specific', $where);
+
 						if(!$res){
 
 							//2. if BRAND specific description available
@@ -352,17 +362,30 @@ class Edit extends MX_Controller {
 
 							if(!$res){
 								//3. if basic  description available
+
 							$where = array('category'=>$category,'char'=>$key, 'char_spec'=>$value);
 							$res = Modules::run('crud/get', 'char_blocks_basic', $where);
-							}
-						}
 
+
+
+							}
+
+
+						}
+						if(!$res)
+							continue;
+						/*	echo $key.":<br />";
+						print_r($res->result());
+						exit();*/
 						if($res){
 
 							$text = $res->row()->description;
 							preg_match_all("/\[([^\]]*)\]/", $text, $matches);
 							if(!empty($matches[1])){
 								$chars = $this->getChar($sku, $category);
+								/*echo "<pre>";
+								print_r( $matches[1]);
+								exit();*/
 								foreach ($matches[1] as $value) {
 									
 									$text = preg_replace('/\['.$value.']/', $chars->row()->$value, $text);
@@ -380,7 +403,8 @@ class Edit extends MX_Controller {
 										<h3 class='custom_description_block_title' style='text-align:center;color:".$res->row()->text_color."'>".$res->row()->title."</h3>
 										<p class='custom_description_block_descr' style='text-align:center;color:".$text_color."'>".$text."</p>
 									</div>
-									<div class='col-sm-6 col-xs-12 custom_description_block_img' style=''><img src='https://etd.gr/xml/images/descriptions/".$res->row()->image."' /></div>
+									<div class='col-sm-6 col-xs-12 custom_description_block_img' style=''>
+									<img src='https://etd.gr/xml/images/descriptions/".$res->row()->image."' /></div>
 							</div>";
 							/*<div class='col-sm-6 col-xs-12 custom_description_block_img' style='background-position: center center;min-height:350px;background-image:url(".base_url()."images/descriptions/".$res->row()->image.")'></div>*/
 						}

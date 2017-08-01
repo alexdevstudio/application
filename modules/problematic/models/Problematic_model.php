@@ -23,8 +23,25 @@ class Problematic_model extends CI_Model {
 
     public function noImages($tables=null){
         //$this->load->model('problematic_model');
+        $skus = Modules::run('crud/get','sku',array('id >'=>1));
+        foreach ($skus->result() as $sku) {
+            # code...
+       
+        $pid    =       $sku->id;
+        $dir    =       '/images/'.$pid;
+        $q      =       (count(scandir($dir)) == 2 ) ? 'Empty' : 'Not empty';
 
-        return Modules::run("crud/noImages", array("sku >"=>'1'), $tables, $this->problematicCategory(2), false);
+      
+         
+            if ($q=="Empty")
+            {
+
+                echo $pid."<br>"; 
+
+            }
+
+         }
+        //return Modules::run("crud/noImages", array("sku >"=>'1'), $tables, $this->problematicCategory(2), false);
 
 
     }

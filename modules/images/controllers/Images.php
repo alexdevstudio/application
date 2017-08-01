@@ -31,7 +31,9 @@ class Images extends MX_Controller {
 
 	}
 
-
+	public function getsrc($sku){
+			echo $this->getFirstImage($sku);
+	}
 	public function getFirstImage($sku, $html=false){
 
 		$filename = './images/'.$sku;
