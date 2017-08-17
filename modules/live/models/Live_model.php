@@ -397,7 +397,7 @@ class Live_model extends CI_Model {
 				continue;
 			}
 
-			$availability = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
+			$availability = 'Κατόπιν παραγγελίας σε 1-3 εργάσιμες';
 
 			$net_price = str_replace(".", "", $product->price);
 			$net_price = str_replace("€", "", $net_price);
@@ -1858,7 +1858,7 @@ class Live_model extends CI_Model {
 			$cat = (string) trim($product->Item);
 			$pn = (string) trim($product->Code);
 			if (strpos($cat, 'OKI ') !== false || strpos($cat, 'ΟΚΙ') !== false)
-			{
+			{	
 				if(strpos($pn, 'MF') !== false)
 					$c = 'multifunction_printers';
 				else
@@ -4604,7 +4604,7 @@ class Live_model extends CI_Model {
 	    			$av = 'Αναμονή παραλαβής';
 	    			break;
 	    		case '1':
-	    			$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
+	    			$av = 'Κατόπιν παραγγελίας σε 1-3 εργάσιμες';
 	    			break;
 	    		case '2':
 	    			$av = 'Άμεσα Διαθέσιμο';
@@ -4628,10 +4628,10 @@ class Live_model extends CI_Model {
 
 	    	switch ($availability) {
 	    		case '1':
-	    			$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
+	    			$av = 'Κατόπιν παραγγελίας σε 1-3 εργάσιμες';
 	    			break;
 	    		case '2':
-	    			$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
+	    			$av = 'Κατόπιν παραγγελίας σε 1-3 εργάσιμες';
 	    			break;
 	    		case '3':
 	    		case '4':
@@ -4660,7 +4660,7 @@ class Live_model extends CI_Model {
     			case 'Normal':
     			case 'Limited':
     				
-    				$av="Κατόπιν παραγγελίας σε 1 εργάσιμη";
+    				$av="Κατόπιν παραγγελίας σε 1-3 εργάσιμες";
     				
     				break;
     			case 'PreOrder':
@@ -4683,7 +4683,7 @@ class Live_model extends CI_Model {
 	    			return false;
 	    			break;
 	    		case '1':
-	    			$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
+	    			$av = 'Κατόπιν παραγγελίας σε 1-3 εργάσιμες';
 	    			break;
 	    		default:
 	    			return false;
@@ -4700,7 +4700,7 @@ class Live_model extends CI_Model {
 	    			$av = 'Αναμονή παραλαβής';
 	    			break;
 	    		case '1':
-	    			$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
+	    			$av = 'Κατόπιν παραγγελίας σε 1-3 εργάσιμες';
 	    			break;
 	    		default:
 	    			return false;
@@ -4731,7 +4731,7 @@ class Live_model extends CI_Model {
     		switch ($availability) {
 				case 'Διαθέσιμο':
 				case 'Περιορισμένη Διαθ.':
-					$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
+					$av = 'Κατόπιν παραγγελίας σε 1-3 εργάσιμες';
 					break;
 				case 'Κατόπιν Παραγγελίας':
 					$av = 'Κατόπιν παραγγελίας χωρίς διαθεσιμότητα';
@@ -4748,8 +4748,8 @@ class Live_model extends CI_Model {
     	}
     	elseif($supplier == 'cpi'){
 
-    		if ($availability >= 1 || $availability == 'Αμεσα Διαθέσιμο' || $availability == 'Περιορισμένη Διαθεσιμότητα')
-    			$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
+    		if ($availability >= 1 || $availability == 'Αμεσα Διαθέσιμο' || $availability == 'Περιορισμένη Διαθεσιμότητα' || $availability == 'ΑΜΕΣΑ ΔΙΑΘΕΣΙΜΟ' || $availability == 'ΠΕΡΙΟΡΙΣΜΕΝΗ ΔΙΑΘΕΣΙΜΟΤΗΤΑ')
+    			$av = 'Κατόπιν παραγγελίας σε 1-3 εργάσιμες';
     		else
     			$av = false;
 
@@ -4759,7 +4759,7 @@ class Live_model extends CI_Model {
 
     		switch ($availability) {
 				case 'OK':
-					$av = 'Κατόπιν παραγγελίας σε 1 εργάσιμη';
+					$av = 'Κατόπιν παραγγελίας σε 1-3 εργάσιμες';
 					break;
 				/*case 'N/A':
 					$av = 'Κατόπιν παραγγελίας χωρίς διαθεσιμότητα';

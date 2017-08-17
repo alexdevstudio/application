@@ -129,7 +129,7 @@ if($itemLive){
 
 	if($av=='Άμεσα Διαθέσιμο'){
 		$instock = 'selected';
-	}elseif($av=='Κατόπιν παραγγελίας σε 1 εργάσιμη'){
+	}elseif($av=='Κατόπιν παραγγελίας σε 1-3 εργάσιμες'){
 		$outstock = 'selected';
 	}elseif($av=='Αναμονή παραλαβής'){
 		$outstock2 = 'selected';
