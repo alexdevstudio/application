@@ -209,9 +209,12 @@ class Extract_model extends CI_Model {
                             $msi = Modules::run("crud/get",'msi_price',array('sku'=>$sku));
                            
                             if($msi)
-                            $msi_price = $msi->row()->price;
+                                $msi_price = $msi->row()->price;
                             else
-                            echo $sku.': THIS MSI HAS NO PRICE<br>'; break;
+                            {
+                                echo $sku.': THIS MSI HAS NO PRICE<br>'; 
+                                break;
+                            }
 
                             
                             if($msi_price!='0.00' && $msi_price!='' && $msi_price!='0'){
