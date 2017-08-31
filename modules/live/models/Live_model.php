@@ -2553,7 +2553,7 @@ class Live_model extends CI_Model {
 
 
 
-    public function addProduct($product, $chars_array, $f , $supplier){
+    public function addProduct($product, $chars_array, $f=null , $supplier){
 
     	$insert = false;
     	$c = $product['category'];
@@ -2819,8 +2819,9 @@ class Live_model extends CI_Model {
 
 
 			//3. Add Product Images
+			if($f){
 			$this->AddProductImages($product, $f, $supplier, $sku);
-
+			}		
 		}//if($sku = Modules::run('sku/checkSku',$skuArray)){
 		/*else
 		{
