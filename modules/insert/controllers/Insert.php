@@ -119,7 +119,7 @@ class Insert extends MX_Controller {
 					$chars['type']= $type;
 
 
-				$newProduct = Modules::run("live/addProduct", $product, $chars, $images , 'etd');
+				$newProduct = Modules::run("live/addProduct", $product, $chars, null , 'etd');
 				
 					echo 'ok';
 		}

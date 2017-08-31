@@ -210,7 +210,8 @@ if($itemLive){
 <div class="form-group">
 	                  	
 	                  	<label>Προμυθευτής</label>
-	                  	
+
+	                  
 	              		  <select class='form-control' name="supplier" id="supplier">
 
 	              		  	<?php
