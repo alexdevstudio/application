@@ -91,7 +91,7 @@ class Live_model extends CI_Model {
 					if($sc == 'LCD-TFT PC Monitors')
 					{
 						$c = 'monitors';
-            $c = $cat;
+            
 					}
 					break;
 				case 'Networking':
@@ -106,10 +106,14 @@ class Live_model extends CI_Model {
 					}
 					break;
 				case 'Power Protection':
-					if($sc == 'Line Interactive UPS' || $sc == 'On Line UPS'  || $sc == 'Standby UPS')
-					{
-						$c = 'ups';
-            $c = $cat;
+					if($brand != 'CYBERCOM' && $brand != 'APC'){
+						$c = $cat;
+					}else{
+
+						if($sc == 'Data Center UPS' || $sc == 'Line Interactive UPS' || $sc == 'On Line UPS'  || $sc == 'Standby UPS')
+							{
+								$c = 'ups';
+							}
 					}
 					break;
 				case 'Printers':
@@ -151,11 +155,16 @@ class Live_model extends CI_Model {
 					}
 					break;
 				case 'Entertainment':
+				if($brand != 'LOGITECH'){
+					$c = $cat;
+				}else{
 					if($sc == 'Speakers' )
 					{
 						$c = 'speakers';
-            $c = $cat;
+            
 					}
+				}
+					
 					break;
 				case 'Storage':
 					if($sc == 'External Hard Drives' )
@@ -192,24 +201,28 @@ class Live_model extends CI_Model {
 					}
 					break;
 				case 'Cases-Peripherals':
-					if($sc == 'Combo' || $sc == 'Keyboard' || $sc == 'Mouse')
-					{
-						$c = 'keyboard_mouse';
+					if($brand != 'MICROSOFT' && $brand != 'LOGITECH'){
+						$c = $cat;
+					}else{
 
-					}
-					elseif($sc == 'Power Supplies')
-					{
-						$c = 'power_supplies';
-					}
-					elseif($sc == 'PC Cases')
-					{
-						$c = 'cases';
-					}
-					elseif($sc == 'PC Cases Options' && $B2b_sc == 'Συστήματα Ψύξης')
-					{
-						$c = 'fans';
-					}
-          $c = $cat;
+						if($sc == 'Combo' || $sc == 'Keyboard' || $sc == 'Mouse')
+						{
+							$c = 'keyboard_mouse';
+
+						}
+						/*elseif($sc == 'Power Supplies')
+						{
+							$c = 'power_supplies';
+						}
+						elseif($sc == 'PC Cases')
+						{
+							$c = 'cases';
+						}
+						elseif($sc == 'PC Cases Options' && $B2b_sc == 'Συστήματα Ψύξης')
+						{
+							$c = 'fans';
+						}*/
+          			}
 					break;
 				case 'Components':
 					if($sc == 'Motherboard for Intel')
