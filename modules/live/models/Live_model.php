@@ -106,7 +106,7 @@ class Live_model extends CI_Model {
 					}
 					break;
 				case 'Power Protection':
-					if($brand != 'CYBERCOM' && $brand != 'APC'){
+					if($brand != 'CYBERPOWER' && $brand != 'APC'){
 						$c = $cat;
 					}else{
 
