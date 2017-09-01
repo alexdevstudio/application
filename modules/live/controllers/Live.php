@@ -191,7 +191,7 @@ class Live extends MX_Controller {
 	}
 
 
-	public function addProduct($a,$b,$c,$d){
+	public function addProduct($a,$b,$c=null,$d){
 		$this->load->model('live_model');
 		if($this->live_model->addProduct($a,$b,$c,$d)){
 			return true;
