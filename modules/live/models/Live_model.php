@@ -1284,6 +1284,12 @@ class Live_model extends CI_Model {
 					else
 						$c = $cat;
 				break;
+				case 'Power Line':
+					if($brand == 'DEVOLO')
+						$c = 'powerlines';
+					else
+						$c = $cat;
+				break;
 				default :
 					$c = $cat;
 				break;
@@ -1321,6 +1327,11 @@ class Live_model extends CI_Model {
 					$last = strpos($description, ',');
 					$title = substr($description, 0, $last);
 					$chars_array['type']='Desktop';
+				}
+				elseif($c == 'powerlines')
+				{
+					$last = strpos($description, ',');
+					$title = substr($description, 0, $last);
 				}
 				elseif($c == 'motherboards')
 				{
