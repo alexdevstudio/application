@@ -47,6 +47,15 @@ class Crud extends MX_Controller {
     	
 		return $this->crud_model->get($table, $where, $order_by, $limit);
     }
+
+    public function get_specific($category, $what, $where=null, $order_by=null, $limit=null){
+
+		return $this->crud_model->get_specific($category, $what, $where, $order_by, $limit);
+
+    }
+
+
+
     public function getWp($table, $where=null){
 
     	

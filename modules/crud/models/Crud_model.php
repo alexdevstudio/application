@@ -82,7 +82,33 @@ class Crud_model extends CI_Model {
             return $item;
           }
       }
+public function get_specific($category, $what, $where=null, $order_by=null, $limit=null){
 
+
+        //$this->db->order_by('title', 'DESC');
+        
+
+        $this->db->select($what);
+        
+        if($where)
+          $this->db->where($where);
+
+        if($order_by)
+          $this->db->order_by($order_by[0], $order_by[1]);
+        
+        if($limit)
+          $this->db->limit($limit);
+        
+          $item = $this->db->get($category);
+
+          if($item->num_rows()<1){
+            return false;
+          }
+          else
+          {
+            return $item;
+          }
+      }
       public function getWp($category, $where=null){
 
       $wpdb = $this->load->database('wordpress', TRUE);

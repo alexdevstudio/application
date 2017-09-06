@@ -411,6 +411,11 @@
             </a>
          </li>
          <li class="">
+            <a href="<?php echo base_url();?>antikatavoles">
+              <i class="fa fa-calculator"></i> <span>ΑΝΤΙΚΑΤΑΒΟΛΕΣ</span>
+            </a>
+         </li>
+         <li class="">
             <a href="<?php echo base_url();?>skroutz">
               <i class="fa fa-money" aria-hidden="true"></i> <span>ΤΙΜΕΣ SKROUTZ</span>
             </a>
