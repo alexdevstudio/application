@@ -368,6 +368,9 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 			case 'cooling_pads':
 					$shipping_class = 10651;
 					break;
+			case 'powerlines':
+					$shipping_class = 10651;
+					break;
 			default:
 				return false;
 				break;

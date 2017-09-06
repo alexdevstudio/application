@@ -2704,7 +2704,7 @@ class Live_model extends CI_Model {
 				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c== "desktops" || $c == "tablets"  || $c == "smartphones" ||
 				 $c == "cables" || $c == "patch_panels" || $c == "racks" || $c =="optical_drives" || $c == "card_readers" || $c == "flash_drives" ||
 				 $c == "power_supplies" || $c == "cases" || $c == "fans" || $c == "motherboards" || $c == "graphic_cards" || $c == "cpu" ||
-				 $c == "memories" || $c == "hoverboards" || $c =="printer_fusers" || $c =="printer_drums" || $c =="printer_belts" || $c=="ups" || $c=="tv" || $c=="accessories" || $c=="cable_accessories" || $c=="cooling_pads"){
+				 $c == "memories" || $c == "hoverboards" || $c =="printer_fusers" || $c =="printer_drums" || $c =="printer_belts" || $c=="ups" || $c=="tv" || $c=="accessories" || $c=="cable_accessories" || $c=="cooling_pads" || $c == "powerlines"){
 
 
 					$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
