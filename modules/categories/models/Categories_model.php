@@ -423,7 +423,7 @@ public function makeShippingClass($data, $cat, $dynamic = null){
     			$shipping_class = 10065;
     			break;
     		case 9:
-    			$shipping_class = 10651;
+    			$shipping_class = 10066;
     			break;
     		case 10:
     			$shipping_class = 10067;
