@@ -301,7 +301,42 @@ class Edit extends MX_Controller {
 					$update = true;
 
 						
+				}else if($post['status']=='total_removal'){
+					unset($post['status']);
+					$DeletionMessage ='Το προϊόν της κατηγορίας:'.$post['category'].' με p.n.:'.$post['product_number'].' Διαγράφηκε από τους πίνακες ';
+
+					$where = array('product_number'=>$post['product_number']);
+					$Deletion_from_category = Modules::run('crud/delete',$post['category'], $where); //delete from category table
+					$where = array('product_number'=>$post['product_number'], 'category'=>$post['category']);
+					$Deletion_from_sku = Modules::run('crud/delete','sku', $where); //delete from sku table
+					$Deletion_from_live = Modules::run('crud/delete','live', $where); //delete from live table
+
+					$where = array('sku'=>$post['sku']);
+					$Deletion_from_installments = Modules::run('crud/delete','installments', $where); //delete from installments table
+					$Deletion_from_etd_prices = Modules::run('crud/delete','etd_prices', $where); //delete from etd_prices table
+
+					if($Deletion_from_category != false)
+						$DeletionMessage .=$post['category'];
+
+					if($Deletion_from_sku != false)
+						$DeletionMessage .=' Sku';
+
+					if($Deletion_from_live != false)
+						$DeletionMessage .=' Live';
+
+					if($Deletion_from_installments != false)
+						$DeletionMessage .=' Installments';
+
+					if($Deletion_from_etd_prices != false)
+						$DeletionMessage .=' Etd_prices';
+
+					echo "<h2>ΔΙΑΓΡΑΦΗΚΕ ΤΟ ΠΡΟΙΟΝ</h2>";
+					unset($post);
+					header("Refresh:0");
+
+
 				}
+
 
 
 				if($update){
