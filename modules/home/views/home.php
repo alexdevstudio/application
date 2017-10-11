@@ -9,6 +9,17 @@ print_r($var->row()->option_name);
 echo "</pre>";*/
  ?>
 	<div class="suppliers sections col-sm-8 col-xs-12">
+
+		<?php
+   			 //flash messages
+			    if($this->session->flashdata('flash_message')){
+
+			      echo '<div class="alert alert-'. $this->session->flashdata('flash_message')['type'].'">';
+			      echo '<a class="close" data-dismiss="alert">&times</a>';
+			      echo $this->session->flashdata('flash_message')['Message'];   
+			      echo '</div>'; 
+			    }
+			?>
 		
 		<section class="content-header">
 	      <h1>1. Ενημέρωση αποθήκης </h1>  

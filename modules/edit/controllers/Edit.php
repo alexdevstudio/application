@@ -5,8 +5,6 @@ class Edit extends MX_Controller {
 
 	public function index($category, $sku)
 	{ 
-
-
 		$item = Modules::run('crud/get',$category, array('sku'=>$sku));
 		$skroutzUrl = Modules::run('crud/get','skroutz_urls', array('sku'=>$sku));
 		$cross_sells = Modules::run('crud/get','cross_sells', array('sku'=>$sku));
@@ -303,7 +301,7 @@ class Edit extends MX_Controller {
 						
 				}else if($post['status']=='total_removal'){
 					unset($post['status']);
-					$DeletionMessage ='Το προϊόν της κατηγορίας:'.$post['category'].' με p.n.:'.$post['product_number'].' Διαγράφηκε από τους πίνακες ';
+					$DeletionMessage ='Το προϊόν '.$post['title'].' της κατηγορίας:'.$post['category'].' με p.n.:'.$post['product_number'].' Διαγράφηκε από τους πίνακες ';
 
 					$where = array('product_number'=>$post['product_number']);
 					$Deletion_from_category = Modules::run('crud/delete',$post['category'], $where); //delete from category table
@@ -315,24 +313,30 @@ class Edit extends MX_Controller {
 					$Deletion_from_installments = Modules::run('crud/delete','installments', $where); //delete from installments table
 					$Deletion_from_etd_prices = Modules::run('crud/delete','etd_prices', $where); //delete from etd_prices table
 
-					if($Deletion_from_category != false)
+					if($Deletion_from_category)
 						$DeletionMessage .=$post['category'];
 
-					if($Deletion_from_sku != false)
-						$DeletionMessage .=' Sku';
+					if($Deletion_from_sku)
+						$DeletionMessage .=', Sku';
 
-					if($Deletion_from_live != false)
-						$DeletionMessage .=' Live';
+					if($Deletion_from_live)
+						$DeletionMessage .=', Live';
 
-					if($Deletion_from_installments != false)
-						$DeletionMessage .=' Installments';
+					if($Deletion_from_installments)
+						$DeletionMessage .=', Installments';
 
-					if($Deletion_from_etd_prices != false)
-						$DeletionMessage .=' Etd_prices';
+					if($Deletion_from_etd_prices)
+						$DeletionMessage .=', Etd_prices';
 
-					echo "<h2>ΔΙΑΓΡΑΦΗΚΕ ΤΟ ΠΡΟΙΟΝ</h2>";
+					$FlashData['Message']= $DeletionMessage;
+                    $FlashData['type'] = 'success';
+
+	                $this->session->set_flashdata('flash_message', $FlashData);
+					
+					echo "<h2>ΔΙΑΓΡΑΦΗΚΕ ΤΟ ΠΡΟΙΟΝ</h2><br>".$DeletionMessage;
 					unset($post);
-					header("Refresh:0");
+					redirect(base_url(), 'auto');
+					//header("Refresh:0");
 
 
 				}
