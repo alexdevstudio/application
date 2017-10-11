@@ -35,8 +35,8 @@ class Crud_model extends CI_Model {
         $this->db->where($where);
         $sql = $this->db->delete($table);
 
-        if($this->db->affected_rows > 0){
-          return $sql;
+        if($this->db->affected_rows() > 0){
+          return true;
         }else{
           return false;
         }
@@ -47,7 +47,7 @@ class Crud_model extends CI_Model {
         $wpdb->where($where);
         $wpdb->delete($table);
 
-        if($wpdb->affected_rows > 0){
+        if($wpdb->affected_rows() > 0){
           return true;
         }else{
           return false;
