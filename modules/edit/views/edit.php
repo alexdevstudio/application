@@ -302,7 +302,7 @@ if($itemLive){
 
 	       
 
-	<button type="submit" class="btn btn-block btn-warning">Ενημέρωση του Eshop</button>
+	<button type="submit" class="btn btn-block btn-info">Ενημέρωση του Eshop</button>
 
 </form>
 <br/>
@@ -318,6 +318,21 @@ if($itemLive){
 	 			<button type="submit" class="btn btn-block btn-danger">Aφαίρεση από STOCK</button>
 	 		</form>
 		</div>
+		
+		<!-- Total Removal Form -->
+		<div class="col-xs-12 ">
+			<br/>
+	 		<form method="post" action="" onsubmit="return confirm('Το προϊόν θα διαγραφεί από παντού. Είστε σίγουροι;');">
+	 			<input class='form-control' type="hidden" name='title' value='<?= $item->row()->title; ?>'>
+	 			<input class='form-control' type="hidden" name='product_number' value='<?= $pn; ?>'>
+	 			<input class='form-control' type="hidden" name='sku' value='<?= $sku; ?>'>
+	 			<input class='form-control' type="hidden" name='category' value='<?= $category; ?>'>
+	 			<input class='form-control' type="hidden" name='status' value='total_removal'>
+
+	 			<button type="submit" class="btn btn-block btn-warning">Ολική Διαγραφή</button>
+	 		</form>
+		</div>
+
     </div>
 
 		<div class=" col-xs-12 col-md-10">
