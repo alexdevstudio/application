@@ -1,14 +1,14 @@
 
 <div class="sections col-xs-12">
 	<section class="content-header">
-	
-		<br>	   
-    </section> 
+
+		<br>
+    </section>
 
     <div class="col-xs-12 col-md-2">
 
-   
- <?php 
+
+ <?php
 
 	$sku = $item->row()->sku;
 	$pn = $item->row()->product_number;
@@ -23,7 +23,7 @@
  <?= $image; ?>
 </div>
  <div class="col-xs-12 ">
- 
+
  <div class="">
           <!-- small box -->
           <div class="small-box bg-green">
@@ -35,8 +35,8 @@
             <div class="icon">
               <i class="ion ion-stats-bars"></i>
             </div>
-            
-          </div> 
+
+          </div>
         </div>
 
         <div class="">
@@ -50,9 +50,9 @@
             <div class="icon">
               <i class="ion ion-stats-bars"></i>
             </div>
-            
+
           </div>
-        
+
 
  </div>
 </div>
@@ -60,8 +60,8 @@
  <div class="col-xs-12 ">
  <?php
      if($skroutzPrice){
-	
-     
+
+
 $best_price = json_decode($skroutzPrice['best_price']);
 
 $sklogo = $best_price->shopLogo;
@@ -73,13 +73,13 @@ $skupdate = date( 'H:i d M `y ', $skupdate );
 //print_r($best_price);
      	?>
  <div class="skroutz_box form-group">
-     
-     <label class='bg-orange' ><a target="_blank" style="color:#fff" href="<?= $skroutzUrl; ?>">1η Τιμή Skroutz <i class="fa fa-external-link"  aria-hidden="true"></i></a></label>   
 
-     
+     <label class='bg-orange' ><a target="_blank" style="color:#fff" href="<?= $skroutzUrl; ?>">1η Τιμή Skroutz <i class="fa fa-external-link"  aria-hidden="true"></i></a></label>
+
+
      <img src="<?= $sklogo; ?>" />
 
-     <!-- <span class='edit-sktitle'><?= $sktitle; ?></span>   --> 
+     <!-- <span class='edit-sktitle'><?= $sktitle; ?></span>   -->
 
      <span class='edit-skprice'><?= $skprice; ?> €</span>
      <span class='edit-skupdate'><i class="fa fa-calendar"></i> <?= $skupdate; ?></span>
@@ -109,14 +109,14 @@ if($etd_prices != NULL)
 }
 
 if($itemLive){
-	
+
 	//$price = $itemLive->row()->price_tax;
-	//$sale_price = $itemLive->row()->sale_price; 
-	//$shipping = $itemLive->row()->shipping; 
+	//$sale_price = $itemLive->row()->sale_price;
+	//$shipping = $itemLive->row()->shipping;
 	$av = $itemLive->row()->availability;
 	$supplier = $itemLive->row()->supplier;
 	$upcomingDate = $itemLive->row()->upcoming_date;
-	
+
 
 	if($itemLive->row()->upcoming_date == ''){
 		$upcomingDate = '';
@@ -135,11 +135,11 @@ if($itemLive){
 		$outstock2 = 'selected';
 	}
 
-	
-	
+
+
 }
 
-	
+
 	$etd = '';
 	$logicom = '';
 	$oktabit = '';
@@ -173,29 +173,29 @@ if($itemLive){
 
 </div>
 <div style=''class="form-group">
-	                  	
+
 <label>Τιμή Προσφοράς</label>
 
 <div class="input-group">
     <input class='form-control' name='sale_price' id='sale_price' value='<?= $sale_price; ?>'>
     <span style="cursor:pointer;color:#dd4b39;" class="input-group-addon" id="basic-addon1" onclick='clearPrice("sale_price");' title="Εκκαθάριση τιμής">X</span>
 </div>
-	
+
 
 </div>
 <div style=''class="form-group">
-	                  	
+
 <label>Κόστος Αποστολής</label>
 
 <div class="input-group">
     <input class='form-control' name='shipping' id='shipping' value='<?= $shipping; ?>'>
     <span style="cursor:pointer;color:#dd4b39;" class="input-group-addon" id="basic-addon1" onclick='clearPrice("shipping");' title="Εκκαθάριση κόστους αποστολής">X</span>
 </div>
-	
+
 
 </div>
 <div class="form-group">
-	                  	
+
 <label>Μέγιστος Αριθμός Άτοκων Δόσεων</label>
 
 <div class="input-group">
@@ -208,10 +208,10 @@ if($itemLive){
 </div>
 
 <div class="form-group">
-	                  	
+
 	                  	<label>Προμυθευτής</label>
 
-	                  
+
 	              		  <select class='form-control' name="supplier" id="supplier">
 
 	              		  	<?php
@@ -242,13 +242,13 @@ if($itemLive){
 	              		  				case 'ddc':
 	              		  					$ddc = 'selected';
 	              		  					break;
-	              		  				
+
 	              		  				default:
 	              		  					$other = 'selected';
-	              		  					
+
 	              		  					break;
 	              		  			}
-	              		  		
+
 
 	              		  	?>
 	              		  	<option value="etd" <?= $etd ?>>ETD</option>
@@ -263,13 +263,13 @@ if($itemLive){
 
 	              		  </select>
 
-	                  	
-          
+
+
 	        </div>
 <div class="form-group">
-	                  	
+
 	                  	<label>Διαθεσιμότητα</label>
-	                  	
+
 	              		  <select class='form-control' name="availability" id="availability">
 	              		  	<option onClick='toogleUpcommingDate("false")' value="">----</option>
 	              		  	<option onClick='toogleUpcommingDate("false")' value="2" <?= $instock; ?>>Διαθέσιμο στο κατάστημα</option>
@@ -277,15 +277,15 @@ if($itemLive){
 	              		  	<option onClick='toogleUpcommingDate("true")' value="0" <?= $outstock2; ?>>Αναμονή παραλαβής</option>
 	              		  </select>
 
-	                  	
-          
+
+
 	        </div>
 	        <div class="form-group upcommingDate">
-	        	
-   
+
+
        <label>Ημ/νία Παραλαβής</label>
 
-            
+
                 <div class='input-group date' id='datetimepicker1'>
                 <?php
                 	$upcomingDate = (isset($upcomingDate))?$upcomingDate:'';
@@ -296,11 +296,11 @@ if($itemLive){
                     </span>
                 </div>
             </div>
-        
-       
-   
 
-	       
+
+
+
+
 
 	<button type="submit" class="btn btn-block btn-info">Ενημέρωση του Eshop</button>
 
@@ -318,7 +318,7 @@ if($itemLive){
 	 			<button type="submit" class="btn btn-block btn-danger">Aφαίρεση από STOCK</button>
 	 		</form>
 		</div>
-		
+
 		<!-- Total Removal Form -->
 		<div class="col-xs-12 ">
 			<br/>
@@ -342,8 +342,8 @@ if($itemLive){
 
 			      echo '<div class="alert alert-'. $this->session->flashdata('flash_message')['type'].'">';
 			      echo '<a class="close" data-dismiss="alert">&times</a>';
-			      echo $this->session->flashdata('flash_message')['Message'];   
-			      echo '</div>'; 
+			      echo $this->session->flashdata('flash_message')['Message'];
+			      echo '</div>';
 			    }
 			?>
 			<?php
@@ -366,7 +366,7 @@ if($itemLive){
             </ul>
             <div class="tab-content">
               <div class="tab-pane active" id="tab_1">
-                
+
 
                <form  method='post' id="chars_form" action="">
 
@@ -374,7 +374,7 @@ if($itemLive){
 	$items = $item->result_array();
 	$sku = $item->row()->sku;
 	foreach ($items[0] as $key => $value) {
-		
+
 		//print_r($item);
 		if($key=='product_number' || $key=='id' || $key=='sku' || $key=='new_item'){
 			continue;
@@ -389,7 +389,7 @@ if($itemLive){
 		<div class="col-xs-12 col-md-8">
 			<input class='form-control' type="hidden" name='new_item' value='0'>
 			<input class='form-control' type="hidden" name='status' value='update'>
-			<?php 
+			<?php
 
 			if($key == 'description' || $key == 'bonus') {
 
@@ -403,7 +403,7 @@ if($itemLive){
 
 	if($value >= 33)
 		$value = 33;
-	
+
 	$selected_value = (isset($_POST[$key]))?$_POST[$key]:$value;
 	$volumetric_weight_array = array('0'=>'Δεν έχει οριστεί','0.2'=>'0.2','0.3'=>'0.3','0.5'=>'0.5','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'6','7'=>'7','8'=>'8','9'=>'9','10'=>'10','11'=>'11','12'=>'12','13'=>'13','14'=>'14','15'=>'15','16'=>'16','17'=>'17','18'=>'18','19'=>'19','20'=>'20','21'=>'21','22'=>'22','23'=>'23','24'=>'24','25'=>'25','26'=>'26','27'=>'27','28'=>'28','29'=>'29','30'=>'30','31'=>'31','32'=>'32','33'=>'Υπέρβαρο');
 	echo form_dropdown($key, $volumetric_weight_array, $selected_value, 'class="form-control"');
@@ -412,8 +412,8 @@ if($itemLive){
 }else{
 			?>
 			<input type="text" name="<?= $key; ?>" class="form-control edit-form-etd" value="<?php if(isset($_POST[$key])){ echo $_POST[$key]; }else{echo $value; } ?>" /></div>
-		
-		
+
+
 		<?php
 		}
 		?>
@@ -430,17 +430,17 @@ if($itemLive){
 		</div>
 		<div class="col-xs-12 col-md-8">
 			<input class="form-control edit-form-etd" value="<?= $skroutzUrl; ?>" name="skroutz_url"/>
-		
+
 		</div>
-	
-	</div>		
+
+	</div>
 	<button type="submit" class="btn btn-block btn-success">Ενημέρωση</button>
 		</form> </div>
               <!-- /.tab-pane -->
               <div class="tab-pane" id="tab_2">
               <!-- cross_sells start -->
-              <?php 	
-              	
+              <?php
+
               	if(!$cross_sells){
               		$cross_sells = '';
               	}else{
@@ -459,10 +459,10 @@ if($itemLive){
               </div>
               <!-- /.tab-pane -->
              <div class="tab-pane" id="tab_3">
-             
-             	
-             
-             <?php 
+
+
+
+             <?php
 				if($images){
 					//print_r($images->num_rows());
 					//http://etd.gr/xml/images/1320604/PNY_FD8GBATT4-EF.jpg
@@ -486,10 +486,10 @@ if($itemLive){
 						$i++;
 					}
 					?>
-					
+
 					</div>
 					</div>
-					<?php 
+					<?php
              	echo form_open('edit/'.$category.'/'.$sku, 'class="imageForm" id="imageForm"');
              	echo	form_hidden('status', 'deleteAllImages');
              	$data = array(
@@ -508,7 +508,7 @@ if($itemLive){
 					<?php
 				}
               ?>
-             	<?php 
+             	<?php
              	echo form_open('edit/'.$category.'/'.$sku, 'class="imageForm" id="imageForm"');
              	echo	form_hidden('status', 'images');
              		$data = array(
@@ -532,13 +532,19 @@ if($itemLive){
 			echo form_button($data);
              	echo form_close();
              	 ?>
+							 <div class="div-col-12">
+								 <div id="my-dropzone" class="dropzone">
+
+								 </div>
+		             	
+		           </div>
              </div>
-            
+
             </div>
             <!-- /.tab-content -->
           </div>
-		
-		
+
+
 		</div>
 </div>
 
@@ -551,7 +557,7 @@ if($itemLive){
 
 		//escape any double quotes or other illigal characters
 		$('#chars_form').on('submit',function(e){
-			
+
 			$('#chars_form input').each(function(){
 				tmp = $(this).val();
 				if(tmp != ''){

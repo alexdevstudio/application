@@ -11,10 +11,10 @@ class Extract_model extends CI_Model {
         parent::__construct();
     }
 
-
+ 
     public function xml($table,$all){
 
-            
+
             $xml = new DomDocument("1.0","UTF-8");//ISO-8859-7
 
 
@@ -25,22 +25,22 @@ class Extract_model extends CI_Model {
             //$this->db->where("new_item", "1");
             //$query = $this->db->query("SELECT * FROM $table");
             if(!$all || $all=='new')
-                $this->db->where('new_item', 1); 
-            
-            $query = $this->db->get($table); 
+                $this->db->where('new_item', 1);
+
+            $query = $this->db->get($table);
 
             $i=0;
             $prod = $query->result_array();
             foreach($prod as $columns){
 
-                
+
                 $product = $xml->createElement('product');
                 $product = $products->appendChild($product);
 
                 foreach($columns as $key => $value){
                     if($key!='id' && $key!='new_item' ){
                         $item = $xml->createElement($key, trim(htmlspecialchars($value)));
-                        $item = $product->appendChild($item);   
+                        $item = $product->appendChild($item);
                     }
                 }
             }
@@ -49,7 +49,7 @@ class Extract_model extends CI_Model {
             //print_r($query->result_array());
 
             $xml->FormatOutput = true;
-            $string_value = $xml->saveXML(); 
+            $string_value = $xml->saveXML();
 
             if (!file_exists('files')) {
             mkdir('files', 0777, true);
@@ -90,7 +90,7 @@ class Extract_model extends CI_Model {
                 $tables = array($table);
 
             }
-            
+
             $f = 0;
             foreach ($tables as $table) {
 
@@ -98,15 +98,15 @@ class Extract_model extends CI_Model {
 
                 $skus = str_replace('_', ',', $skus);
                 $query = $this->db->query("
-                     SELECT l.id, 
-                            l.product_number, 
-                            l.category, 
-                            l.net_price, 
+                     SELECT l.id,
+                            l.product_number,
+                            l.category,
+                            l.net_price,
                             l.recycle_tax,
-                            l.availability, 
-                            l.upcoming_date, 
-                            l.supplier, 
-                            l.status, 
+                            l.availability,
+                            l.upcoming_date,
+                            l.supplier,
+                            l.status,
                             l.delete_flag,
                             t.*,
                             i.installments_count,
@@ -118,18 +118,18 @@ class Extract_model extends CI_Model {
                      FROM live l
 
                      INNER JOIN {$table} t ON l.product_number = t.product_number
-                     
+
                      LEFT JOIN installments i ON t.sku = i.sku
                      LEFT JOIN etd_prices e ON t.sku = e.sku
                      LEFT JOIN descriptions_html h ON h.sku = t.sku
 
                      WHERE l.category = '{$table}' AND t.new_item = 0 AND t.sku IN ({$skus})
 
-                     
+
                     ");
 
             }else{
-               
+
                $query = $this->db->query("
                      SELECT l.id,
                      l.product_number,
@@ -151,14 +151,14 @@ class Extract_model extends CI_Model {
                      FROM live l
 
                      INNER JOIN {$table} t ON l.product_number = t.product_number
-                     
+
                      LEFT JOIN installments i ON t.sku = i.sku
                      LEFT JOIN etd_prices e ON t.sku = e.sku
                      LEFT JOIN descriptions_html h ON h.sku = t.sku
 
                      WHERE l.category = '{$table}' AND t.new_item = 0 ORDER BY t.sku DESC LIMIT {$numrows}
 
-                     
+
                     ");
             }
 
@@ -181,7 +181,7 @@ class Extract_model extends CI_Model {
 
 
                  }
-                
+
 
 
                foreach ($query->result_array() as $product) {
@@ -197,40 +197,40 @@ class Extract_model extends CI_Model {
                         $brand = $product['Brand'];
                     }
 
-                
-                
-                
-                 
+
+
+
+
                     if(!isset($product['price_tax']) || $product['price_tax'] == '' ||  $product['price_tax'] === NULL  ||  $product['price_tax'] == '0.00' || $product['price_tax'] =='0'){
-                      
+
                         $product['price_tax'] = $this->priceTax($product);
 
                         if(($supplier=='braintrust' || $supplier=='etd') && $cat == 'laptops' && $brand == 'MSI'){
                             $msi = Modules::run("crud/get",'msi_price',array('sku'=>$sku));
-                           
+
                             if($msi)
                                 $msi_price = $msi->row()->price;
                             else
                             {
-                                echo $sku.': THIS MSI HAS NO PRICE<br>'; 
+                                echo $sku.': THIS MSI HAS NO PRICE<br>';
                                 break;
                             }
 
-                            
+
                             if($msi_price!='0.00' && $msi_price!='' && $msi_price!='0'){
                                 $product['price_tax'] = $msi_price;
                             }
-                            
+
                         }
                         //Skip product without price....
                         if($product['supplier']!='konica' && !$product['price_tax'] && $product['status']=='publish')
-                            continue;   
+                            continue;
                     }
 
                     // Check if Etd product is trashed to increment the delete flag.
                     if($product['supplier']=='etd' && $product['status']=='trash')
                     {
-                        
+
                         $flag = $product['delete_flag'];
 
                         if ($flag >= 10) //1. Delete old trashed entries if delete_flag >=10
@@ -253,7 +253,7 @@ class Extract_model extends CI_Model {
                             $this->db->update('live');
                         }
                     }
-                    
+
 
 
 
@@ -262,14 +262,14 @@ class Extract_model extends CI_Model {
                     $etd_title = $product['etd_title'];
                     $skroutz_title = $product['skroutz_title'];
                     $cross = '';
-                                   
+
                 switch ($table) {
                         case 'laptops':
-                        $cpu =   str_replace(' ','',$product['cpu_model']); 
-                        $ram =   str_replace(' ','',$product['memory_size']);   
-                        $disk =  str_replace(' ','',$product['hdd']); 
-                        $os = str_replace(' ','',$product['skroutz_operating_system']); 
-                        $color = str_replace(' ','',$product['color']); 
+                        $cpu =   str_replace(' ','',$product['cpu_model']);
+                        $ram =   str_replace(' ','',$product['memory_size']);
+                        $disk =  str_replace(' ','',$product['hdd']);
+                        $os = str_replace(' ','',$product['skroutz_operating_system']);
+                        $color = str_replace(' ','',$product['color']);
                         $model = trim($product['model']);
                         $pn = str_replace(' ','',$product['product_number']);
                         $description = trim(strip_tags($product['description']));
@@ -307,25 +307,25 @@ class Extract_model extends CI_Model {
 
 
                         $product['cross_sells'] =  Modules::run("crosssales/auto_laptop",$product['sku'], $product['brand'], $product['screen_size'], $product['price_tax']);
-                        
-                      
-                        
+
+
+
                         $product['up_sells'] = implode(",",$laptops);
 
 
                             break;
                          case 'desktops':
-                        $cpu =   str_replace(' ','',$product['cpu_model']); 
-                        $ram =   str_replace(' ','',$product['memory_size']);   
-                        $disk =  str_replace(' ','',$product['hdd']); 
-                        $os = str_replace(' ','',$product['skroutz_operating_system']); 
+                        $cpu =   str_replace(' ','',$product['cpu_model']);
+                        $ram =   str_replace(' ','',$product['memory_size']);
+                        $disk =  str_replace(' ','',$product['hdd']);
+                        $os = str_replace(' ','',$product['skroutz_operating_system']);
                         $model = trim($product['model']);
                         $pn = str_replace(' ','',$product['product_number']);
 
                         //for NUC some title modifications
 
                          if($etd_title == ''){
-                            
+
                              $etd_title = $model." ($pn)";
                         }
 
@@ -335,20 +335,20 @@ class Extract_model extends CI_Model {
                             }else{
                                  $skroutz_title = $model.' '.$cpu.'/'.$ram.'/'.$disk.'/'.$os;
                             }
-                            
+
 
                         }
-                       
-                       
-                        
+
+
+
 
                             break;
                             case 'monitors':
-                        
-                        $title =   str_replace(' ','',$product['title']); 
-                        $brand =   str_replace(' ','',$product['brand']);   
-                        $inches =  str_replace(',','.',$product['screen_size']); 
-                        $technology = str_replace(' ','',$product['monitor_technology']); 
+
+                        $title =   str_replace(' ','',$product['title']);
+                        $brand =   str_replace(' ','',$product['brand']);
+                        $inches =  str_replace(',','.',$product['screen_size']);
+                        $technology = str_replace(' ','',$product['monitor_technology']);
                         $pn = str_replace(' ','',$product['product_number']);
                         $ips = '';
 
@@ -359,14 +359,14 @@ class Extract_model extends CI_Model {
                             }
 
                         if($etd_title == ''){
-                            
+
                         $etd_title = $brand.' '.$inches.' ιντσών '.$technology.' '.$ips.' ('.$pn.')';
                         }
 
                         if($skroutz_title == ''){
-                             
+
                              $skroutz_title = $brand.' '.$inches.'  '.$pn;
-                            
+
                         }
 
                             $product['tags'] = $product['availability'];
@@ -374,100 +374,99 @@ class Extract_model extends CI_Model {
                             break;
                             case 'printers':
                             case 'multifunction_printers':
-                        
-                        $title =  $product['title']; 
-                        $model =  $product['model'];   
+
+                        $title =  $product['title'];
+                        $model =  $product['model'];
                         $pn    =  $product['product_number'];
-                        
+
                          if($etd_title == ''){
-                            
+
                             $etd_title = "$model ($pn)";
                         }
 
                         if($skroutz_title == ''){
-                             
+
                              $skroutz_title = $model;
-                            
+
                         }
-                        
 
-                            break;    
+
+                            break;
                             case 'servers':
-                        
-                        $title =  $product['title']; 
-                        $model =  $product['model'];   
-                        $cpu =  $product['cpu'];   
-                        $cpu_generation =  $product['cpu_generation'];  
-                        $cpu_generation = rtrim($cpu_generation, " E3"); 
-                        $cpu_generation = rtrim($cpu_generation, " E5"); 
-                        $cpu_model =  $product['cpu_model'];  
-                        $pn    =  $product['product_number'];
-                        
-                         if($etd_title == '')                            
-                             $etd_title = "$model $cpu $cpu_generation  $cpu_model ($pn)";
-                        
 
-                        if($skroutz_title == '')                             
+                        $title =  $product['title'];
+                        $model =  $product['model'];
+                        $cpu =  $product['cpu'];
+                        $cpu_generation =  $product['cpu_generation'];
+                        $cpu_generation = rtrim($cpu_generation, " E3");
+                        $cpu_generation = rtrim($cpu_generation, " E5");
+                        $cpu_model =  $product['cpu_model'];
+                        $pn    =  $product['product_number'];
+
+                         if($etd_title == '')
+                             $etd_title = "$model $cpu $cpu_generation  $cpu_model ($pn)";
+
+
+                        if($skroutz_title == '')
                              $skroutz_title = "$model $cpu $cpu_generation  $cpu_model ($pn)";
 
                            break;
                         case 'cartridges':
                         case 'toners':
-                        
-                        $title =  $product['title']; 
-                        $model =  $product['model'];   
+
+                        $title =  $product['title'];
+                        $model =  $product['model'];
                         $pn    =  $product['product_number'];
 
                         if($model=='')
                             $title = ltrim($title, 'Cartridge ' );
-                                              
-                         if($etd_title == '')                            
-                             $etd_title = "$title ($pn)";
-                        
 
-                        if($skroutz_title == '')                             
+                         if($etd_title == '')
+                             $etd_title = "$title ($pn)";
+
+
+                        if($skroutz_title == '')
                              $skroutz_title = "$title ($pn)";
 
                            break;
                            case 'smartphones':
-                        
-                        $title =  $product['title']; 
-                        $color =  $product['color']; 
-                        $model =  $product['model'];   
+
+                        $title =  $product['title'];
+                        $color =  $product['color'];
+                        $model =  $product['model'];
                         $pn    =  $product['product_number'];
 
                         if($model=='')
                             $model = ltrim($title, 'Smartphone ' );
                             $model = ltrim($model, 'SMARTPHONE ' );
-                                              
-                         if($etd_title == '')                            
-                             $etd_title = "$model $color ($pn)";
-                        
 
-                        if($skroutz_title == '')                             
+                         if($etd_title == '')
+                             $etd_title = "$model $color ($pn)";
+
+
+                        if($skroutz_title == '')
                              $skroutz_title = "$model  $color ($pn)";
 
                            break;
                            /*case 'copiers':
-                        
-                       
+
+
                         $pn    =  $product['product_number'];
 
-                       
-                                              
-                         if($etd_title == '')                            
-                             $etd_title = $product['title'];
-                        
 
-                        if($skroutz_title == '')                             
+
+                         if($etd_title == '')
+                             $etd_title = $product['title'];
+
+
+                        if($skroutz_title == '')
                              $skroutz_title = $product['Name'];
 
                            break;*/
                         default:
-                            $etd_title = $product['title'];
-                            $skroutz_title = $product['title'];
+                          $skroutz_title =  $etd_title = $product['title']." (".$product['product_number'].")";
                             break;
-                    }    
+                    }
 
 
 
@@ -517,11 +516,11 @@ class Extract_model extends CI_Model {
                 //$this->db->where("new_item", "1");
                 //$query = $this->db->query("SELECT * FROM $table WHERE new_item=1 ");
                 $i=0;
-                
- 
+
+
                 foreach($products as $product){
 
-                    
+
                     $item = $xml->createElement('item');
                     $item = $items->appendChild($item);
 
@@ -533,7 +532,7 @@ class Extract_model extends CI_Model {
 
                             if($key == 'maximum_resolution' || $key=='screen_resolution'){
 
-                                $value = str_replace(' ','',$value); 
+                                $value = str_replace(' ','',$value);
 
                             }
 
@@ -543,9 +542,9 @@ class Extract_model extends CI_Model {
                                 $attr = $xml->createElement($key, trim(htmlspecialchars(strip_tags($value))));
                             }
 
-                            $attr = $item->appendChild($attr);   
+                            $attr = $item->appendChild($attr);
 
-                            
+
                         }
                     }
 
@@ -564,7 +563,7 @@ class Extract_model extends CI_Model {
                 //print_r($query->result_array());
 
                 $xml->FormatOutput = true;
-                $string_value = $xml->saveXML(); 
+                $string_value = $xml->saveXML();
 
                 if (!file_exists('files/updates')) {
                 mkdir('files/updates', 0777, true);
@@ -582,7 +581,7 @@ class Extract_model extends CI_Model {
                 }
                   //  return false;
 
-             
+
               /* print_r("<pre >");
                 print_r($products);
               */
@@ -601,33 +600,33 @@ class Extract_model extends CI_Model {
                 //$this->db->where("new_item", "1");
                 //$query = $this->db->query("SELECT * FROM $table WHERE new_item=1 ");
                 $i=0;
-                
-                
+
+
                 foreach($allProds as $product){
 
-                    
+
                     $item = $xml->createElement('item');
                     $item = $items->appendChild($item);
 
                     foreach($product as $key => $value){
                         if($key=='sku' || $key=='availability' || $key=='price_tax' || $key=='product_number' || $key=='status' ){
                             $attr = $xml->createElement($key, trim(htmlspecialchars(strip_tags($value))));
-                            $attr = $item->appendChild($attr);   
+                            $attr = $item->appendChild($attr);
                         }
                     }
 
                     $this->updateWp($product);
-                    
 
-                    
+
+
                 }
 
                 $item = $xml->createElement('item');
                 $item = $items->appendChild($item);
-                
+
 
                 $xml->FormatOutput = true;
-                $string_value = $xml->saveXML(); 
+                $string_value = $xml->saveXML();
 
                 $file = "./files/updates/general_ALL_IMPORT.xml";
 
@@ -636,13 +635,13 @@ class Extract_model extends CI_Model {
                 $xml->save($file);
             }
                 echo "<h1>Price and Availability Update Complete.</h1>";
-         
+
         }
 
         private function cross_sells($sku){
 
-            $where = array('sku'=>$sku);    
-            
+            $where = array('sku'=>$sku);
+
             if($cross_sells = Modules::run('crud/get','cross_sells', $where)){
                 return $cross_sells->row()->products;
             }
@@ -662,7 +661,7 @@ class Extract_model extends CI_Model {
 
              $category_brand = $category."_".$brand;
              $category_brand_rate = Modules::run("profit_rates/getCategoryRate",$category_brand);
-             
+
              if($category_brand_rate && $category_brand_rate!='' && $category_brand_rate!='0'){
                 $category_rate = $category_brand_rate;
              }else{
@@ -670,7 +669,7 @@ class Extract_model extends CI_Model {
 
              }
 
-             
+
              $category_rate = number_format((float)$category_rate, 3, '.', '');
 
              $etd_price = $net_price*(1 + $category_rate);
@@ -683,12 +682,12 @@ class Extract_model extends CI_Model {
              if($price_tax !='0')
                 return number_format((float)$price_tax, 2, '.', '');
             else
-                return false;  
-             
+                return false;
+
         }
 
         public function updateWp($product,$customVar=null){
-                    
+
                 $installments_import = $product['installments_count'];
 
                     /*if(!$installments_import){
@@ -701,7 +700,7 @@ class Extract_model extends CI_Model {
                     $data = array('new_item'=>0);
                     Modules::run("crud/update",$table, $where, $data); */
 
-                   
+
                     $where = array('meta_value'=>$sku,"meta_key"=>"_sku");
                     $post_id = Modules::run("crud/getWp","wp_postmeta", $where);
 
@@ -722,7 +721,7 @@ class Extract_model extends CI_Model {
 
                         if($product['status']=='publish'){
 
-                         
+
                              $post_name = rtrim($post_name,'__trashed');
 
 
@@ -741,59 +740,59 @@ class Extract_model extends CI_Model {
 
                              if($customAvailability=='Αναμονή παραλαβής' && $upcommingDate!=''){
                                 $customAvailability.= "^$upcommingDate";
-                                
+
                              }
 
-                             
-                            
+
+
                             $where = array('post_id'=>$post_id,'meta_key'=>'_regular_price');
-                            $data = array('meta_value'=>$product['price_tax']);                   
+                            $data = array('meta_value'=>$product['price_tax']);
                             Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
-                            
+
                             $where = array('post_id'=>$post_id,'meta_key'=>'_sale_price');
-                            $data = array('meta_value'=>$sale_price);                   
+                            $data = array('meta_value'=>$sale_price);
                             Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
-                            
+
                             $where = array('post_id'=>$post_id,'meta_key'=>'_price');
-                            $data = array('meta_value'=>$price1);                   
+                            $data = array('meta_value'=>$price1);
                             Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
-                            
+
                             $where = array('post_id'=>$post_id,'meta_key'=>'custom_availability');
-                            $data = array('meta_value'=>$customAvailability);                   
+                            $data = array('meta_value'=>$customAvailability);
                             Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
 
                             $where = array('post_id'=>$post_id,'meta_key'=>'shipping');
-                            $data = array('meta_value'=>$product['shipping']);                   
+                            $data = array('meta_value'=>$product['shipping']);
                             Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
-                            
+
                             $where = array('post_id'=>$post_id,'meta_key'=>'max_installments');
                             Modules::run("crud/deleteWp","wp_postmeta",  $where);
-                           
-                            $data = array('post_id'=>$post_id,'meta_key'=>'max_installments','meta_value'=>$installments_import);                   
+
+                            $data = array('post_id'=>$post_id,'meta_key'=>'max_installments','meta_value'=>$installments_import);
                             Modules::run("crud/insertWp","wp_postmeta", $data);
 
 
 
                             //echo  $products_count++;
-                            //echo ":$sku:".$product['status']."<br />";  
+                            //echo ":$sku:".$product['status']."<br />";
 
 
                         }
                         /*$where = array('post_id'=>$post_id,'meta_key'=>'_stock_status');
-                        $data = array('meta_value'=>'instock');                   
+                        $data = array('meta_value'=>'instock');
                         Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
                         $where = array('post_id'=>$post_id,'meta_key'=>'_manage_stock');
-                        $data = array('meta_value'=>'no');                   
+                        $data = array('meta_value'=>'no');
                         Modules::run("crud/updateWp","wp_postmeta",  $where, $data);*/
                                 $where = array('ID'=>$post_id);
-                                $data = array('post_title'=>$product['etd_title'],"post_status"=>$product['status'],"post_name"=>$post_name);                   
+                                $data = array('post_title'=>$product['etd_title'],"post_status"=>$product['status'],"post_name"=>$post_name);
                                 Modules::run("crud/updateWp","wp_posts",  $where, $data);
-                        
 
-                       // exit($product['price_tax']); 
 
-                        
-                    } 
+                       // exit($product['price_tax']);
+
+
+                    }
 
                     return true;
         }
