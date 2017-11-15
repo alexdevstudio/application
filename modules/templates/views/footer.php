@@ -8,7 +8,7 @@
 <!-- jQuery UI 1.11.4 -->
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
   <link rel="stylesheet" href="<?= base_url()?>/assets/css/bootstrap-colorpicker.min.css">
- 
+
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <!-- Morris.js charts -->
@@ -34,13 +34,25 @@
 <script src="<?= base_url()?>assets/plugins/fastclick/fastclick.js"></script>
 <!-- AdminLTE App -->
 <script src="<?= base_url()?>assets/dist/js/app.min.js"></script>
-<!-- AdminLTE dashboard demo (This is only for demo purposes) 
+<!-- AdminLTE dashboard demo (This is only for demo purposes)
 <script src="<?= base_url()?>assets/dist/js/pages/dashboard.js"></script>-->
 <!-- AdminLTE for demo purposes -->
 <script src="<?= base_url()?>assets/dist/js/demo.js"></script>
 <script src="<?= base_url()?>assets/js/etd.js"></script>
 <script src="<?= base_url()?>assets/js/bootstrap-colorpicker.min.js"></script>
 <script src="<?= base_url()?>assets/js/lazy.js"></script>
+<script src="<?= base_url()?>assets/js/dropzone.js"></script>
+<?php if($this->uri->segment(1) == 'edit'): ?>
+  <script type="text/javascript">
+    Dropzone.autoDiscover = false;
+    var myDropzone = new Dropzone("#my-dropzone", {
+      url: "<?= base_url("images/upload/".$this->uri->segment(2)."/".$this->uri->segment(3)); ?>"
+    })
+  </script>
+
+
+<?php endif; ?>
+
  <script type="text/javascript">
 $(function() {
     $("img.lazyimg").lazyload();
