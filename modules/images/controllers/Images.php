@@ -105,6 +105,20 @@ class Images extends MX_Controller {
 			 echo $file_name.''.$fileData['file_ext'].' : success';
 	}
 
+	function default(){
+		if(!$this->input->post())
+		return;
+
+		$sku = $this->input->post('sku');
+		$image_id = $this->input->post('id');
+		$this->load->model('images_model');
+		if($this->images_model->default($sku, $image_id)){
+			echo 'success';
+		}else
+			echo 'error';
+
+	}
+
 }
 
 ?>

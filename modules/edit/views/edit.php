@@ -469,7 +469,9 @@ if($itemLive){
 					?>
 					<div class="col-xs-12">
 					<div class='itemImages row '>
+
 					<?php
+
 					$i=0;
 					foreach ($images->result() as $image) {
 						if($i==6){
@@ -479,8 +481,15 @@ if($itemLive){
 						}
 						?>
 						<div class='imageItem col-sm-2 col-xs-4'>
+							<div class="radio" id="<?= $image->id ?>" >
+							  <label for="s<?= $image->id ?>">
+									<i class="fa <?= ($image->default > 0 ? 'fa-star' : 'fa-star-o'); ?>"></i>
+								</label>
+								<input class="hidden" id="s<?= $image->id ?>" <?= ($image->default > 0 ? 'checked' : ''); ?> type="radio" name="defaultImage" value="">
+							</div>
 							<img style="width:100%;" src="<?= base_url().'/images/'.$sku.'/'.$image->image_src.'.jpg'; ?>" alt="">
 							<div  title='Διαγραφή αυτής της φωτογραφίας!' class='deleteImg' data-src='<?= $image->image_src; ?>' data-sku='<?= $sku; ?>'>x</div>
+
 						</div>
 						<?php
 						$i++;
@@ -497,20 +506,17 @@ if($itemLive){
 			        'id'            => 'button',
 			        'value'         => '',
 			        'type'          => 'submit',
-			        'class'			=> 'btn pull-right  btn-danger ',
+			        'class'			=> 'btn pull-right hidden  btn-danger ',
 			        'content'		=> 'Διαγραφή Φωτογραφιών',
 			        'onclick'		=> "return confirm('Είστε σίγουροι;')"
 			);
 				echo form_button($data);
-             	echo form_close();
-             	echo '<br><br>';
-             	 ?>
-					<?php
+				echo	form_hidden('status', 'images');
+
 				}
               ?>
              	<?php
-             	echo form_open('edit/'.$category.'/'.$sku, 'class="imageForm" id="imageForm"');
-             	echo	form_hidden('status', 'images');
+
              		$data = array(
 				        'type'  => 'text',
 				        'name'  => 'imageUrl',
@@ -518,25 +524,45 @@ if($itemLive){
 				        'placeholder' => 'Amazon URL',
 				        'class' => 'form-control'
 				);
+				?>
+				<div class="row">
 
+
+				<div class="col-sm-10">
+
+
+				<?php
 				echo form_input($data);
+				?>
+</div>
+<div class="col-sm-2">
+
+
+				<?php
+
+
+
 							$data = array(
 			        'name'          => 'button',
 			        'id'            => 'button',
 			        'value'         => 'Υποβολή',
 			        'type'          => 'submit',
-			        'class'			=> 'btn  btn-success ',
+			        'class'			=> 'btn  btn-success btn-block',
 			        'content'		=> 'Υποβολή'
 			);
-							echo '<br>';
+
 			echo form_button($data);
+			?>
+			</div></div>
+			<?php
              	echo form_close();
              	 ?>
+							 <br>
 							 <div class="div-col-12">
 								 <div id="my-dropzone" class="dropzone">
 
 								 </div>
-		             	
+
 		           </div>
              </div>
 
