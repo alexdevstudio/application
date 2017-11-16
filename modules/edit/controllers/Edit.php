@@ -10,7 +10,7 @@ class Edit extends MX_Controller {
 		$cross_sells = Modules::run('crud/get','cross_sells', array('sku'=>$sku));
 		$images = Modules::run('crud/get','images', array('item_sku'=>$sku));
 
-		
+
 
 
 
@@ -377,7 +377,7 @@ class Edit extends MX_Controller {
 			}
 
 			$data['installments'] = $installments;
-
+			$data['sku'] = $sku;
 			$this->load->view('templates/header',$data);
 			$this->load->view('edit', $data);
 			$this->load->view('templates/footer',$data);

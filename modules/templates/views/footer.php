@@ -41,6 +41,7 @@
 <script src="<?= base_url()?>assets/js/etd.js"></script>
 <script src="<?= base_url()?>assets/js/bootstrap-colorpicker.min.js"></script>
 <script src="<?= base_url()?>assets/js/lazy.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.2.0/dropzone.css" />
 <script src="<?= base_url()?>assets/js/dropzone.js"></script>
 <?php if($this->uri->segment(1) == 'edit'): ?>
   <script type="text/javascript">
@@ -48,6 +49,24 @@
     var myDropzone = new Dropzone("#my-dropzone", {
       url: "<?= base_url("images/upload/".$this->uri->segment(2)."/".$this->uri->segment(3)); ?>"
     })
+
+    $(function() {
+        $(".radio").on('change', function(){
+          var sku = '<?php echo $sku; ?>';
+          var imageId =  $(this).attr('id');
+          $.post("<?= base_url('images/default'); ?>", {sku: sku, id: imageId}, function(result){
+              if(result === 'success'){
+                  $('.fa-star').removeClass('fa-star').addClass('fa-star-o');
+                  $('#'+imageId+' i.fa-star-o').removeClass('fa-star-o').addClass('fa-star')
+                  setTimeout(function(){
+                    alert ('Η προεπιλεγμένη φωτογραφία άλλαξε!');
+                  },500);
+              }else
+              alert('Παρουσιάστηκε σφάλμα!');
+          });
+        });
+    });
+
   </script>
 
 

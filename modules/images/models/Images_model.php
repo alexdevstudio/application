@@ -11,7 +11,20 @@ class Images_model extends CI_Model {
         parent::__construct();
     }
 
+    public function default($sku, $image_id){
 
+      $where = ['item_sku'=>$sku];
+      //Disable current default image
+      $this->db->where(['item_sku'=>$sku, 'default'=>1]);
+      $this->db->set(['default'=>0]);
+      $this->db->update('images');
+      //Enable the new one
+      $this->db->where(['item_sku'=>$sku, 'id'=>$image_id]);
+      $this->db->set(['default'=>1]);
+      $this->db->update('images');
+
+      return true;
+      }
     public function parseImage($data){
 
     	$this->load->library('image_lib');
@@ -34,8 +47,8 @@ class Images_model extends CI_Model {
 		}
 
 			$newFileName = $brand.'_'.$pn.''.$tail;
-			
-		    $target_path = './images/'.$sku.'/'.$newFileName.'.jpg';		
+
+		    $target_path = './images/'.$sku.'/'.$newFileName.'.jpg';
 
 		   /* $config_manip = array(
 		        'image_library' => 'ImageMagick',
@@ -60,7 +73,7 @@ class Images_model extends CI_Model {
 			//Test with Imagick
 		    //600x600 Image
 		    $target_img_path = './images/'.$sku.'/'.$newFileName.'_600.jpg';
-			
+
 			$config_manip = array(
 		        'image_library' => 'ImageMagick',
 		        'library_path' => '/usr/bin',
@@ -84,7 +97,7 @@ class Images_model extends CI_Model {
 
 			//300x300 Image
 		    $target_img_path = './images/'.$sku.'/'.$newFileName.'_300.jpg';
-			
+
 			$config_manip = array(
 		        'image_library' => 'ImageMagick',
 		        'library_path' => '/usr/bin',
@@ -108,7 +121,7 @@ class Images_model extends CI_Model {
 
 			//THUMB Image
 			$target_thumb_path = './images/'.$sku.'/'.$newFileName.'_thumb.jpg';
-			
+
 			$config_manip = array(
 		        'image_library' => 'ImageMagick',
 		        'library_path' => '/usr/bin',
@@ -130,7 +143,7 @@ class Images_model extends CI_Model {
 			$this->image_lib->clear();
 			unset ($config_manip);
 
-			//End of Test with Imagick		    	
+			//End of Test with Imagick
 
 		    // clear //
 		  //  $this->image_lib->clear();
@@ -146,9 +159,9 @@ class Images_model extends CI_Model {
 
 
 		    }
-		    
+
 		     return false;
-		  
+
 
     }
 
@@ -188,13 +201,13 @@ $html_base = new simple_html_dom();
 $html_base->load($str);
 
 foreach($html_base->find('#imageBlock_feature_div script') as $element){
-			
-			
+
+
 		    $the_script = $element->innertext;
 
 		    //iconv(mb_detect_encoding($the_script, mb_detect_order(), true), "UTF-8", $the_script);
 
-			
+
 		}
 		//echo $the_script;
 
@@ -226,7 +239,7 @@ foreach($html_base->find('#imageBlock_feature_div script') as $element){
 
 	     	$the_key = (strpos($ArrayHiRes[0], 'null') === FALSE ? 0 : 2);
 
-	     	
+
 				//exit('nooooot');
 				$ArrayHiRes[$the_key] = preg_replace('/\[\{/', '', $ArrayHiRes[$the_key]);
 				//var_dump( $ArrayHiRes[$the_key]);
@@ -234,7 +247,7 @@ foreach($html_base->find('#imageBlock_feature_div script') as $element){
 				if($this->validUrl($tmpUrl)){
 					$NewImage[] = $tmpUrl;
 				}
-				
+
 
 	     }
 
@@ -267,8 +280,8 @@ foreach($html_base->find('#imageBlock_feature_div script') as $element){
 			return;
 
 		}
-		
 
-   
+
+
 
 }
