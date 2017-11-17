@@ -488,7 +488,7 @@ if($itemLive){
 								<input class="hidden" id="s<?= $image->id ?>" <?= ($image->default > 0 ? 'checked' : ''); ?> type="radio" name="defaultImage" value="">
 							</div>
 							<img style="width:100%;" src="<?= base_url().'/images/'.$sku.'/'.$image->image_src.'.jpg'; ?>" alt="">
-							<div  title='Διαγραφή αυτής της φωτογραφίας!' class='deleteImg' data-src='<?= $image->image_src; ?>' data-sku='<?= $sku; ?>'>x</div>
+							<div  title='Διαγραφή αυτής της φωτογραφίας!' class='deleteImg' data-src='<?= $image->image_src; ?>' data-sku='<?= $sku; ?>'>&times</div>
 
 						</div>
 						<?php
