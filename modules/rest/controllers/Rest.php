@@ -18,22 +18,26 @@ class Rest extends MX_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
-	
+
 
 	public function index()//$s stands for supplier
-	{	
-		
+	{
+
 	}
 
 	public function featuredImage($sku, $sec_key=null){
+
 		if(!$sec_key)
 			die('dead end');
 
-		$images = Modules::run('crud/get', 'images', array('item_sku'=>$sku), array('id', 'ASC'), 1);
-
+			$images = Modules::run('crud/get', 'images', array('item_sku'=>$sku,'default'=>1), array('id', 'ASC'), 1);
+			if(!$images)
+			$images = Modules::run('crud/get', 'images', array('item_sku'=>$sku), array('id', 'ASC'), 1);
 		/*foreach ($images->result() as $image) {
 			$name = $images->image_src;
 		}*/
+
+
 		if($images){
 			$name = $images->row()->image_src.'.jpg';
 			$name = '<img  src="https://etd.gr/xml/images/'.$sku.'/'.$name.'" >';
@@ -51,7 +55,7 @@ class Rest extends MX_Controller {
 		    redirect('https://etd.gr');
 		}*/
 		//echo $_SESSION['myKey'];
-		$images = Modules::run('crud/get', 'images', array('item_sku'=>$sku));
+		$images = Modules::run('crud/get', 'images', array('item_sku'=>$sku),  array('default', 'DESC'));
 		if($images){
 			$result	= "<div id='product-large-images-light-box' class='product-large-images'>";
 			$thumbs = '';
@@ -72,9 +76,9 @@ class Rest extends MX_Controller {
 			$result .= '<div class="product-large-images-thumbs">'.$thumbs.'</div>';
 
 		}else{
-			
+
 			 $result = '<img src="https://etd.gr/wp-content/plugins/woocommerce/assets/images/placeholder.png" >';
-		
+
 		}
 
 		echo  $result;
@@ -89,4 +93,4 @@ class Rest extends MX_Controller {
 
 
 
-?> 
+?>
