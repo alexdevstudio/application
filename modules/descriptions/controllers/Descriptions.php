@@ -6,22 +6,22 @@ class Descriptions extends MX_Controller {
 	public function __construct()
     {
         parent::__construct();
-        
+
         $this->load->model('Descriptions_model');
        // $this->load->model('crud/Crud_model');
     }
 
-	
- 
+
+
 	public function index()
-	{	 
+	{
 		$data['title'] = 'Περιγραφή Προϊόντων';
 		$data['basic_templates'] = Modules::run('crud/get','char_blocks_basic');
 		$data['specific_templates'] = Modules::run('crud/get','char_blocks_specific');
 		$this->load->view('templates/header' ,$data);
 		$this->load->view('descriptions');
 		$this->load->view('templates/footer');
-	} 
+	}
 
 	public function add($table='basic')
 	{
@@ -92,11 +92,11 @@ class Descriptions extends MX_Controller {
                         $FlashData['type'] = 'danger';
                     }
                     $this->session->set_flashdata('flash_message', $FlashData);
-			    
+
 			    }
 
             }
-	        else 
+	        else
 	        {
 	                $FlashData['Message']= '<strong>Η φωτογραφία δεν αποθηκεύτηκε</strong>'.$this->upload->display_errors();
 	                $FlashData['type'] = 'danger';
@@ -109,7 +109,7 @@ class Descriptions extends MX_Controller {
 		$data['title'] = 'Νέα Περιγραφή';
 		$data['categories'] = Modules::run('categories/fullCategoriesArray');
 		$data['table'] = $table;
-		
+
 		$this->load->view('templates/header' ,$data);
 		$this->load->view('add');
 		$this->load->view('templates/footer');
@@ -194,11 +194,11 @@ class Descriptions extends MX_Controller {
                         $FlashData['type'] = 'danger';
                     }
                     $this->session->set_flashdata('flash_message', $FlashData);
-			    
+
 			    }
 
             }
-	        else 
+	        else
 	        {
 	                $FlashData['Message']= '<strong>Η φωτογραφία δεν αποθηκεύτηκε</strong>'.$this->upload->display_errors();
 	                $FlashData['type'] = 'danger';
@@ -219,8 +219,8 @@ class Descriptions extends MX_Controller {
 
 		$data['category_char'] = $this->getCategoryChars($table_full, 'list_chars');
 		$data['category_char_spec'] = $this->getCategoryChars($table_full, $data['chars_data'][0]['char']);
-		
-		
+
+
 		$this->load->view('templates/header' ,$data);
 		$this->load->view('edit');
 		$this->load->view('templates/footer');
@@ -230,12 +230,12 @@ class Descriptions extends MX_Controller {
     public function getCategoryChars($category, $char){
     	if($char == 'list_chars')
     	{
-    		$result = $this->db->query("SELECT `COLUMN_NAME` 
-				FROM `INFORMATION_SCHEMA`.`COLUMNS` 
+    		$result = $this->db->query("SELECT `COLUMN_NAME`
+				FROM `INFORMATION_SCHEMA`.`COLUMNS`
 				WHERE `TABLE_SCHEMA`='etd67140_xml'
 			    AND `TABLE_NAME`='$category';");
 
-    		$excludes = array(	'id','sku','product_number','brand','title','description','warranty','year_warranty','doa','volumetric_weight','shipping_class','etd_title','skroutz_title','supplier_product_url','product_url','product_url_pdf','support_tel','support_url','new_item');
+    		$excludes = array(	'id','sku','product_number','brand','title','description',/*'warranty',*/'year_warranty','doa','volumetric_weight','shipping_class','etd_title','skroutz_title','supplier_product_url','product_url','product_url_pdf','support_tel','support_url','new_item');
 
     		$char_type = array();
     		foreach ($result->result() as $key => $value) {
@@ -266,17 +266,17 @@ class Descriptions extends MX_Controller {
 		$return = '<option value="">----</option>';
 		if($type == "categories"){
 			$this->session->set_userdata('table',$value);
-			$result = $this->db->query("SELECT `COLUMN_NAME` 
-			FROM `INFORMATION_SCHEMA`.`COLUMNS` 
+			$result = $this->db->query("SELECT `COLUMN_NAME`
+			FROM `INFORMATION_SCHEMA`.`COLUMNS`
 			WHERE `TABLE_SCHEMA`='etd67140_xml'
 			    AND `TABLE_NAME`='$value';");
-			
-			$excludes = array(	'id','sku','product_number','brand','title',/*'model',*/'description','warranty','year_warranty','doa','volumetric_weight','shipping_class','etd_title','skroutz_title','supplier_product_url','product_url','product_url_pdf','support_tel','support_url','new_item');
+
+			$excludes = array(	'id','sku','product_number','brand','title',/*'model',*/'description',/*'warranty',*/'year_warranty','doa','volumetric_weight','shipping_class','etd_title','skroutz_title','supplier_product_url','product_url','product_url_pdf','support_tel','support_url','new_item');
 			foreach ($result->result() as $key => $value) {
 				if(!in_array($value->COLUMN_NAME, $excludes))
 					$return .= '<option  onclick=""  value="'.$value->COLUMN_NAME.'">'.ucfirst($value->COLUMN_NAME).'</option>';
 			}
-			
+
 		}else{
 			$result = $this->db->query("SELECT DISTINCT (".$value.") from ".$this->session->table." ORDER BY ".$value." ASC");
 			foreach ($result->result() as $key => $char) {
@@ -327,4 +327,4 @@ class Descriptions extends MX_Controller {
         }*/
 }
 
-?> 
+?>
