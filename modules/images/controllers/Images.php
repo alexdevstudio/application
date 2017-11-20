@@ -101,7 +101,7 @@ class Images extends MX_Controller {
 
 			 $imageData = ['item_sku'=>$sku,'image_src'=>$file_name];
 			 $this->db->insert('images',$imageData);
-			 echo $file_name.''.$fileData['file_ext'].' : success';
+			 echo 'success';
 	}
 
 	function default(){
