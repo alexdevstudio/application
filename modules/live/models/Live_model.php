@@ -161,7 +161,6 @@ class Live_model extends CI_Model {
 					if($sc == 'Speakers' )
 					{
 						$c = 'speakers';
-            
 					}
 				}
 					
@@ -170,34 +169,33 @@ class Live_model extends CI_Model {
 					if($sc == 'External Hard Drives' )
 					{
 						$c = 'external_hard_drives';
-            $c = $cat;
-
+            			$c = $cat;
 					}
 					elseif($sc == 'SATA Hard Drives' )
 					{
 						$c = 'sata_hard_drives';
-            $c = $cat;
+            			$c = $cat;
 
 					}
 					elseif($sc == 'Solid State Drives' )
 					{
 						$c = 'ssd';
-            $c = $cat;
+           				$c = $cat;
 					}
 					elseif($sc == 'DVD-RW Drives' )
 					{
 						$c = 'optical_drives';
-            $c = $cat;
+            			$c = $cat;
 					}
 					elseif($sc == 'Card Reader' )
 					{
 						$c = 'card_readers';
-            $c = $cat;
+            			$c = $cat;
 					}
 					elseif($sc == 'USB Memory Sticks' )
 					{
 						$c = 'flash_drives';
-            $c = $cat;
+            			$c = $cat;
 					}
 					break;
 				case 'Cases-Peripherals':
@@ -224,6 +222,33 @@ class Live_model extends CI_Model {
 						}*/
           			}
 					break;
+				case 'Telephony':
+					if($brand == 'YEALINK')
+					{
+						if($sc == 'Phone Device DECT')
+						{
+							$c = 'ip_phones';
+							$sc = 'DECT Phone';
+						}
+						elseif($sc == 'Phone Device IP')
+						{
+							$c = 'ip_phones';
+							$sc = 'IP Phones';
+						}
+						elseif($sc == 'Voice Conference')
+						{
+							$c = 'ip_phones';
+							$sc = 'Conference';
+						}
+						elseif($sc == 'Accessories')
+						{
+							$c = 'ip_phones';
+							$sc = 'Accessory';
+						}
+					}
+					else
+						$c = $cat;
+					break;
 				case 'Components':
 					if($sc == 'Motherboard for Intel')
 					{
@@ -241,7 +266,7 @@ class Live_model extends CI_Model {
 					{
 						$c = 'memories';
 					}
-          $c = $cat;
+          			$c = $cat;
 					break;
 				default:
 					$c = $cat;
@@ -322,7 +347,7 @@ class Live_model extends CI_Model {
 					'net_price'=>$net_price
 				);
 
-				if ($c=='software')
+				if ($c == 'software')
 				{
 					$okt_product['type'] = $sc;
 					$okt_product['dist_type'] = $dist_type;
@@ -333,6 +358,10 @@ class Live_model extends CI_Model {
 						$okt_product['dist_type'] = 'DSP';
 					elseif(strstr ($title,'Reseller Option Kit') || strstr ($title,'ROK'))
 						$okt_product['dist_type'] = 'ROK';
+				}
+				elseif($c == 'ip_phones')
+				{
+					$okt_product['type'] = $sc;
 				}
 
 				if ($c == 'memories' && $B2b_sc == 'Εξαρτήματα Servers')
@@ -2704,7 +2733,7 @@ class Live_model extends CI_Model {
 				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c== "desktops" || $c == "tablets"  || $c == "smartphones" ||
 				 $c == "cables" || $c == "patch_panels" || $c == "racks" || $c =="optical_drives" || $c == "card_readers" || $c == "flash_drives" ||
 				 $c == "power_supplies" || $c == "cases" || $c == "fans" || $c == "motherboards" || $c == "graphic_cards" || $c == "cpu" ||
-				 $c == "memories" || $c == "hoverboards" || $c =="printer_fusers" || $c =="printer_drums" || $c =="printer_belts" || $c=="ups" || $c=="tv" || $c=="accessories" || $c=="cable_accessories" || $c=="cooling_pads" || $c == "powerlines"){
+				 $c == "memories" || $c == "hoverboards" || $c =="printer_fusers" || $c =="printer_drums" || $c =="printer_belts" || $c=="ups" || $c=="tv" || $c=="accessories" || $c=="cable_accessories" || $c=="cooling_pads" || $c == "powerlines" || $c == "ip_phones"){
 
 
 					$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
@@ -2737,6 +2766,9 @@ class Live_model extends CI_Model {
 					}
 
 			    	unset($categoryData['supplier_product_url']);
+				}
+				elseif ($c == "ip_phones"){
+					$categoryData['type'] = $product['type'];
 				}
 
 				if($chars_array)
