@@ -153,6 +153,10 @@ class Live_model extends CI_Model {
 					{
 						$c = 'servers';
 					}
+					if ($sc == 'Tower Systems' )
+					{
+						$c = 'servers';
+					}
 					break;
 				case 'Entertainment':
 				if($brand != 'LOGITECH'){
