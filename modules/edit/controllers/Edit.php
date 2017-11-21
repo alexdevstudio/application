@@ -4,12 +4,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Edit extends MX_Controller {
 
 	public function index($category, $sku)
-	{ 
+	{
 		$item = Modules::run('crud/get',$category, array('sku'=>$sku));
 		$skroutzUrl = Modules::run('crud/get','skroutz_urls', array('sku'=>$sku));
 		$cross_sells = Modules::run('crud/get','cross_sells', array('sku'=>$sku));
 		$images = Modules::run('crud/get','images', array('item_sku'=>$sku));
-		
+
+
+
 
 
 		if(!$skroutzUrl){
@@ -25,9 +27,9 @@ class Edit extends MX_Controller {
 			$installments = $installments->row()->installments_count;
 		}
 
-		
+
 		$update ='';
-		
+
 		if($post = $this->input->post()){
 
 			if(isset($post['status'])){
@@ -48,15 +50,15 @@ class Edit extends MX_Controller {
 				        }
 				    }
 				    rmdir($dirPath);
-					 
+
 
 				}else if($post['status']=='images')
 				{
-		
+
 
 					if($post['imageUrl']!=''){
 						$imageArray = Modules::run('images/getExternalImagesFromUrl', $post['imageUrl']);
-							
+
 							/*print_r($imageArray);
 							exit();*/
 
@@ -66,7 +68,7 @@ class Edit extends MX_Controller {
 							print_r($imageArray);*/
 							$imageItem['brand'] = $item->row()->brand;
 							$imageItem['product_number'] = $item->row()->product_number;
-							
+
 							Modules::run('live/AddProductImages', $imageItem	, $imageArray, 'etd', $sku);
 							$FlashData['Message']= '<strong>Οι Φωτογραφίες ενημερώθηκαν</strong>';
                             $FlashData['type'] = 'success';
@@ -107,7 +109,7 @@ class Edit extends MX_Controller {
 					$exists_in_etd_prices = Modules::run('crud/get','etd_prices',array('sku'=>$sku));
 					if ($exists_in_etd_prices)
 					{
-						Modules::run('crud/delete','etd_prices',array('sku'=>$sku));	
+						Modules::run('crud/delete','etd_prices',array('sku'=>$sku));
 					}
 
 					//Remove from Installments Table
@@ -117,7 +119,7 @@ class Edit extends MX_Controller {
 					Modules::run('extract/allImport',$category,'one',0,$sku);
 
 					//Disable active url from skroutz_irls table to avoid further price update
-					
+
 					$this->skroutzParsingDeactivate($sku);
 
 				}
@@ -160,18 +162,18 @@ class Edit extends MX_Controller {
 
 					$installments_q = Modules::run('crud/delete','installments',array('sku'=>$sku));
 					$installments_count = $post['installments'];
-					
+
 					if($installments_count!='0' && $installments_count != ''){
 						Modules::run('crud/insert','installments',array('sku'=>$sku,'installments_count'=>$installments_count));
 					}
 
-					
+
 					unset($post['installments']);
 
 
 					$where_in_etd_prices = array('sku'=>$sku);
 					$exist_in_etd_prices = Modules::run("crud/get","etd_prices",$where_in_etd_prices);
-					
+
 					if($exist_in_etd_prices)
 					{
 						if(($post['price_tax'] == 0 || $post['price_tax'] == '') && ($post['sale_price'] == 0 || $post['sale_price'] == '') && ($post['shipping'] == ''))
@@ -193,7 +195,7 @@ class Edit extends MX_Controller {
 							 	  'shipping'=>$post['shipping'],
 							 	   'date_last_edited'=>date('Y-m-d H:i:s')));
 					}
-					
+
 
 					unset ($post['price_tax']);
 					unset ($post['shipping']);
@@ -230,21 +232,21 @@ class Edit extends MX_Controller {
 
 					//Insert or delete Skroutz URL from DB;
 					Modules::run('skroutz/toggleSkroutzUrl', $skroutz_url, $sku);
-					
+
 					$where = array('sku'=>$sku);
 
 					$vweight = trim($post['volumetric_weight']);
-					
+
 					if($vweight!='' /*&& ($category=='monitors' || $category=='desktops' || $category=='tv')*/){
-						
+
 
 						$post['shipping_class'] = Modules::run('categories/shippingByWeight', $vweight);
 
 					}else{
 
 							if($category!='printers' && $category != 'multifunction_printers'){
-								
-							
+
+
 
 
 								if($post['shipping_class']==''){
@@ -259,14 +261,14 @@ class Edit extends MX_Controller {
 
 
 							}else{
-								
+
 								if($post['volumetric_weight']==''){
 									$post['volumetric_weight'] = Modules::run('categories/volumeWeight', $post['dimensions']);
 								}
 
 								$post['shipping_class'] = Modules::run('categories/makeShippingClass',$post,$category);
 
-									
+
 							}
 
 
@@ -274,7 +276,7 @@ class Edit extends MX_Controller {
 					$update = Modules::run('crud/update',$category,$where,$post);
 
 					$this->createHtmlDescription($sku,$category, $post);
-					
+
 				}else if($post['status']=='related'){
 					unset($post['status']);
 					$products = str_replace(" ", "", $post['cross_sells_products']);
@@ -282,11 +284,11 @@ class Edit extends MX_Controller {
 					if(($cross_sells && $cross_sells->row()->products!=$products) || $products==''){
 						$where=array('sku'=>$sku);
 						Modules::run('crud/delete','cross_sells', $where);
-						
+
 					}
-					
+
 					if($products!='' && (!$cross_sells || $cross_sells->row()->products!=$products)){
-						
+
 						$data = array(
 							'sku'=>$sku,
 							'products' => $products
@@ -298,7 +300,7 @@ class Edit extends MX_Controller {
 
 					$update = true;
 
-						
+
 				}else if($post['status']=='total_removal'){
 					unset($post['status']);
 					$DeletionMessage ='Το προϊόν '.$post['title'].' της κατηγορίας:'.$post['category'].' με p.n.:'.$post['product_number'].' Διαγράφηκε από τους πίνακες ';
@@ -332,7 +334,7 @@ class Edit extends MX_Controller {
                     $FlashData['type'] = 'success';
 
 	                $this->session->set_flashdata('flash_message', $FlashData);
-					
+
 					echo "<h2>ΔΙΑΓΡΑΦΗΚΕ ΤΟ ΠΡΟΙΟΝ</h2><br>".$DeletionMessage;
 					unset($post);
 					redirect(base_url(), 'auto');
@@ -375,7 +377,7 @@ class Edit extends MX_Controller {
 			}
 
 			$data['installments'] = $installments;
-
+			$data['sku'] = $sku;
 			$this->load->view('templates/header',$data);
 			$this->load->view('edit', $data);
 			$this->load->view('templates/footer',$data);
@@ -388,7 +390,7 @@ class Edit extends MX_Controller {
 	private function createHtmlDescription($sku,$category,$post){
 					$auto_description = '';
 					foreach ($post as $key => $value) {
-						
+
 						//1. if SKU specific description available
 						$where = array('sku'=>$sku,'category'=>$category,'char'=>$key, 'char_spec'=>$value);
 						$res = Modules::run('crud/get', 'char_blocks_specific', $where);
@@ -426,11 +428,11 @@ class Edit extends MX_Controller {
 								print_r( $matches[1]);
 								exit();*/
 								foreach ($matches[1] as $value) {
-									
+
 									$text = preg_replace('/\['.$value.']/', $chars->row()->$value, $text);
 
 								}
-								
+
 							}
 
 							$text_color = $res->row()->text_color;
@@ -472,8 +474,8 @@ class Edit extends MX_Controller {
 			Modules::run('crud/delete','images',array('item_sku'=>$sku, 'image_src'=>$src));
 			$path = 'images/'.$sku.'/'.$src.'.jpg';
 			unlink($path);
-		    exit ('ok'); 
-		
+		    exit ('ok');
+
 	}
 
 	public function skroutzParsingDeactivate($sku, $activate=null){
