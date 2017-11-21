@@ -153,7 +153,7 @@ class Live_model extends CI_Model {
 					{
 						$c = 'servers';
 					}
-					if ($sc == 'Tower Systems' )
+					if ($sc == 'Tower Systems' || $sc == 'Tower Systems BTO' )
 					{
 						$c = 'servers';
 					}
