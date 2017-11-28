@@ -40,9 +40,10 @@ class Rest extends MX_Controller {
 
 		if($images){
 			$name = $images->row()->image_src.'.jpg';
-			$name = '<img  src="https://etd.gr/xml/images/'.$sku.'/'.$name.'" >';
+			//$name = '<img src="https://etd.gr/xml/images/'.$sku.'/'.$name.'" >';
+			$name = $sku.'/'.$name;
 		}else{
-			$name = '<img src="https://etd.gr/wp-content/plugins/woocommerce/assets/images/placeholder.png" >';
+			$name = 'none';
 		}
 
 		echo $name;
