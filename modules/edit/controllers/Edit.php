@@ -127,7 +127,10 @@ class Edit extends MX_Controller {
 				{
 					unset ($post['status']);
 
-					$av = Modules::run("live/getAvailability",$post['availability'],'edit');
+					$currentAv = $post['availability'];
+					$av = Modules::run("live/getAvailability",$currentAv,'edit');
+
+
 
 					if (!$av)
 						$av = 'Αναμονή παραλαβής';
@@ -159,6 +162,8 @@ class Edit extends MX_Controller {
 					//First check if item exists
 
 					$exists = Modules::run("crud/get","live",$where);
+					$prev_product_details = $exists->result();
+
 
 					$installments_q = Modules::run('crud/delete','installments',array('sku'=>$sku));
 					$installments_count = $post['installments'];
@@ -203,6 +208,13 @@ class Edit extends MX_Controller {
 
 
 					if($exists){
+						$old_supplier = $prev_product_details[0]->supplier;
+						$old_av = $prev_product_details[0]->availability;
+
+						if($old_supplier == 'etd' && $post['supplier'] != 'etd' && $old_av == 'Άμεσα Διαθέσιμο'  && $currentAv != 2){
+							$post['status']='trash';
+						}
+
 						$update = Modules::run('crud/update','live',$where,$post);
 						//updateWp($product, $table);
 					}else{

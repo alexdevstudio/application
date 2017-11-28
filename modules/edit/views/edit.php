@@ -329,7 +329,7 @@ if($itemLive){
 	 			<input class='form-control' type="hidden" name='category' value='<?= $category; ?>'>
 	 			<input class='form-control' type="hidden" name='status' value='total_removal'>
 
-	 			<button type="submit" class="btn btn-block btn-warning">Ολική Διαγραφή</button>
+	 			<button type="submit" class="btn btn-block btn-warning" disabled>Ολική Διαγραφή</button>
 	 		</form>
 		</div>
 
@@ -488,18 +488,26 @@ if($itemLive){
 								<input class="hidden" id="s<?= $image->id ?>" <?= ($image->default > 0 ? 'checked' : ''); ?> type="radio" name="defaultImage" value="">
 							</div>
 							<img style="width:100%;" src="<?= base_url().'/images/'.$sku.'/'.$image->image_src.'.jpg'; ?>" alt="">
-							<div  title='Διαγραφή αυτής της φωτογραφίας!' class='deleteImg' data-src='<?= $image->image_src; ?>' data-sku='<?= $sku; ?>'>&times</div>
+							<div  title='Διαγραφή αυτής της φωτογραφίας!' class='deleteImg' data-src='<?= $image->image_src; ?>' data-sku='<?= $sku; ?>'>
+								&times;
+							</div>
 
 						</div>
 						<?php
 						$i++;
 					}
+
+
 					?>
 
 					</div>
 					</div>
+
+
 					<?php
-             	echo form_open('edit/'.$category.'/'.$sku, 'class="imageForm" id="imageForm"');
+
+						}
+    echo form_open('edit/'.$category.'/'.$sku, 'class="imageForm" id="imageForm"');
              	echo	form_hidden('status', 'deleteAllImages');
              	$data = array(
 			        'name'          => 'button',
@@ -511,9 +519,11 @@ if($itemLive){
 			        'onclick'		=> "return confirm('Είστε σίγουροι;')"
 			);
 				echo form_button($data);
+			echo form_close();
+				echo form_open('edit/'.$category.'/'.$sku, 'class="imageForm" id="imageForm"');
 				echo	form_hidden('status', 'images');
 
-				}
+
               ?>
              	<?php
 
