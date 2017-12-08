@@ -665,6 +665,7 @@ class Live_model extends CI_Model {
 					$c = 'printers';
 					break;
 				case 'Telecoms GSM- / SmartPhones':
+				case 'Telecoms- / SmartPhones'
 					$c = 'smartphones';
 					break;
 				case strpos($cat,'Peripherals- / Monitors'):
