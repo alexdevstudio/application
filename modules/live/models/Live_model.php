@@ -98,11 +98,11 @@ class Live_model extends CI_Model {
 					if($sc == 'Routers')
 					{
 						$c = 'routers';
-            $c = $cat;
+            			$c = $cat;
 					}
 					elseif($sc == 'Switches'){
 						$c = 'switches';
-            $c = $cat;
+            			$c = $cat;
 					}
 					break;
 				case 'Power Protection':
@@ -285,6 +285,8 @@ class Live_model extends CI_Model {
 					$f=0;
 					continue;
 				}
+				else
+					$f=1;
 
 				$net_price = str_replace(",", ".", $product->timi);
 				$net_price = (string) trim($net_price);
@@ -2881,9 +2883,10 @@ class Live_model extends CI_Model {
 
 			//3. Add Product Images
 			if($f){
-			$this->AddProductImages($product, $f, $supplier, $sku);
+				$this->AddProductImages($product, $f, $supplier, $sku);
 			}		
-		}//if($sku = Modules::run('sku/checkSku',$skuArray)){
+		}
+		//if($sku = Modules::run('sku/checkSku',$skuArray)){
 		/*else
 		{
 			if($c == 'printers' || $c == 'multifunction_printers'){
@@ -2906,8 +2909,6 @@ class Live_model extends CI_Model {
 
 
     public function AddProductImages($product, $f, $supplier, $sku){
-
-
 
     	if ($supplier == 'oktabit' )
     	{
@@ -2934,6 +2935,7 @@ class Live_model extends CI_Model {
 					$f++;
 				}
 			}
+
     	}
     	else if ($supplier == 'logicom' || $supplier == 'braintrust')
     	{
