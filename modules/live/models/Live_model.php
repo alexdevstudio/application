@@ -4777,6 +4777,7 @@ class Live_model extends CI_Model {
     		switch ($availability) {
 	    		case '0':
 	    			$av = 'Αναμονή παραλαβής';
+	    			return false; // On December 12 by Vaggelis because negative on Skroutz.
 	    			break;
 	    		case '1':
 	    			$av = 'Κατόπιν παραγγελίας σε 1-3 εργάσιμες';
