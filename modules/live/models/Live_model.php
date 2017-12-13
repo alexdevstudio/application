@@ -135,6 +135,10 @@ class Live_model extends CI_Model {
 						$c = 'software';
 						$sc = 'Εφαρμογές γραφείου';
 					}
+					elseif($sc == 'Antivirus'){
+						$c = 'software';
+						$sc = 'Antivirus';
+					}
 					break;
 				case 'Software DSP':
 					$dist_type = 'DSP';
