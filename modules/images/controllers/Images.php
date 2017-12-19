@@ -84,6 +84,7 @@ class Images extends MX_Controller {
 			$product = Modules::run('crud/get',$category, ['sku'=>$sku]);
 			$rand = rand(1,10000000);
 			$file_name = $product->row()->brand.'-'.$product->row()->product_number.'-'.$rand;
+			$file_name = str_replace(' ','_',$file_name);
 			$file_name = str_replace('.','_',$file_name);
 			$config["upload_path"] = "./images/".$sku;
 			$config["allowed_types"] = "jpg";
