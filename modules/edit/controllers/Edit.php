@@ -480,7 +480,7 @@ class Edit extends MX_Controller {
 	}
 
 	public function deleteImg($sku, $src){
-
+			$src = urldecode($src);
 
 
 			Modules::run('crud/delete','images',array('item_sku'=>$sku, 'image_src'=>$src));

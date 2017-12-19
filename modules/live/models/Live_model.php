@@ -403,6 +403,118 @@ class Live_model extends CI_Model {
 
     }
 
+
+    public function quest(){
+
+    	$this->load->view('upload_quest_xml', array('error' => ' ' ));
+    }
+
+    public function import_quest($path){
+
+    	if($xml = $this->xml($path)){
+
+			//$images = array();
+			$this->updateLive('quest');
+		}
+
+		$newProducts = array();
+		$sc = $type = '';
+
+		foreach($xml->children() as $product) {
+			/*echo '<pre>';
+			print_r($product);
+			$cat = (string) trim($product->Category);
+			echo $cat;
+			echo '</pre>';*/
+
+			$cat = (string) trim($product->Category);
+			switch ($cat) {
+				case 'Routers'
+					$c = 'routers';
+					break;
+				case 'Mobile Battery/Power Bank'
+					$c = 'power_bank';
+					break;
+				case 'Tablet & Pads'
+					$c = 'tablets';
+					break;
+				case 'Desktop Branded PCs'
+					$c = 'desktops';
+					$type = 'Desktop';
+					break;
+				case 'Memory Modules'
+					$c = 'memories';
+					break;
+				/*case 'Notebook Power and Batteries'
+					$c = 'Notebook Power and Batteries';
+					break;*/
+				case 'Switches'
+					$c = 'switches';
+					break;
+				case 'Speakers'
+					$c = 'speakers';
+					break;
+				/*case 'Memory Cards'
+					$c = 'Memory Cards';
+					break;*/
+				case 'Laser Printers'
+					$c = 'printers';
+					$type = 'Laser';
+					break;
+				case 'Operating Systems'
+					$c = 'software';
+					$type = 'Λειτουργικά Συστήματα';
+					break;
+				case 'SOLID STATE DISKS (SSD)'
+					$c = 'ssd';
+					break;
+				case 'Projector'
+					$c = 'projectors';
+					break;
+				case 'Notebook/Netbook  Bags'
+					$c = 'carrying_cases';
+					break;
+				case 'External Hard Disk Drives'
+					$c = 'external_hard_drives';
+					break;
+				case 'Monitor LCD'
+					$c = 'monitors';
+					break;
+				/*case 'Plotters'
+					$c = 'Plotters';
+					break;*/
+				case 'Servers (HW)'
+					$c = 'servers';
+					break;
+				case "Workstation PC's"
+					$c = 'desktops';
+					$type = 'Workstation';
+					break;
+				/*case 'Smart Home'
+					$c = 'Smart Home';
+					break;*/
+				case 'Notebook'
+					$c = 'Notebook';
+					break;
+				case 'Security & Antivirus'
+					$c = 'Security & Antivirus';
+					break;
+				
+				default:
+					$c = $cat;
+					break;
+			}
+
+			if($c==$cat){
+				continue;
+			}
+
+			if ($type != '')
+				$quest_product['type'] = $type;
+		}
+    }
+
+
     public function partnernet(){
 
 
@@ -805,7 +917,6 @@ class Live_model extends CI_Model {
 		echo "Finnished updating Logicom-Enet.";
 
     }
-
 
     public function ddc(){
 
