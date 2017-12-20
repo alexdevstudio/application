@@ -83,7 +83,7 @@ echo "</pre>";*/
 		</div>
 		<div class="supplier-item col-sm-6 col-md-3">
 			<div class="color-palette-set text-center">
-				<div class="bg-red-active color-palette ">
+				<div class="bg-light-blue color-palette ">
 					<a href="./live/index/quest" style="color:#fff;display:block"><br /><span >Quest</span><br /><br /></a>
 				</div>
 			</div>
