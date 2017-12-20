@@ -429,75 +429,76 @@ class Live_model extends CI_Model {
 
 			$cat = (string) trim($product->Category);
 			switch ($cat) {
-				case 'Routers'
+				case 'Routers':
 					$c = 'routers';
 					break;
-				case 'Mobile Battery/Power Bank'
+				case 'Mobile Battery/Power Bank':
 					$c = 'power_bank';
 					break;
-				case 'Tablet & Pads'
+				case 'Tablet & Pads':
 					$c = 'tablets';
 					break;
-				case 'Desktop Branded PCs'
+				case 'Desktop Branded PCs':
 					$c = 'desktops';
 					$type = 'Desktop';
 					break;
-				case 'Memory Modules'
+				case 'Memory Modules':
 					$c = 'memories';
 					break;
-				/*case 'Notebook Power and Batteries'
+				/*case 'Notebook Power and Batteries':
 					$c = 'Notebook Power and Batteries';
 					break;*/
-				case 'Switches'
+				case 'Switches':
 					$c = 'switches';
 					break;
-				case 'Speakers'
+				case 'Speakers':
 					$c = 'speakers';
 					break;
-				/*case 'Memory Cards'
+				/*case 'Memory Cards':
 					$c = 'Memory Cards';
 					break;*/
-				case 'Laser Printers'
+				case 'Laser Printers':
 					$c = 'printers';
 					$type = 'Laser';
 					break;
-				case 'Operating Systems'
+				case 'Operating Systems':
 					$c = 'software';
 					$type = 'Λειτουργικά Συστήματα';
 					break;
-				case 'SOLID STATE DISKS (SSD)'
+				case 'SOLID STATE DISKS (SSD)':
 					$c = 'ssd';
 					break;
-				case 'Projector'
+				/*case 'Projector':
 					$c = 'projectors';
-					break;
-				case 'Notebook/Netbook  Bags'
+					break;*/
+				case 'Notebook/Netbook  Bags':
 					$c = 'carrying_cases';
 					break;
-				case 'External Hard Disk Drives'
+				case 'External Hard Disk Drives':
 					$c = 'external_hard_drives';
 					break;
-				case 'Monitor LCD'
+				case 'Monitor LCD':
 					$c = 'monitors';
 					break;
-				/*case 'Plotters'
+				/*case 'Plotters':
 					$c = 'Plotters';
 					break;*/
-				case 'Servers (HW)'
+				case 'Servers (HW)':
 					$c = 'servers';
 					break;
-				case "Workstation PC's"
+				case "Workstation PC's":
 					$c = 'desktops';
 					$type = 'Workstation';
 					break;
-				/*case 'Smart Home'
+				/*case 'Smart Home':
 					$c = 'Smart Home';
 					break;*/
-				case 'Notebook'
-					$c = 'Notebook';
+				case 'Notebook':
+					$c = 'laptops';
 					break;
-				case 'Security & Antivirus'
-					$c = 'Security & Antivirus';
+				case 'Security & Antivirus':
+					$c = 'software';
+					$type = 'Antivirus';
 					break;
 				
 				default:
@@ -505,18 +506,112 @@ class Live_model extends CI_Model {
 					break;
 			}
 
-			if($c==$cat){
-				continue;
-			}
 
-			if ($type != '')
-				$quest_product['type'] = $type;
-		}
-    }
+			if($c!=$cat){
+
+	    		$prd = $product->attributes();
+
+				$availability = $this->makeAvailability((string) trim($product->Availability), 'quest');
+
+				if(!$availability)
+					continue;
+
+				$pn = (string) trim($product->Code);
+
+				if(strpos($pn, 'XXX') !== false)
+					continue;
+
+	    		$title = (string) trim($product->Item);
+	    		$description = '';
+	    		$net_price = $product->Price;
+	    		if($net_price == '0' || $net_price == 0)
+	    			continue;
+	    		$net_price = str_replace(",", ".", $net_price); //for floatval to work
+				$net_price = floatval ($net_price);
+	    		$availability = $availability;
+	    		$recycle_tax = '';
+	    		$code = (string) trim($product->Quest_Code);
+
+	    		//1. Live
+				$supplier = 'quest';
+				if($this->checkLiveProduct($pn, $net_price, $supplier)){
+
+					$live = array(
+						'category'=>$c,
+						'product_number'=>$pn,
+						'net_price'=>$net_price,
+						'availability'=>$availability,
+						'recycle_tax'=>(string) trim($recycle_tax),
+						'supplier' =>$supplier,
+						'status' => 'publish',
+						'delete_flag'=>0
+						);
+
+					$this->db->where('product_number', $pn);
+					$this->db->where('supplier', $supplier);
+					$this->db->delete('live', $live);
+
+					$this->db->insert('live', $live);
+
+					unset($live);
+				}
+
+				//Array for categories table
+				//Brand Name and product URL cannot be parsed must import it manually
+				$brand = '';
+				$product_url = '';
+
+				$quest_product = array(
+					'category' => $c,
+					'product_number' => $pn,
+					'description' => $description,
+					'title' => $title,
+					'brand' => $brand,
+					'product_url' => $product_url,
+					'code' => $code,
+					'net_price'=>$net_price
+				);
+
+				if ($c == 'software')
+				{
+					$quest_product['type'] = $type;
+					$quest_product['shipping_class'] = 10646;
+					$quest_product['volumetric_weight'] = 0.2;
+
+					if (strstr ($title,'DSP'))
+						$quest_product['dist_type'] = 'DSP';
+					elseif(strstr ($title,'ROK'))
+						$quest_product['dist_type'] = 'ROK';
+					else
+						$quest_product['dist_type'] = '';
+				}
+
+				if ($type != '')
+					$quest_product['type'] = $type;
+
+				//Image cannot be parsed must import it manually
+				$imageUrl = '';
+
+				$insert = $this->addProduct ($quest_product, array(), $imageUrl, 'quest');
+
+
+				if ($insert)
+				{
+					if(isset ($newProducts[$c])){
+						$newProducts[$c] = $newProducts[$c]+1;
+					}
+					else{
+						$newProducts[$c] = 1;
+					}
+				}
+			}
+		}//end foreach
+		$this->sendImportedProductsByMail($newProducts);
+		echo "Finnished updating Quest.";	
+    }//End Quest
 
 
     public function partnernet(){
-
 
     	if($xml = $this->xml("http://eshop.partnernet.gr/index.php?route=feed/any_feed&name=episilonteledata")){
 
@@ -4847,6 +4942,32 @@ class Live_model extends CI_Model {
 	    	}
 
 	    	return $av;
+
+    	}elseif($supplier == 'quest'){
+
+    		switch ($availability) {
+    			case 'X':
+    			case 'x':
+    				$av="Κατόπιν παραγγελίας σε 1-3 εργάσιμες";
+    				break;
+    			case '0':
+    			case '1':
+    			case '2':
+    			case '3':
+    			case '4':
+    			case '5':
+    			case '6':
+    			case '7':
+    			case '8':
+    			case '9':
+	    			$av = 'Αναμονή παραλαβής';
+	    			return false;
+	    			break;
+    			default:
+    				return false;
+    				break;
+    		}
+    		return $av;
 
     	}elseif($supplier == 'logicom'){
 
