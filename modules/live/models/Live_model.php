@@ -397,7 +397,7 @@ class Live_model extends CI_Model {
 		
 		}//end foreach
 
-		$this->sendImportedProductsByMail($newProducts);
+		$this->sendImportedProductsByMail($newProducts,'Oktabit');
 
 		 echo "Finnished Oktabit";
 
@@ -418,15 +418,10 @@ class Live_model extends CI_Model {
 		}
 
 		$newProducts = array();
-		$sc = $type = '';
+		$sc = '';   		
 
 		foreach($xml->children() as $product) {
-			/*echo '<pre>';
-			print_r($product);
-			$cat = (string) trim($product->Category);
-			echo $cat;
-			echo '</pre>';*/
-
+			$type = '';
 			$cat = (string) trim($product->Category);
 			switch ($cat) {
 				case 'Routers':
@@ -445,9 +440,10 @@ class Live_model extends CI_Model {
 				case 'Memory Modules':
 					$c = 'memories';
 					break;
-				/*case 'Notebook Power and Batteries':
-					$c = 'Notebook Power and Batteries';
-					break;*/
+				case 'Notebook Power and Batteries':
+					$c = 'accessories';
+					$type = 'laptops';
+					break;
 				case 'Switches':
 					$c = 'switches';
 					break;
@@ -468,9 +464,9 @@ class Live_model extends CI_Model {
 				case 'SOLID STATE DISKS (SSD)':
 					$c = 'ssd';
 					break;
-				/*case 'Projector':
+				case 'Projector':
 					$c = 'projectors';
-					break;*/
+					break;
 				case 'Notebook/Netbook  Bags':
 					$c = 'carrying_cases';
 					break;
@@ -509,8 +505,6 @@ class Live_model extends CI_Model {
 
 			if($c!=$cat){
 
-	    		$prd = $product->attributes();
-
 				$availability = $this->makeAvailability((string) trim($product->Availability), 'quest');
 
 				if(!$availability)
@@ -531,6 +525,8 @@ class Live_model extends CI_Model {
 	    		$availability = $availability;
 	    		$recycle_tax = '';
 	    		$code = (string) trim($product->Quest_Code);
+
+	    		$brand = $this->MakeQuestBrands($title, $cat);
 
 	    		//1. Live
 				$supplier = 'quest';
@@ -558,7 +554,7 @@ class Live_model extends CI_Model {
 
 				//Array for categories table
 				//Brand Name and product URL cannot be parsed must import it manually
-				$brand = '';
+				$brand = $this->MakeQuestBrands($title, $cat);
 				$product_url = '';
 
 				$quest_product = array(
@@ -606,7 +602,8 @@ class Live_model extends CI_Model {
 				}
 			}
 		}//end foreach
-		$this->sendImportedProductsByMail($newProducts);
+
+		$this->sendImportedProductsByMail($newProducts,'Quest');
 		echo "Finnished updating Quest.";	
     }//End Quest
 
@@ -774,7 +771,7 @@ class Live_model extends CI_Model {
 
 			}//foreach($xml->children() as $product)
 
-			$this->sendImportedProductsByMail($newProducts);
+			$this->sendImportedProductsByMail($newProducts, 'PartnerNet');
 			echo "<pre>";
 			print_r($newProducts);
 			echo "Finnished $supplier";
@@ -1007,7 +1004,7 @@ class Live_model extends CI_Model {
 
 		}//end foreach
 
-		$this->sendImportedProductsByMail($newProducts);
+		$this->sendImportedProductsByMail($newProducts, 'Logicom-Enet');
 
 		echo "Finnished updating Logicom-Enet.";
 
@@ -1411,7 +1408,7 @@ class Live_model extends CI_Model {
 			}
 		}
 
-		$this->sendImportedProductsByMail($newProducts);
+		$this->sendImportedProductsByMail($newProducts, 'Digital Data Communication');
 
 		echo "Finnished updating Digital Data Communication.";
 
@@ -1693,7 +1690,7 @@ class Live_model extends CI_Model {
 			}
 		} //end foreach
 
-		$this->sendImportedProductsByMail($newProducts);
+		$this->sendImportedProductsByMail($newProducts, 'Braintrust');
 
 		echo "Finnished updating Braintrust.";
 
@@ -2117,7 +2114,7 @@ class Live_model extends CI_Model {
 			}
 		}//end foreach
 
-		$this->sendImportedProductsByMail($newProducts);
+		$this->sendImportedProductsByMail($newProducts, 'KONICA Copiers');
 		echo "Finnished updating KONICA Copiers.";
     }
 
@@ -2228,7 +2225,7 @@ class Live_model extends CI_Model {
 			}
 		}//end foreach
 
-		$this->sendImportedProductsByMail($newProducts);
+		$this->sendImportedProductsByMail($newProducts, 'CPI');
 		echo "Finnished updating CPI.";
     }
 
@@ -2738,22 +2735,23 @@ class Live_model extends CI_Model {
 			}
 		}//end foreach
 
-		$this->sendImportedProductsByMail($newProducts);
+		$this->sendImportedProductsByMail($newProducts, 'Westnet');
 		echo "Finnished updating Westnet.";
 
     }
 
-    private function sendImportedProductsByMail($newProducts){
+    private function sendImportedProductsByMail($newProducts, $the_supplier){
 
     	if (!empty($newProducts))//Send Mail Check
 		{
-			$message='<h2>Νέα προϊόντα</h2>';
+			$message='<h2>Νέα προϊόντα από '.$the_supplier.'</h2>';
 
 			foreach ($newProducts as $key => $value){
 				$message .= $key.' : '.$value.' (<a href="'.base_url().'/extract/xml/'.$key.'/new">Προβολή XML)</a><br>';
 			}
+			$subject = 'Νέα προϊόντα από '.$the_supplier;
 
-			Modules::run('emails/send','Νέα προϊόντα',$message);
+			Modules::run('emails/send',$subject, $message);
 		}
     }
 
@@ -2949,7 +2947,7 @@ class Live_model extends CI_Model {
 				 $c == "power_bank" || $c == "keyboard_mouse"  || $c == "servers"  ||
 				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c== "desktops" || $c == "tablets"  || $c == "smartphones" ||
 				 $c == "cables" || $c == "patch_panels" || $c == "racks" || $c =="optical_drives" || $c == "card_readers" || $c == "flash_drives" ||
-				 $c == "power_supplies" || $c == "cases" || $c == "fans" || $c == "motherboards" || $c == "graphic_cards" || $c == "cpu" ||
+				 $c == "power_supplies" || $c == "projectors" || $c == "cases" || $c == "fans" || $c == "motherboards" || $c == "graphic_cards" || $c == "cpu" ||
 				 $c == "memories" || $c == "hoverboards" || $c =="printer_fusers" || $c =="printer_drums" || $c =="printer_belts" || $c=="ups" || $c=="tv" || $c=="accessories" || $c=="cable_accessories" || $c=="cooling_pads" || $c == "powerlines" || $c == "ip_phones"){
 
 
@@ -3079,6 +3077,11 @@ class Live_model extends CI_Model {
 					break;
 				default:
 					break;
+			}
+
+			if(($categoryData['type'] == '' || )&& $product['type'] != '')
+			{
+				$categoryData['type'] = $product['type'];
 			}
 
 			if(Modules::run("categories/insert", $c, $categoryData)){
@@ -5096,7 +5099,7 @@ class Live_model extends CI_Model {
 
 		$this->db->where('supplier', $supplier);
 		$this->db->where('status', 'trash');
-		$this->db->where('delete_flag', 10);
+		$this->db->where('delete_flag', 30);
 		$this->db->delete('live');
 
 
@@ -5118,6 +5121,275 @@ class Live_model extends CI_Model {
 			}
 
 		return true;
+	}
+
+	private function MakeQuestBrands($title, $category){
+		$brand = '';
+		if($category == 'Desktop Branded PCs')
+		{
+			if (strpos($title, 'DELL') !== false)
+				$brand = 'DELL';
+			elseif (strpos($title, 'Gigabyte') !== false)
+				$brand = 'Gigabyte';
+			elseif (strpos($title, 'HP') !== false)
+				$brand = 'HP';
+			elseif (strpos($title, 'INTEL') !== false || strpos($title, 'Intel') !== false)
+				$brand = 'INTEL';
+			elseif (strpos($title, 'LENOVO') !== false || strpos($title, 'LN') !== false)
+				$brand = 'LENOVO';
+			elseif (strpos($title, 'Mac') !== false)
+				$brand = 'APPLE';
+		}
+		elseif($category == 'External Hard Disk Drives')
+		{
+			if (strpos($title, 'MAXTOR') !== false)
+				$brand = 'SEAGATE';
+			elseif (strpos($title, 'TOSHIBA') !== false)
+				$brand = 'TOSHIBA';
+			elseif (strpos($title, 'WD') !== false)
+				$brand = 'WD';
+			elseif (strpos($title, 'AIRPORT') !== false)
+				$brand = 'APPLE';
+		}
+		elseif($category == 'Laser Printers')
+		{
+			if (strpos($title, 'CANON') !== false)
+				$brand = 'CANON';
+			elseif (strpos($title, 'EPSON') !== false || strpos($title, 'Epson') !== false)
+				$brand = 'EPSON';
+			elseif (strpos($title, 'HP') !== false || strpos($title, 'HPE') !== false)
+				$brand = 'HP';
+			elseif (strpos($title, 'LEXMARK') !== false)
+				$brand = 'LEXMARK';
+			elseif (strpos($title, 'SAMSUNG') !== false)
+				$brand = 'SAMSUNG';
+			elseif (strpos($title, 'XEROX') !== false)
+				$brand = 'XEROX';
+		}
+		elseif($category == 'Memory Cards')
+		{
+			if (strpos($title, 'KINGS') !== false || strpos($title, 'KINGST') !== false || strpos($title, 'KINGSTON') !== false)
+				$brand = 'KINGSTON';
+		}
+		elseif($category == 'Memory Modules')
+		{
+			if (strpos($title, 'BALL') !== false || strpos($title, 'BALLIST') !== false || strpos($title, 'BALLISTI') !== false || strpos($title, 'BALLISTIX') !== false)
+				$brand = 'BALLISTIX';
+			elseif (strpos($title, 'CORSAIR') !== false || strpos($title, 'COR') !== false)
+				$brand = 'CORSAIR';
+			elseif (strpos($title, 'HP') !== false || strpos($title, 'HPE') !== false)
+				$brand = 'HP';
+			elseif (strpos($title, 'CRUCIAL') !== false)
+				$brand = 'CRUCIAL';
+			elseif (strpos($title, 'HX') !== false)
+				$brand = 'HyperX';
+			elseif (strpos($title, 'KINGS') !== false || strpos($title, 'KINGST') !== false || strpos($title, 'KINGSTON') !== false)
+				$brand = 'KINGSTON';
+		}
+		elseif($category == 'Mobile Battery/Power Bank')
+		{
+			if (strpos($title, 'APC') !== false)
+				$brand = 'APC';
+			elseif (strpos($title, 'Bitmore') !== false)
+				$brand = 'Bitmore';
+			elseif (strpos($title, 'HP') !== false || strpos($title, 'HPE') !== false)
+				$brand = 'HP';
+			elseif (strpos($title, 'PURO') !== false)
+				$brand = 'PURO';
+			elseif (strpos($title, 'Sailing') !== false)
+				$brand = 'Sailing';
+			elseif (strpos($title, 'TP-LINK') !== false || strpos($title, 'TPLINK') !== false)
+				$brand = 'TP-LINK';
+		}
+		elseif($category == 'Monitor LCD')
+		{
+			if (strpos($title, 'AOC') !== false)
+				$brand = 'AOC';
+			elseif (strpos($title, 'BENQ') !== false)
+				$brand = 'BENQ';
+			elseif (strpos($title, 'HP') !== false || strpos($title, 'HPE') !== false)
+				$brand = 'HP';
+			elseif (strpos($title, 'DELL') !== false)
+				$brand = 'DELL';
+			elseif (strpos($title, 'LENOVO') !== false || strpos($title, 'ThinkVision') !== false)
+				$brand = 'LENOVO';
+			elseif (strpos($title, 'LG') !== false)
+				$brand = 'LG';
+			elseif (strpos($title, 'SAMSUNG') !== false)
+				$brand = 'SAMSUNG';
+		}
+		elseif($category == 'Notebook')
+		{
+			if (strpos($title, 'DELL') !== false || strpos($title, 'INSP') !== false)
+				$brand = 'DELL';
+			elseif (strpos($title, 'HP') !== false || strpos($title, 'HPE') !== false)
+				$brand = 'HP';
+			elseif (strpos($title, 'LENOVO') !== false || strpos($title, 'LEN') !== false || strpos($title, 'LN') !== false)
+				$brand = 'LENOVO';
+			elseif (strpos($title, 'TOSHIBA') !== false)
+				$brand = 'TOSHIBA';
+			elseif (strpos($title, 'MBAIR') !== false || strpos($title, 'MBP') !== false || strpos($title, 'MB') !== false)
+				$brand = 'APPLE';
+		}
+		elseif($category == 'Notebook Power and Batteries')
+		{
+			if (strpos($title, 'Apple') !== false || strpos($title, 'APPLE') !== false)
+				$brand = 'APPLE';
+			elseif (strpos($title, 'HP') !== false || strpos($title, 'HPE') !== false)
+				$brand = 'HP';
+			elseif (strpos($title, 'HANTOL') !== false)
+				$brand = 'HANTOL';
+			elseif (strpos($title, 'MAGSAFE') !== false)
+				$brand = 'MAGSAFE';
+			elseif (strpos($title, 'TARGUS') !== false)
+				$brand = 'TARGUS';
+			elseif (strpos($title, 'Xilence') !== false)
+				$brand = 'Xilence';
+		}
+		elseif($category == 'Notebook/Netbook  Bags')
+		{
+			if (strpos($title, 'Dicota') !== false)
+				$brand = 'Dicota';
+			elseif (strpos($title, 'HP') !== false || strpos($title, 'HPE') !== false)
+				$brand = 'HP';
+			elseif (strpos($title, 'Logic') !== false)
+				$brand = 'Logic';
+			elseif (strpos($title, 'Speck') !== false)
+				$brand = 'Speck';
+			elseif (strpos($title, 'THULE') !== false)
+				$brand = 'THULE';
+		}
+		elseif($category == 'Operating Systems')
+		{
+			//if (strpos($title, 'Microsoft') !== false || strpos($title, 'WIN') !== false || strpos($title, 'Win') !== false)
+				$brand = 'MICROSOFT';
+		}
+		elseif($category == 'Plotters')
+		{
+			//if (strpos($title, 'HP') !== false || strpos($title, 'HPE') !== false)
+				$brand = 'HP';
+		}
+		elseif($category == 'Projector')
+		{
+			if (strpos($title, 'CANON') !== false)
+				$brand = 'CANON';
+			elseif (strpos($title, 'DELL') !== false)
+				$brand = 'DELL';
+			elseif (strpos($title, 'EPSON') !== false || strpos($title, 'Epson') !== false)
+				$brand = 'EPSON';
+			elseif (strpos($title, 'HITACHI') !== false)
+				$brand = 'HITACHI';
+			elseif (strpos($title, 'PANASONIC') !== false)
+				$brand = 'PANASONIC';
+			elseif (strpos($title, 'PHILIPS') !== false)
+				$brand = 'PHILIPS';
+		}
+		elseif($category == 'Routers')
+		{
+			if (strpos($title, 'CISCO') !== false)
+				$brand = 'CISCO';
+			elseif (strpos($title, 'DRAYTEK') !== false)
+				$brand = 'DRAYTEK';
+			elseif (strpos($title, 'TP-LINK') !== false)
+				$brand = 'TP-LINK';
+		}
+		elseif($category == 'Security & Antivirus')
+		{
+			if (strpos($title, 'BITDEFENDER') !== false)
+				$brand = 'BITDEFENDER';
+			elseif (strpos($title, 'ESET') !== false)
+				$brand = 'ESET';
+			elseif (strpos($title, 'KASPERSKY') !== false)
+				$brand = 'KASPERSKY';
+			elseif (strpos($title, 'NORTON') !== false)
+				$brand = 'NORTON';
+			elseif (strpos($title, 'Panda') !== false)
+				$brand = 'Panda';
+		}
+		elseif($category == 'Servers (HW)')
+		{
+			if (strpos($title, 'DELL') !== false || strpos($title, 'PE R') !== false || strpos($title, 'PE T') !== false)
+				$brand = 'DELL';
+			elseif (strpos($title, 'HP') !== false || strpos($title, 'HPE') !== false)
+				$brand = 'HP';
+		}
+		elseif($category == 'Smart Home')
+		{
+			if (strpos($title, 'D-LINK') !== false || strpos($title, 'DLINK') !== false)
+				$brand = 'DLINK';
+			elseif (strpos($title, 'TP-LINK') !== false || strpos($title, 'TPLINK') !== false)
+				$brand = 'TP-LINK';
+		}
+		elseif($category == 'SOLID STATE DISKS (SSD)')
+		{
+			if (strpos($title, 'CORSAIR') !== false)
+				$brand = 'CORSAIR';
+			elseif (strpos($title, 'CRUCIAL') !== false)
+				$brand = 'CRUCIAL';
+			elseif (strpos($title, 'INTEL') !== false || strpos($title, 'Intel') !== false)
+				$brand = 'INTEL';
+			elseif (strpos($title, 'KINGSTON') !== false)
+				$brand = 'KINGSTON';
+			elseif (strpos($title, 'MICRON') !== false)
+				$brand = 'MICRON';
+			elseif (strpos($title, 'OCZ') !== false)
+				$brand = 'OCZ';
+			elseif (strpos($title, 'SAMSUNG') !== false)
+				$brand = 'SAMSUNG';
+		}
+		elseif($category == 'Speakers')
+		{
+			if (strpos($title, 'B&W') !== false)
+				$brand = 'B&W';
+			elseif (strpos($title, 'Beats') !== false)
+				$brand = 'Beats';
+			elseif (strpos($title, 'CREATIVE') !== false)
+				$brand = 'CREATIVE';
+			elseif (strpos($title, 'GENIUS') !== false)
+				$brand = 'GENIUS';
+			elseif (strpos($title, 'HP') !== false)
+				$brand = 'HP';
+			elseif (strpos($title, 'LOGITECH') !== false)
+				$brand = 'LOGITECH';
+		}
+		elseif($category == 'Switches')
+		{
+			if (strpos($title, 'CISCO') !== false || strpos($title, 'Catalyst') !== false)
+				$brand = 'CISCO';
+			elseif (strpos($title, 'DLINK') !== false || strpos($title, 'D-LINK') !== false || strpos($title, 'DGS') !== false || strpos($title, 'DXS') !== false)
+				$brand = 'DLINK';
+			elseif (strpos($title, 'NETGEAR') !== false)
+				$brand = 'NETGEAR';
+			elseif (strpos($title, 'TP-LINK') !== false)
+				$brand = 'TP-LINK';
+			elseif (strpos($title, 'HP') !== false || strpos($title, 'HPE') !== false)
+				$brand = 'HP';
+		}
+		elseif($category == 'Tablet & Pads')
+		{
+			if (strpos($title, 'Bitmore') !== false)
+				$brand = 'Bitmore';
+			elseif (strpos($title, 'ColorTab') !== false)
+				$brand = 'ColorTab';
+			elseif (strpos($title, 'iPad') !== false)
+				$brand = 'APPLE';
+			elseif (strpos($title, 'HP') !== false || strpos($title, 'HPE') !== false)
+				$brand = 'HP';
+		}
+		elseif($category == "Workstation PC's")
+		{
+			if (strpos($title, 'DELL') !== false || strpos($title, 'INSP') !== false)
+				$brand = 'DELL';
+			elseif (strpos($title, 'HP') !== false || strpos($title, 'HPE') !== false)
+				$brand = 'HP';
+			elseif (strpos($title, 'LENOVO') !== false || strpos($title, 'LEN') !== false || strpos($title, 'LN') !== false)
+				$brand = 'LENOVO';
+		}
+		else
+		{
+			$brand = 'Unknown';
+		}
+		return $brand;
 	}
 }
 

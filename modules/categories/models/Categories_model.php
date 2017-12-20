@@ -365,6 +365,9 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 			case 'printer_belts':
 					$shipping_class = 10651;
 					break;
+			case 'projectors':
+					$shipping_class = 10019;
+					break;
 			case 'cooling_pads':
 					$shipping_class = 10651;
 					break;
