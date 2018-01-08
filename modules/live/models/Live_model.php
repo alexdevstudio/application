@@ -526,7 +526,9 @@ class Live_model extends CI_Model {
 	    		$recycle_tax = '';
 	    		$code = (string) trim($product->Quest_Code);
 
-	    		$brand = $this->MakeQuestBrands($title, $cat);
+				$brand = $this->MakeQuestBrands($title, $cat);
+				if ($brand == 'APPLE')
+					continue;
 
 	    		//1. Live
 				$supplier = 'quest';
@@ -553,8 +555,6 @@ class Live_model extends CI_Model {
 				}
 
 				//Array for categories table
-				//Brand Name and product URL cannot be parsed must import it manually
-				$brand = $this->MakeQuestBrands($title, $cat);
 				$product_url = '';
 
 				$quest_product = array(
