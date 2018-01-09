@@ -3073,7 +3073,8 @@ class Live_model extends CI_Model {
 					break;
 				case 'MSI':
 					$categoryData['support_url'] = '';
-					$categoryData['support_tel'] = '2106995825';
+					//$categoryData['support_tel'] = '2106995825';
+					$categoryData['support_tel'] = 'braintrust@support.gr';
 					break;
 				default:
 					break;
