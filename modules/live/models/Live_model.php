@@ -5138,7 +5138,7 @@ class Live_model extends CI_Model {
 				$brand = 'INTEL';
 			elseif (strpos($title, 'LENOVO') !== false || strpos($title, 'LN') !== false)
 				$brand = 'LENOVO';
-			elseif (strpos($title, 'Mac') !== false)
+			elseif (strpos($title, 'Mac') !== false || strpos($title, 'MACBOOK') !== false || strpos($title, 'APPLE') !== false || strpos($title, 'Macmini') !== false || strpos($title, 'MacBook') !== false || strpos($title, 'IMAC') !== false)
 				$brand = 'APPLE';
 		}
 		elseif($category == 'External Hard Disk Drives')
@@ -5229,7 +5229,7 @@ class Live_model extends CI_Model {
 				$brand = 'LENOVO';
 			elseif (strpos($title, 'TOSHIBA') !== false)
 				$brand = 'TOSHIBA';
-			elseif (strpos($title, 'MBAIR') !== false || strpos($title, 'MBP') !== false || strpos($title, 'MB') !== false)
+			elseif (strpos($title, 'MBAIR') !== false || strpos($title, 'MBP') !== false || strpos($title, 'MB') !== false || strpos($title, 'Mac') !== false || strpos($title, 'MACBOOK') !== false || strpos($title, 'APPLE') !== false || strpos($title, 'Macmini') !== false || strpos($title, 'MacBook') !== false || strpos($title, 'IMAC') !== false)
 				$brand = 'APPLE';
 		}
 		elseif($category == 'Notebook Power and Batteries')
