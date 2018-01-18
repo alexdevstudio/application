@@ -137,7 +137,6 @@ class Statistics_model extends CI_Model {
 
         $query = $this->db->get();
         $all_products = $query->result();
-
         
 
         foreach($all_products as $product){
