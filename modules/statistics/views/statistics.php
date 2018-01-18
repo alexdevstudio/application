@@ -92,18 +92,20 @@
 <?php
     if(isset($Supplier_products))
     {
+		$products_quantity = count($Supplier_products);
+		
         ?>
 		
 		<div class="col-sm-12 col-md-12">
             <table class="table table-striped table-bordered table-condensed">
                 <thead>
                     <tr>
-                        <th colspan="5" style="background-color: #aaa;text-align:center;vertical-align: middle; font-size: 26px;" ><?= $Supplier ?></th>
+                        <th colspan="5" style="background-color: #aaa;text-align:center;vertical-align: middle; font-size: 26px;" ><?= $Supplier.' <span style="font-size: 14px;">Αριθ. προϊόντων: '.$products_quantity.'</span>' ?></th>
                     </tr>
                 </thead>
                 <tbody>              
                 <?php
-                $cat_pre = '';
+				$cat_pre = '';
 
                 foreach ($Supplier_products as $Supplier_product)
                 {
