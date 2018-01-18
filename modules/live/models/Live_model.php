@@ -687,6 +687,8 @@ class Live_model extends CI_Model {
 			$brand = (string) trim($product->manufacturer);
 			$title = (string) trim($product->name);
 
+			if($brand == 'Yealink') //added after Evans command on 16-1-2018 (email).
+				continue;
 
 			$status = 'publish';
 			$flag = 0;
@@ -702,8 +704,6 @@ class Live_model extends CI_Model {
 			//1. Live
 
 				if($this->checkLiveProduct($pn, $net_price, $supplier)){
-
-
 
 					$live = array(
 						'category'=>$c,
