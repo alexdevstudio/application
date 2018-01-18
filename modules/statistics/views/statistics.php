@@ -14,7 +14,7 @@
 		?>
 		
 		<section class="content-header">
-	      <h1>Εξαγωγή Σταττιστικών ανα προμηθευτή </h1>  
+	      <h1>Εξαγωγή Στατιστικών ανα προμηθευτή </h1>  
 	      <br>	   
 	    </section> 
 		<div class="supplier-item col-sm-4 col-md-2">

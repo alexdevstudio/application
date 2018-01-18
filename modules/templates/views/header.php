@@ -421,6 +421,11 @@
             </a>
          </li>
          <li class="">
+            <a href="<?php echo base_url('statistics');?>">
+              <i class="fa fa-bar-chart" aria-hidden="true"></i> <span>ΣΤΑΤΙΣΤΙΚΑ</span>
+            </a>
+         </li>
+         <li class="">
             <a target="_blank" href="https://etd.gr">
               <img src="https://etd.gr/wp-content/uploads/2015/10/logo72.png" class='img-menu'> <span>ETD.GR</span>
             </a>
