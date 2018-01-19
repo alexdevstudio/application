@@ -34,16 +34,23 @@
 
                 foreach ($rates_table->result() as $item) {
                 	
-                	$class = ' odd ';
+                	$class = ' odd child ';
                 	if ($i % 2 == 0) {
-					           $class = ' even ';
+					           $class = ' even child ';
 					         }
 
         					$i++;
         					$category = $item->category;
         					$rate = $item->rate;
                   $rate = $rate*100;
-        					$description = $item->description;
+                  $description = $item->description;
+                  $parent =  $item->parent;
+
+                  if($parent == '')
+                  {
+                    $class = ' parent ';
+                    $i = 1;
+                  }
 
                   $class_color='';
 
