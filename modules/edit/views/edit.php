@@ -148,6 +148,7 @@ if($itemLive){
 	$westnet = '';
 	$ddc = '';
 	$partnernet = '';
+	$quest= '';
 	$other = '';
 
 ?>
@@ -241,6 +242,9 @@ if($itemLive){
 	              		  					break;
 	              		  				case 'ddc':
 	              		  					$ddc = 'selected';
+												break;
+										case 'quest':
+	              		  					$quest = 'selected';
 	              		  					break;
 
 	              		  				default:
@@ -252,13 +256,14 @@ if($itemLive){
 
 	              		  	?>
 	              		  	<option value="etd" <?= $etd ?>>ETD</option>
-	              		  	<option value="logicom" <?= $logicom ?>>Logicom</option>
-	              		  	<option value="oktabit" <?= $oktabit ?>>Oktabit</option>
 	              		  	<option value="braintrust" <?= $braintrust ?>>Braintrust</option>
 	              		  	<option value="cpi" <?= $cpi ?>>CPI</option>
-	              		  	<option value="westnet" <?= $westnet ?>>WestNet</option>
-	              		  	<option value="DDC" <?= $ddc ?>>DDC</option>
-	              		  	<option value="partnernet" <?= $partnernet ?>>PartnerNet</option>
+							<option value="DDC" <?= $ddc ?>>DDC</option>
+							<option value="logicom" <?= $logicom ?>>Logicom</option>
+							<option value="oktabit" <?= $oktabit ?>>Oktabit</option>
+							<option value="partnernet" <?= $partnernet ?>>PartnerNet</option>
+							<option value="quest" <?= $quest ?>>Quest</option>
+	              		  	<option value="westnet" <?= $westnet ?>>WestNet</option>	              		  	
 	              		  	<option value="none" <?= $other ?>>Δεν υπάρχει σε κανέναν προμηθευτή</option>
 
 	              		  </select>
