@@ -61,7 +61,7 @@
                   <tr class="<?= $class; ?>" role="row">
                     <td><?= $description; ?></td>
                     <td><?= $category; ?></td>
-                    <td class="<?= $class_color; ?>" id="newRate_<?= $category; ?>"><?= $rate.'%' ?></td>
+                    <td class="<?= $class_color; ?> text-center" id="newRate_<?= $category; ?>"><?= $rate.'%' ?></td>
                     <td>
                       <form id="rate_<?= $category; ?>" action="./updateRate">
                         <input type='hidden' value='<?= $rate; ?>' name='rate' id='rate' />

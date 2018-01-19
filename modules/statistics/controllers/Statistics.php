@@ -16,7 +16,7 @@ class Statistics extends MX_Controller {
             $data['Supplier_products'] = $this->Statistics_model->getSupplierProducts($supplier);
             $data['Supplier']= strtoupper($supplier);
         }
-        $data['title'] = 'Statistics';
+        $data['title'] = 'ΠΡΟΜΗΘΕΥΤΕΣ';
 
 		$this->load->view('templates/header',$data);
 		$this->load->view('statistics', $data);

@@ -406,11 +406,6 @@
             </a>
          </li>
          <li class="">
-            <a href="<?php echo base_url();?>profit_rates">
-              <i class="fa fa-calculator"></i> <span>ΠΟΣΟΣΤΑ ΚΑΤΗΓΟΡΙΩΝ</span>
-            </a>
-         </li>
-         <li class="">
             <a href="<?php echo base_url();?>antikatavoles">
               <i class="fa fa-calculator"></i> <span>ΑΝΤΙΚΑΤΑΒΟΛΕΣ</span>
             </a>
@@ -420,11 +415,26 @@
               <i class="fa fa-money" aria-hidden="true"></i> <span>ΤΙΜΕΣ SKROUTZ</span>
             </a>
          </li>
-         <li class="">
-            <a href="<?php echo base_url('statistics');?>">
-              <i class="fa fa-bar-chart" aria-hidden="true"></i> <span>ΣΤΑΤΙΣΤΙΚΑ</span>
-            </a>
+         <li class="treeview">
+          <a href="#">
+            <i class="fa fa-dashboard"></i>
+            <span>ΕΜΠΟΡΙΚΗ ΔΙΑΧΕΙΡΙΣΗ</span>
+            <i class="fa fa-angle-left pull-right"></i>
+          </a> 
+          <ul class="treeview-menu">
+            <li class="">
+              <a href="<?php echo base_url('statistics');?>">
+                <i class="fa fa-bar-chart"></i> ΠΡΟΜΗΘΕΥΤΕΣ
+              </a>
+            </li> 
+            <li class="">
+              <a href="<?php echo base_url();?>profit_rates">
+                <i class="fa fa-calculator"></i> <span>ΠΟΣΟΣΤΑ ΚΑΤΗΓΟΡΙΩΝ</span>
+              </a>
+            </li>
+          </ul>
          </li>
+
          <li class="">
             <a target="_blank" href="https://etd.gr">
               <img src="https://etd.gr/wp-content/uploads/2015/10/logo72.png" class='img-menu'> <span>ETD.GR</span>
