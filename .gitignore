@@ -47,3 +47,5 @@ Temporary Items
 .apdisk
 0kpcaooe.01f.txt
 *.json
+system/*
+application/config/*
