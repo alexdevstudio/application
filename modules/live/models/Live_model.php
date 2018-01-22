@@ -3080,9 +3080,12 @@ class Live_model extends CI_Model {
 					break;
 			}
 
-			if($categoryData['type'] == '' && $product['type'] != '')
+			if(isset($product['type']))
 			{
-				$categoryData['type'] = $product['type'];
+				if($categoryData['type'] == '' && $product['type'] != '')
+				{
+					$categoryData['type'] = $product['type'];
+				}
 			}
 
 			if(Modules::run("categories/insert", $c, $categoryData)){
