@@ -157,21 +157,52 @@ class Live_model extends CI_Model {
 					{
 						$c = 'servers';
 					}
-					if ($sc == 'Tower Systems' || $sc == 'Tower Systems BTO' )
+					elseif ($sc == 'Tower Systems' || $sc == 'Tower Systems BTO' )
 					{
 						$c = 'servers';
 					}
+					elseif($sc == 'Server CPU' )
+					{
+						$c = 'server_cpu';
+					}
+					elseif($sc == 'Server Memory' )
+					{
+						$c = 'server_memories';
+					}
+					elseif($sc == 'Server Storage' )
+					{
+						$c = 'server_hard_drives';
+					}
+					elseif($sc == 'Storage Controlers' )
+					{
+						$c = 'server_controllers';
+					}
+					elseif($sc == 'Server Options' )
+					{
+						$tmp_title = (string) trim($product->titlos);
+						if(strstr ($tmp_title,'PSU'))
+						{
+							$c = 'server_power_supplies';
+						}
+						elseif(strstr ($tmp_title,'Memory'))
+						{
+							$c = 'server_memories';
+						}
+						elseif(strstr ($tmp_title,'RAID'))
+						{
+							$c = 'server_controllers';
+						}
+					}
 					break;
 				case 'Entertainment':
-				if($brand != 'LOGITECH'){
-					$c = $cat;
-				}else{
-					if($sc == 'Speakers' )
-					{
-						$c = 'speakers';
+					if($brand != 'LOGITECH'){
+						$c = $cat;
+					}else{
+						if($sc == 'Speakers' )
+						{
+							$c = 'speakers';
+						}
 					}
-				}
-					
 					break;
 				case 'Storage':
 					if($sc == 'External Hard Drives' )
@@ -808,6 +839,7 @@ class Live_model extends CI_Model {
 
 			$c = $cat = $product->Details->CategoryList->attributes()->{'Name'};
 			$sc = '';
+			$ManufacturerList = (string) trim($product->Details->ManufacturerList->attributes()->{'Name'});
 
 			switch ($cat) {
 
@@ -881,6 +913,26 @@ class Live_model extends CI_Model {
 				case strpos($cat,'Peripherals- / Monitors'):
 					$c = 'monitors';
 					break;
+				case 'Computers- / Servers- / Controllers'
+					$c='server_controllers';
+					break;
+				case 'Computers- / Components- / CPUs'
+					if($ManufacturerList == 'HPE- / Server Options- / CPUs')
+						$c='server_cpu';
+					break;
+				case 'Computers- / Components- / Internal Hard Drives'
+					if($ManufacturerList == 'HPE- / Server Options- / Internal Hard Drives')
+						$c='server_hard_drives';
+					break;
+				case 'Computers- / Components- / Memories Module'
+					if($ManufacturerList == 'HPE- / Server Options- / Memories Module')
+						$c='server_memories';
+					break;
+				case 'Computers- / Servers- / Server / Rack Options'
+					$tmp_title = (string) trim($prd["Name"]);
+					if(strstr($tmp_title,'Power Supply'))
+						$c='server_power_supplies';
+					break;
 				default:
 					$c = $cat;
 					break;
@@ -923,7 +975,10 @@ class Live_model extends CI_Model {
 	    		else
 	    		{
 	    			$brand = explode('- /',trim($ManufacturerList))[0];
-	    		}
+				}
+				//For Servers parts
+				if($brand == 'HPE')
+					$brand = 'HP';
 
 
 	    		// IMAGE
