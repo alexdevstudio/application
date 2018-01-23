@@ -22,7 +22,5 @@ class Statistics extends MX_Controller {
 		$this->load->view('statistics', $data);
 		$this->load->view('templates/footer',$data);
 		
-	}
-
-
+    }
 }
