@@ -840,6 +840,7 @@ class Live_model extends CI_Model {
 			$c = $cat = $product->Details->CategoryList->attributes()->{'Name'};
 			$sc = '';
 			$ManufacturerList = (string) trim($product->Details->ManufacturerList->attributes()->{'Name'});
+			$prd = $product->attributes();
 
 			switch ($cat) {
 
