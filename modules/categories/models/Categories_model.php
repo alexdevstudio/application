@@ -261,7 +261,6 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					$shipping_class= 10646;
 					break;
 			case 'sata_hard_drives':
-			case 'server_hard_drives':
 					//$shipping_class= 10650;
 					$shipping_class= 10646;
 					break;
@@ -319,7 +318,6 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					$shipping_class = 10646;
 					break;
 			case 'power_supplies':
-			case 'server_power_supplies':
 					$shipping_class = 10063;
 					break;
 			case 'cases':
@@ -330,19 +328,16 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 				//	$shipping_class = 10650;
 					break;
 			case 'motherboards':
-			case 'server_controllers':
 					$shipping_class = 10063;
 					break;
 			case 'graphic_cards':
 					$shipping_class = 10650;
 					break;
 			case 'cpu':
-			case 'server_cpu':
 					$shipping_class = 10646;
 					//$shipping_class = 10063;
 					break;
 			case 'memories':
-			case 'server_memories':
 					$shipping_class = 10646;
 					break;
 			case 'hoverboards':
@@ -376,6 +371,21 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					break;
 			case 'powerlines':
 					$shipping_class = 10651;
+					break;
+			case 'server_hard_drives':
+					$shipping_class = 10650;
+					break;
+			case 'server_cpu':
+					$shipping_class = 10649;
+					break;
+			case 'server_controllers':
+					$shipping_class = 10652;
+					break;
+			case 'server_power_supplies':
+					$shipping_class = 10063;
+					break;
+			case 'server_memories':
+					$shipping_class = 10648;
 					break;
 			default:
 				return false;
