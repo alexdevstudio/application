@@ -913,22 +913,22 @@ class Live_model extends CI_Model {
 				case strpos($cat,'Peripherals- / Monitors'):
 					$c = 'monitors';
 					break;
-				case 'Computers- / Servers- / Controllers'
+				case 'Computers- / Servers- / Controllers':
 					$c='server_controllers';
 					break;
-				case 'Computers- / Components- / CPUs'
+				case 'Computers- / Components- / CPUs':
 					if($ManufacturerList == 'HPE- / Server Options- / CPUs')
 						$c='server_cpu';
 					break;
-				case 'Computers- / Components- / Internal Hard Drives'
+				case 'Computers- / Components- / Internal Hard Drives':
 					if($ManufacturerList == 'HPE- / Server Options- / Internal Hard Drives')
 						$c='server_hard_drives';
 					break;
-				case 'Computers- / Components- / Memories Module'
+				case 'Computers- / Components- / Memories Module':
 					if($ManufacturerList == 'HPE- / Server Options- / Memories Module')
 						$c='server_memories';
 					break;
-				case 'Computers- / Servers- / Server / Rack Options'
+				case 'Computers- / Servers- / Server / Rack Options':
 					$tmp_title = (string) trim($prd["Name"]);
 					if(strstr($tmp_title,'Power Supply'))
 						$c='server_power_supplies';
