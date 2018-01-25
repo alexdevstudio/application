@@ -120,11 +120,18 @@ if(isset($Supplier_products))
 					echo '<th align="center">';
 						echo 'SKU';
 					echo '</th>';
-					echo '<th align="center" width="75px">';
+					/*echo '<th align="center" width="75px">';
 						echo 'Αγορά';
 					echo '</th>';
 					echo '<th align="center" width="75px">';
 						echo 'Πώληση';
+					echo '</th>';*/
+					echo'<th colspan="2" align="center">';
+						echo '<div style="width: 150px;">';
+							echo '<span class="text-left" style=" width: 75px; display: inline-block;">Αγορά</span>';
+							echo '<span class="text-right" style="width: 75px; display: inline-block;">Πώληση</span>';
+						echo '</div>';
+						echo '<div class="text-center" style="color: #ff0000;">(Τιμές χωρίς Φ.Π.Α.)</div>';
 					echo '</th>';
 					echo '<th align="center">';
 						echo 'Μάρκα';
@@ -132,19 +139,7 @@ if(isset($Supplier_products))
 					echo '<th align="center">';
 						echo 'Τίτλος';
 					echo '</th>';
-				echo '<tr>';
-				echo '<tr>';
-					echo '<th colspan="2">';
-						echo '&nbsp;';
-					echo '</th>';
-					echo '<th colspan="2" align="center" style="color: #ff0000;">';
-						echo '(Τιμές χωρίς Φ.Π.Α.)';
-					echo '</th>';
-					echo '<th colspan="2">';
-						echo '&nbsp;';
-					echo '</th>';
-				echo '<tr>';
-
+				echo '</tr>';
 
 				foreach ($category_products as $array => $product)
 				{
@@ -175,7 +170,7 @@ if(isset($Supplier_products))
 							$product_for_price['category'] = $product->category;
 							$product_for_price['brand'] = $product->brand;
 							
-							$Product_price =  number_format((float)$this->extract_model->priceTax($product_for_price)/1.24, 3, '.', '');
+							$Product_price =  number_format((float)$this->extract_model->priceTax($product_for_price)/1.24, 2, '.', '');
 							echo $Product_price.' &euro;';
 							//echo $product->net_price.' &euro;';
 						echo '</td>';
