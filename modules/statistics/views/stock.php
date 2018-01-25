@@ -5,6 +5,7 @@
 		    </section>
 
 		    <?php
+			$category_pre = '';
 
 			    $where = array(
                     'supplier'=>'etd',
@@ -23,26 +24,39 @@
                     //$out = '';
                     $out = '
                         <div class="header_stock">
-                            <div class="col-sm-1">
+                            <div class="col-md-1 col-sm-2">
                                 &nbsp;
                             </div>
-                            <div class="col-sm-1 text-center">
+                            <div class="col-md-1 col-sm-2 text-center">
                                 SKU
                             </div>
-                            <div class="col-sm-7 text-center">
+                            <div class="col-md-7 col-sm-8 text-center">
                                 ΤΙΤΛΟΣ
                             </div>
-                            <div class="col-sm-2 text-center">
+                            <div class="col-md-2 col-sm-6 text-center">
                                 ΤΙΜΗ SKROUTZ
                             </div>
-                            <div class="col-sm-1 text-right">
+                            <div class="col-md-1 col-sm-6 text-right">
                                 TIMH ETD
                             </div>
                         </div>';
 
 	                foreach ($stock->result_array() as $items) {
 
-	                	$category = $items['category'];
+						$category = $items['category'];
+						if($category_pre != $category)
+						{
+							$category_pre = $category;
+							$category_name = str_replace("_"," ",$category);
+							$out .='
+								<div class="subheader_stock text-center" data-category="'.$category.'">
+									<div class="col-md-12 col-sm-12">
+										'.$category_name.'
+									</div>
+								</div>
+								';
+						}
+
 	                	$cat_array[] = $category;
 	                	
 
@@ -58,18 +72,18 @@
 	                	$title = $item->row()->title;
 
 	                	$etd_prices = Modules::run('crud/get', 'etd_prices', array('sku'=>$sku ));
-
+						
+						$price = '';
 	                	if($etd_prices){
 	                		$sale_price = $etd_prices->row()->sale_price;
 	                		$price_tax = $etd_prices->row()->price_tax;
-	                		@$price = ($sale_price=='' || $sale_price<0.01) ? $price_tax: $sale_price;
+	                		@$price = ($sale_price == '' || $sale_price < 0.01) ? $price_tax: $sale_price;
 	                	}
-	                	if(!$price){
+	                	/*if(!$price){
 	                		$price = '<span style="color:red;">Δεν υπάρχει τιμή</span>';
-                        }/*else{
+                        }else{
 	                		$price = "€ $price";
 	                	}*/
-
 
 
 	                	$skroutzPrice = Modules::run('skroutz/getBestPrice',$sku);
@@ -91,35 +105,67 @@
                         }
                         
                         $price_color = '';
+						if($price != '')
+						{
+							if($skprice != '')
+							{
+								if($skprice > $price)
+									$price_color ='stock-price-nice';
+								elseif($skprice == $price)
+									$price_color ='stock-price-same';
+								else 
+									$price_color ='stock-price-bad';
+							}
+							$price = '€ '.$price;
+						}
+						else
+						{
+							$price_color ='stock-price-noprice';
+							$price = '<span style="color:white;">Χωρίς τιμή</span>';
+						}
 
-                        if($skprice != '')
-                        {
-                            if($skprice > $price)
-                                $price_color ='stock-price-nice';
-                            elseif($skprice == $price)
-                                $price_color ='stock-price-same';
-                            else 
-                                $price_color ='stock-price-bad';
-                        }
+						// Get Skroutz URL
+						$where = array(
+							'sku'=>$sku
+							);
+							
+						$skroutzUrl = Modules::run('crud/get','skroutz_urls',$where);
+						$skroutzLink = '';
+
+						if($skroutzUrl)
+						{
+							if( $skroutzUrl->num_rows > 0)
+							{
+								$skroutzUrl = $skroutzUrl->result()[0]->url;
+								if($skroutzPrice == '')
+									$skroutzPrice = 'skroutz.gr';
+
+								$skroutzLink = '<a href="'.$skroutzUrl.'">'.$skroutzPrice.'</a>';
+							}
+						}
+						
+
+						
+						
 
 	                	$img = Modules::run('images/getFirstImage', $sku, false);
 						
                         $out.=' 
                                 <div class="instock_item clearfix" data-category="'.$category.'">
-                                    <div class="col-sm-1">
+                                    <div class="col-md-1 col-sm-2">
                                         <img data-original="'.$img.'" class="lazyimg" />
                                     </div>
-                                    <div class="col-sm-1 text-center">
+                                    <div class="col-md-1 col-sm-2 text-center">
                                         <strong style="color:#0fc504;">'.$sku.'</strong>
                                     </div>
-                                    <div class="col-sm-7"> 
+                                    <div class="col-md-7 col-sm-8"> 
                                         <a href="http://etd.gr/xml/edit/'.$category.'/'.$sku.'">'.$title.'</a>
                                     </div>
-                                    <div class="col-sm-2">
-                                        '.$skroutzPrice.'
+									<div class="col-md-2 col-sm-6">
+										'.$skroutzLink.'
                                     </div>
-                                    <div class="col-sm-1 text-right '.$price_color.'">
-                                        € '.$price.' 
+                                    <div class="col-md-1 col-sm-6 text-right '.$price_color.'">
+                                        '.$price.' 
                                     </div>
                                 </div>
                                 ';
@@ -172,10 +218,14 @@ $(document).ready(function(){
 
 		if(id=='all'){
 			$('.instock_item').removeClass('to_hide');
+			$('.subheader_stock').removeClass('to_hide');
 		}else{
 
 			$('.instock_item').addClass('to_hide');
+			$('.subheader_stock').addClass('to_hide');
+
 			$('.instock_item[data-category="'+id+'"]').removeClass('to_hide');
+			$('.subheader_stock[data-category="'+id+'"]').removeClass('to_hide');
 		}
 
 	});
