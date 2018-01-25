@@ -100,46 +100,46 @@ if(isset($Supplier_products))
 		<table class="table table-striped table-bordered table-condensed">
 			<thead>
 				<tr>
-					<th colspan="6" style="background-color: #aaa;text-align:center;vertical-align: middle; font-size: 26px;" ><?= $Supplier.' <span style="font-size: 14px;">Αριθ. προϊόντων: '.$products_quantity.'</span>' ?></th>
+					<th colspan="7" style="background-color: #aaa;text-align:center;vertical-align: middle; font-size: 26px;" ><?= $Supplier.' <span style="font-size: 14px;">Αριθ. προϊόντων: '.$products_quantity.'</span>' ?></th>
+				</tr>
+				<tr class="border_bottom">
+					<th>
+						Product #
+					</th>
+					<th>
+						SKU
+					</th>
+					<th colspan="2">
+						<div class="text-center stat-header-prices"  style="color: #ff0000;">Xωρίς Φ.Π.Α.</div>
+						<div class="stat-header-prices">
+							<span class="pull-left">Αγορά</span>
+							<span class="pull-right">Πώληση</span>
+						</div>
+					</th>
+					<th style="width: 80px;">
+						Κέρδος % 
+					</th>
+					<th>
+						Εταιρία
+					</th>
+					<th>
+						Τίτλος
+					</th>
 				</tr>
 			</thead>
-			<tbody>              
+			<tbody>
+				             
 			<?php
 
 			foreach ($Supplier_products as $category=>$category_products)
-			{			
+			{	
+				echo '<tr class="spacer"></tr>';
 				echo '<tr>';
-					echo '<th colspan="6" style="background-color: #ccc; text-align:center;" >';
+					echo '<th colspan="7" class="stat-category" >';
 						echo strtoupper($category);
 					echo '</th>';
 				echo '</tr>';
-				echo '<tr>';
-					echo '<th align="center">';
-						echo 'Product #';
-					echo '</th>';
-					echo '<th align="center">';
-						echo 'SKU';
-					echo '</th>';
-					/*echo '<th align="center" width="75px">';
-						echo 'Αγορά';
-					echo '</th>';
-					echo '<th align="center" width="75px">';
-						echo 'Πώληση';
-					echo '</th>';*/
-					echo'<th colspan="2" align="center">';
-						echo '<div style="width: 150px;">';
-							echo '<span class="text-left" style=" width: 75px; display: inline-block;">Αγορά</span>';
-							echo '<span class="text-right" style="width: 75px; display: inline-block;">Πώληση</span>';
-						echo '</div>';
-						echo '<div class="text-center" style="color: #ff0000;">(Τιμές χωρίς Φ.Π.Α.)</div>';
-					echo '</th>';
-					echo '<th align="center">';
-						echo 'Μάρκα';
-					echo '</th>';
-					echo '<th align="center">';
-						echo 'Τίτλος';
-					echo '</th>';
-				echo '</tr>';
+				
 
 				foreach ($category_products as $array => $product)
 				{
@@ -173,6 +173,10 @@ if(isset($Supplier_products))
 							$Product_price =  number_format((float)$this->extract_model->priceTax($product_for_price)/1.24, 2, '.', '');
 							echo $Product_price.' &euro;';
 							//echo $product->net_price.' &euro;';
+						echo '</td>';
+						echo '<td align="center">'; 
+							$profit_rate = number_format(($Product_price/$product->net_price)-1, 2, '.', '')*100;
+							echo $profit_rate.'%';
 						echo '</td>';
 						echo '<td align="center">';
 							echo $product->brand;
