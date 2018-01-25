@@ -428,8 +428,13 @@
               </a>
             </li> 
             <li class="">
-              <a href="<?php echo base_url();?>profit_rates">
+              <a href="<?php echo base_url('profit_rates');?>">
                 <i class="fa fa-calculator"></i> <span>ΠΟΣΟΣΤΑ ΚΑΤΗΓΟΡΙΩΝ</span>
+              </a>
+            </li>
+            <li class="">
+              <a href="<?php echo base_url('statistics/stock');?>">
+                <i class="fa fa-balance-scale "></i> <span>ΠΡΟΪΟΝΤΑ ΣΕ ΑΠΟΘΕΜΑ</span>
               </a>
             </li>
           </ul>

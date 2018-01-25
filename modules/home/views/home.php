@@ -8,7 +8,7 @@ echo "<pre>";
 print_r($var->row()->option_name);
 echo "</pre>";*/
  ?>
-	<div class="suppliers sections col-sm-8 col-xs-12">
+	<div class="suppliers sections col-sm-12 col-xs-12">
 
 		<?php
    			 //flash messages
@@ -25,63 +25,63 @@ echo "</pre>";*/
 	      <h1>1. Ενημέρωση αποθήκης </h1>  
 	      <br>	   
 	    </section> 
-		<div class="supplier-item col-sm-6 col-md-3">
+		<div class="supplier-item col-sm-6 col-md-2">
 			<div class="color-palette-set text-center">
 				<div class="bg-orange-active color-palette ">
 					<a href="./live/index/oktabit" style="color:#fff;display:block"><br /><span >Oktabit</span><br /><br /></a>
 				</div>
 			</div>
 		</div>
-		<div class="supplier-item col-sm-6 col-md-3">
+		<div class="supplier-item col-sm-6 col-md-2">
 			<div class="color-palette-set text-center">
 				<div class="bg-light-blue color-palette ">
 					<a href="./live/index/logicom" style="color:#fff;display:block"><br /><span >Logicom - Enet</span><br /><br /></a>
 				</div>
 			</div>
 		</div> 
-		<div class="supplier-item col-sm-6 col-md-3">
+		<div class="supplier-item col-sm-6 col-md-2">
 			<div class="color-palette-set text-center">
 				<div class="bg-green color-palette ">
 					<a href="./live/index/braintrust" style="color:#fff;display:block"><br /><span >BrainTrust</span><br /><br /></a>
 				</div>
 			</div>
 		</div> 
-		<div class="supplier-item col-sm-6 col-md-3">
+		<div class="supplier-item col-sm-6 col-md-2">
 			<div class="color-palette-set text-center">
 				<div class="bg-red color-palette ">
 					<a href="./live/index/ddc" style="color:#fff;display:block"><br /><span >Digital Data</span><br /><br /></a>
 				</div>
 			</div>
 		</div> 
-		<div class="supplier-item col-sm-6 col-md-3">
+		<div class="supplier-item col-sm-6 col-md-2">
 			<div class="color-palette-set text-center">
 				<div class="bg-navy color-palette ">
 					<a href="./live/index/copiers" style="color:#fff;display:block"><br /><span >Copiers</span><br /><br /></a>
 				</div>
 			</div>
 		</div>
-		<div class="supplier-item col-sm-6 col-md-3">
+		<div class="supplier-item col-sm-6 col-md-2">
 			<div class="color-palette-set text-center">
 				<div class="bg-red color-palette ">
 					<a href="./live/index/cpi" style="color:#fff;display:block"><br /><span >CPI</span><br /><br /></a>
 				</div>
 			</div>
 		</div>
-		<div class="supplier-item col-sm-6 col-md-3">
+		<div class="supplier-item col-sm-6 col-md-2">
 			<div class="color-palette-set text-center">
 				<div class="bg-red color-palette ">
 					<a href="./live/index/westnet" style="color:#fff;display:block"><br /><span >Westnet</span><br /><br /></a>
 				</div>
 			</div>
 		</div>
-		<div class="supplier-item col-sm-6 col-md-3">
+		<div class="supplier-item col-sm-6 col-md-2">
 			<div class="color-palette-set text-center">
 				<div class="bg-orange-active color-palette ">
 					<a href="./live/index/partnernet" style="color:#fff;display:block"><br /><span >PartnerNet</span><br /><br /></a>
 				</div>
 			</div>
 		</div>
-		<div class="supplier-item col-sm-6 col-md-3">
+		<div class="supplier-item col-sm-6 col-md-2">
 			<div class="color-palette-set text-center">
 				<div class="bg-light-blue color-palette ">
 					<a href="./live/index/quest" style="color:#fff;display:block"><br /><span >Quest</span><br /><br /></a>
@@ -280,134 +280,3 @@ echo "</pre>";*/
 			
 		
 </div><!-- EEEE -->
-
-<div style="background:#fff;" class="col-sm-4 col-xs-12">
-			<section class="content-header">
-		    	<h1 style="text-align:center;">Σε Απόθεμα</h1>
-		      	<br>	
-		    </section>
-
-		    <?php
-
-			    $where = array(
-			    	'supplier'=>'etd'
-			    	);
-
-	                $stock = Modules::run('crud/get','live',$where);
-	               // print_r($stock->result_array());
-	                $cat_array = array();
-	                $out = '';
-	                foreach ($stock->result_array() as $items) {
-
-	                	$category = $items['category'];
-	                	$cat_array[] = $category;
-	                	
-
-	                	$product_number = $items['product_number'];
-	                	$where =array(
-							'product_number'=>$product_number
-	                		);
-
-	                	$item = Modules::run('crud/get', $category, $where);
-	                	
-
-	                	$sku =  $item->row()->sku;
-	                	$title = $item->row()->title;
-
-	                	$etd_prices = Modules::run('crud/get', 'etd_prices', array('sku'=>$sku ));
-
-	                	if($etd_prices){
-	                		$sale_price = $etd_prices->row()->sale_price;
-	                		$price_tax = $etd_prices->row()->price_tax;
-	                		@$price = ($sale_price=='' || $sale_price<0.01) ? $price_tax: $sale_price;
-	                	}
-	                	if(!$price){
-	                		$price = '<span style="color:red;">Δεν υπάρχει τιμή</span>';
-	                	}else{
-	                		$price = "€ $price";
-	                	}
-
-
-
-	                	$skroutzPrice = Modules::run('skroutz/getBestPrice',$sku);
-
-						if($skroutzPrice){
-							$skroutzPrice = $skroutzPrice->result_array();
-							$skroutzPrice = $skroutzPrice[0];
-							$best_price = json_decode($skroutzPrice['best_price']);
-
-							$sklogo = $best_price->shopLogo;
-							$sktitle = $best_price->shopTitle;
-							$skprice = $best_price->shopPrice;
-							
-							$skroutzPrice = '<img  class="instosk-sklogo" src="'.$sklogo.'"  /> € '.$skprice.' <br/>';
-
-
-						}else{
-							$skroutzPrice = '';
-						}
-
-
-
-	                	$img = Modules::run('images/getFirstImage', $sku, false);
-						
-						$out.=' <div class="instock_item clearfix" data-category="'.$category.'">
-						                			<img data-original="'.$img.'" class="lazyimg" />
-						        <h5><a href="http://etd.gr/xml/edit/'.$category.'/'.$sku.'">'.$title.'</a></h5>
-						        <strong style="color:#0fc504;">SKU: '.$sku.'</strong><br />
-						        <span class="instock_item_price">'.$skroutzPrice.'
-						        Τιμή στο site: '.$price.'
-						        </span>
-
-
-						        </div>';
-	                	
-	                	//print_r($item->result_array());
-               	 }
-
-?>
-<div class="instock_filter">
-	<span class="active_filter instock_filter_item" id="all">Όλα :<?php echo count($cat_array); ?></span>
-
-<?php
-$cats = array_count_values($cat_array);
-
-foreach ($cats as $key => $value) {
-	?>
-
-	<span class=" instock_filter_item" id="<?= $key; ?>"><?php echo ucfirst($key).': '. $value; ?></span>
-
-	<?php
-}
-
-?>
-</div>
-<?php
-echo $out;
-
-		    ?>
-
-
-</div>
-
-<script type="text/javascript">
-$(document).ready(function(){
-	$('.instock_filter_item').on('click',function(){
-		var id = $(this).attr('id');
-		$('.instock_filter_item').removeClass('active_filter');
-		$('#'+id).addClass('active_filter');
-
-		if(id=='all'){
-			$('.instock_item').removeClass('to_hide');
-		}else{
-
-			$('.instock_item').addClass('to_hide');
-			$('.instock_item[data-category="'+id+'"]').removeClass('to_hide');
-		}
-
-	});
-});
-	
-</script>
-
-

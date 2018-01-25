@@ -23,4 +23,14 @@ class Statistics extends MX_Controller {
 		$this->load->view('templates/footer',$data);
 		
     }
+
+    public function stock()
+	{	
+        $data['title'] = 'ΑΠΟΘΕΜΑ';
+
+		$this->load->view('templates/header',$data);
+		$this->load->view('stock', $data);
+		$this->load->view('templates/footer',$data);
+		
+    }
 }
