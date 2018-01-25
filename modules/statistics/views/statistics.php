@@ -1,6 +1,7 @@
 <div class="suppliers sections col-sm-12 col-xs-12">
 
 	<?php
+		$this->load->model('extract/extract_model');
 			//flash messages
 		if($this->session->flashdata('flash_message')){
 
@@ -99,7 +100,7 @@ if(isset($Supplier_products))
 		<table class="table table-striped table-bordered table-condensed">
 			<thead>
 				<tr>
-					<th colspan="5" style="background-color: #aaa;text-align:center;vertical-align: middle; font-size: 26px;" ><?= $Supplier.' <span style="font-size: 14px;">Αριθ. προϊόντων: '.$products_quantity.'</span>' ?></th>
+					<th colspan="6" style="background-color: #aaa;text-align:center;vertical-align: middle; font-size: 26px;" ><?= $Supplier.' <span style="font-size: 14px;">Αριθ. προϊόντων: '.$products_quantity.'</span>' ?></th>
 				</tr>
 			</thead>
 			<tbody>              
@@ -108,7 +109,7 @@ if(isset($Supplier_products))
 			foreach ($Supplier_products as $category=>$category_products)
 			{			
 				echo '<tr>';
-					echo '<th colspan="5" style="background-color: #ccc; text-align:center;" >';
+					echo '<th colspan="6" style="background-color: #ccc; text-align:center;" >';
 						echo strtoupper($category);
 					echo '</th>';
 				echo '</tr>';
@@ -119,8 +120,11 @@ if(isset($Supplier_products))
 					echo '<th align="center">';
 						echo 'SKU';
 					echo '</th>';
-					echo '<th align="center">';
+					echo '<th align="center" width="75px">';
 						echo 'Αγορά';
+					echo '</th>';
+					echo '<th align="center" width="75px">';
+						echo 'Πώληση';
 					echo '</th>';
 					echo '<th align="center">';
 						echo 'Μάρκα';
@@ -128,9 +132,21 @@ if(isset($Supplier_products))
 					echo '<th align="center">';
 						echo 'Τίτλος';
 					echo '</th>';
-				echo '</tr>';
+				echo '<tr>';
+				echo '<tr>';
+					echo '<th colspan="2">';
+						echo '&nbsp;';
+					echo '</th>';
+					echo '<th colspan="2" align="center" style="color: #ff0000;">';
+						echo '(Τιμές χωρίς Φ.Π.Α.)';
+					echo '</th>';
+					echo '<th colspan="2">';
+						echo '&nbsp;';
+					echo '</th>';
+				echo '<tr>';
 
-				foreach ($category_products as $as=>$product)
+
+				foreach ($category_products as $array => $product)
 				{
 					$RowColor = $new_product = '';
 					if(isset($product->new_item))
@@ -152,11 +168,22 @@ if(isset($Supplier_products))
 						echo '<td align="right">';
 							echo $product->net_price.' &euro;';
 						echo '</td>';
+						echo '<td align="right">';
+
+							$product_for_price['net_price'] = $product->net_price;
+							$product_for_price['recycle_tax'] = $product->recycle_tax;
+							$product_for_price['category'] = $product->category;
+							$product_for_price['brand'] = $product->brand;
+							
+							$Product_price =  number_format((float)$this->extract_model->priceTax($product_for_price)/1.24, 3, '.', '');
+							echo $Product_price.' &euro;';
+							//echo $product->net_price.' &euro;';
+						echo '</td>';
 						echo '<td align="center">';
 							echo $product->brand;
 						echo '</td>';
 						echo '<td>';
-							echo $product->title . $new_product;;
+							echo $product->title . $new_product;
 						echo '</td>';
 					echo '</tr>';
 				}
