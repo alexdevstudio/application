@@ -1522,6 +1522,16 @@ class Live_model extends CI_Model {
 					else
 						$c = $cat;
 				break;
+				case 'PC BareBone':
+					if($brand == 'MSI')
+					{
+						$c = 'desktops';
+						$sc = 'Mini Pc';
+					}
+					else
+						$c = $cat;
+				break;
+				
 				case 'PC Motherboard':
 					if($brand == 'MSI')
 						$c = 'motherboards';
@@ -1625,7 +1635,10 @@ class Live_model extends CI_Model {
 				{
 					$last = strpos($description, ',');
 					$title = substr($description, 0, $last);
-					$chars_array['type']='Desktop';
+					if($sc == 'Mini Pc')
+						$chars_array['type']='Mini Pc';
+					else
+						$chars_array['type']='Desktop';
 				}
 				elseif($c == 'powerlines')
 				{
