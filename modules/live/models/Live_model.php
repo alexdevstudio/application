@@ -558,7 +558,7 @@ class Live_model extends CI_Model {
 	    		$code = (string) trim($product->Quest_Code);
 
 				$brand = $this->MakeQuestBrands($title, $cat);
-				if ($brand == 'APPLE')
+				if ($brand == 'APPLE' || $brand == 'BENQ' || ($brand == 'TOSHIBA' && $cat== 'Notebook'))
 					continue;
 
 	    		//1. Live
