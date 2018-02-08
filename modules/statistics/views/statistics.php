@@ -174,10 +174,18 @@ if(isset($Supplier_products))
 							echo $Product_price.' &euro;';
 							//echo $product->net_price.' &euro;';
 						echo '</td>';
-						echo '<td align="center">'; 
-							$profit_rate = number_format(($Product_price/$product->net_price)-1, 2, '.', '')*100;
-							echo $profit_rate.'%';
-						echo '</td>';
+						if($product->net_price == 0)
+						{
+							echo '<td align="center" class="alert alert-warning">'; 
+								echo 'ΧΩΡΙΣ ΤΙΜΗ!';
+							echo '</td>';
+						}
+						else{
+							echo '<td align="center">'; 
+								$profit_rate = number_format(($Product_price/$product->net_price)-1, 2, '.', '')*100;
+								echo $profit_rate.'%';
+							echo '</td>';
+						}
 						echo '<td align="center">';
 							echo $product->brand;
 						echo '</td>';
