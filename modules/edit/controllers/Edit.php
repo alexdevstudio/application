@@ -238,7 +238,6 @@ class Edit extends MX_Controller {
 				else if($post['status']=='update')
 				{
 					unset ($post['status']);
-
 					$skroutz_url = $post['skroutz_url'];
 					unset ($post['skroutz_url']);
 
@@ -249,17 +248,13 @@ class Edit extends MX_Controller {
 
 					$vweight = trim($post['volumetric_weight']);
 
-					if($vweight!='' /*&& ($category=='monitors' || $category=='desktops' || $category=='tv')*/){
-
-
+					if($vweight!='' && $vweight!='0' /*&& ($category=='monitors' || $category=='desktops' || $category=='tv')*/){
+					
 						$post['shipping_class'] = Modules::run('categories/shippingByWeight', $vweight);
 
 					}else{
 
 							if($category!='printers' && $category != 'multifunction_printers'){
-
-
-
 
 								if($post['shipping_class']==''){
 									$post['shipping_class'] = Modules::run('categories/makeShippingClass',$post,$category);
@@ -267,14 +262,14 @@ class Edit extends MX_Controller {
 
 
 
-								if($post['shipping_class']!='' && $post['volumetric_weight']==''){
+								if($post['shipping_class']!='' && ($post['volumetric_weight']=='' || $post['volumetric_weight']=='0') ){
 									$post['volumetric_weight'] = Modules::run('categories/getWeight',$post['shipping_class']);
 								}
 
 
 							}else{
 
-								if($post['volumetric_weight']==''){
+								if($post['volumetric_weight']=='' || $post['volumetric_weight']=='0'){
 									$post['volumetric_weight'] = Modules::run('categories/volumeWeight', $post['dimensions']);
 								}
 
