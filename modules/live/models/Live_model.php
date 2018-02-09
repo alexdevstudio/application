@@ -3142,6 +3142,10 @@ class Live_model extends CI_Model {
 					$categoryData['support_url'] = '';
 					$categoryData['support_tel'] = '2106148834';
 					break;
+				case 'BENQ':
+					$categoryData['support_url'] = '';
+					$categoryData['support_tel'] = '2104805800';
+					break;
 				case 'MSI':
 					$categoryData['support_url'] = '';
 					//$categoryData['support_tel'] = '2106995825';
