@@ -542,11 +542,13 @@ class Live_model extends CI_Model {
 					continue;
 
 				$pn = (string) trim($product->Code);
-
 				if(strpos($pn, 'XXX') !== false)
 					continue;
 
-	    		$title = (string) trim($product->Item);
+				$title = (string) trim($product->Item);
+				if(strpos($title, 'ΕΞΑΡΤ') !== false)
+					continue;
+
 	    		$description = '';
 	    		$net_price = $product->Price;
 	    		if($net_price == '0' || $net_price == 0)
