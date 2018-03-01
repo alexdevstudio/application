@@ -527,6 +527,9 @@ class Live_model extends CI_Model {
 					$c = 'software';
 					$type = 'Antivirus';
 					break;
+				case 'Networking Storage':
+					$c = 'nas';
+					break;
 				
 				default:
 					$c = $cat;
@@ -3021,7 +3024,8 @@ class Live_model extends CI_Model {
 				 $c == "power_supplies" || $c == "projectors" || $c == "cases" || $c == "fans" || $c == "motherboards" || $c == "graphic_cards" || $c == "cpu" ||
 				 $c == "memories" || $c == "hoverboards" || $c =="printer_fusers" || $c =="printer_drums" || $c =="printer_belts" || 
 				 $c=="ups" || $c=="tv" || $c=="accessories" || $c=="cable_accessories" || $c=="cooling_pads" || $c == "powerlines" || 
-				 $c == "ip_phones" || $c=="server_controllers" || $c=="server_cpu" || $c=="server_hard_drives" || $c=="server_memories" || $c=="server_power_supplies"){
+				 $c == "ip_phones" || $c=="server_controllers" || $c=="server_cpu" || $c=="server_hard_drives" || $c=="server_memories" || 
+				 $c=="server_power_supplies" || $c=='nas'){
 
 
 					$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);

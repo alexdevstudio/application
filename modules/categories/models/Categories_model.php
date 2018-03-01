@@ -387,6 +387,9 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 			case 'server_memories':
 					$shipping_class = 10648;
 					break;
+			case 'nas':
+					$shipping_class = 10063;
+					break;
 			default:
 				return false;
 				break;
