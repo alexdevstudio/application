@@ -48,8 +48,9 @@ class Edit extends MX_Controller {
 				        } else {
 				            unlink($file);
 				        }
-				    }
-				    rmdir($dirPath);
+					}
+					if(file_exists($dirPath))
+				    	rmdir($dirPath);
 
 
 				}else if($post['status']=='images')
