@@ -38,7 +38,7 @@ class Images extends MX_Controller {
 
 		$filename = './images/'.$sku;
 
-			if (file_exists($filename)) {
+			if ( ! $this->is_dir_empty($filename)) {
 			   $files = scandir ($filename);
 			   $firstFile =$files[2];// because [0] = "." [1] = ".."
 			   $src = $filename.'/'.$firstFile;
@@ -59,6 +59,11 @@ class Images extends MX_Controller {
 
 
 	}
+
+	function is_dir_empty($dir) {
+		if (!is_readable($dir)) return NULL; 
+		return (count(scandir($dir)) == 2);
+	  }
 
 	public function getExternalImagesFromUrl($url){
 		$this->load->model('images_model');
