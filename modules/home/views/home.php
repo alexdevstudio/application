@@ -88,6 +88,13 @@ echo "</pre>";*/
 				</div>
 			</div>
 		</div>
+		<div class="supplier-item col-sm-6 col-md-2">
+			<div class="color-palette-set text-center">
+				<div class="bg-green color-palette ">
+					<a href="./live/index/netconnect" style="color:#fff;display:block"><br /><span>NETCONNECT</span><br /><br /></a>
+				</div>
+			</div>
+		</div>
 		<!-- 
 		<div class="supplier-item col-sm-4 col-md-2">
 			<div class="color-palette-set text-center">
