@@ -714,6 +714,30 @@ class Live_model extends CI_Model {
 					continue;
 
 				$pn = (string) trim($product->Code);
+				$NewPn = '';
+				if($brand == 'ViewSonic')
+				{
+					$pos = strpos($pn, '/');
+					$NewPn = substr($pn, $pos+1);
+					$NewPn = str_replace("/","-",$NewPn);
+				}
+				else
+				{
+					$pos = strpos($pn, '-');
+					$NewPn = substr($pn, $pos+1);
+					if($brand == 'Synology')
+					{
+						$NewPn = str_replace("/PLUS","+",$NewPn);
+						$NewPn = str_replace("PLUS","+",$NewPn);
+						$NewPn = str_replace("/02GB"," (2GB)",$NewPn);
+						$NewPn = str_replace("/04GB"," (4GB)",$NewPn);
+						$NewPn = str_replace("/08GB"," (8GB)",$NewPn);
+					}
+				}
+
+				if ($NewPn != '')
+					$pn = $NewPn;
+
 				$title = (string) trim($product->Description);
 				if($brand == 'Western Digital')
 				{ 
@@ -721,7 +745,7 @@ class Live_model extends CI_Model {
 						$title = 'WD '.$title;
 				}
 				elseif (strpos($title, $brand) === false || strpos($title, strtoupper($brand)) === false)
-					$title = $brand.' '.$title;
+					$title = strtoupper($brand).' '.$pn.' '.$title;
 
 				$description = '';
 				if($product->Text != '')
@@ -748,7 +772,7 @@ class Live_model extends CI_Model {
 	    		$availability = $availability;
 				$code = (string) trim($product->EAN);
 				
-				/*
+/*				
 				echo '<pre>';
 				print_r ($product);
 				echo '</pre>';
@@ -767,7 +791,7 @@ class Live_model extends CI_Model {
 				echo $recycle_tax.'<br>';
 				echo $code.'<br>';
 				echo '</pre><br><br>';
-				*/
+*/
 				
 
 	    		//1. Live
@@ -796,6 +820,7 @@ class Live_model extends CI_Model {
 
 				//Array for categories table
 				$product_url = '';
+				$brand = strtoupper($brand);
 
 				$netconnect_product = array(
 					'category' => $c,
