@@ -297,7 +297,28 @@ class Extract_model extends CI_Model {
 
 
                         if($etd_title == ''){
-                            $etd_title = $model.$color." ($pn)";
+
+                            // $etd_title = $model.$color." ($pn)";
+                            $screen_size = str_replace(' ','',$product['screen_size']);
+                            $monitor_type = $product['monitor_type'];
+                            $ram_type = str_replace(' ','',$product['memory_type']);
+                            $hdd_type = str_replace(' ','',$product['hdd_type']);
+                            $vga = $product['graphics'];
+                            $vga_ram = str_replace(' ','',$product['graphics_memory']);
+                            $y_warranty = $product['year_warranty'];
+
+                            $title_color = ($color != '') ? ' '.$color : '';
+                            $title_vga_ram = ($vga_ram != '') ? ' '.$vga_ram : '';
+
+                            $etd_title = $model.$title_color.', '.
+                            $screen_size.' '.$monitor_type.', '.
+                            $cpu.', '.
+                            $ram.' '.$ram_type.', '.
+                            $disk.' '.$hdd_type.', '.
+                            $vga.$title_vga_ram.', '.
+                            $os.', '.
+                            $y_warranty.' ('.$pn.')';
+
                         }
 
                         if($skroutz_title == ''){
