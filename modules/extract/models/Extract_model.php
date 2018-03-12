@@ -536,7 +536,7 @@ class Extract_model extends CI_Model {
 
                             }
 
-                            if(($key == 'description' && $table == 'laptops') || $key == 'auto_descr' )// for insert the description without strip_tags
+                            if(($key == 'description' && $table == 'laptops') || ($key == 'description' && $table == 'printers') || $key == 'auto_descr' )// for insert the description without strip_tags
                               {  $attr = $xml->createElement($key, trim(htmlspecialchars($value)));}
                             else{
                                 $attr = $xml->createElement($key, trim(htmlspecialchars(strip_tags($value))));
