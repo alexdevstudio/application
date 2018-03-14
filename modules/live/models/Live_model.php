@@ -3427,6 +3427,8 @@ class Live_model extends CI_Model {
 
     	if ($supplier == 'oktabit' )
     	{
+			$f=0;
+			
     		while($f < 5){ // because we want to get max 5 images
 
 				if($f=="0"){
