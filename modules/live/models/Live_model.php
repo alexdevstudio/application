@@ -454,6 +454,7 @@ class Live_model extends CI_Model {
 		foreach($xml->children() as $product) {
 			$type = '';
 			$cat = (string) trim($product->Category);
+			$title = (string) trim($product->Item);
 			switch ($cat) {
 				case 'Routers':
 					$c = 'routers';
@@ -493,7 +494,10 @@ class Live_model extends CI_Model {
 					$type = 'Λειτουργικά Συστήματα';
 					break;
 				case 'SOLID STATE DISKS (SSD)':
-					$c = 'ssd';
+					if (strpos($title, 'PORTABLE') !== false || strpos($title, 'MY PASS') !== false)
+						$c = 'external_hard_drives';
+					else
+						$c = 'ssd';
 					break;
 				case 'Projector':
 					$c = 'projectors';
@@ -666,7 +670,7 @@ class Live_model extends CI_Model {
 
 			switch ($cat) {
 				case 'Harddrive Internal':
-					if ($sc == 'SSD SATA' || $sc == 'SSD m2-SATA' || $sc == 'SSD m2-PCIe' || $sc == 'Desktop SSHD')
+					if ($sc == 'SSD SATA' || $sc == 'SSD m2-SATA' || $sc == 'SSD m2-PCIe' /*|| $sc == 'Desktop SSHD'*/)
 						$c = 'ssd';
 					else
 						$c = 'sata_hard_drives';
