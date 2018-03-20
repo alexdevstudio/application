@@ -712,7 +712,7 @@ class Live_model extends CI_Model {
 				$brand = (string) trim($product->Brand);
 				if ($brand != 'Western Digital' && $brand != 'ViewSonic' && $brand != 'Synology')
 					continue;
-;
+
 				$availability = $this->makeAvailability((string) trim($product->Availiability), 'netconnect');
 				if(!$availability)
 					continue;
