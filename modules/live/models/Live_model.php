@@ -661,205 +661,215 @@ class Live_model extends CI_Model {
 		}
 
 		$newProducts = array();
-		$sc = '';   		
+		$sc = '';  
+		
+		if (isset($xml->children()->Product[0]->Availiability) && isset($xml->children()->Product[0]->EAN)) // Check if Availability & EAN exist in XML
+		{
 
-		foreach($xml->children() as $product) {
-			$type = '';
-			$cat = (string) trim($product->Category);
-			$sc = (string) trim($product->Subcategory);
+			foreach($xml->children() as $product) {
+				$type = '';
+				$cat = (string) trim($product->Category);
+				$sc = (string) trim($product->Subcategory);
 
-			switch ($cat) {
-				case 'Harddrive Internal':
-					if ($sc == 'SSD SATA' || $sc == 'SSD m2-SATA' || $sc == 'SSD m2-PCIe' /*|| $sc == 'Desktop SSHD'*/)
-						$c = 'ssd';
-					else
-						$c = 'sata_hard_drives';
-					break;
-				case 'Harddrive External':
-					$c = 'external_hard_drives';
-					break;
-				case 'NAS/Cloud':
-					$c = 'nas';
-					$type = $sc;
-					break;
-				case 'Monitor':
-					$c = 'monitors';
-					break;				
-				default:
-					$c = $cat;
-					break;
-			}
-/*
-
-[Code] => 1P1AMD-A4/4000
-    [Brand] => Amd
-    [Category] => Processor
-    [Subcategory] => Processor with sFM2+
-    [Description] => AMD A4-4000 3.00/3.20GHz 2C/2T HD7480D/128CORES 1MB 65W FM2
-    [Price] =>         24.29
-    [Recycle] => 0
-    [Image] => http://images.netconnect.gr/get.php?image=1P1AMD-A4%2F4000_b
-    [Text] => http://images.netconnect.gr/text.php?page=1P1AMD-A4%2F4000
-    [Availiability] => +
-    [EAN] => 730143303415
-*/
-
-			if($c!=$cat){
-
-				if($type == 'Accessories')
-					continue;
-
-				$brand = (string) trim($product->Brand);
-				if ($brand != 'Western Digital' && $brand != 'ViewSonic' && $brand != 'Synology')
-					continue;
-
-				$availability = $this->makeAvailability((string) trim($product->Availiability), 'netconnect');
-				if(!$availability)
-					continue;
-
-				$pn = (string) trim($product->Code);
-				$NewPn = '';
-				if($brand == 'ViewSonic')
-				{
-					$pos = strpos($pn, '/');
-					$NewPn = substr($pn, $pos+1);
-					$NewPn = str_replace("/","-",$NewPn);
+				switch ($cat) {
+					case 'Harddrive Internal':
+						if ($sc == 'SSD SATA' || $sc == 'SSD m2-SATA' || $sc == 'SSD m2-PCIe' /*|| $sc == 'Desktop SSHD'*/)
+							$c = 'ssd';
+						else
+							$c = 'sata_hard_drives';
+						break;
+					case 'Harddrive External':
+						$c = 'external_hard_drives';
+						break;
+					case 'NAS/Cloud':
+						$c = 'nas';
+						$type = $sc;
+						break;
+					case 'Monitor':
+						$c = 'monitors';
+						break;				
+					default:
+						$c = $cat;
+						break;
 				}
-				else
-				{
-					$pos = strpos($pn, '-');
-					$NewPn = substr($pn, $pos+1);
-					if($brand == 'Synology')
+	/*
+
+	[Code] => 1P1AMD-A4/4000
+		[Brand] => Amd
+		[Category] => Processor
+		[Subcategory] => Processor with sFM2+
+		[Description] => AMD A4-4000 3.00/3.20GHz 2C/2T HD7480D/128CORES 1MB 65W FM2
+		[Price] =>         24.29
+		[Recycle] => 0
+		[Image] => http://images.netconnect.gr/get.php?image=1P1AMD-A4%2F4000_b
+		[Text] => http://images.netconnect.gr/text.php?page=1P1AMD-A4%2F4000
+		[Availiability] => +
+		[EAN] => 730143303415
+	*/
+
+				if($c!=$cat){
+
+					if($type == 'Accessories')
+						continue;
+
+					$brand = (string) trim($product->Brand);
+					if ($brand != 'Western Digital' && $brand != 'ViewSonic' && $brand != 'Synology')
+						continue;
+
+					$availability = $this->makeAvailability((string) trim($product->Availiability), 'netconnect');
+					if(!$availability)
+						continue;
+
+					$pn = (string) trim($product->Code);
+					$NewPn = '';
+					if($brand == 'ViewSonic')
 					{
-						$NewPn = str_replace("/PLUS","+",$NewPn);
-						$NewPn = str_replace("PLUS","+",$NewPn);
-						$NewPn = str_replace("/02GB"," (2GB)",$NewPn);
-						$NewPn = str_replace("/04GB"," (4GB)",$NewPn);
-						$NewPn = str_replace("/08GB"," (8GB)",$NewPn);
+						$pos = strpos($pn, '/');
+						$NewPn = substr($pn, $pos+1);
+						$NewPn = str_replace("/","-",$NewPn);
+					}
+					else
+					{
+						$pos = strpos($pn, '-');
+						$NewPn = substr($pn, $pos+1);
+						if($brand == 'Synology')
+						{
+							$NewPn = str_replace("/PLUS","+",$NewPn);
+							$NewPn = str_replace("PLUS","+",$NewPn);
+							$NewPn = str_replace("/02GB"," (2GB)",$NewPn);
+							$NewPn = str_replace("/04GB"," (4GB)",$NewPn);
+							$NewPn = str_replace("/08GB"," (8GB)",$NewPn);
+						}
+					}
+
+					if ($NewPn != '')
+						$pn = $NewPn;
+
+					$title = (string) trim($product->Description);
+					if($brand == 'Western Digital')
+					{ 
+						if(strpos($title, 'WD') === false)
+							$title = 'WD '.$title;
+					}
+					elseif (strpos($title, $brand) === false || strpos($title, strtoupper($brand)) === false)
+						$title = strtoupper($brand).' '.$pn.' '.$title;
+
+					$description = '';
+					if($product->Text != '')
+					{
+						//For Getting the Description from the body tag of $product->Text URL
+							$file = file_get_contents($product->Text);       
+							$dom = new DOMDocument;
+							$dom->loadHTML($file);
+							$bodies = $dom->getElementsByTagName('body');
+							assert($bodies->length === 1);
+							$body = $bodies->item(0);
+
+						$description = $body->textContent;
+					}
+
+					$net_price = $product->Price;
+					if($net_price == '0' || $net_price == 0)
+						continue;
+					$net_price = floatval ($net_price);
+
+					$recycle_tax = $product->Recycle;
+					$recycle_tax = floatval ($recycle_tax);
+
+					$availability = $availability;
+					$code = (string) trim($product->EAN);
+					
+	/*				
+					echo '<pre>';
+					print_r ($product);
+					echo '</pre>';
+					echo $c.'<br>';
+					echo '---------';
+
+					echo '---------<pre>';
+					echo $c.'<br>';
+					echo $sc.'<br>';
+					echo $brand.'<br>';
+					echo $availability.'<br>';
+					echo $pn.'<br>';
+					echo $title.'<br>';
+					echo $description.'<br>';
+					echo $net_price.'<br>';
+					echo $recycle_tax.'<br>';
+					echo $code.'<br>';
+					echo '</pre><br><br>';
+	*/
+					
+
+					//1. Live
+					$supplier = 'netconnect';
+					if($this->checkLiveProduct($pn, $net_price, $supplier)){
+
+						$live = array(
+							'category'=>$c,
+							'product_number'=>$pn,
+							'net_price'=>$net_price,
+							'availability'=>$availability,
+							'recycle_tax'=>(string) trim($recycle_tax),
+							'supplier' =>$supplier,
+							'status' => 'publish',
+							'delete_flag'=>0
+							);
+
+						$this->db->where('product_number', $pn);
+						$this->db->where('supplier', $supplier);
+						$this->db->delete('live', $live);
+
+						$this->db->insert('live', $live);
+
+						unset($live);
+					}
+
+					//Array for categories table
+					$product_url = '';
+					$brand = strtoupper($brand);
+
+					$netconnect_product = array(
+						'category' => $c,
+						'product_number' => $pn,
+						'description' => $description,
+						'title' => $title,
+						'brand' => $brand,
+						'product_url' => $product_url,
+						'code' => $code,
+						'net_price'=>$net_price
+					);
+
+					if ($type != '')
+						$netconnect_product['type'] = $type;
+
+
+					$imageUrl = $product->Image;
+
+					$insert = $this->addProduct ($netconnect_product, array(), $imageUrl, 'netconnect');
+
+
+					if ($insert)
+					{
+						if(isset ($newProducts[$c])){
+							$newProducts[$c] = $newProducts[$c]+1;
+						}
+						else{
+							$newProducts[$c] = 1;
+						}
 					}
 				}
+			}//end foreach
 
-				if ($NewPn != '')
-					$pn = $NewPn;
-
-				$title = (string) trim($product->Description);
-				if($brand == 'Western Digital')
-				{ 
-					if(strpos($title, 'WD') === false)
-						$title = 'WD '.$title;
-				}
-				elseif (strpos($title, $brand) === false || strpos($title, strtoupper($brand)) === false)
-					$title = strtoupper($brand).' '.$pn.' '.$title;
-
-				$description = '';
-				if($product->Text != '')
-				{
-					//For Getting the Description from the body tag of $product->Text URL
-						$file = file_get_contents($product->Text);       
-						$dom = new DOMDocument;
-						$dom->loadHTML($file);
-						$bodies = $dom->getElementsByTagName('body');
-						assert($bodies->length === 1);
-						$body = $bodies->item(0);
-
-					$description = $body->textContent;
-				}
-
-	    		$net_price = $product->Price;
-	    		if($net_price == '0' || $net_price == 0)
-	    			continue;
-				$net_price = floatval ($net_price);
-
-				$recycle_tax = $product->Recycle;
-				$recycle_tax = floatval ($recycle_tax);
-
-	    		$availability = $availability;
-				$code = (string) trim($product->EAN);
-				
-/*				
-				echo '<pre>';
-				print_r ($product);
-				echo '</pre>';
-				echo $c.'<br>';
-				echo '---------';
-
-				echo '---------<pre>';
-				echo $c.'<br>';
-				echo $sc.'<br>';
-				echo $brand.'<br>';
-				echo $availability.'<br>';
-				echo $pn.'<br>';
-				echo $title.'<br>';
-				echo $description.'<br>';
-				echo $net_price.'<br>';
-				echo $recycle_tax.'<br>';
-				echo $code.'<br>';
-				echo '</pre><br><br>';
-*/
-				
-
-	    		//1. Live
-				$supplier = 'netconnect';
-				if($this->checkLiveProduct($pn, $net_price, $supplier)){
-
-					$live = array(
-						'category'=>$c,
-						'product_number'=>$pn,
-						'net_price'=>$net_price,
-						'availability'=>$availability,
-						'recycle_tax'=>(string) trim($recycle_tax),
-						'supplier' =>$supplier,
-						'status' => 'publish',
-						'delete_flag'=>0
-						);
-
-					$this->db->where('product_number', $pn);
-					$this->db->where('supplier', $supplier);
-					$this->db->delete('live', $live);
-
-					$this->db->insert('live', $live);
-
-					unset($live);
-				}
-
-				//Array for categories table
-				$product_url = '';
-				$brand = strtoupper($brand);
-
-				$netconnect_product = array(
-					'category' => $c,
-					'product_number' => $pn,
-					'description' => $description,
-					'title' => $title,
-					'brand' => $brand,
-					'product_url' => $product_url,
-					'code' => $code,
-					'net_price'=>$net_price
-				);
-
-				if ($type != '')
-					$netconnect_product['type'] = $type;
-
-
-				$imageUrl = $product->Image;
-
-				$insert = $this->addProduct ($netconnect_product, array(), $imageUrl, 'netconnect');
-
-
-				if ($insert)
-				{
-					if(isset ($newProducts[$c])){
-						$newProducts[$c] = $newProducts[$c]+1;
-					}
-					else{
-						$newProducts[$c] = 1;
-					}
-				}
-			}
-		}//end foreach
-
-		$this->sendImportedProductsByMail($newProducts,'NETCONNECT');
-		echo "Finnished updating NETCONNECT.";	
+			$this->sendImportedProductsByMail($newProducts,'NETCONNECT');
+			echo "Finnished updating NETCONNECT.";
+		} //end check for availability column
+		else
+		{
+			echo "Το XML της Netconnect δεν έχει διαθεσιμότητες ή ΕΑΝ";
+			echo "</br></br>";
+			echo '<a href="'.base_url("live/index/netconnect").'"><button>Πίσω στην εισαγωγή για NetConnect</button></a>';
+		}
 	}//End NETCONNECT
 
 
