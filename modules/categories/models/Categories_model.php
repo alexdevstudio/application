@@ -258,7 +258,10 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					break;
 			case 'external_hard_drives':
 					//$shipping_class= 10650;
-					$shipping_class= 10646;
+					if($data['size']=='2.5')
+						$shipping_class= 10646;
+					else
+						$shipping_class= 10649;
 					break;
 			case 'sata_hard_drives':
 					//$shipping_class= 10650;
