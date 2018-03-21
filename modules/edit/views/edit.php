@@ -149,6 +149,7 @@ if($itemLive){
 	$ddc = '';
 	$partnernet = '';
 	$quest= '';
+	$netconnect = '';
 	$other = '';
 
 ?>
@@ -242,14 +243,16 @@ if($itemLive){
 	              		  					break;
 	              		  				case 'ddc':
 	              		  					$ddc = 'selected';
-												break;
+											break;
 										case 'quest':
 	              		  					$quest = 'selected';
+											break;
+										case 'netconnect':
+	              		  					$netconnect = 'selected';
 	              		  					break;
 
 	              		  				default:
 	              		  					$other = 'selected';
-
 	              		  					break;
 	              		  			}
 
@@ -260,6 +263,7 @@ if($itemLive){
 	              		  	<option value="cpi" <?= $cpi ?>>CPI</option>
 							<option value="DDC" <?= $ddc ?>>DDC</option>
 							<option value="logicom" <?= $logicom ?>>Logicom</option>
+							<option value="netconnect" <?= $netconnect ?>>Netconnect</option>
 							<option value="oktabit" <?= $oktabit ?>>Oktabit</option>
 							<option value="partnernet" <?= $partnernet ?>>PartnerNet</option>
 							<option value="quest" <?= $quest ?>>Quest</option>
