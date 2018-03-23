@@ -1,3 +1,8 @@
+<style>
+.table > tbody > tr > td {
+     vertical-align: middle;
+}
+</style>
 <div class="suppliers sections col-sm-12 col-xs-12">
 
 	<?php
@@ -119,7 +124,7 @@ if(isset($Supplier_products))
 					<th>
 						SKU
 					</th>
-					<th colspan="2">
+					<th colspan="2" style="width: 155px;">
 						<div class="text-center stat-header-prices"  style="color: #ff0000;">Xωρίς Φ.Π.Α.</div>
 						<div class="stat-header-prices">
 							<span class="pull-left">Αγορά</span>
