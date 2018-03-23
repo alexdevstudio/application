@@ -63,8 +63,10 @@ $fa = 0;
     				
     				if($key != 'description' && $key!='shipping_class'){
 
-    					$data[$key]=$value;
+						if($value=='-')
+							$value='';
 
+    					$data[$key]=$value;
     				}
 
 
