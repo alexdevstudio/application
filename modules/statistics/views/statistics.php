@@ -107,9 +107,12 @@ if(isset($Supplier_products))
 		<table class="table table-striped table-bordered table-condensed">
 			<thead>
 				<tr>
-					<th colspan="7" style="background-color: #aaa;text-align:center;vertical-align: middle; font-size: 26px;" ><?= $Supplier.' <span style="font-size: 14px;">Αριθ. προϊόντων: '.$products_quantity.'</span>' ?></th>
+					<th colspan="8" style="background-color: #aaa;text-align:center;vertical-align: middle; font-size: 26px;" ><?= $Supplier.' <span style="font-size: 14px;">Αριθ. προϊόντων: '.$products_quantity.'</span>' ?></th>
 				</tr>
 				<tr class="border_bottom">
+					<th>
+						&nbsp;
+					</th>
 					<th>
 						Product #
 					</th>
@@ -142,7 +145,7 @@ if(isset($Supplier_products))
 			{	
 				echo '<tr class="spacer"></tr>';
 				echo '<tr>';
-					echo '<th colspan="7" class="stat-category" >';
+					echo '<th colspan="8" class="stat-category" >';
 						echo strtoupper($category);
 					echo '</th>';
 				echo '</tr>';
@@ -159,13 +162,18 @@ if(isset($Supplier_products))
 							$new_product = ' <span style="color: #ff0000;">(ΝΕΟ ΠΡΟΪΟΝ)</span>';
 						}
 					}
+
+					$img = Modules::run('images/getFirstImage', $product->sku, false);
 					
 					echo '<tr '.$RowColor.'>';
+						echo '<td class="instock_item clearfix">';
+							echo '<img data-original="'.$img.'" class="lazyimg" />';
+						echo '</td>';
 						echo '<td>';
 							echo $product->product_number;
 						echo '</td>';
 						echo '<td>';
-							echo '<a href="https://etd.gr/?product_cat=0&s=%22'.$product->sku.'%22&post_type=product" target="_blank">'.$product->sku.'</a>';
+							echo '<a href="'.base_url('edit/'.$product->category.'/'.$product->sku).'" target="_blank" title="Επεξεργαστείτε το στο XML app">'.$product->sku.'</a>';
 						echo '</td>';
 						echo '<td align="right">';
 							echo $product->net_price.' &euro;';
@@ -197,7 +205,10 @@ if(isset($Supplier_products))
 							echo $product->brand;
 						echo '</td>';
 						echo '<td>';
-							echo $product->title . $new_product;
+							if($new_product !='')
+								echo $product->title . $new_product;
+							else
+								echo '<a href="https://etd.gr/?product_cat=0&s=%22'.$product->sku.'%22&post_type=product" target="_blank" title="Δες το στο etd.gr">'.$product->title . $new_product.'</a>';
 						echo '</td>';
 					echo '</tr>';
 				}
