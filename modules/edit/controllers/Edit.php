@@ -163,7 +163,9 @@ class Edit extends MX_Controller {
 					//First check if item exists
 
 					$exists = Modules::run("crud/get","live",$where);
-					$prev_product_details = $exists->result();
+					
+					if ($exists)
+						$prev_product_details = $exists->result();
 
 
 					$installments_q = Modules::run('crud/delete','installments',array('sku'=>$sku));
