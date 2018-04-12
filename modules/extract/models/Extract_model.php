@@ -11,7 +11,7 @@ class Extract_model extends CI_Model {
         parent::__construct();
     }
 
- 
+
     public function xml($table,$all){
 
 
@@ -347,6 +347,7 @@ class Extract_model extends CI_Model {
 
                         $title =   str_replace(' ','',$product['title']);
                         $brand =   str_replace(' ','',$product['brand']);
+                        $model =   $product['model'];
                         $inches =  str_replace(',','.',$product['screen_size']);
                         $technology = str_replace(' ','',$product['monitor_technology']);
                         $pn = str_replace(' ','',$product['product_number']);
@@ -360,15 +361,14 @@ class Extract_model extends CI_Model {
 
                         if($etd_title == ''){
 
-                        $etd_title = $brand.' '.$inches.' ιντσών '.$technology.' '.$ips.' ('.$pn.')';
+                        $etd_title = $model.' '.$inches.' ιντσών '.$technology.' '.$ips.' ('.$pn.')';
                         }
 
                         if($skroutz_title == ''){
 
-                             $skroutz_title = $brand.' '.$inches.'  '.$pn;
+                             $skroutz_title = $etd_title;
 
                         }
-
                             $product['tags'] = $product['availability'];
 
                             break;
