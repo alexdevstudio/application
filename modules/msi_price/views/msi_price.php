@@ -10,23 +10,23 @@
               <div class="dataTables_wrapper form-inline dt-bootstrap" id="example2_wrapper">
               <div class="row">
               <div class="col-sm-6">
-              	
+
               </div>
               <div class="col-sm-6">
-              	
+
               </div>
               </div>
               <div class="row">
               <div class="col-sm-12">
-              <table  id="msiTable" class="table table-bordered table-hover dataTable">
+              <table  id="msiTable" class="table table-bordered table-striped">
                 <thead>
-                <tr role="row">
-                <th  colspan="1" rowspan="1" >SKU</th>
-                <th colspan="1" rowspan="1" >Title</th>
-                <th colspan="1" rowspan="1"  >PN</th>
-                <th colspan="1" rowspan="1"  >Price</th>
-                <th colspan="1" rowspan="1"  >Προτεινόμενη Τιμή</th>
-                <th colspan="1" rowspan="1"  >Τελευταία ενημέρωση</th>
+                <tr >
+                <th >SKU</th>
+                <th>Title</th>
+                <th >PN</th>
+                <th >Price</th>
+                <th >Προτεινόμενη Τιμή</th>
+                <th >Τελευταία ενημέρωση</th>
 
                 </tr>
                 </thead>
@@ -35,7 +35,7 @@
                 $i = 1;
 
                 foreach ($laptops->result() as $item) {
-                	
+
                 	$class = ' odd ';
                 	if ($i % 2 == 0) {
 					  $class = ' even ';
@@ -52,7 +52,7 @@
 
 					?>
 
- 				<tr class="<?= $class; ?>" role="row">
+ 				<tr class="<?= $class; ?>">
                   <td><?= $sku; ?></td>
                   <td><?= $title; ?></td>
                   <td><?= $pn; ?></td>
@@ -60,17 +60,17 @@
                   <td>
                		<form id="sku<?= $sku; ?>" action="./updatePrice">
                		<input type='hidden' value='<?= $sku; ?>' name='sku' id='sku' />
-               		
+
                		<div class="input-group col-xs-6 pull-left">
 		                  <div class="input-group-addon">
 		                    <i class="fa fa-euro"></i>
 		                  </div>
 		                  <input class="form-control " type='text'  id='price<?= $sku; ?>' name='price<?= $sku; ?>' />
                		</div>
-               		
+
                  	 <button id="" type="button" class="btn btn-success btn-md col-xs-offset-1 col-xs-5" onclick="msiPrice('sku<?= $sku; ?>', '<?= $sku; ?>', 'price<?= $sku; ?>');" >Αλλαγή</button>
 
-                   </form> 
+                   </form>
                   </td>
                  <td class='text-center'><?= $date; ?></td>
                 </tr>
@@ -80,17 +80,17 @@
 
                 }
 		?>
-                
+
 
               </tbody>
                 <tfoot>
-                <tr role="row">
-                <th  colspan="1" rowspan="1" >SKU</th>
-                <th colspan="1" rowspan="1" >Title</th>
-                <th colspan="1" rowspan="1"  >PN</th>
-                <th colspan="1" rowspan="1"  >Price</th>
-                <th colspan="1" rowspan="1"  >Προτεινόμενη Τιμή</th>
-                <th colspan="1" rowspan="1"  >Τελευταία ενημέρωση</th>
+                <tr>
+                <th >SKU</th>
+                <th>Title</th>
+                <th >PN</th>
+                <th >Price</th>
+                <th >Προτεινόμενη Τιμή</th>
+                <th >Τελευταία ενημέρωση</th>
                 </tr>
                 </tfoot>
               </table>
@@ -100,3 +100,11 @@
           </div>
 
 </div>
+
+<script>
+  $(function () {
+    $('#msiTable').DataTable({
+
+    })
+  })
+</script>

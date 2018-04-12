@@ -6,34 +6,48 @@
   <title><?= $title; ?> - XML Generator</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  <!-- Bootstrap 3.3.6 -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <!-- Bootstrap 3.3.7 -->
+  <link rel="stylesheet" href="<?= base_url()?>/assets/bower_components/bootstrap/dist/css/bootstrap.min.css">
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="<?= base_url()?>/assets/bower_components/font-awesome/css/font-awesome.min.css">
   <!-- Ionicons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+  <link rel="stylesheet" href="<?= base_url()?>/assets/bower_components/Ionicons/css/ionicons.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="<?= base_url()?>/assets/dist/css/AdminLTE.min.css">
   <!-- AdminLTE Skins. Choose a skin from the css/skins
        folder instead of downloading all of them to reduce the load. -->
   <link rel="stylesheet" href="<?= base_url()?>/assets/dist/css/skins/_all-skins.min.css">
-  <!-- iCheck -->
- <!--  <link rel="stylesheet" href="<?= base_url()?>/assets/plugins/iCheck/flat/blue.css"> -->
   <!-- Morris chart -->
-  <link rel="stylesheet" href="<?= base_url()?>/assets/plugins/morris/morris.css">
+  <link rel="stylesheet" href="<?= base_url()?>/assets/bower_components/morris.js/morris.css">
   <!-- jvectormap -->
-  <link rel="stylesheet" href="<?= base_url()?>/assets/plugins/jvectormap/jquery-jvectormap-1.2.2.css">
+  <link rel="stylesheet" href="<?= base_url()?>/assets/bower_components/jvectormap/jquery-jvectormap.css">
   <!-- Date Picker -->
-  <link rel="stylesheet" href="<?= base_url()?>/assets/plugins/datepicker/datepicker3.css">
+  <link rel="stylesheet" href="<?= base_url()?>/assets/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
   <!-- Daterange picker -->
-  <link rel="stylesheet" href="<?= base_url()?>/assets/plugins/daterangepicker/daterangepicker-bs3.css">
+  <link rel="stylesheet" href="<?= base_url()?>/assets/bower_components/bootstrap-daterangepicker/daterangepicker.css">
   <!-- bootstrap wysihtml5 - text editor -->
   <link rel="stylesheet" href="<?= base_url()?>/assets/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+  <link href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+  <!-- Google Font -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
   <link rel="stylesheet" href="<?= base_url()?>/assets/css/main.css">
 
 <!-- jQuery 2.2.0 -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -43,8 +57,8 @@
   <![endif]-->
 <script>
 
-      
-      
+
+
     </script>
 
 </head>
@@ -339,7 +353,7 @@
             <div class="box-header">
               <!-- tools box -->
               <div class="pull-right box-tools">
-                
+
                 <button type="button" class="btn btn-primary btn-sm pull-right" data-widget="collapse" data-toggle="tooltip" title="Collapse" style="margin-right: 5px;">
                   <i class="fa fa-minus"></i></button>
               </div>
@@ -355,7 +369,7 @@
             <!-- /.box-body-->
             <div class="box-footer no-border">
               <div class="row">
-               
+
                 <!-- ./col -->
                 <div class="col-xs-6 search-btn text-center">
                   <div id="sparkline-3"></div>
@@ -372,20 +386,36 @@
           </div>
       <!-- /.search form -->
       <!-- sidebar menu: : style can be found in sidebar.less -->
-       <ul class="sidebar-menu">
-        <li class="header">ΠΛΟΗΓΗΣΗ</li>
-        
+       <ul class="sidebar-menu" data-widget="tree">
+        <li class="header">ΓΕΝΙΚΑ</li>
+
         <li class="">
           <a href="<?php echo base_url();?>">
-            <i class="fa fa-dashboard"></i> <span>ΑΡΧΙΚΗ</span> 
+            <i class="fa fa-dashboard"></i> <span>ΑΡΧΙΚΗ</span>
           </a>
-          
+
         </li>
-         <li class="">
-            <a href="<?php echo base_url();?>insert">
-              <i class="fa fa-edit"></i> <span>ΠΡΟΙΟΝ</span>
-            </a>
-         </li>
+        <li class="treeview  <?= ($this->uri->segment(1)=='categories' || $this->uri->segment(1)=='insert') ? 'menu-open' : '' ?>">
+         <a href="#">
+           <i class="fa fa-shopping-cart"></i>
+           <span>ΠΡΟΪΟΝΤΑ</span>
+           <i class="fa fa-angle-left pull-right"></i>
+         </a>
+         <ul class="treeview-menu" style="display:<?= ($this->uri->segment(1)=='categories' || $this->uri->segment(1)=='insert') ? 'block' : 'none' ?>">
+           <li class="<?= ($this->uri->segment(1)=='categories') ? 'active' : '' ?>">
+             <a href="<?php echo base_url();?>categories">
+               <i class="fa fa-cubes"></i> <span>ΟΛΑ ΤΑ ΠΡΟΪΟΝΤΑ</span>
+             </a>
+           </li>
+           <li class="<?= ($this->uri->segment(1)=='insert') ? 'active' : '' ?>">
+             <a href="<?php echo base_url();?>insert">
+               <i class="fa fa-plus"></i> <span>ΝΕΟ ΠΡΟΪΟΝ</span>
+             </a>
+           </li>
+
+         </ul>
+        </li>
+         
          <li class="">
            <?php
             $Num_problematics = Modules::run("crud/problematic", array("volumetric_weight"=>'',"volumetric_weight"=>'0'), '', true);
@@ -410,36 +440,33 @@
               <i class="fa fa-calculator"></i> <span>ΑΝΤΙΚΑΤΑΒΟΛΕΣ</span>
             </a>
          </li>
-         <li class="">
-            <a href="<?php echo base_url();?>skroutz">
-              <i class="fa fa-money" aria-hidden="true"></i> <span>ΤΙΜΕΣ SKROUTZ</span>
-            </a>
-         </li>
+
+
          <li class="treeview">
           <a href="#">
             <i class="fa fa-dashboard"></i>
             <span>ΕΜΠΟΡΙΚΗ ΔΙΑΧΕΙΡΙΣΗ</span>
             <i class="fa fa-angle-left pull-right"></i>
-          </a> 
+          </a>
           <ul class="treeview-menu">
             <li class="">
               <a href="<?php echo base_url('statistics');?>">
                 <i class="fa fa-bar-chart"></i> ΠΡΟΜΗΘΕΥΤΕΣ
               </a>
-            </li> 
+            </li>
             <li class="">
               <a href="<?php echo base_url('profit_rates');?>">
-                <i class="fa fa-calculator"></i> <span>ΠΟΣΟΣΤΑ ΚΑΤΗΓΟΡΙΩΝ</span>
+                <i class="fa fa-calculator"></i> ΠΟΣΟΣΤΑ ΚΑΤΗΓΟΡΙΩΝ
               </a>
             </li>
             <li class="">
               <a href="<?php echo base_url('statistics/stock');?>">
-                <i class="fa fa-balance-scale "></i> <span>ΠΡΟΪΟΝΤΑ ΣΕ ΑΠΟΘΕΜΑ</span>
+                <i class="fa fa-balance-scale "></i> ΠΡΟΪΟΝΤΑ ΣΕ ΑΠΟΘΕΜΑ
               </a>
             </li>
           </ul>
          </li>
-
+         <li class="header">ΧΡΗΣΙΜΟΙ ΣΥΝΔΕΣΜΟΙ</li>
          <li class="">
             <a target="_blank" href="https://etd.gr">
               <img src="https://etd.gr/wp-content/uploads/2015/10/logo72.png" class='img-menu'> <span>ETD.GR</span>
@@ -467,7 +494,7 @@
             <li><a href="index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
           </ul>
         </li>
-        
+
         <li class="header">LABELS</li>
         <li><a href="#"><i class="fa fa-circle-o text-red"></i> <span>Important</span></a></li>
         <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> <span>Warning</span></a></li>
@@ -483,10 +510,9 @@
     <section class="content-header">
       <h1>
         <?= $title; ?>
-        
+
       </h1>
       <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i>Αρχική</a></li>
         <li class="active"><?= $title; ?></li>
       </ol>
     </section>
