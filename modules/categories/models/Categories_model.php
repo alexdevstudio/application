@@ -12,6 +12,44 @@ class Categories_model extends CI_Model {
     }
 
 
+    public function getProductsByCategory($table){
+        $this->db->select($table.'.sku as sku,'.$table.'.title as title,'.$table.'.product_number as product_number, live.product_number as pn, live.status as status');
+        $this->db->join('live', $table.'.product_number = live.product_number' , 'LEFT');
+        $products = $this->db->get($table);
+
+    if($products->num_rows() > 0)
+        return $products->result();
+
+        return;
+    }
+
+    public function countProducts($tables){
+      $query = 'SELECT ';
+
+      $first = true;
+      foreach ($tables as $table) {
+
+        if($first)
+          $query .= "(SELECT COUNT(*) FROM $table) as $table";
+        else
+          $query .= ", (SELECT COUNT(*) FROM $table) as $table";
+
+
+        $query .= ", (SELECT COUNT(*) FROM live WHERE category = '$table' AND status = 'publish') as live_$table";
+
+        $first = false;
+      }
+
+      $product_count = $this->db->query($query);
+
+      if($product_count->num_rows() > 0)
+        return $product_count->row();
+
+      return;
+
+
+      //SELECT (SELECT COUNT(*) FROM laptops) as laptops, (SELECT COUNT(*) FROM monitors) as monitors
+    }
     public function insertItem($c, $categoryData){
 
     	$query = $this->db->get_where($c,array('product_number'=>$categoryData['product_number']));
@@ -24,7 +62,7 @@ class Categories_model extends CI_Model {
 	    }
 	    else
 	    {
-	    	
+
 
 			$this->db->set('sku',$categoryData['sku']);
 			$this->db->where('id',$query->row()->id);
@@ -32,9 +70,9 @@ class Categories_model extends CI_Model {
 
 			$message = "Το SKU που προστέθηκε δεν ταιριάζει με το SKU που είναι ήδη
 			 καταχωρημένο στο ERP για αυτό το Προϊόν:<br /> Κατηγορία: ".$c."<br />Παλιό SKU: ".$query->row()->sku."<br />
-			 Τίτλος: ".$query->row()->title."<br/> <p style='color:red;'>Παρακαλούμε όπως προβείτε άμεσα στην αλλαγή του SKU στο ERP ή 
+			 Τίτλος: ".$query->row()->title."<br/> <p style='color:red;'>Παρακαλούμε όπως προβείτε άμεσα στην αλλαγή του SKU στο ERP ή
 			 διαφορετικά αγνοείστε αυτό το μήνυμα.</p><br />Το νέο SKU είναι: ".$categoryData['sku'];
-				
+
 				Modules::run('emails/send','Διπλό SKU',$message);
 				return true;
 			}
@@ -43,7 +81,7 @@ class Categories_model extends CI_Model {
 
 
     	return false;
- 
+
     }
 
 
@@ -60,7 +98,7 @@ $fa = 0;
     				continue;
 
     			foreach ($product as $key => $value) {
-    				
+
     				if($key != 'description' && $key!='shipping_class'){
 
 						if($value=='-')
@@ -95,10 +133,10 @@ $fa = 0;
 
     					$dimensions = $data['dimensions'];
 						$data['volumetric_weight'] = $this->volumeWeight($dimensions);
-    			   		
+
 
 						if(!$data['volumetric_weight']){
-    						
+
     						$data['new_item']=1;
 
 						}
@@ -111,11 +149,11 @@ $fa = 0;
     			}
 
 
-    			
 
 
-				
-				
+
+
+
 				$this->db->where('sku', $sku );
 				$query = $this->db->get($table);
 
@@ -150,8 +188,8 @@ public function volumeWeight($dimensions){
 
 	//Create an array
 	$da = explode("x",$dimensions);
-	
-	if(count($da) != 3){ 
+
+	if(count($da) != 3){
 
 		return false;
 	}
@@ -159,10 +197,10 @@ public function volumeWeight($dimensions){
 	$vweight = (((int) $da[0]/10)*((int) $da[1]/10)*((int) $da[2]/10))/5000;
 
 	$vweight = ceil($vweight);
-	
+
 
 	return $vweight;
-	
+
 
 
 
@@ -229,9 +267,9 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					$shipping_class= 10650;
 					break;
 			case 'switches':
-					
+
 					$ports=(int) $data['ports'];
-					
+
 					if( $ports >= 16)
 						$shipping_class= 10063;
 					else
@@ -239,7 +277,7 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					break;
 			case 'ups':
 					$strength=(int) $data['strength'];
-					
+
 					if( $strength >= 3001)
 						$shipping_class= 9974;
 					elseif( $strength >= 1501)
@@ -247,7 +285,7 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					else
 						$shipping_class = 10070;
 					break;
-			
+
 			case 'servers':
 					$server_formfactor = $data['form_factor'];
 					if($server_formfactor != 'Rack' && $server_formfactor != 'Tower')
@@ -398,12 +436,12 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 			default:
 				return false;
 				break;
-	
+
 			}
 		}
-	
-		
-     
+
+
+
       return $shipping_class;
     }
 
@@ -518,7 +556,7 @@ public function makeShippingClass($data, $cat, $dynamic = null){
     		case 32:
     			 $shipping_class = 10883;
     			 break;
-    		
+
     		default:
     			$shipping_class = 9974; //Overload
     			break;
@@ -591,6 +629,6 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 
     	return $sc_array[$shipping_class];
     }
-   
+
 
 }

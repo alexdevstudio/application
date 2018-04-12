@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Categories extends MX_Controller {
- 
+
 	/**
 	 * Index Page for this controller.
 	 *
@@ -18,10 +18,39 @@ class Categories extends MX_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
-	
+
+ public function index($table = null){
+
+   if($table)
+   return $this->show_category_products($table);
+
+   $this->load->model('categories_model');
+
+   $data['title'] = 'Κατηγορίες προϊόντων';
+   $data['tables'] = Modules::run('categories/fullCategoriesArray');
+   $data['product_count'] = $this->categories_model->countProducts($data['tables']);
+
+   $this->load->view('templates/header',$data);
+   $this->load->view('categories');
+   $this->load->view('templates/footer');
+ }
+
+ public function products($table){
+   $this->load->model('categories_model');
+   $data['title'] = 'Προϊόντα κατηγορίας: '.$table;
+   $data['tables'] = Modules::run('categories/fullCategoriesArray');
+   $data['products'] = $this->categories_model->getProductsByCategory($table);
+   $data['table'] = $table;
+
+
+   $this->load->view('templates/header',$data);
+   $this->load->view('products');
+   $this->load->view('templates/footer');;
+ }
+
 
 	public function insert($c, $categoryData)
-	{	
+	{
 		$this->load->model('categories_model');
 
 		if($this->categories_model->insertItem($c, $categoryData)){
@@ -33,7 +62,7 @@ class Categories extends MX_Controller {
 		print_r($categoryData);
 
 		return false;
-	} 
+	}
 
 	 public function categoriesArray(){
     	$array = array('cable_accessories','copiers','desktops','docking_stations','laptops','printers', 'multifunction_printers',
@@ -54,7 +83,7 @@ class Categories extends MX_Controller {
     	return $array;
     }
 
- 
+
      public function updateItem($c, $xml){
 
      	$this->load->model('categories_model');
@@ -95,7 +124,7 @@ class Categories extends MX_Controller {
      				Modules::run('crud/update', $cat, array('sku'=>$sku), array('volumetric_weight'=>$volumetric_weight));
      			}
             }
-                 			
+
      	}
      		//echo "$cat: OK<br />";
      }
