@@ -671,7 +671,7 @@ class Extract_model extends CI_Model {
 
         }
 
-        public function priceTax($product)
+        public function priceTax($product) 
         {
            //  echo $category_rate;
              $net  = $product['net_price'];
