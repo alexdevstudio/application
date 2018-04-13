@@ -7,7 +7,8 @@
       <table id="categories" class="table table-bordered table-striped">
         <thead>
           <tr>
-            <td><i class="fa fa-circle"></td>
+            <td><i class="fa fa-circle"></i></td>
+            <td>Προμηθευτής</td>
             <td>SKU</td>
             <td>Product number</td>
             <td>Title</td>
@@ -18,6 +19,7 @@
           <?php foreach ($products as $product) : ?>
             <tr>
               <td class="text-center"><?= ($product->status == 'publish') ? '<i class="fa fa-circle text-green"><br>On' : '<i class="fa fa-circle text-red"><br> Off' ?></td>
+                <td class="text-center <?= ($product->supplier == 'out') ? 'bg-danger' : '' ?>"><?= ($product->supplier == 'out') ? 'Out of stock' : $product->supplier ?></td>
               <td><?= $product->sku ?></td>
               <td><?= $product->product_number ?></td>
               <td><?= $product->title ?></td>
@@ -26,7 +28,8 @@
           <?php endforeach; ?>
         </tbody>
         <tfoot>
-          <td><i class="fa fa-circle"></td>
+          <td><i class="fa fa-circle"></i></td>
+          <td>Προμηθευτής</td>
           <td>SKU</td>
           <td>Product number</td>
           <td>Title</td>
@@ -45,7 +48,7 @@
       'searching'   : true,
       'ordering'    : true,
       'info'        : true,
-      'autoWidth'   : true,
+      'autoWidth'   : false,
       "pageLength": 25
     })
   })

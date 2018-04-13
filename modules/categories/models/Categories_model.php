@@ -13,7 +13,7 @@ class Categories_model extends CI_Model {
 
 
     public function getProductsByCategory($table){
-        $this->db->select($table.'.sku as sku,'.$table.'.title as title,'.$table.'.product_number as product_number, live.product_number as pn, live.status as status');
+        $this->db->select($table.'.sku as sku,'.$table.'.title as title,'.$table.'.product_number as product_number, live.product_number as pn, live.status as status, live.supplier as supplier');
         $this->db->join('live', $table.'.product_number = live.product_number' , 'LEFT');
         $products = $this->db->get($table);
 
