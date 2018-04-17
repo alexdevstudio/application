@@ -152,10 +152,10 @@
 						<img data-original="'.$img.'" class="lazyimg" />
 					</div>
 					<div class="col-md-1 col-sm-2 text-center">
-						<strong><a href="http://etd.gr/xml/edit/'.$category.'/'.$sku.'" target="_blank">'.$sku.'</a></strong>
+						<strong><a href="'.base_url().'edit/'.$category.'/'.$sku.'" target="_blank">'.$sku.'</a></strong>
 					</div>
 					<div class="col-md-7 col-sm-8"> 
-						<a href="http://etd.gr/xml/edit/'.$category.'/'.$sku.'" target="_blank">'.$title.'</a>
+						<a href="'.base_url().'edit/'.$category.'/'.$sku.'" target="_blank">'.$title.'</a>
 					</div>
 					<div class="col-md-2 col-sm-6">
 						'.$skroutzLink.'
