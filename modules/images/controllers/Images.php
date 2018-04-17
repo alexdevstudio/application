@@ -42,7 +42,7 @@ class Images extends MX_Controller {
 			   $files = scandir ($filename);
 			   $firstFile =$files[2];// because [0] = "." [1] = ".."
 			   $src = $filename.'/'.$firstFile;
-			   $src = "http://etd.gr/xml".ltrim($src,".");
+			   $src = "https://etd.gr/xml".ltrim($src,".");
 
 			   if(!$html)
 			   	return $src;
