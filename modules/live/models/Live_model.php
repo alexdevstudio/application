@@ -45,6 +45,15 @@ class Live_model extends CI_Model {
 		$newProducts = array();
 		$f=0;
 
+		//For log table
+		$log = array(
+			'log_type'=>'update supplier',
+			'user_id'=>'0',
+			'log_description'=>'Oktabit Update',
+			'log_date'=> date('Y-m-d H:i:s'),
+			'log_result'=>'Start Oktabit Update'
+		);
+
 		foreach($xml->children() as $product) {
 
 			set_time_limit(50);
@@ -430,7 +439,10 @@ class Live_model extends CI_Model {
 
 		$this->sendImportedProductsByMail($newProducts,'Oktabit');
 
-		 echo "Finnished Oktabit";
+		echo "Finnished Oktabit";
+
+		$log['log_result'] = $newProducts;
+		$this->MakeLogEntry($log);
 
     }
 
@@ -449,7 +461,16 @@ class Live_model extends CI_Model {
 		}
 
 		$newProducts = array();
-		$sc = '';   		
+		$sc = '';   	
+		
+		//For log table
+		$log = array(
+			'log_type'=>'update supplier',
+			'user_id'=>'0',
+			'log_description'=>'Quest Update',
+			'log_date'=> date('Y-m-d H:i:s'),
+			'log_result'=>'Start Quest Update'
+		);
 
 		foreach($xml->children() as $product) {
 			$type = '';
@@ -645,6 +666,9 @@ class Live_model extends CI_Model {
 
 		$this->sendImportedProductsByMail($newProducts,'Quest');
 		echo "Finnished updating Quest.";	
+
+		$log['log_result'] = $newProducts;
+		$this->MakeLogEntry($log);
 	}//End Quest
 	
 	public function netconnect(){
@@ -662,6 +686,15 @@ class Live_model extends CI_Model {
 
 		$newProducts = array();
 		$sc = '';  
+
+		//For log table
+		$log = array(
+			'log_type'=>'update supplier',
+			'user_id'=>'0',
+			'log_description'=>'NetConnect Update',
+			'log_date'=> date('Y-m-d H:i:s'),
+			'log_result'=>'Start NetConnect Update'
+		);
 		
 		if (isset($xml->children()->Product[0]->Availiability) && isset($xml->children()->Product[0]->EAN)) // Check if Availability & EAN exist in XML
 		{
@@ -860,16 +893,20 @@ class Live_model extends CI_Model {
 					}
 				}
 			}//end foreach
-
+			
 			$this->sendImportedProductsByMail($newProducts,'NETCONNECT');
 			echo "Finnished updating NETCONNECT.";
+			$log['log_result'] = $newProducts;
 		} //end check for availability column
 		else
 		{
+			$log['log_result'] = 'error: Το XML της Netconnect δεν έχει διαθεσιμότητες ή ΕΑΝ';
 			echo "Το XML της Netconnect δεν έχει διαθεσιμότητες ή ΕΑΝ";
 			echo "</br></br>";
 			echo '<a href="'.base_url("live/index/netconnect").'"><button>Πίσω στην εισαγωγή για NetConnect</button></a>';
 		}
+
+		$this->MakeLogEntry($log);
 	}//End NETCONNECT
 
 
@@ -886,6 +923,14 @@ class Live_model extends CI_Model {
 
 		$newProducts = array();
 		$supplier = "partnernet";
+
+		$log = array(
+			'log_type'=>'update supplier',
+			'user_id'=>'0',
+			'log_description'=>'PartnerNet Update',
+			'log_date'=> date('Y-m-d H:i:s'),
+			'log_result'=>'Start PartnerNet Update'
+		);
 
 
 		foreach($xml->children() as $product) {
@@ -1037,9 +1082,10 @@ class Live_model extends CI_Model {
 			}//foreach($xml->children() as $product)
 
 			$this->sendImportedProductsByMail($newProducts, 'PartnerNet');
-			echo "<pre>";
-			print_r($newProducts);
 			echo "Finnished $supplier";
+
+			$log['log_result'] = $newProducts;
+			$this->MakeLogEntry($log);
 
 		}
 
@@ -1064,6 +1110,15 @@ class Live_model extends CI_Model {
 		$i=0;
 		$k=0;
 		//$f=0;
+
+		//For log table
+		$log = array(
+			'log_type'=>'update supplier',
+			'user_id'=>'0',
+			'log_description'=>'Enet-Logicom Update',
+			'log_date'=> date('Y-m-d H:i:s'),
+			'log_result'=>'Start Enet-Logicom Update'
+		);
 
 
 		foreach($xml->children()->children()->children() as $product) {
@@ -1298,6 +1353,9 @@ class Live_model extends CI_Model {
 
 		echo "Finnished updating Logicom-Enet.";
 
+		$log['log_result'] = $newProducts;
+		$this->MakeLogEntry($log);
+
     }
 
     public function ddc(){
@@ -1319,6 +1377,15 @@ class Live_model extends CI_Model {
 		$i=0;
 		$length = 0;
 		$sc = $cable_cat = $dimensions = $size = $height = $ports = $patch_type = '';
+
+		//For log table
+		$log = array(
+			'log_type'=>'update supplier',
+			'user_id'=>'0',
+			'log_description'=>'DDC Update',
+			'log_date'=> date('Y-m-d H:i:s'),
+			'log_result'=>'Start DDC Update'
+		);
 
 		foreach($xml->children() as $product) {
 
@@ -1702,6 +1769,9 @@ class Live_model extends CI_Model {
 
 		echo "Finnished updating Digital Data Communication.";
 
+		$log['log_result'] = $newProducts;
+		$this->MakeLogEntry($log);
+
 	}
 
 	public function braintrust(){
@@ -1721,6 +1791,15 @@ class Live_model extends CI_Model {
 
 		$newProducts = array();
 		$i=0;
+
+		//For log table
+		$log = array(
+			'log_type'=>'update supplier',
+			'user_id'=>'0',
+			'log_description'=>'Braintrust Update',
+			'log_date'=> date('Y-m-d H:i:s'),
+			'log_result'=>'Start Braintrust Update'
+		);
 
 		foreach($xml->children() as $product) {
 			$availability=false;
@@ -1997,6 +2076,9 @@ class Live_model extends CI_Model {
 
 		echo "Finnished updating Braintrust.";
 
+		$log['log_result'] = $newProducts;
+		$this->MakeLogEntry($log);
+
     }
 
     public function aci(){
@@ -2015,6 +2097,15 @@ class Live_model extends CI_Model {
 
 		$newProducts = array();
 		$i=0;
+
+		//For log table
+		$log = array(
+			'log_type'=>'update supplier',
+			'user_id'=>'0',
+			'log_description'=>'ACI Update',
+			'log_date'=> date('Y-m-d H:i:s'),
+			'log_result'=>'Start ACI Update'
+		);
 
 
 		foreach($xml->children() as $product) {
@@ -2127,6 +2218,12 @@ class Live_model extends CI_Model {
 */
 			}
 		}
+		$this->sendImportedProductsByMail($newProducts, 'ACI');
+
+		echo "Finnished updating ACI.";
+
+		$log['log_result'] = $newProducts;
+		$this->MakeLogEntry($log);
     }
 
     public function copiers(){
@@ -2146,6 +2243,15 @@ class Live_model extends CI_Model {
 		$newProducts = array();
 		$i=0;
 
+		//For log table
+		$log = array(
+			'log_type'=>'update supplier',
+			'user_id'=>'0',
+			'log_description'=>'Copiers Update',
+			'log_date'=> date('Y-m-d H:i:s'),
+			'log_result'=>'Start Copiers Update'
+		);
+
 
 		foreach($xml->children() as $product) {
 			$availability=false;
@@ -2153,10 +2259,7 @@ class Live_model extends CI_Model {
 
 			//Rename categories for ETD.gr
 
-
 			$c = 'copiers';
-
-
 
 			if($c){
 
@@ -2166,8 +2269,6 @@ class Live_model extends CI_Model {
 				if(!$availability){
 					continue;
 				}
-
-
 
 				$title = (string) trim($product->title);
 				$Image = (string) trim($product->Image);
@@ -2271,10 +2372,7 @@ class Live_model extends CI_Model {
 					continue;
 				}
 
-
 				$imageUrl = $Image;
-
-
 
 				//1. Live
 				$supplier = 'konica';
@@ -2419,6 +2517,9 @@ class Live_model extends CI_Model {
 
 		$this->sendImportedProductsByMail($newProducts, 'KONICA Copiers');
 		echo "Finnished updating KONICA Copiers.";
+
+		$log['log_result'] = $newProducts;
+		$this->MakeLogEntry($log);
     }
 
     public function cpi(){
@@ -2435,6 +2536,15 @@ class Live_model extends CI_Model {
 
 		$newProducts = array();
 		$i=0;
+
+		//For log table
+		$log = array(
+			'log_type'=>'update supplier',
+			'user_id'=>'0',
+			'log_description'=>'CPI Update',
+			'log_date'=> date('Y-m-d H:i:s'),
+			'log_result'=>'Start CPI Update'
+		);
 
 		foreach($xml->children() as $product) {
 			$availability=false;
@@ -2530,6 +2640,9 @@ class Live_model extends CI_Model {
 
 		$this->sendImportedProductsByMail($newProducts, 'CPI');
 		echo "Finnished updating CPI.";
+
+		$log['log_result'] = $newProducts;
+		$this->MakeLogEntry($log);
     }
 
     public function westnet(){
@@ -2546,6 +2659,15 @@ class Live_model extends CI_Model {
 
 		$newProducts = array();
 		$i=0;
+
+		//For log table
+		$log = array(
+			'log_type'=>'update supplier',
+			'user_id'=>'0',
+			'log_description'=>'WestNet Update',
+			'log_date'=> date('Y-m-d H:i:s'),
+			'log_result'=>'Start WestNet Update'
+		);
 
 		foreach($xml->children() as $product) {
 
@@ -3041,6 +3163,8 @@ class Live_model extends CI_Model {
 		$this->sendImportedProductsByMail($newProducts, 'Westnet');
 		echo "Finnished updating Westnet.";
 
+		$log['log_result'] = $newProducts;
+		$this->MakeLogEntry($log);
     }
 
     private function sendImportedProductsByMail($newProducts, $the_supplier){
@@ -5744,6 +5868,34 @@ class Live_model extends CI_Model {
 		}
 		return $brand;
 	}
-}
 
+	private function MakeLogEntry($log_array)
+	{
+		/*
+		// The $log_array table
+		$log = array(
+			'log_type'=>'update supplier', 
+			'user_id'=>'0',
+			'log_description'=>'NetConnect Update',
+			'log_date'=> date('Y-m-d H:i:s'),
+			'log_result'=>'Start NetConnect Update'
+		);
+		*/
+
+		if (!empty($log_array))
+		{
+			if(is_array($log_array['log_result']))
+			{
+				$log_result = 'Succesfull';
+				foreach($log_array['log_result'] as $key => $value)
+				{
+					$log_result .= '<br>' . $key.' : '.$value;
+				}
+				$log_array['log_result'] = $log_result;
+			}
+
+			$this->db->insert('logs', $log_array);
+		}
+	}
+}
 ?>
