@@ -758,8 +758,19 @@ class Live_model extends CI_Model {
 					if($brand == 'ViewSonic')
 					{
 						$pos = strpos($pn, '/');
-						$NewPn = substr($pn, $pos+1);
-						$NewPn = str_replace("/","-",$NewPn);
+						$pn_len = strlen($pn);
+
+						if($pn_len - $pos <= 4 )
+						{
+							$pos = strpos($pn, '-');
+							$NewPn = substr($pn, $pos+1);
+							$NewPn = str_replace("/","-",$NewPn);
+						}
+						else
+						{
+							$NewPn = substr($pn, $pos+1);
+							$NewPn = str_replace("/","-",$NewPn);
+						}
 					}
 					else
 					{
@@ -801,7 +812,10 @@ class Live_model extends CI_Model {
 						$description = $body->textContent;
 					}
 
-					$net_price = $product->Price;
+					$net_price = (string) $product->Price;
+
+					$net_price = str_replace(",","",$net_price);
+
 					if($net_price == '0' || $net_price == 0)
 						continue;
 					$net_price = floatval ($net_price);
