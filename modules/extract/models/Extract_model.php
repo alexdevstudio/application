@@ -486,7 +486,7 @@ class Extract_model extends CI_Model {
                            break;*/
                         case 'server_hard_drives':
                             if($etd_title == '')
-                                $etd_title = $product['title']." ---(".$product['product_number'].")";
+                                $etd_title = $product['title']." (".$product['product_number'].")";
                         break;
                         default:
                           $skroutz_title =  $etd_title = $product['title']." (".$product['product_number'].")";
