@@ -99,7 +99,7 @@ $fa = 0;
 
     			foreach ($product as $key => $value) {
 
-    				if($key != 'description' && $key!='shipping_class'){
+    				if($table == 'server_hard_drives' || ($key != 'description' && $key !='shipping_class')){ // First condition Added by George in order to insert poulidakis description for Server HDD (Includes crossales for Servers)
 
 						if($value=='-')
 							$value='';
