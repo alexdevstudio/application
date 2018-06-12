@@ -82,6 +82,14 @@ class Live_model extends CI_Model {
 						$c = 'carrying_cases';
 					}
 					break;
+				case 'Imaging':
+					if($sc == 'Projectors LCD')
+					{
+						$c = 'projectors';
+					}else{
+						$c = $cat;
+					}
+					break;
 				case 'Computers':
 					if($sc == 'Advanced PC' || $sc == 'All In One PC' || $sc == 'Business PC' || $sc == 'Workstations')
 					{
@@ -720,6 +728,9 @@ class Live_model extends CI_Model {
 						break;
 					case 'Monitor':
 						$c = 'monitors';
+						break;
+					case 'Projector':
+						$c = 'projectors';
 						break;				
 					default:
 						$c = $cat;
@@ -757,19 +768,26 @@ class Live_model extends CI_Model {
 					$NewPn = '';
 					if($brand == 'ViewSonic')
 					{
-						$pos = strpos($pn, '/');
-						$pn_len = strlen($pn);
-
-						if($pn_len - $pos <= 4 )
+						if($c == 'projectors')
 						{
-							$pos = strpos($pn, '-');
-							$NewPn = substr($pn, $pos+1);
-							$NewPn = str_replace("/","-",$NewPn);
+							$NewPn = ltrim ($pn, '1V5VWS-');
 						}
 						else
 						{
-							$NewPn = substr($pn, $pos+1);
-							$NewPn = str_replace("/","-",$NewPn);
+							$pos = strpos($pn, '/');
+							$pn_len = strlen($pn);
+
+							if($pn_len - $pos <= 4 )
+							{
+								$pos = strpos($pn, '-');
+								$NewPn = substr($pn, $pos+1);
+								$NewPn = str_replace("/","-",$NewPn);
+							}
+							else
+							{
+								$NewPn = substr($pn, $pos+1);
+								$NewPn = str_replace("/","-",$NewPn);
+							}
 						}
 					}
 					else
