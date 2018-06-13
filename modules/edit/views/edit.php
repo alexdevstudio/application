@@ -267,7 +267,7 @@ if($itemLive){
 							<option value="oktabit" <?= $oktabit ?>>Oktabit</option>
 							<option value="partnernet" <?= $partnernet ?>>PartnerNet</option>
 							<option value="quest" <?= $quest ?>>Quest</option>
-	              		  	<option value="westnet" <?= $westnet ?>>WestNet</option>	              		  	
+	              		  	<option value="westnet" <?= $westnet ?>>WestNet</option>
 	              		  	<option value="none" <?= $other ?>>Δεν υπάρχει σε κανέναν προμηθευτή</option>
 
 	              		  </select>
@@ -388,14 +388,25 @@ if($itemLive){
 		if($key=='product_number' || $key=='id' || $key=='sku' || $key=='new_item'){
 			continue;
 		}
+
+		if($key == 'description') :
 		?>
+		<div class="col-xs-12 col-md-12" style="margin-bottom:30px">
+			<div class="col-xs-12 col-md-2">
+			<label><?= ucfirst(str_replace('_', ' ', $key));  ?></label>
+			</div>
+			<div class="col-xs-12 col-md-10">
 
-		<div class="col-xs-12 col-md-6">
+		<?php else : ?>
+			<div class="col-xs-12 col-md-6">
+				<div class="col-xs-12 col-md-4">
+				<label><?= ucfirst(str_replace('_', ' ', $key));  ?></label>
+				</div>
+				<div class="col-xs-12 col-md-8">
 
-		<div class="col-xs-12 col-md-4">
-		<label><?= ucfirst(str_replace('_', ' ', $key));  ?></label>
-		</div>
-		<div class="col-xs-12 col-md-8">
+		<?php endif;?>
+
+
 			<input class='form-control' type="hidden" name='new_item' value='0'>
 			<input class='form-control' type="hidden" name='status' value='update'>
 			<?php
@@ -403,7 +414,7 @@ if($itemLive){
 			if($key == 'description' || $key == 'bonus') {
 
 ?>
-<textarea  name="<?= $key; ?>" class="form-control edit-form-etd" value="" >
+<textarea id="<?= $key; ?>"  name="<?= $key; ?>" class="form-control edit-form-etd" value="" >
 <?php if(isset($_POST[$key])){ echo $_POST[$key]; }else{echo $value; } ?>
 </textarea>
 </div>

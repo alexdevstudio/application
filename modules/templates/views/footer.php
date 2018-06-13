@@ -38,6 +38,11 @@
 <script src="<?= base_url() ?>assets/bower_components/fastclick/lib/fastclick.js"></script>
 <!-- AdminLTE App -->
 <script src="<?= base_url() ?>assets/dist/js/adminlte.min.js"></script>
+<script src="<?= base_url() ?>assets/bower_components/ckeditor/ckeditor.js"></script>
+<script src="<?= base_url() ?>assets/bower_components/ckeditor/config.js"></script>
+
+
+
 <!-- AdminLTE for demo purposes -->
 <script src="<?= base_url() ?>assets/dist/js/demo.js"></script>
 
@@ -82,5 +87,12 @@ $(function() {
 });
 
         </script>
+
+
+        <?php if ($this->uri->segment(1) == 'edit'): ?>
+          <script type="text/javascript">
+             CKEDITOR.replace( 'description' );
+          </script>
+        <?php endif; ?>
 </body>
 </html>
