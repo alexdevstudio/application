@@ -163,7 +163,7 @@ class Edit extends MX_Controller {
 					//First check if item exists
 
 					$exists = Modules::run("crud/get","live",$where);
-					
+
 					if ($exists)
 						$prev_product_details = $exists->result();
 
@@ -247,12 +247,16 @@ class Edit extends MX_Controller {
 					//Insert or delete Skroutz URL from DB;
 					Modules::run('skroutz/toggleSkroutzUrl', $skroutz_url, $sku);
 
+
+					$post['description'] = $this->secureHTMLDescription($post['description']);
+
+				
 					$where = array('sku'=>$sku);
 
 					$vweight = trim($post['volumetric_weight']);
 
 					if($vweight!='' && $vweight!='0' /*&& ($category=='monitors' || $category=='desktops' || $category=='tv')*/){
-					
+
 						$post['shipping_class'] = Modules::run('categories/shippingByWeight', $vweight);
 
 					}else{
@@ -496,6 +500,28 @@ class Edit extends MX_Controller {
 		}
 		return true;
 
+	}
+
+
+	private function secureHTMLDescription($html=null){
+			$dom = new DOMDocument();
+
+			$dom->loadHTML($html);
+
+			$script = $dom->getElementsByTagName('script');
+
+			$remove = [];
+			foreach($script as $item)
+			{
+			  $remove[] = $item;
+			}
+
+			foreach ($remove as $item)
+			{
+			  $item->parentNode->removeChild($item);
+			}
+
+			return $dom->saveHTML();
 	}
 
 }
