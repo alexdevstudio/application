@@ -250,7 +250,7 @@ class Edit extends MX_Controller {
 
 					$post['description'] = $this->secureHTMLDescription($post['description']);
 
-				
+
 					$where = array('sku'=>$sku);
 
 					$vweight = trim($post['volumetric_weight']);
@@ -504,9 +504,14 @@ class Edit extends MX_Controller {
 
 
 	private function secureHTMLDescription($html=null){
+
+		return $html;
+
+		//Script
 			$dom = new DOMDocument();
 
 			$dom->loadHTML($html);
+
 
 			$script = $dom->getElementsByTagName('script');
 
@@ -521,7 +526,34 @@ class Edit extends MX_Controller {
 			  $item->parentNode->removeChild($item);
 			}
 
-			return $dom->saveHTML();
+			$html =  $dom->saveHTML();
+
+
+			//A href
+			$dom = new DOMDocument();
+
+			$dom->loadHTML($html);
+
+
+			$script = $dom->getElementsByTagName('a');
+
+			$remove = [];
+			foreach($script as $item)
+			{
+				$remove[] = $item;
+			}
+
+			foreach ($remove as $item)
+			{
+				$item->parentNode->removeChild($item);
+			}
+
+			$html =  $dom->saveHTML();
+
+			//Return
+			return iconv(mb_detect_encoding($html), "UTF-8", $html);
+
+
 	}
 
 }
