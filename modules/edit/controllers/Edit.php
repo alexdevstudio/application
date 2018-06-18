@@ -9,8 +9,7 @@ class Edit extends MX_Controller {
 		$skroutzUrl = Modules::run('crud/get','skroutz_urls', array('sku'=>$sku));
 		$cross_sells = Modules::run('crud/get','cross_sells', array('sku'=>$sku));
 		$images = Modules::run('crud/get','images', array('item_sku'=>$sku));
-
-
+		$ExistInFrontPage =( Modules::run('crud/get','front_page_products', array('sku'=>$sku))) ? 'checked="checked"' : '';
 
 
 
@@ -392,6 +391,7 @@ class Edit extends MX_Controller {
 
 			$data['installments'] = $installments;
 			$data['sku'] = $sku;
+			$data['ExistInFrontPage'] = $ExistInFrontPage;
 			$this->load->view('templates/header',$data);
 			$this->load->view('edit', $data);
 			$this->load->view('templates/footer',$data);

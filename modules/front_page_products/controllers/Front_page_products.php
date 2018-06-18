@@ -32,26 +32,54 @@ class Front_page_products extends MX_Controller {
 		$this->load->view('templates/footer');
 	}
 
-	public function delete($sku)
+	public function get()
 	{	
-		Modules::run('crud/delete', 'front_page_products', array('sku'=>$sku));
+		$products = Modules::run('crud/get', 'front_page_products');
 
-		redirect( base_url('/front_page_products/'), 'auto');
+		if($products)
+		{
+			echo json_encode($products->result());
+			return true;
+		}
+		echo json_encode(array());
+		return false;
 		
 	}
 
-	public function insert($product)
-	{
-		$where = array('meta_value'=>$product['sku'],"meta_key"=>"_sku");
-		$product['$woo_id'] = Modules::run("crud/getWp","wp_postmeta", $where);
+	public function delete($sku, $view_page = false)
+	{	
+		Modules::run('crud/delete', 'front_page_products', array('sku'=>$sku));
 
-		if ($product['$woo_id'] !== false)
-		{
+		if($view_page)
+			redirect( base_url('/front_page_products/'), 'auto');
+		
+	}
+
+	public function insert($sku, $pn, $category)
+	{
+		$where = array('meta_value'=>$sku,"meta_key"=>"_sku");
+		$woo_id = Modules::run("crud/getWp","wp_postmeta", $where);
+
+		if($woo_id){
+			$woo_id = $woo_id->result();
+			$woo_id = $woo_id[0]->post_id;
+
+			$product ['sku'] = $sku;
+			$product ['product_number'] = $pn;
+			$product ['woo_id'] = $woo_id;
+
+			$product ['section'] = $category;
+			if($category != 'laptops' && $category != 'desktops' && $category != 'servers' && $category != 'monitors' && $category != 'printers-mfp')
+				$product ['section'] = 'other';
+
 			Modules::run('crud/insert', 'front_page_products', $product);
+				echo 'true';
+
 			return true;
 		}
-		else
-			return false;
+
+		echo 'false';
+		return false;
 	}
 
 }

@@ -179,6 +179,8 @@ public function insertWp($table, $data){
 
     private function dataValidation($table, $data)
     {
+      echo '<pre>';
+      print_r($data);
       foreach ($data as $key => $value) {
           $variable= strtolower($value);
           if($value=='yes' || $value=='nai' || $value=='ναι' || $value=='ναί')

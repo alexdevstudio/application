@@ -368,14 +368,10 @@ if($itemLive){
 			<div class ="row">
 				<h2 class="col-sm-9"><?= $item->row()->title; ?></h2>
 				<label class="checkbox-inline col-sm-3">
-					<input id="ShowOnFrontPage" type="checkbox" value="" onchange="updateFrontPage()">Εμφάνιση στη Αρχική σελίδα
+					<input id="ShowOnFrontPage" type="checkbox" value="" <?= $ExistInFrontPage ?> onclick="updateFrontPage('<?php echo $sku?>','<?php echo $pn?>', '<?php echo $category?>')">Εμφάνιση στη Αρχική σελίδα
 				</label>
 			</div>
-<script>
-			$('#ShowOnFrontPage').change(function() {
-  alert($(this).prop('checked'))
-})
-</script>
+
 
 		<div style='border-top:1px solid #888'></div><br />
 		<div class="nav-tabs-custom">

@@ -27,7 +27,7 @@
 								<td><?= $Front_page_product->woo_id ?></td>
 								<td><?= $Front_page_product->product_number ?></td>
 								<td><?= $Front_page_product->section ?></td>
-								<td><a href="<?= base_url('/front_page_products/delete/'.$Front_page_product->sku); ?>" class="btn btn-danger btn-md col-xs-offset-1 col-xs-5">Διαγραφή</a></td>
+								<td><a href="<?= base_url('/front_page_products/delete/'.$Front_page_product->sku.'/true'); ?>" class="btn btn-danger btn-md col-xs-offset-1 col-xs-5">Διαγραφή</a></td>
 							</tr>
 							<?php
 							}
