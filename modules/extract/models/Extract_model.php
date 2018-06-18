@@ -489,7 +489,10 @@ class Extract_model extends CI_Model {
                                 $etd_title = $product['title']." (".$product['product_number'].")";
                         break;
                         default:
-                          $skroutz_title =  $etd_title = $product['title']." (".$product['product_number'].")";
+                            if($etd_title == '')
+                                $etd_title = $product['title']." (".$product['product_number'].")";
+                            if($skroutz_title == '')
+                                $skroutz_title = $product['title']." (".$product['product_number'].")";
                             break;
                     }
 
