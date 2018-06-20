@@ -413,6 +413,11 @@
                <i class="fa fa-plus"></i> <span>ΝΕΟ ΠΡΟΪΟΝ</span>
              </a>
            </li>
+           <li class="<?= ($this->uri->segment(1)=='front_page_products') ? 'active' : '' ?>">
+             <a href="<?php echo base_url('front_page_products');?>">
+               <i class="fa fa-file-o"></i> <span>ΠΡΟΊΟΝΤΑ ΣΤΗΝ ΑΡΧΙΚΗ</span>
+             </a>
+           </li>
 
          </ul>
         </li>
