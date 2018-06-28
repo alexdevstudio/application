@@ -1718,10 +1718,10 @@ class Live_model extends CI_Model {
 							$dimensions = trim($dimensions);
 
 							$space_where = $comma_where = 1000;
-							if($space_where = strpos( $dimensions, ' ')+1)
+							if(strpos( $dimensions, ' ')+1)
 								$space_where = strpos( $dimensions, ' ')+1;
 
-							if($comma_where = strpos( $dimensions, ','))
+							if(strpos( $dimensions, ','))
 								$comma_where = strpos( $dimensions, ',');
 
 							$where_is = min($space_where, $comma_where);
