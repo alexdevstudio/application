@@ -67,14 +67,15 @@ class Categories extends MX_Controller {
 	 public function categoriesArray(){
     	$array = array('cable_accessories','copiers','desktops','docking_stations','laptops','printers', 'multifunction_printers',
     		'monitors','servers','ups','tablets','smartphones','software',
-    		'external_hard_drives','keyboard_mouse','ip_phones','ip_cards','ip_gateways','ip_pbx','printer_drums','printer_fuser','printer_belts','tv');
+			'external_hard_drives','keyboard_mouse','ip_phones','ip_cards','ip_gateways','ip_pbx','printer_drums',
+			'printer_fuser','printer_belts','tv','firewalls');
 
     	return $array;
     }
 
     public function fullCategoriesArray(){
     	$array = array('accessories','cables','cable_accessories','card_readers','carrying_cases','cartridges','cases','cooling_pads','copiers','cpu',
-    		'desktops','docking_stations','external_hard_drives','fans','flash_drives','graphic_cards','hoverboards','ip_phones',
+    		'desktops','docking_stations','external_hard_drives','fans','firewalls','flash_drives','graphic_cards','hoverboards','ip_phones',
             'ip_cards','ip_gateways','ip_pbx', 'keyboard_mouse','laptops','memories','monitors','motherboards','multifunction_printers','nas',
     		'optical_drives','papers','patch_panels','powerlines','power_bank','power_supplies','printers','printer_drums','printer_fusers','printer_belts','projectors','racks',
 			'routers','sata_hard_drives','servers','server_controllers','server_cpu','server_hard_drives','server_memories','server_power_supplies',

@@ -3413,7 +3413,7 @@ class Live_model extends CI_Model {
 				 $c == "memories" || $c == "hoverboards" || $c =="printer_fusers" || $c =="printer_drums" || $c =="printer_belts" || 
 				 $c=="ups" || $c=="tv" || $c=="accessories" || $c=="cable_accessories" || $c=="cooling_pads" || $c == "powerlines" || 
 				 $c == "ip_phones" || $c=="server_controllers" || $c=="server_cpu" || $c=="server_hard_drives" || $c=="server_memories" || 
-				 $c=="server_power_supplies" || $c=='nas'){
+				 $c=="server_power_supplies" || $c=='nas' || $c=='firewalls'){
 
 					$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
 					$volumetric_weight = Modules::run('categories/getWeight', $shipping_class);
