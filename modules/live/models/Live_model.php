@@ -21,9 +21,9 @@ class Live_model extends CI_Model {
 
     public function oktabit(){
 
-		if($xml = $this->xml("http://www.oktabit.gr/times_pelatwn/prices_xml.asp?customercode=012348&logi=evansmour")){
-			if($desc_xml = $this->xml("http://www.oktabit.gr/times_pelatwn/perigrafes_xml.asp?customercode=012348&logi=evansmour")){
-				if($char_xml = $this->xml("http://www.oktabit.gr/times_pelatwn/chars_xml.asp?customercode=012348&logi=evansmour")){
+		if($xml = $this->xml("https://www.oktabit.gr/times_pelatwn/prices_xml.asp?customercode=012348&logi=evansmour")){
+			if($desc_xml = $this->xml("https://www.oktabit.gr/times_pelatwn/perigrafes_xml.asp?customercode=012348&logi=evansmour")){
+				if($char_xml = $this->xml("https://www.oktabit.gr/times_pelatwn/chars_xml.asp?customercode=012348&logi=evansmour")){
 
 					$images = array();
 
@@ -3611,7 +3611,7 @@ class Live_model extends CI_Model {
 				}
 
 				$imageData = array(
-					'src' => "http://oktabit.gr/images/photos/".$product['code']."".$tail.".jpg",
+					'src' => "https://www.oktabit.gr/images/photos/".$product['code']."".$tail.".jpg",
 					'sku' => $sku ,
 					'brand' => $product['brand'] ,
 					'part_number' => $product['product_number'] ,
