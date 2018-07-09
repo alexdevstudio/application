@@ -38,9 +38,16 @@ class Extract_model extends CI_Model {
                 $product = $products->appendChild($product);
 
                 foreach($columns as $key => $value){
-                    if($key!='id' && $key!='new_item' ){
-                        $item = $xml->createElement($key, trim(htmlspecialchars($value)));
-                        $item = $product->appendChild($item);
+                    if($table == 'laptops' && $key == '2in1')
+                    {
+
+                    }
+                    else
+                    {
+                        if($key!='id' && $key!='new_item' ){
+                            $item = $xml->createElement($key, trim(htmlspecialchars($value)));
+                            $item = $product->appendChild($item);
+                        }
                     }
                 }
             }
@@ -565,7 +572,22 @@ class Extract_model extends CI_Model {
                             }
 
                             if(($key == 'description' && $table == 'laptops') || ($key == 'description' && $table == 'printers') || $key == 'auto_descr' )// for insert the description without strip_tags
-                              {  $attr = $xml->createElement($key, trim(htmlspecialchars($value)));}
+                            {  
+                                $attr = $xml->createElement($key, trim(htmlspecialchars($value)));
+                            }
+                            elseif(($key == '2in1' && $table == 'laptops') || ($key == 'type' && $table == 'laptops'))// for insert the description without strip_tags
+                            { 
+                                //mUST BE CHECKED
+                                /*
+                                echo '<br>'.$key;
+                                echo ': '.$value;
+                                if($value == 'Ν')
+                                    $attr = $xml->createElement($key, 'ΝΑΙ');
+                                else
+                                    $attr = $xml->createElement($key, 'ΟΧΙ');
+                                echo $value;
+                                */
+                            }
                             else{
                                 $attr = $xml->createElement($key, trim(htmlspecialchars(strip_tags($value))));
                             }
