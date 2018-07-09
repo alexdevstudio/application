@@ -367,9 +367,14 @@ if($itemLive){
         	?>
 			<div class ="row">
 				<h2 class="col-sm-9"><?= $item->row()->title; ?></h2>
-				<label class="checkbox-inline col-sm-3">
-					<input id="ShowOnFrontPage" type="checkbox" value="" <?= $ExistInFrontPage ?> onclick="updateFrontPage('<?php echo $sku?>','<?php echo $pn?>', '<?php echo $category?>')">Εμφάνιση στη Αρχική σελίδα
-				</label>
+				<div class="col-sm-3">
+					<label class="checkbox">
+						<input id="ShowOnFrontPage" type="checkbox" value="" <?= $ExistInFrontPage ?> onclick="updateFrontPage('<?php echo $sku?>','<?php echo $pn?>', '<?php echo $category?>')">Εμφάνιση στη Αρχική σελίδα
+					</label>
+					<label class="checkbox">
+						<input id="IsFeatured" type="checkbox" value="" <?= $IsFeaturedProduct ?> onclick="updateFeatured('<?php echo $sku?>','<?php echo $pn?>', '<?php echo $category?>')">Προσθήκη στις προσφορές
+					</label>
+				</div>
 			</div>
 
 
