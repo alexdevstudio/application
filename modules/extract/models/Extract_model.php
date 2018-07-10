@@ -563,8 +563,8 @@ class Extract_model extends CI_Model {
                                 $value = str_replace(' ','',$value);
 
                             }
-
-                            if(($key == 'description' && $table == 'laptops') || ($key == 'description' && $table == 'printers') || $key == 'auto_descr' )// for insert the description without strip_tags
+                            //if(($key == 'description' && $table == 'laptops') || ($key == 'description' && $table == 'monitors')|| ($key == 'description' && $table == 'printers') || $key == 'auto_descr' )// for insert the description without strip_tags
+                            if(($key == 'description' && ($table == 'laptops' || $table == 'monitors' || $table == 'printers' || $table == 'desktops')) || $key == 'auto_descr')
                             {  
                                 $attr = $xml->createElement($key, trim(htmlspecialchars($value)));
                             }
