@@ -328,6 +328,8 @@ class Edit extends MX_Controller {
 					$where = array('sku'=>$post['sku']);
 					$Deletion_from_installments = Modules::run('crud/delete','installments', $where); //delete from installments table
 					$Deletion_from_etd_prices = Modules::run('crud/delete','etd_prices', $where); //delete from etd_prices table
+					$Deletion_from_skroutz_urls = Modules::run('crud/delete','skroutz_urls', $where); //delete from skroutz_urls table
+					$Deletion_from_skroutz_prices = Modules::run('crud/delete','skroutz_prices', $where); //delete from skroutz_prices table
 
 					if($Deletion_from_category)
 						$DeletionMessage .=$post['category'];
@@ -344,6 +346,13 @@ class Edit extends MX_Controller {
 					if($Deletion_from_etd_prices)
 						$DeletionMessage .=', Etd_prices';
 
+					if($Deletion_from_skroutz_urls)
+						$DeletionMessage .=', Skroutz_urls';
+					
+					if($Deletion_from_skroutz_prices)
+						$DeletionMessage .=', Skroutz_prices';
+
+
 					$FlashData['Message']= $DeletionMessage;
                     $FlashData['type'] = 'success';
 
@@ -353,10 +362,7 @@ class Edit extends MX_Controller {
 					unset($post);
 					redirect(base_url(), 'auto');
 					//header("Refresh:0");
-
-
 				}
-
 
 
 				if($update){
