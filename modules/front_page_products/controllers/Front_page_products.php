@@ -43,7 +43,19 @@ class Front_page_products extends MX_Controller {
 		}
 		echo json_encode(array());
 		return false;
-		
+	}
+	public function get_with_images()
+	{	
+		$this->load->model('Front_page_products_model');
+		$products = $this->Front_page_products_model->get_with_images();
+
+		if($products)
+		{
+			echo json_encode($products);
+			return true;
+		}
+		echo json_encode(array());
+		return false;
 	}
 
 	public function delete($sku, $view_page = false)
@@ -52,7 +64,6 @@ class Front_page_products extends MX_Controller {
 
 		if($view_page)
 			redirect( base_url('/front_page_products/'), 'auto');
-		
 	}
 
 	public function insert($sku, $pn, $category)
@@ -81,6 +92,5 @@ class Front_page_products extends MX_Controller {
 		echo 'false';
 		return false;
 	}
-
 }
 ?>

@@ -43,7 +43,20 @@ class Featured_products extends MX_Controller {
 		}
 		echo json_encode(array());
 		return false;
-		
+	}
+
+	public function get_with_images()
+	{	
+		$this->load->model('Featured_products_model');
+		$products = $this->Featured_products_model->get_with_images();
+
+		if($products)
+		{
+			echo json_encode($products);
+			return true;
+		}
+		echo json_encode(array());
+		return false;
 	}
 
 	public function delete($sku, $view_page = false)
@@ -52,7 +65,6 @@ class Featured_products extends MX_Controller {
 
 		if($view_page)
 			redirect( base_url('/featured_products/'), 'auto');
-		
 	}
 
 	public function insert($sku, $pn, $category)
@@ -81,6 +93,5 @@ class Featured_products extends MX_Controller {
 		echo 'false';
 		return false;
 	}
-
 }
 ?>
