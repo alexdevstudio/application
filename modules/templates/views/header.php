@@ -413,17 +413,16 @@
                <i class="fa fa-plus"></i> <span>ΝΕΟ ΠΡΟΪΟΝ</span>
              </a>
            </li>
-           <li class="<?= ($this->uri->segment(1)=='front_page_products') ? 'active' : '' ?>">
-             <a href="<?php echo base_url('front_page_products');?>">
-               <i class="fa fa-file-o"></i> <span>ΠΡΟΪΟΝΤΑ ΣΤΗΝ ΑΡΧΙΚΗ</span>
-             </a>
-           </li>
            <li class="<?= ($this->uri->segment(1)=='featured_products') ? 'active' : '' ?>">
              <a href="<?php echo base_url('featured_products');?>">
                <i class="fa fa-file-o"></i> <span>HOT ΠΡΟΪΟΝΤΑ ΑΡΧΙΚΗ</span>
              </a>
            </li>
-
+           <li class="<?= ($this->uri->segment(1)=='front_page_products') ? 'active' : '' ?>">
+             <a href="<?php echo base_url('front_page_products');?>">
+               <i class="fa fa-file-o"></i> <span>ΠΡΟΪΟΝΤΑ ΣΤΗΝ ΑΡΧΙΚΗ</span>
+             </a>
+           </li>
          </ul>
         </li>
 

@@ -25,7 +25,7 @@ class Front_page_products extends MX_Controller {
 		$this->load->model('Front_page_products_model');
 
 		$data['title'] = 'Προϊόντα στην Αρχική Σελίδα';
-		$data['Front_page_products'] = $this->Front_page_products_model->get_FrontPageProducts();
+		$data['Front_page_products'] = $this->Front_page_products_model->get_with_images();
 
 		$this->load->view('templates/header',$data);
 		$this->load->view('front_page_products');
@@ -78,6 +78,8 @@ class Front_page_products extends MX_Controller {
 			$product ['sku'] = $sku;
 			$product ['product_number'] = $pn;
 			$product ['woo_id'] = $woo_id;
+
+			$product ['category'] = $category;
 
 			$product ['section'] = $category;
 			if($category != 'laptops' && $category != 'desktops' && $category != 'servers' && $category != 'monitors' && $category != 'printers-mfp')

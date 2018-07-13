@@ -17,7 +17,7 @@ class Front_page_products_model extends CI_Model {
 		$this->db->select('*');
         $this->db->from('front_page_products');
 
-        $this->db->order_by('section', 'asc');
+        $this->db->order_by('category', 'asc');
 
 		$query = $this->db->get();
 		
@@ -35,6 +35,7 @@ class Front_page_products_model extends CI_Model {
         // FROM front_page_products
         $this->db->select('front_page_products.*');
         $this->db->select('(SELECT  images.image_src FROM images WHERE images.item_sku = front_page_products.sku ORDER BY images.default DESC LIMIT 1) as image', FALSE);
+        $this->db->order_by('category', 'desc');
         $this->db->from('front_page_products');
 
 		$query = $this->db->get();

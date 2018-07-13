@@ -24,8 +24,8 @@ class Featured_products extends MX_Controller {
 	{	
 		$this->load->model('Featured_products_model');
 
-		$data['title'] = 'Προϊόντα σε Προσφορά';
-		$data['Featured_products'] = $this->Featured_products_model->get_FeaturedProducts();
+		$data['title'] = 'Hot Προϊόντα';
+		$data['Featured_products'] = $this->Featured_products_model->get_with_images();
 
 		$this->load->view('templates/header',$data);
 		$this->load->view('featured_products');
@@ -79,6 +79,8 @@ class Featured_products extends MX_Controller {
 			$product ['sku'] = $sku;
 			$product ['product_number'] = $pn;
 			$product ['woo_id'] = $woo_id;
+
+			$product ['category'] = $category;
 
 			$product ['section'] = $category;
 			if($category != 'laptops' && $category != 'desktops' && $category != 'servers' && $category != 'monitors' && $category != 'printers-mfp')
