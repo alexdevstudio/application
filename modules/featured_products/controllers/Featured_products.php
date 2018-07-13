@@ -25,7 +25,7 @@ class Featured_products extends MX_Controller {
 		$this->load->model('Featured_products_model');
 
 		$data['title'] = 'Hot Προϊόντα';
-		$data['Featured_products'] = $this->Featured_products_model->get_with_images();
+		$data['Featured_products'] = $this->Featured_products_model->get_with_images(0);
 
 		$this->load->view('templates/header',$data);
 		$this->load->view('featured_products');

@@ -24,7 +24,7 @@ class Featured_products_model extends CI_Model {
         return $query->result();
     }
     
-    public function get_with_images()
+    public function get_with_images($limit = 5)
     {
         // SELECT featured_products.*,
         //     (SELECT  images.image_src
@@ -35,8 +35,12 @@ class Featured_products_model extends CI_Model {
         // FROM featured_products
         $this->db->select('featured_products.*');
         $this->db->select('(SELECT  images.image_src FROM images WHERE images.item_sku = featured_products.sku ORDER BY images.default DESC LIMIT 1) as image', FALSE);
-        $this->db->order_by('category', 'desc');
+        $this->db->select('live.status as product_status');
+        $this->db->join('live','live.product_number = featured_products.product_number','left');
+        $this->db->limit($limit);
+        $this->db->order_by('woo_id', 'desc');
         $this->db->from('featured_products');
+
 
 		$query = $this->db->get();
 		

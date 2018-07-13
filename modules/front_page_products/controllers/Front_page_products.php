@@ -24,7 +24,7 @@ class Front_page_products extends MX_Controller {
 	{	
 		$this->load->model('Front_page_products_model');
 
-		$data['title'] = 'Προϊόντα στην Αρχική Σελίδα';
+		$data['title'] = 'Προτεινόμενα Προϊόντα';
 		$data['Front_page_products'] = $this->Front_page_products_model->get_with_images();
 
 		$this->load->view('templates/header',$data);

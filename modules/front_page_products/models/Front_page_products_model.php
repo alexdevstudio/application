@@ -35,7 +35,9 @@ class Front_page_products_model extends CI_Model {
         // FROM front_page_products
         $this->db->select('front_page_products.*');
         $this->db->select('(SELECT  images.image_src FROM images WHERE images.item_sku = front_page_products.sku ORDER BY images.default DESC LIMIT 1) as image', FALSE);
-        $this->db->order_by('category', 'desc');
+        $this->db->select('live.status as product_status');
+        $this->db->join('live','live.product_number = front_page_products.product_number','left');
+        $this->db->order_by('woo_id', 'desc');
         $this->db->from('front_page_products');
 
 		$query = $this->db->get();

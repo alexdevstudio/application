@@ -415,12 +415,12 @@
            </li>
            <li class="<?= ($this->uri->segment(1)=='featured_products') ? 'active' : '' ?>">
              <a href="<?php echo base_url('featured_products');?>">
-               <i class="fa fa-file-o"></i> <span>HOT ΠΡΟΪΟΝΤΑ ΑΡΧΙΚΗ</span>
+               <i class="fa fa-file-o"></i> <span>HOT ΠΡΟΪΟΝΤΑ</span>
              </a>
            </li>
            <li class="<?= ($this->uri->segment(1)=='front_page_products') ? 'active' : '' ?>">
              <a href="<?php echo base_url('front_page_products');?>">
-               <i class="fa fa-file-o"></i> <span>ΠΡΟΪΟΝΤΑ ΣΤΗΝ ΑΡΧΙΚΗ</span>
+               <i class="fa fa-file-o"></i> <span>ΠΡΟΤΕΙΝΟΜΕΝΑ ΠΡΟΪΟΝΤΑ</span>
              </a>
            </li>
          </ul>
