@@ -1,3 +1,44 @@
+<style type="text/css">
+.col-md-5ths, .col-lg-5ths, .col-xl-5ths, 
+.col-xs-two5ths, .col-sm-two5ths, .col-md-two5ths, .col-lg-two5ths, .col-xl-two5ths, 
+.col-xs-three5ths, .col-sm-three5ths, .col-md-three5ths, .col-lg-three5ths, .col-xl-three5ths, 
+.col-xs-four5ths, .col-sm-four5ths, .col-md-four5ths, .col-lg-four5ths, .col-xl-four5ths, 
+.col-xs-five5ths, .col-sm-five5ths, .col-md-five5ths, .col-lg-five5ths, .col-xl-five5ths
+{
+    position: relative;
+    min-height: 1px;
+	padding: 0 3px;
+}
+
+@media (min-width: 576px) {
+    .col-sm-5ths {width: 20%;float: left;}
+    .col-sm-two5ths {width: 40%;float: left;}
+    .col-sm-three5ths {width: 60%;float: left;}
+    .col-sm-four5ths {width: 80%;float: left;}
+}
+
+@media (min-width: 768px) {
+    .col-md-5ths {width: 20%;float: left;}
+    .col-md-two5ths {width: 40%;float: left;}
+    .col-md-three5ths {width: 60%;float: left;}
+    .col-md-four5ths {width: 80%;float: left;}
+}
+
+@media (min-width: 992px) {
+    .col-lg-5ths {width: 20%;float: left;}
+    .col-lg-two5ths {width: 40%;float: left;}
+    .col-lg-three5ths {width: 60%;float: left;}
+    .col-lg-four5ths {width: 80%;float: left;}
+}
+
+@media (min-width: 1200px) {
+    .col-xl-5ths {width: 20%;float: left;}
+    .col-xl-two5ths {width: 40%;float: left;}
+    .col-xl-three5ths {width: 60%;float: left;}
+    .col-xl-four5ths {width: 80%;float: left;}
+}
+</style>
+
 <div class="col-xs-12">
 	<br>
 
@@ -19,22 +60,22 @@
 
 		if($Front_page_product->product_status == 'publish') {
 
-			if ($first_published == 0 || ($first_published % 5) == 0)
+			/*if ($first_published == 0 || ($first_published % 5) == 0)
 				$offset = 'col-md-offset-1';
-			else
+			else*/
 				$offset = '';
 
 			$first_published ++;
-			$out = '<div class="col-md-2 '.$offset.'">';
+			$out = '<div class="col-lg-5ths '.$offset.'">';
 		}
 		else {
-			if ($first_trashed == 0 || ($first_trashed % 5) == 0)
+			/*if ($first_trashed == 0 || ($first_trashed % 5) == 0)
 				$offset = 'col-md-offset-1';
-			else
+			else*/
 				$offset = '';
 
 			$first_trashed ++;
-			$out = '<div class="col-md-2 '.$offset.'">';
+			$out = '<div class="col-lg-5ths '.$offset.'">';
 		}
 		
 			$out .= '<div class=" col-xs-12 f-prod">';
@@ -75,19 +116,22 @@
 	
 	if($out_published != ''){
 	?>
-		<div class="row">
-			<h3 class="f-header">Διαθέσιμα προϊόντα</h3>
-			<?= $out_published ?>
+		<div class="container">
+			<div class="row">
+				<h3 class="f-header">Διαθέσιμα προϊόντα</h3>
+				<?= $out_published ?>
+			</div>
 		</div>
-		
 	<?php
 	}
 	if($out_trushed != '') {
 		?>
 		<br>
-		<div class="row">
-			<h3 class="f-header">Μη διαθέσιμα προϊόντα</h3>
-			<?= $out_trushed ?>
+		<div class="container">
+			<div class="row">
+				<h3 class="f-header">Μη διαθέσιμα προϊόντα</h3>
+				<?= $out_trushed ?>
+			</div>
 		</div>
 	<?php
 	}
