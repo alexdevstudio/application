@@ -91,7 +91,7 @@ class Live_model extends CI_Model {
 					}
 					break;
 				case 'Computers':
-					if($sc == 'Advanced PC' || $sc == 'All In One PC' || $sc == 'Business PC' || $sc == 'Workstations')
+					if($sc == 'Advanced PC' || $sc == 'All In One PC' || $sc == ' All In One PC BTO' || $sc == 'Business PC' || $sc == 'Workstations')
 					{
 						$c = 'desktops';
 
@@ -323,6 +323,15 @@ class Live_model extends CI_Model {
 						$c = 'memories';
 					}
           			$c = $cat;
+					break;
+				case 'Furniture':
+					if($sc == 'Gaming Chair')
+					{
+						$c = 'gaming_chairs';
+					}
+					else {
+						$c = $cat;
+					}
 					break;
 				default:
 					$c = $cat;
@@ -3413,7 +3422,7 @@ class Live_model extends CI_Model {
 				 $c == "memories" || $c == "hoverboards" || $c =="printer_fusers" || $c =="printer_drums" || $c =="printer_belts" || 
 				 $c=="ups" || $c=="tv" || $c=="accessories" || $c=="cable_accessories" || $c=="cooling_pads" || $c == "powerlines" || 
 				 $c == "ip_phones" || $c=="server_controllers" || $c=="server_cpu" || $c=="server_hard_drives" || $c=="server_memories" || 
-				 $c=="server_power_supplies" || $c=='nas' || $c=='firewalls'){
+				 $c=="server_power_supplies" || $c=='nas' || $c=='firewalls' || $c =='gaming_chairs'){
 
 					$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
 					$volumetric_weight = Modules::run('categories/getWeight', $shipping_class);
@@ -5352,6 +5361,64 @@ class Live_model extends CI_Model {
 							}
 							else
 								$chars_array['warranty'] = $chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					continue;
+				}
+			}
+			return $chars_array;
+		}
+		if ($category == 'gaming_chairs'){
+
+			$chars_array = array(
+				'size'=>"",
+				'colour'=>"",
+				'mechanism'=>"",
+				'material'=>"",
+				'max_load'=>"",
+				'lifter_type'=>"",
+				'weight'=>""
+			);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					switch ($chars_title) {
+						case 'Size':
+							$chars_array['size']=$chars_value;
+							break;
+						case 'Χρώμα':
+							$chars_array['colour']=$chars_value;
+							break;
+						case 'Μηχανισμός':
+							$chars_array['mechanism']=$chars_value;
+							break;
+						case 'Υλικό Καλύμματος Κάρεκλας':
+							$chars_array['material']=$chars_value;
+							break;
+						case 'Μηχανισμός':
+							$chars_array['mechanism']=$chars_value;
+							break;
+						case 'Μέγιστο Φορτίο':
+							$chars_array['max_load']=$chars_value;
+							break;
+						case 'Τύπος Ανυψωτήρα':
+							$chars_array['lifter_type']=$chars_value;
+							break;
+						case 'Βάρος':
+							$chars_array['weight']=$chars_value;
 							break;
 						default :
 

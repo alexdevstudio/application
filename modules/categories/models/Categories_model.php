@@ -433,6 +433,9 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 			case 'nas':
 					$shipping_class = 10063;
 					break;
+			case 'gaming_chairs':
+					$shipping_class = $this->shippingByWeight((float)$data['weight']+10);
+					break;
 			default:
 				return false;
 				break;
