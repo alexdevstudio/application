@@ -5378,6 +5378,12 @@ class Live_model extends CI_Model {
 			$chars_array = array(
 				'size'=>"",
 				'colour'=>"",
+				'adjustable_arm'=>"",
+				'adjustable_back_slope'=>"",
+				'back_height'=>"",
+				'shoulders_width'=>"",
+				'pillows'=>"",
+				'wheels'=>"",
 				'mechanism'=>"",
 				'material'=>"",
 				'max_load'=>"",
@@ -5401,6 +5407,28 @@ class Live_model extends CI_Model {
 							break;
 						case 'Χρώμα':
 							$chars_array['colour']=$chars_value;
+							break;
+						case 'Ρυθμιζόμενος Βραχίονας':
+							$chars_array['adjustable_arm']=$chars_value;
+							break;
+						case 'Ρυθμιζόμενη Κλίση Πλάτης':
+							$chars_array['adjustable_back_slope']=$chars_value;
+							$chars_array['adjustable_back_slope'] = str_replace("and#7506", "&deg", $chars_array['adjustable_back_slope']);
+							break;
+						case 'Ύψος Πλάτης':
+							$chars_array['back_height']=$chars_value;
+							break;
+						case 'Πλάτος Ώμων':
+							$chars_array['shoulders_width']=$chars_value;
+							break;
+						case 'Μαξιλάρια':
+							$chars_array['pillows']=$chars_value;
+							break;
+						case 'Ρόδες':
+							$chars_array['wheels']=$chars_value;
+							break;
+						case 'Βάση':
+							$chars_array['base']=$chars_value;
 							break;
 						case 'Μηχανισμός':
 							$chars_array['mechanism']=$chars_value;
