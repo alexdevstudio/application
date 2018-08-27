@@ -572,7 +572,9 @@ class Live_model extends CI_Model {
 				case 'Networking Storage':
 					$c = 'nas';
 					break;
-				
+				case 'Barcode Scanners':
+					$c = 'barcode_scanners';
+					break;
 				default:
 					$c = $cat;
 					break;
@@ -605,7 +607,7 @@ class Live_model extends CI_Model {
 	    		$code = (string) trim($product->Quest_Code);
 
 				$brand = $this->MakeQuestBrands($title, $cat);
-				if ($brand == 'APPLE' || ($brand == 'TOSHIBA' && $cat== 'Notebook') || $brand == 'BENQ')
+				if ($brand == 'APPLE' || ($brand == 'TOSHIBA' && $cat== 'Notebook') || $brand == 'BENQ' || $brand == 'Unknown' || $brand == '')
 					continue;
 
 	    		//1. Live
@@ -5991,6 +5993,19 @@ class Live_model extends CI_Model {
 				$brand = 'HP';
 			elseif (strpos($title, 'LENOVO') !== false || strpos($title, 'LEN') !== false || strpos($title, 'LN') !== false)
 				$brand = 'LENOVO';
+		}
+		elseif($category == "Barcode Scanners")
+		{
+			if (strpos($title, 'SYMBOL') !== false)
+				$brand = 'SYMBOL';
+			elseif (strpos($title, 'MOTOROLA') !== false)
+				$brand = 'MOTOROLA';
+			elseif (strpos($title, 'ZEBRA') !== false)
+				$brand = 'ZEBRA';
+			elseif (strpos($title, 'HONEYWELL') !== false)
+				$brand = 'HONEYWELL';
+			elseif (strpos($title, 'DATALOGIC') !== false)
+				$brand = 'DATALOGIC';
 		}
 		else
 		{
