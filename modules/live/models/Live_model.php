@@ -123,7 +123,7 @@ class Live_model extends CI_Model {
 					}
 					break;
 				case 'Power Protection':
-					if($brand != 'CYBERPOWER' && $brand != 'APC'){
+					/*if($brand != 'CYBERPOWER' && $brand != 'APC'){
 						$c = $cat;
 					}else{
 
@@ -131,6 +131,10 @@ class Live_model extends CI_Model {
 							{
 								$c = 'ups';
 							}
+					}*/
+					if($sc == 'Data Center UPS' || $sc == 'Line Interactive UPS' || $sc == 'On Line UPS'  || $sc == 'Standby UPS')
+					{
+						$c = 'ups';
 					}
 					break;
 				case 'Printers':
@@ -212,13 +216,17 @@ class Live_model extends CI_Model {
 					}
 					break;
 				case 'Entertainment':
-					if($brand != 'LOGITECH'){
+					/*if($brand != 'LOGITECH'){
 						$c = $cat;
 					}else{
 						if($sc == 'Speakers' )
 						{
 							$c = 'speakers';
 						}
+					}*/
+					if($sc == 'Speakers' )
+					{
+						$c = 'speakers';
 					}
 					break;
 				case 'Storage':
@@ -360,8 +368,8 @@ class Live_model extends CI_Model {
 				$description = "";
 				$brand = (string) trim($product->brand);
 				$title = (string) trim($product->titlos);
-				$product_url = "";
 				$code = (string) trim($product->code);
+				$product_url = "https://www.oktabit.gr/product_details.asp?productid=".$code;
 
 				// Get The Description
 				foreach($desc_xml->children() as $perigrafes) {
@@ -430,7 +438,7 @@ class Live_model extends CI_Model {
 				{
 					$okt_product['type'] = $sc;
 				}
-
+				
 				if ($c == 'memories' && $B2b_sc == 'Εξαρτήματα Servers')
 				{
 					$okt_product['description'] = 'Εξαρτήματα Servers';
@@ -3422,9 +3430,9 @@ class Live_model extends CI_Model {
 				 $c == "cables" || $c == "patch_panels" || $c == "racks" || $c =="optical_drives" || $c == "card_readers" || $c == "flash_drives" ||
 				 $c == "power_supplies" || $c == "projectors" || $c == "cases" || $c == "fans" || $c == "motherboards" || $c == "graphic_cards" || $c == "cpu" ||
 				 $c == "memories" || $c == "hoverboards" || $c =="printer_fusers" || $c =="printer_drums" || $c =="printer_belts" || 
-				 $c=="ups" || $c=="tv" || $c=="accessories" || $c=="cable_accessories" || $c=="cooling_pads" || $c == "powerlines" || 
-				 $c == "ip_phones" || $c=="server_controllers" || $c=="server_cpu" || $c=="server_hard_drives" || $c=="server_memories" || 
-				 $c=="server_power_supplies" || $c=='nas' || $c=='firewalls' || $c =='gaming_chairs'){
+				 $c =="ups" || $c =="tv" || $c =="accessories" || $c =="cable_accessories" || $c =="cooling_pads" || $c == "powerlines" || 
+				 $c == "ip_phones" || $c =="server_controllers" || $c =="server_cpu" || $c =="server_hard_drives" || $c =="server_memories" || 
+				 $c =="server_power_supplies" || $c =='nas' || $c =='firewalls' || $c =='gaming_chairs'){
 
 					$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
 					$volumetric_weight = Modules::run('categories/getWeight', $shipping_class);
@@ -3463,11 +3471,34 @@ class Live_model extends CI_Model {
 				elseif ($c == "ip_phones"){
 					$categoryData['type'] = $product['type'];
 				}
+				elseif ($c == "ups"){
+					
+					if ($supplier == 'oktabit' )
+					{
+						$categoryData['model'] = str_replace('UPS ', '',$product['title']);
+						
+					}	
+				}
 
 				if($chars_array)
 				{
 					$categoryData = array_merge($categoryData, $chars_array);
 				}
+			}
+			if($supplier == 'oktabit')
+			{
+				//Add PDF files
+				$etd_product_url_pdf = $this->AddProductPdf($product['code']);
+				echo $product['code'].' Is the: '.$etd_product_url_pdf;
+
+				if($etd_product_url_pdf != false )
+					$categoryData['product_url_pdf'] = $etd_product_url_pdf;
+				else 
+					echo '<br>'.$product['title'].'_'.$product['code'].'file not saved';
+				
+				// Make products not new items to parse immediately
+				if($c == 'speakers' || $c == 'gaming_chairs' || $c == 'ups' )
+					$categoryData['new_item'] = 0;
 			}
 
 			if($supplier == 'braintrust' && $c != "laptops")
@@ -3735,8 +3766,17 @@ class Live_model extends CI_Model {
 						Modules::run('images/getImage',$imageData);
     	}
     	*/
-    }
+	}
+	
+	public function AddProductPdf($product_code){
 
+		$pdfData = array(
+			'src' => "https://www.oktabit.gr/images/pdfs/".$product_code.".pdf",
+			'code' =>$product_code
+		);
+
+		return Modules::run('images/getPdf',$pdfData);
+	}
 
     private function addProductChars($category, $product_code, $char_xml){
 
@@ -3810,7 +3850,7 @@ class Live_model extends CI_Model {
 					$chars_value = (string) trim($chars->value[0]);
 
 					if ($chars_value == 'Yes')
-						$chars_value = 'NAI';
+						$chars_value = 'ΝΑΙ';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
 					else if ($chars_value == '-')
@@ -3875,7 +3915,7 @@ class Live_model extends CI_Model {
 					$chars_title = (string) trim($chars->atribute[0]);
 					$chars_value = (string) trim($chars->value[0]);
 					if ($chars_value == 'Yes')
-						$chars_value = 'NAI';
+						$chars_value = 'ΝΑΙ';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
 					else if ($chars_value == '-')
@@ -3952,7 +3992,7 @@ class Live_model extends CI_Model {
 					$chars_value = (string) trim($chars->value[0]);
 
 					if ($chars_value == 'Yes')
-						$chars_value = 'NAI';
+						$chars_value = 'ΝΑΙ';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
 					else if ($chars_value == '-')
@@ -4024,7 +4064,7 @@ class Live_model extends CI_Model {
 					$chars_value = (string) trim($chars->value[0]);
 
 					if ($chars_value == 'Yes')
-						$chars_value = 'NAI';
+						$chars_value = 'ΝΑΙ';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
 					else if ($chars_value == '-')
@@ -4093,7 +4133,7 @@ class Live_model extends CI_Model {
 					$chars_value = (string) trim($chars->value[0]);
 
 					if ($chars_value == 'Yes')
-						$chars_value = 'NAI';
+						$chars_value = 'ΝΑΙ';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
 					else if ($chars_value == '-')
@@ -4173,7 +4213,7 @@ class Live_model extends CI_Model {
 					$chars_value = (string) trim($chars->value[0]);
 
 					if ($chars_value == 'Yes')
-						$chars_value = 'NAI';
+						$chars_value = 'ΝΑΙ';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
 					else if ($chars_value == '-')
@@ -4252,7 +4292,7 @@ class Live_model extends CI_Model {
 						$chars_value = str_replace('"', '', $chars_value);
 
 					if ($chars_value == 'Yes')
-						$chars_value = 'NAI';
+						$chars_value = 'ΝΑΙ';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
 					else if ($chars_value == '-')
@@ -4334,7 +4374,7 @@ class Live_model extends CI_Model {
 					$chars_value = (string) trim($chars->value[0]);
 
 					if ($chars_value == 'Yes')
-						$chars_value = 'NAI';
+						$chars_value = 'ΝΑΙ';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
 					else if ($chars_value == '-')
@@ -4425,7 +4465,7 @@ class Live_model extends CI_Model {
 					$chars_value = (string) trim($chars->value[0]);
 
 					if ($chars_value == 'Yes')
-						$chars_value = 'NAI';
+						$chars_value = 'ΝΑΙ';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
 					else if ($chars_value == '-')
@@ -4516,7 +4556,7 @@ class Live_model extends CI_Model {
 					$chars_value = (string) trim($chars->value[0]);
 
 					if ($chars_value == 'Yes')
-						$chars_value = 'NAI';
+						$chars_value = 'ΝΑΙ';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
 					else if ($chars_value == '-')
@@ -4582,7 +4622,7 @@ class Live_model extends CI_Model {
 					$chars_value = (string) trim($chars->value[0]);
 
 					if ($chars_value == 'Yes')
-						$chars_value = 'NAI';
+						$chars_value = 'ΝΑΙ';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
 					else if ($chars_value == '-')
@@ -4641,7 +4681,7 @@ class Live_model extends CI_Model {
 					$chars_value = (string) trim($chars->value[0]);
 
 					if ($chars_value == 'Yes')
-						$chars_value = 'NAI';
+						$chars_value = 'ΝΑΙ';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
 					else if ($chars_value == '-')
@@ -4715,7 +4755,7 @@ class Live_model extends CI_Model {
 					$chars_value = (string) trim($chars->value[0]);
 
 					if ($chars_value == 'Yes')
-						$chars_value = 'NAI';
+						$chars_value = 'ΝΑΙ';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
 					else if ($chars_value == '-')
@@ -4795,7 +4835,7 @@ class Live_model extends CI_Model {
 					$chars_value = (string) trim($chars->value[0]);
 
 					if ($chars_value == 'Yes')
-						$chars_value = 'NAI';
+						$chars_value = 'ΝΑΙ';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
 					else if ($chars_value == '-')
@@ -4885,7 +4925,7 @@ class Live_model extends CI_Model {
 					$chars_value = (string) trim($chars->value[0]);
 
 					if ($chars_value == 'Yes')
-						$chars_value = 'NAI';
+						$chars_value = 'ΝΑΙ';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
 					else if ($chars_value == '-')
@@ -4971,7 +5011,7 @@ class Live_model extends CI_Model {
 					$chars_value = (string) trim($chars->value[0]);
 
 					if ($chars_value == 'Yes')
-						$chars_value = 'NAI';
+						$chars_value = 'ΝΑΙ';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
 					else if ($chars_value == '-')
@@ -5141,7 +5181,7 @@ class Live_model extends CI_Model {
 					$chars_value = (string) trim($chars->value[0]);
 
 					if ($chars_value == 'Yes')
-						$chars_value = 'NAI';
+						$chars_value = 'ΝΑΙ';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
 					else if ($chars_value == '-')
@@ -5234,7 +5274,7 @@ class Live_model extends CI_Model {
 					$chars_value = (string) trim($chars->value[0]);
 
 					if ($chars_value == 'Yes')
-						$chars_value = 'NAI';
+						$chars_value = 'ΝΑΙ';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
 					else if ($chars_value == '-')
@@ -5328,7 +5368,7 @@ class Live_model extends CI_Model {
 					$chars_value = (string) trim($chars->value[0]);
 
 					if ($chars_value == 'Yes')
-						$chars_value = 'NAI';
+						$chars_value = 'ΝΑΙ';
 					else if ($chars_value == 'No')
 						$chars_value = 'ΟΧΙ';
 					else if ($chars_value == '-')
@@ -5375,7 +5415,7 @@ class Live_model extends CI_Model {
 			}
 			return $chars_array;
 		}
-		if ($category == 'gaming_chairs'){
+		else if ($category == 'gaming_chairs'){
 
 			$chars_array = array(
 				'size'=>"",
@@ -5461,6 +5501,133 @@ class Live_model extends CI_Model {
 			}
 			return $chars_array;
 		}
+		elseif ($category == 'ups'){
+
+			$chars_array = array(
+				'type'=>"",
+				'strength_va'=>"",
+				'strength_w'=>"",
+				'waveform_output'=>"",
+				'input_phase'=>"",
+				'output_phase'=>"",
+				'battery_endurance_full_load'=>"",
+				'battery_endurance_half_load'=>"",
+				'recharge_time'=>"",
+				'battery_type'=>"",
+				'usb'=>"",
+				'connection'=>"",
+				'form_factor'=>"",
+				'rack_mount'=>"",
+				'dimensions'=>"",
+				'weight'=>"",
+				'year_warranty'=>"",
+				'warranty'=>""
+			);
+
+			foreach($char_xml->children() as $chars){
+
+				$okt_chars_code = (string) trim($chars->product[0]);
+
+				if($product_code == $okt_chars_code)
+				{
+					$is_found = true;
+					$chars_title = (string) trim($chars->atribute[0]);
+					$chars_value = (string) trim($chars->value[0]);
+
+					switch ($chars_title) {
+						case 'Τύπος συσκευής':
+							$chars_array['type']=$chars_value;
+							break;
+						case 'Παρεχόμενη ισχύς (VA)':
+							$chars_array['strength_va']=$chars_value;
+							break;
+						case 'Παρεχόμενη ισχύς (Watt)':
+							$chars_array['strength_w']=$chars_value;
+							break;
+						case 'Waveform output':
+							$chars_array['waveform_output']=$chars_value;
+							break;
+						case 'Είσοδος (φάση)':
+							$chars_array['input_phase']=$chars_value;
+							break;
+						case 'Έξοδος (φάση)':
+							$chars_array['output_phase']=$chars_value;
+							break;
+						case 'Αυτονομία σε full load (λεπτά)':
+							$chars_array['battery_endurance_full_load']=$chars_value;
+							break;
+						case 'Αυτονομία σε half load (λεπτά)':
+							$chars_array['battery_endurance_half_load']=$chars_value;
+							break;
+						case 'Χρόνος επαναφόρτισης':
+							$time = str_replace(' hours','',$chars_value);
+							$chars_array['recharge_time']=$time;
+							break;
+						case 'Μπαταρία':
+							$chars_array['battery_type']=$chars_value;
+							break;
+						case 'Σύνδεση':
+							if (strpos($chars_value, 'USB') !== false) {
+								$chars_array['usb']='ΝΑΙ';
+							}
+							else
+								$chars_array['usb']='ΟΧΙ';
+
+							$chars_array['connection']=$chars_value;
+							break;
+						case 'Rack mount':
+							$form_factor = $rack_mount = '';
+							if($chars_value == 'Yes')
+							{
+								$rack_mount = 'ΝΑΙ';
+								$form_factor = 'Rack';
+							}
+							elseif($chars_value == 'Yes (optional)')
+							{
+								$rack_mount = 'ΠΡΟΑΙΡΕΤΙΚΟ';
+								$form_factor = 'Tower';
+							}
+							else
+							{
+								$rack_mount = 'ΟΧΙ';
+								$form_factor = 'Tower';
+							}
+
+							$chars_array['form_factor']=$form_factor;
+							$chars_array['rack_mount']=$rack_mount;
+							break;
+						case 'Διαστάσεις (πλάτος x ύψος x βάθος, σε mm)':
+							$chars_array['dimensions']=$chars_value;
+							break;
+						case 'Βάρος (κιλά)':
+							$chars_array['weight']=$chars_value;
+							break;
+						case 'Εγγύηση (μήνες)':
+							if($chars_value/12 >=1)
+							{
+								if($chars_value/12 == 1)
+									$chars_array['year_warranty'] = (string)($chars_value/12).' έτος';
+								else
+									$chars_array['year_warranty'] = (string)($chars_value/12).' έτη';
+							}
+							else
+								$chars_array['year_warranty'] = $chars_value;
+							break;
+						case 'Τύπος εγγύησης':
+							$chars_array['warranty']=$chars_value;
+							break;
+						default :
+
+							break;
+					}
+				}
+				else if ($is_found){
+					continue;
+				}
+			}
+			return $chars_array;
+		}
+
 
 		/////////////
 

@@ -24,7 +24,25 @@ class Images_model extends CI_Model {
       $this->db->update('images');
 
       return true;
-      }
+	}
+
+	public function parsePdf($data){
+
+		$src = $data['src'];
+		$product_code = $data['code'];
+
+		$target_path = '/var/www/vhosts/etd.gr/httpdocs/wp-content/uploads/'.$product_code.'.pdf';
+
+		if (!file_exists($target_path)) {
+			if (copy($src, $target_path))
+				return 'https://etd.gr/wp-content/uploads/'.$product_code.'.pdf';
+		}
+		else {
+			return 'https://etd.gr/wp-content/uploads/'.$product_code.'.pdf';
+		}
+		return false;		
+	}
+	
     public function parseImage($data){
 
     	$this->load->library('image_lib');
@@ -36,58 +54,57 @@ class Images_model extends CI_Model {
 		$pn = str_replace("/","-",$data['part_number']);
 		$tail = $data['tail'];
 
-
 		if (!file_exists('images')) {
 		    mkdir('images', 0777, true);
 		}
-
 
 		if (!file_exists('images/'.$sku)) {
 		    mkdir('images/'.$sku, 0777, true);
 		}
 
-			$newFileName = $brand.'_'.$pn.''.$tail;
+		$newFileName = $brand.'_'.$pn.''.$tail;
 
-		    $target_path = './images/'.$sku.'/'.$newFileName.'.jpg';
+		$target_path = './images/'.$sku.'/'.$newFileName.'.jpg';
 
-		   /* $config_manip = array(
-		        'image_library' => 'ImageMagick',
-		        'source_image' => $target_path,
-		        'new_image' => $target_path,
-		        'maintain_ratio' => TRUE,
-		        'create_thumb' => TRUE,
-		        'thumb_marker' => '',
-		        'allowed_types' => 'jpg|jpeg|gif|png',
-		        'width' => 600,
-		        'height' => 600
-		    );*/
-		    //$this->load->library('image_lib', $config);
+		/* $config_manip = array(
+			'image_library' => 'ImageMagick',
+			'source_image' => $target_path,
+			'new_image' => $target_path,
+			'maintain_ratio' => TRUE,
+			'create_thumb' => TRUE,
+			'thumb_marker' => '',
+			'allowed_types' => 'jpg|jpeg|gif|png',
+			'width' => 600,
+			'height' => 600
+		);*/
+		//$this->load->library('image_lib', $config);
 
-			//$this->image_lib->resize();
-		   // $this->image_lib->initialize($config_manip);
+		//$this->image_lib->resize();
+		// $this->image_lib->initialize($config_manip);
 
-		    if (copy($src, $target_path)) {
+		if (copy($src, $target_path)) {
 
-		    	echo $target_path.' : '.$src.'<br/>';
+			echo $target_path.' : '.$src.'<br/>';
 
 			//Test with Imagick
-		    //600x600 Image
-		    $target_img_path = './images/'.$sku.'/'.$newFileName.'_600.jpg';
+			//600x600 Image
+			$target_img_path = './images/'.$sku.'/'.$newFileName.'_600.jpg';
 
 			$config_manip = array(
-		        'image_library' => 'ImageMagick',
-		        'library_path' => '/usr/bin',
-		        'source_image' => $target_path,
-		        'new_image' => $target_img_path,
-		        'maintain_ratio' => TRUE,
-		        'create_thumb' => TRUE,
-		        'thumb_marker' => '',
-		        'allowed_types' => 'jpg|jpeg|gif|png',
-		        'width' => 600,
-		        'height' => 600
-		    );
-		    //$this->load->library('image_lib', $config_manip);
-		    $this->image_lib->initialize($config_manip);
+				'image_library' => 'ImageMagick',
+				'library_path' => '/usr/bin',
+				'source_image' => $target_path,
+				'new_image' => $target_img_path,
+				'maintain_ratio' => TRUE,
+				'create_thumb' => TRUE,
+				'thumb_marker' => '',
+				'allowed_types' => 'jpg|jpeg|gif|png',
+				'width' => 600,
+				'height' => 600
+			);
+
+			//$this->load->library('image_lib', $config_manip);
+			$this->image_lib->initialize($config_manip);
 
 			if ( ! $this->image_lib->resize())
 				echo $this->image_lib->display_errors();
@@ -96,22 +113,23 @@ class Images_model extends CI_Model {
 			unset ($config_manip);
 
 			//300x300 Image
-		    $target_img_path = './images/'.$sku.'/'.$newFileName.'_300.jpg';
+			$target_img_path = './images/'.$sku.'/'.$newFileName.'_300.jpg';
 
 			$config_manip = array(
-		        'image_library' => 'ImageMagick',
-		        'library_path' => '/usr/bin',
-		        'source_image' => $target_path,
-		        'new_image' => $target_img_path,
-		        'maintain_ratio' => TRUE,
-		        'create_thumb' => TRUE,
-		        'thumb_marker' => '',
-		        'allowed_types' => 'jpg|jpeg|gif|png',
-		        'width' => 300,
-		        'height' => 300
-		    );
-		    //$this->load->library('image_lib', $config_manip);
-		    $this->image_lib->initialize($config_manip);
+				'image_library' => 'ImageMagick',
+				'library_path' => '/usr/bin',
+				'source_image' => $target_path,
+				'new_image' => $target_img_path,
+				'maintain_ratio' => TRUE,
+				'create_thumb' => TRUE,
+				'thumb_marker' => '',
+				'allowed_types' => 'jpg|jpeg|gif|png',
+				'width' => 300,
+				'height' => 300
+			);
+
+			//$this->load->library('image_lib', $config_manip);
+			$this->image_lib->initialize($config_manip);
 
 			if ( ! $this->image_lib->resize())
 				echo $this->image_lib->display_errors();
@@ -123,19 +141,19 @@ class Images_model extends CI_Model {
 			$target_thumb_path = './images/'.$sku.'/'.$newFileName.'_thumb.jpg';
 
 			$config_manip = array(
-		        'image_library' => 'ImageMagick',
-		        'library_path' => '/usr/bin',
-		        'source_image' => $target_path,
-		        'new_image' => $target_thumb_path,
-		        'maintain_ratio' => TRUE,
-		        'create_thumb' => TRUE,
-		        'thumb_marker' => '',
-		        'allowed_types' => 'jpg|jpeg|gif|png',
-		        'width' => 70,
-		        'height' => 70
-		    );
-		    //$this->load->library('image_lib', $config_manip);
-		    $this->image_lib->initialize($config_manip);
+				'image_library' => 'ImageMagick',
+				'library_path' => '/usr/bin',
+				'source_image' => $target_path,
+				'new_image' => $target_thumb_path,
+				'maintain_ratio' => TRUE,
+				'create_thumb' => TRUE,
+				'thumb_marker' => '',
+				'allowed_types' => 'jpg|jpeg|gif|png',
+				'width' => 70,
+				'height' => 70
+			);
+			//$this->load->library('image_lib', $config_manip);
+			$this->image_lib->initialize($config_manip);
 
 			if ( ! $this->image_lib->resize())
 				echo $this->image_lib->display_errors();
@@ -145,24 +163,19 @@ class Images_model extends CI_Model {
 
 			//End of Test with Imagick
 
-		    // clear //
-		  //  $this->image_lib->clear();
+			// clear //
+			//  $this->image_lib->clear();
 
-		    $data = array(
-		    	'item_sku' => $sku,
-		    	'image_src' => $newFileName
-		    	);
+			$data = array(
+				'item_sku' => $sku,
+				'image_src' => $newFileName
+				);
 
-		    $this->db->insert('images', $data);
+			$this->db->insert('images', $data);
 
-		   		 return true;
-
-
-		    }
-
-		     return false;
-
-
+			return true;
+		}
+		return false;
     }
 
 public function getExternalImagesFromUrl($url){

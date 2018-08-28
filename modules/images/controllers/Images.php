@@ -7,21 +7,24 @@ class Images extends MX_Controller {
 
 	public function getImage($data)
 	{
-
 		$src = $data['src'];
-
 
 		if($this->imageUrlExists($src)){
 			$this->load->model('images_model');
 			return $this->images_model->parseImage($data);
-
-
 		}
 		return false;
+	}
 
+	public function getPdf($data)
+	{
+		$src = $data['src'];
 
-
-
+		if($this->imageUrlExists($src)){
+			$this->load->model('images_model');
+			return $this->images_model->parsePdf($data);
+		}
+		return false;
 	}
 
 	public function imageUrlExists($url){

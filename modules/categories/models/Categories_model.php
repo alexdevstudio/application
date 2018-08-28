@@ -276,14 +276,33 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 						$shipping_class= 10650;
 					break;
 			case 'ups':
-					$strength=(int) $data['strength'];
+					echo $data['code'];
+					if($data['weight'] != '' || $data['dimensions'] != '')
+					{
+						$vol_w = $weight = 0;
+						if ($data['dimensions'] != '')
+						{
+							$array = explode(" x ",$data['dimensions']);
+							$vol_w = ceil($array[0]*$array[1]*$array[2]/5000000);
+						}
 
-					if( $strength >= 3001)
-						$shipping_class= 9974;
-					elseif( $strength >= 1501)
-						$shipping_class = 10883;
+						if ($data['weight'] != '')
+							$weight = ceil($data['weight']);
+
+						$ups_weight = max($vol_w, $weight);
+						$shipping_class = $this->shippingByWeight($ups_weight);
+					}
 					else
-						$shipping_class = 10070;
+					{
+						$strength=(int) $data['strength'];
+
+						if( $strength >= 3001)
+							$shipping_class= 9974;
+						elseif( $strength >= 1501)
+							$shipping_class = 10883;
+						else
+							$shipping_class = 10070;
+					}
 					break;
 
 			case 'servers':
