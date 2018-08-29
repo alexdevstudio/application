@@ -414,7 +414,8 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					//$shipping_class = 10063;
 					break;
 		    case 'ip_phones':
-		    case 'docking_stations':
+			case 'docking_stations':
+			case 'ip_cameras':
 					$shipping_class = 10650;
 					break;
 			case 'ip_pbx':

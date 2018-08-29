@@ -153,6 +153,9 @@ class Live_model extends CI_Model {
 					elseif($sc == 'Powerlines'){
 						$c = 'powerlines';
 					}
+					elseif($sc == 'IP Cameras'){
+						$c = 'ip_cameras';
+					}
 					/*if($sc == 'Routers')
 					{
 						$c = 'routers';
@@ -3478,7 +3481,7 @@ class Live_model extends CI_Model {
 				 $c == "memories" || $c == "hoverboards" || $c == "printer_fusers" || $c == "printer_drums" || $c == "printer_belts" || 
 				 $c == "ups" || $c =="tv" || $c == "accessories" || $c == "cable_accessories" || $c == "cooling_pads" || $c == "powerlines" || 
 				 $c == "ip_phones" || $c == "server_controllers" || $c == "server_cpu" || $c == "server_hard_drives" || $c == "server_memories" || 
-				 $c == "server_power_supplies" || $c == 'nas' || $c == 'firewalls' || $c == 'gaming_chairs'){
+				 $c == "server_power_supplies" || $c == 'nas' || $c == 'firewalls' || $c == 'gaming_chairs' || $c == 'ip_cameras'){
 
 					$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
 					$volumetric_weight = Modules::run('categories/getWeight', $shipping_class);
@@ -3541,10 +3544,10 @@ class Live_model extends CI_Model {
 				}
 				
 				// Make products not new items to parse immediately
-				if($c == 'speakers' || $c == 'gaming_chairs' || $c == 'ups' || $c == 'routers' || $c == 'powerlines')
+				if($c == 'speakers' || $c == 'gaming_chairs' || $c == 'ups' || $c == 'routers' || $c == 'powerlines' || $c == 'ip_cameras')
 					$categoryData['new_item'] = 0;
 			}
-
+			
 			if($supplier == 'braintrust' && $c != "laptops")
 			{
 				$categoryData ['new_item'] = 1;
@@ -3895,6 +3898,25 @@ class Live_model extends CI_Model {
 
 				if($value == 'Τύπος')
 					$chars_array[$key] = 'Access Point';
+			}
+		}
+		elseif ($category == 'ip_cameras'){
+
+			$chars_array = array(
+				'video_resolution' => 'Ανάλυση video',
+				'pan_tilt' => 'Pan, Tilt',
+				'min_brightness' => 'Ελάχιστη φωτεινότητα (Lux)',
+				'wireless' => 'Wireless',
+				'zoom' => 'Zoom',
+				'audio' => 'Ήχος',
+				'outdoor' => 'Εξωτερικού χώρου',
+				'poe' => 'PoE',
+				'year_warranty' => 'Εγγύηση (μήνες)',
+				'warranty' => 'Τύπος εγγύησης'
+			);
+
+			foreach ($chars_array as $key => $value) {
+				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
 			}
 		}
 		elseif ($category == 'switches'){
