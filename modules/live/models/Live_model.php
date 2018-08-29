@@ -3549,7 +3549,8 @@ class Live_model extends CI_Model {
 				}
 				
 				// Make products not new items to parse immediately
-				if($c == 'speakers' || $c == 'gaming_chairs' || $c == 'ups' || $c == 'routers' || $c == 'powerlines' || $c == 'ip_cameras')
+				if($c == 'speakers' || $c == 'gaming_chairs' || $c == 'ups' || $c == 'routers' || $c == 'powerlines' || 
+				   $c == 'ip_cameras' || $c == 'multiplugs' )
 					$categoryData['new_item'] = 0;
 			}
 			
