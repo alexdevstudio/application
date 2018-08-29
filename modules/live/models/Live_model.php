@@ -16,9 +16,8 @@ class Live_model extends CI_Model {
 		$xml = simplexml_load_file($url) or die("Error: Cannot create object");
 
     	return $xml;
-    }
-
-
+	}
+	
     public function oktabit(){
 
 		if($xml = $this->xml("https://www.oktabit.gr/times_pelatwn/prices_xml.asp?customercode=012348&logi=evansmour")){
@@ -31,16 +30,39 @@ class Live_model extends CI_Model {
 
 
 				}
-				else{
+				else
 					die("Characteristics XML from Oktabit can not be loaded.");
-				}
 			}
-			else{
+			else
 				die("Description XML from Oktabit can not be loaded.");
-			}
-		}else{
+		}else
 			die("XML from Oktabit can not be loaded.");
-		}
+
+			$charsArray = array();
+			foreach($char_xml->children() as $chars) {
+
+				$char_prd = strtoupper((string) trim($chars->product[0]));
+				$char_att = (string) trim($chars->atribute[0]);
+				$char_val = (string) trim($chars->value[0]);
+
+				if ($char_val == 'Yes')
+					$char_val = 'ΝΑΙ';
+				else if ($char_val == 'No')
+					$char_val = 'ΟΧΙ';
+				else if ($char_val == '-')
+					$char_val = '';
+
+				
+				if($char_att == 'Εγγύηση (μήνες)' || $char_att == 'Εγγύηση')
+				{
+					if($char_val/12 == 1)
+						$char_val = (string)($char_val/12).' έτος';
+					elseif($char_val/12 > 1)
+						$char_val = (string)($char_val/12).' έτη';
+				}
+	
+				$charsArray[$char_prd][$char_att] = $char_val;
+			}
 
 		$newProducts = array();
 		$f=0;
@@ -94,29 +116,45 @@ class Live_model extends CI_Model {
 					if($sc == 'Advanced PC' || $sc == 'All In One PC' || $sc == ' All In One PC BTO' || $sc == 'Business PC' || $sc == 'Workstations')
 					{
 						$c = 'desktops';
-
 					}
 					break;
 				case 'Energy':
 					if($sc == 'Power Bank')
 					{
 						$c = 'power_bank';
-							$c = $cat;
+						$c = $cat;
 					}
 					break;
 				case 'Monitors':
 					if($sc == 'LCD-TFT PC Monitors')
 					{
 						$c = 'monitors';
-            
 					}
 					break;
 				case 'Networking':
-					if($sc == 'Routers')
+					//# The product type is set in addProductChars function as following 
+					//# $chars_array = array('type' => "Access Point", for the access points
+					//# and dynamically from the $char_xml for the rest products.
+					if($sc == 'DSL Products' || $sc == 'Routers')
+					{
+						$c = 'routers';
+					}
+					elseif($sc == 'Wireless Products')
+					{
+						if($B2b_sc == 'Routers' || $B2b_sc == 'Access Points')
+						{
+							$c = 'routers';
+						}
+					}
+					elseif($sc == 'Wireless Products (D)')
+					{
+						$c = 'routers';
+					}
+					/*if($sc == 'Routers')
 					{
 						$c = 'routers';
             			$c = $cat;
-					}
+					}*/
 					elseif($sc == 'Switches'){
 						$c = 'switches';
             			$c = $cat;
@@ -346,7 +384,7 @@ class Live_model extends CI_Model {
 					break;
 			}
 
-			if($c!=$cat){
+			if(/*$c!=$cat*/ $c == 'routers'){
 
 				$availability = $this->makeAvailability((string) trim($product->availability), 'oktabit');
 
@@ -371,6 +409,7 @@ class Live_model extends CI_Model {
 				$code = (string) trim($product->code);
 				$product_url = "https://www.oktabit.gr/product_details.asp?productid=".$code;
 
+
 				// Get The Description
 				foreach($desc_xml->children() as $perigrafes) {
 					$okt_desc_code = (string) trim($perigrafes->code);
@@ -383,7 +422,7 @@ class Live_model extends CI_Model {
 				}
 
 				// Get the characteristics
-				$chars_array = $this->addProductChars($c, $code, $char_xml);
+				$chars_array = $this->addProductChars($c, $code, $charsArray);
 
 				//1. Live
 				$supplier = 'oktabit';
@@ -465,6 +504,10 @@ class Live_model extends CI_Model {
 		$this->sendImportedProductsByMail($newProducts,'Oktabit');
 
 		echo "Finnished Oktabit";
+		echo "<h3> NEW PRODUCTS </h3>";
+		foreach ($newProducts as $key => $value) {
+			echo $key.' -> '.$value;
+		}
 
 		$log['log_result'] = $newProducts;
 		$this->MakeLogEntry($log);
@@ -3429,10 +3472,10 @@ class Live_model extends CI_Model {
 				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c== "desktops" || $c == "tablets"  || $c == "smartphones" ||
 				 $c == "cables" || $c == "patch_panels" || $c == "racks" || $c =="optical_drives" || $c == "card_readers" || $c == "flash_drives" ||
 				 $c == "power_supplies" || $c == "projectors" || $c == "cases" || $c == "fans" || $c == "motherboards" || $c == "graphic_cards" || $c == "cpu" ||
-				 $c == "memories" || $c == "hoverboards" || $c =="printer_fusers" || $c =="printer_drums" || $c =="printer_belts" || 
-				 $c =="ups" || $c =="tv" || $c =="accessories" || $c =="cable_accessories" || $c =="cooling_pads" || $c == "powerlines" || 
-				 $c == "ip_phones" || $c =="server_controllers" || $c =="server_cpu" || $c =="server_hard_drives" || $c =="server_memories" || 
-				 $c =="server_power_supplies" || $c =='nas' || $c =='firewalls' || $c =='gaming_chairs'){
+				 $c == "memories" || $c == "hoverboards" || $c == "printer_fusers" || $c == "printer_drums" || $c == "printer_belts" || 
+				 $c == "ups" || $c =="tv" || $c == "accessories" || $c == "cable_accessories" || $c == "cooling_pads" || $c == "powerlines" || 
+				 $c == "ip_phones" || $c == "server_controllers" || $c == "server_cpu" || $c == "server_hard_drives" || $c == "server_memories" || 
+				 $c == "server_power_supplies" || $c == 'nas' || $c == 'firewalls' || $c == 'gaming_chairs'){
 
 					$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
 					$volumetric_weight = Modules::run('categories/getWeight', $shipping_class);
@@ -3448,7 +3491,7 @@ class Live_model extends CI_Model {
 				'volumetric_weight' => $volumetric_weight
 				);
 
-				if($c=='nas')
+				if($c=='nas' || $c == "ip_phones")
 					$categoryData['type'] = $product['type'];
 
 				if($c == "cables" || $c == "patch_panels" || $c == "racks"){
@@ -3468,15 +3511,10 @@ class Live_model extends CI_Model {
 
 			    	unset($categoryData['supplier_product_url']);
 				}
-				elseif ($c == "ip_phones"){
-					$categoryData['type'] = $product['type'];
-				}
-				elseif ($c == "ups"){
-					
+				elseif ($c == 'ups'){
 					if ($supplier == 'oktabit' )
 					{
 						$categoryData['model'] = str_replace('UPS ', '',$product['title']);
-						
 					}	
 				}
 
@@ -3487,17 +3525,17 @@ class Live_model extends CI_Model {
 			}
 			if($supplier == 'oktabit')
 			{
-				//Add PDF files
-				$etd_product_url_pdf = $this->AddProductPdf($product['code']);
-				echo $product['code'].' Is the: '.$etd_product_url_pdf;
-
-				if($etd_product_url_pdf != false )
-					$categoryData['product_url_pdf'] = $etd_product_url_pdf;
-				else 
-					echo '<br>'.$product['title'].'_'.$product['code'].'file not saved';
+				if($c == 'ups' || $c == 'routers' || $c == 'gaming_chairs')
+				{
+					//Add PDF files
+					$etd_product_url_pdf = $this->AddProductPdf($product['code']);
+					
+					if($etd_product_url_pdf != false )
+						$categoryData['product_url_pdf'] = $etd_product_url_pdf;
+				}
 				
 				// Make products not new items to parse immediately
-				if($c == 'speakers' || $c == 'gaming_chairs' || $c == 'ups' )
+				if($c == 'speakers' || $c == 'gaming_chairs' || $c == 'ups' || $c == 'routers')
 					$categoryData['new_item'] = 0;
 			}
 
@@ -3778,7 +3816,571 @@ class Live_model extends CI_Model {
 		return Modules::run('images/getPdf',$pdfData);
 	}
 
+	private function addProductChars($category, $product_code, $charsArray){
+
+
+		if ($category == 'carrying_cases'){
+
+			$chars_array = array(
+				'type' => 'Τύπος',
+				'size' => 'Μέγεθος οθόνης',
+				'material' => 'Υλικό κατασκευής',
+				'colour' => 'Χρώμα',
+				'dimensions' => 'Διαστάσεις (πλάτος x ύψος x πάχος, σε mm)'
+			);
+			foreach ($chars_array as $key => $value) {
+				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+			}
+		}
+		elseif ($category == 'power_bank'){
+
+			$chars_array = array(
+				'battery_capacity' => "Χωρητικότητα Μπαταρίας",
+				'recharge_time' => "Χρόνος επαναφόρτισης ως το 90-100% (ώρες)",
+				'charging_output' => "Έξοδος φόρτισης",
+				'dimensions' => "Διαστάσεις (πλάτος x ύψος x βάθος, σε mm)",
+				'year_warranty' => 'Εγγύηση (μήνες)',
+				'warranty' => 'Τύπος εγγύησης'
+			);
+
+			foreach ($chars_array as $key => $value) {
+				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+			}
+		}
+		elseif ($category == 'routers'){
+
+			$chars_array = array(
+				'type' => 'Τύπος',
+				'wireless' => 'Wireless',
+				'line_type' => 'Τύπος γραμμής',
+				'lan_ports' => 'Θύρες LAN',
+				'wan_ports' => 'Θύρες WAN',
+				'supported_protocols' => 'Υποστηριζόμενα πρωτόκολλα',
+				'vpn' => 'VPN',
+				'removable_antenna' => 'Αποσπώμενη κεραία',
+				'poe' => 'POE',
+				'outdoor' => 'Εξωτερικού χώρου',
+				'year_warranty' => 'Εγγύηση (μήνες)',
+				'warranty' => 'Τύπος εγγύησης'
+			);
+			foreach ($chars_array as $key => $value) {
+
+				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+
+				if($value == 'Τύπος')
+					$chars_array[$key] = 'Access Point';
+			}
+		}
+		elseif ($category == 'switches'){
+
+			$chars_array = array(
+				'ports' => "Θύρες",
+				'network_speed' => "Ταχύτητα Δικτύου",
+				'sfp_ports' => "SFP θύρες",
+				'manage' => "Manage",
+				'poe' => "POE",
+				'layer' => "Layer",
+				'rackmount' => "RackMount",
+				'year_warranty' => 'Εγγύηση (μήνες)',
+				'warranty' => 'Τύπος εγγύησης'
+			);
+			foreach ($chars_array as $key => $value) {
+				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+			}			
+		}
+		elseif ($category == 'speakers'){
+
+			$chars_array = array(
+				'type' => "Τύπος ηχείων",
+				'watt' => "Ισχύς Watt (RMS)",
+				'dolby_digital_decoding' => "Dolby Digital Decoding",
+				'headphones_input' => "Είσοδος ακουστικών",
+				'input' => "Είσοδος",
+				'year_warranty' => 'Εγγύηση (μήνες)',
+				'warranty' => 'Τύπος εγγύησης'
+			);
+			foreach ($chars_array as $key => $value) {
+				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+			}						
+		}
+		elseif ($category == 'external_hard_drives'){
+
+			$chars_array = array(
+				'capacity' => "Χωρητικότητα",
+				'connection' => "Σύνδεση",
+				'size' => "Διάσταση",
+				'cache' => "Cache",
+				'rpm' => "Στροφές λειτουργίας",
+				'colour' => "Χρώμα",
+				'weight' => "Βάρος (γραμμάρια)",
+				'year_warranty' => 'Εγγύηση (μήνες)',
+				'warranty' => 'Τύπος εγγύησης'
+			);
+			foreach ($chars_array as $key => $value) {
+				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+			}		
+		}
+		elseif ($category == 'sata_hard_drives'){
+
+			$chars_array = array(
+				'capacity' => "Χωρητικότητα",
+				'connection' => "Σύνδεση",
+				'size' => "Διάσταση",
+				'cache' => "Cache",
+				'rpm' => "Στροφές λειτουργίας",
+				'packaging' => "Συσκευασία",
+				'year_warranty' => 'Εγγύηση (μήνες)',
+				'warranty' => 'Τύπος εγγύησης'
+			);
+			foreach ($chars_array as $key => $value) {
+				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+			}	
+		}
+		elseif ($category == 'ssd'){
+
+			$chars_array = array(
+				'capacity_from_to' => "Χωρητικότητα (Από εώς)",
+				'capacity' => "Χωρητικότητα",
+				'connection' => "Σύνδεση",
+				'size' => "Διάσταση",
+				'read_speed' => "Ταχύτητα ανάγνωσης (MB/s)",
+				'write_speed' => "Ταχύτητα εγγραφής (MB/s)",
+				'manufacture_technology' => "Τεχνολογία κατασκευής",
+				'mtbf' => "MTBF (ώρες)",
+				'packaging' => "Συσκευασία",
+				'year_warranty' => 'Εγγύηση (μήνες)',
+				'warranty' => 'Τύπος εγγύησης'
+			);
+			foreach ($chars_array as $key => $value) {
+				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+			}	
+		}
+		elseif ($category == 'keyboard_mouse'){
+
+			$chars_array = array(
+				'type' => "Τύπος συσκευής",
+				'usage' => "Χρήση",
+				'connection' => "Σύνδεση",
+				'dpi' => "Ανάλυση DPI",
+				'mouse_buttons' => "Κουμπιά mouse",
+				'technology' => "Τεχνολογία",
+				'language' => "Γλώσσα πληκτρολογίου",
+				'programmable_buttons' => "Προγραμματιζόμενα πλήκτρα",
+				'multimedia_buttons' => "Multimedia πλήκτρα",
+				'year_warranty' => 'Εγγύηση (μήνες)',
+				'warranty' => 'Τύπος εγγύησης'
+			);
+			foreach ($chars_array as $key => $value) {
+				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+			}	
+		}
+		elseif ($category == 'servers'){
+
+			$chars_array = array(
+				'form_factor' => "Τύπος θήκης",
+				'server_size' => "Rack height",
+				'power_supply' => "Τροφοδοτικό",
+				'cpu' => "Κατασκευαστής επεξεργαστή",
+				'cpu_generation' => "Επεξεργαστής",
+				'cpu_model' => "",
+				'cpu_frequency' => "",
+				'cpu_cores	' => "",
+				'cpu_cache' => "",
+				'memory_size' => "Χωρητικότητα μνήμης",
+				'memory_type' => "Τύπος μνήμης",
+				'memory_frequency' => "",
+				'hdd' => "Σκληρός δίσκος (χωρητικότητα / στροφές λειτουργίας)",
+				'hdd_type' => "Τύπος σκληρών δίσκων",
+				'controller_raid' => "RAID",
+				'ethernet' => "ethernet",
+				'optical_drive' => "Οπτικά μέσα",
+				'year_warranty' => 'Εγγύηση (μήνες)',
+				'warranty' => 'Τύπος εγγύησης'
+			);
+			foreach ($chars_array as $key => $value) {
+				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+			}	
+		}
+		elseif ($category == 'optical_drives')
+		{
+			$chars_array = array(
+				'device' => "Συσκευή",
+				'type' => "Τύπος",
+				'connection' => "Σύνδεση",
+				'write_speed' => "Ταχύτητα εγγραφής",
+				'read_speed' => "Ταχύτητα ανάγνωσης",
+				'color' => "Χρώμα",
+				'year_warranty' => 'Εγγύηση (μήνες)',
+				'warranty' => 'Τύπος εγγύησης'
+			);
+			foreach ($chars_array as $key => $value) {
+				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+			}				
+		}
+		elseif ($category == 'card_readers')
+		{
+			$chars_array = array(
+				'device_type' => "Τύπος συσκευής",
+				'card_types' => "Υποστήριξη τύπων μνήμης",
+				'year_warranty' => 'Εγγύηση (μήνες)',
+				'warranty' => 'Τύπος εγγύησης'
+			);
+			foreach ($chars_array as $key => $value) {
+				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+			}			
+		}
+		elseif ($category == 'flash_drives')
+		{
+			$chars_array = array(
+				'capacity' => "Χωρητικότητα",
+				'connection' => "Σύνδεση",
+				'security' => "Ασφάλεια",
+				'read_speed' => "Ταχύτητα ανάγνωσης (MB/sec)",
+				'write_speed' => "Ταχύτητα εγγραφής (MB/sec)",
+				'color' => "Χρώμα",
+				'closing_type' => "Τύπος κλεισίματος",
+				'year_warranty' => 'Εγγύηση (μήνες)',
+				'warranty' => 'Τύπος εγγύησης'
+			);
+			foreach ($chars_array as $key => $value) {
+				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+			}				
+		}
+		elseif ($category == 'power_supplies')
+		{
+			$chars_array = array(
+				'type' => "Τύπος",
+				'power' => "Ισχύς (Watt)",
+				'energy_efficiency' => "Energy-Efficient",
+				'fan_size' => "Ανεμιστήρας",
+				'output_connectors' => "Υποδοχές εξόδου",
+				'pfc' => "PFC",
+				'dimensions' => "Διαστάσεις (πλάτος x ύψος x βάθος, σε mm)",
+				'year_warranty' => 'Εγγύηση (μήνες)',
+				'warranty' => 'Τύπος εγγύησης'
+			);
+			foreach ($chars_array as $key => $value) {
+				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+			}	
+		}
+		elseif ($category == 'cases')
+		{
+			$chars_array = array(
+				'type' => "Τύπος",
+				'motherboard_size' => "Υποστήριξη μητρικής",
+				'color' => "Χρώμα",
+				'external_5_25' => 'Εξωτερικές Θέσεις 5,25"',
+				'external_3_5' => 'Εξωτερικές Θέσεις 3,5"',
+				'internal_5_25' => 'Εσωτερικές Θέσεις 3,5"',
+				'internal_3_5' => 'Εσωτερικές Θέσεις 2,5"',
+				'hdd_dock' => "Docking σκληρού δίσκου",
+				'installed_fans' => "Εγκατεστημένοι ανεμιστήρες",
+				'side_window' => 'Πλαϊνό Παράθυρο',
+				'dimensions' => "Διαστάσεις (πλάτος x ύψος x βάθος, σε mm)",
+				'weight' => "Βάρος (κιλά)",
+				'power_supply' => "Τροφοδοτικό",
+				'year_warranty' => 'Εγγύηση (μήνες)',
+				'warranty' => 'Τύπος εγγύησης'
+			);
+			foreach ($chars_array as $key => $value) {
+				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+			}
+		}
+		elseif ($category == 'fans')
+		{
+			$chars_array = array(
+				'heat_sink_type' => "Τύπος Ψύκτρας",
+				'fan_diameter' => "Μέγεθος ανεμιστήρα (mm)",
+				'fan_number' => "Αριθμός ανεμιστήρων",
+				'compatibility' => "Συμβατότητα",
+				'dimensions' => "Διαστάσεις (μήκος x πλάτος x ύψος, σε mm)",
+				'year_warranty' => 'Εγγύηση (μήνες)',
+				'warranty' => 'Τύπος εγγύησης'
+			);
+			foreach ($chars_array as $key => $value) {
+				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+			}
+		}
+		elseif ($category == 'motherboards')
+		{
+			$chars_array = array(
+				'cpu_brand' => 'Κατασκευαστής επεξεργαστή',
+				'socket' => 'Socket',
+				'chipset' => 'Chipset',
+				'integrated_cpu' => 'Ενσωματωμένος επεξεργαστής',
+				'type' => 'Τύπος μητρικής',
+				'ram_type' => 'Υποστηριζόμενη μνήμη',
+				'max_ram' => 'Μέγιστο μέγεθος μνήμης',
+				'integrated_graphics' => 'Ενσωματωμένη κάρτα γραφικών',
+
+				'crossfire_x' => "Υποστήριξη CrossfireX / SLI",
+				'sli' => "",
+				
+				'sound' => 'Ήχος',
+				'sata_2' => 'SATA 3Gb/s',
+				'sata_3' => 'SATA 6Gb/s',
+				'raid' => 'Raid',
+				'pci_express_x8_16' => 'PCI Express (x16, x8)',
+				'pci_express_x1_4' => 'PCI Express (x1, x4)',
+				'pci' => 'PCI',
+				'usb_2' => 'USB 2.0',
+				'usb_3' => 'USB 3.0',
+				'usb_3_1' => 'USB 3.1',
+
+				'firewire' => "Firewire / eSATA",
+				'e_sata' => "",
+				
+				'network' => 'Δίκτυο',
+				
+				'serial' => "Σειριακή θύρα / Παράλληλη θύρα",
+				'parallel' => "",
+				
+				'year_warranty' => 'Εγγύηση (μήνες)',
+				'warranty' => 'Τύπος εγγύησης'
+			);
+			$sli = $esata = $serial = false;
+			foreach ($chars_array as $key => $value) {
+
+				if ($sli || $esata || $serial)
+					continue;
+				
+				$prod_char = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+
+				if($value == 'Υποστήριξη CrossfireX / SLI')
+				{
+					$sli = true;
+					if($whereIs = strpos( $prod_char, '/'))
+					{
+						$etd_crossfire_x = trim(substr($prod_char, 0, $whereIs));
+						$etd_sli = trim(substr($prod_char, $whereIs+1, strlen($prod_char)));
+
+						if($etd_crossfire_x == 'No' || $etd_crossfire_x == 'ΟΧΙ')
+							$chars_array['crossfire_x'] = 'ΟΧΙ';
+						elseif($etd_crossfire_x == 'Yes' || $etd_crossfire_x == 'ΝΑΙ')
+							$chars_array['crossfire_x'] = 'ΝΑΙ';
+
+						if($etd_sli == 'No' || $etd_sli == 'ΟΧΙ')
+							$chars_array['sli'] = 'ΟΧΙ';
+						elseif($etd_sli == 'Yes' || $etd_sli == 'ΝΑΙ')
+							$chars_array['sli'] = 'ΝΑΙ';
+					}
+				}
+				elseif($value == 'Firewire / eSATA')
+				{
+					$esata = true;
+					if($whereIs = strpos( $prod_char, '/'))
+					{
+						$etd_firewire = trim(substr($prod_char, 0, $whereIs));
+						$etd_e_sata = trim(substr($prod_char, $whereIs+1, strlen($prod_char)));
+
+						if($etd_firewire == 'No' || $etd_firewire == 'ΟΧΙ')
+							$chars_array['firewire'] = 'ΟΧΙ';
+						elseif($etd_firewire == 'Yes' || $etd_firewire == 'ΝΑΙ')
+							$chars_array['firewire'] = 'ΝΑΙ';
+
+						if($etd_e_sata == 'No' || $etd_e_sata == 'ΟΧΙ')
+							$chars_array['e_sata'] = 'ΟΧΙ';
+						elseif($etd_e_sata == 'Yes' || $etd_e_sata == 'ΝΑΙ')
+							$chars_array['e_sata'] = 'ΝΑΙ';
+					}
+				}
+				elseif($value == 'Σειριακή θύρα / Παράλληλη θύρα')
+				{
+					$serial = true;
+					if($whereIs = strpos( $prod_char, '/'))
+					{
+						$etd_serial = trim(substr($prod_char, 0, $whereIs));
+						$etd_parallel = trim(substr($prod_char, $whereIs+1, strlen($prod_char)));
+
+						if($etd_serial == 'No' || $etd_serial == 'ΟΧΙ')
+							$chars_array['serial'] = 'ΟΧΙ';
+						elseif($etd_serial == 'Yes' || $etd_serial == 'ΝΑΙ')
+							$chars_array['serial'] = 'ΝΑΙ';
+
+						if($etd_parallel == 'No' || $etd_parallel == 'ΟΧΙ')
+							$chars_array['parallel'] = 'ΟΧΙ';
+						elseif($etd_parallel == 'Yes' || $etd_parallel == 'ΝΑΙ')
+							$chars_array['parallel'] = 'ΝΑΙ';
+					}
+				}
+				else              
+					$chars_array[$key] = isset($prod_char[$value]) ? $prod_char[$value] : '';
+			}
+		}
+		elseif ($category == 'graphic_cards')
+		{
+			$chars_array = array(
+				'chip_brand' => 'Κατασκευαστής chip',
+				'gpu' => 'Επεξεργαστής γραφικών',
+				'core_frequency' => 'Συχνότητα πυρήνα (MHz)',
+				'manufacturer_technology' => 'Τεχνολογία κατασκευής',
+				'ram_size' => 'Μέγεθος μνήμης',
+				'ram_type' => 'Τύπος μνήμης',
+				'ram_frequency' => 'Συχνότητα μνήμης (MHz)',
+				'ram_channel' => 'Δίαυλος μνήμης',
+				'connection' => 'Σύνδεση',
+				'direct_x' => 'DirectX',
+				'output_ports' => 'Θύρες εξόδου',
+				'year_warranty' => 'Εγγύηση (μήνες)',
+				'warranty' => 'Τύπος εγγύησης'
+			);
+			foreach ($chars_array as $key => $value) {
+				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+			}
+		}
+		elseif ($category == 'cpu')
+		{
+			$chars_array = array(
+				'family' => 'Οικογένεια επεξεργαστή',
+				'cpu_model' => 'Μοντέλο επεξεργαστή',
+				'frequency' => 'Συχνότητα',
+				'turbo_core' => 'Turbo Core',
+				'turbo_boost' => 'Turbo Boost',
+				'socket' => 'Socket',
+				'thermal_design_power' => 'Thermal Design Power',
+				'cache' => 'Συνολική Μνήμη Cache (L2 + L3)',
+				'construction_technology' => 'Τεχνολογία κατασκευής',
+				'core_num' => 'Αριθμός πυρήνων',
+				'threads' => 'Threads',
+				'integrated_graphic' => "Ενσωματωμένη κάρτα/chip γραφικών",
+				'heat_sink' => "Ψύκτρα",
+				'packaging' => "Συσκευασία",
+				'year_warranty' => 'Εγγύηση (μήνες)',
+				'warranty' => 'Τύπος εγγύησης'
+			);
+			foreach ($chars_array as $key => $value) {
+				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+			}
+		}
+		elseif ($category == 'memories')
+		{
+			$chars_array = array(
+				'type' => 'Τύπος μνήμης',
+				'capacity' => 'Χωρητικότητα μνήμης',
+				'quantity' => 'Τεμάχια',
+				'frequency' => 'Συχνότητα λειτουργίας',
+				'cas_latency' => 'CAS Latency',
+				'voltage' => 'Τάση λειτουργίας',
+				'year_warranty' => 'Εγγύηση (μήνες)',
+				'warranty' => 'Τύπος εγγύησης'
+			);
+			foreach ($chars_array as $key => $value) {
+				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+			}
+		}
+		elseif ($category == 'gaming_chairs'){
+
+			$chars_array = array(
+				'size' => 'Size',
+				'colour' => 'Χρώμα',
+				'adjustable_arm' => 'Ρυθμιζόμενος Βραχίονας',
+				'adjustable_back_slope'=> 'Ρυθμιζόμενη Κλίση Πλάτης',
+				'back_height' => 'Ύψος Πλάτης',
+				'shoulders_width' => 'Πλάτος Ώμων',
+				'pillows' => 'Μαξιλάρια',
+				'wheels' => 'Ρόδες',
+				'base' => 'Βάση',
+				'mechanism' => 'Μηχανισμός',
+				'material' => 'Υλικό Καλύμματος Κάρεκλας',
+				'mechanism' => 'Μηχανισμός',
+				'max_load' => 'Μέγιστο Φορτίο',
+				'lifter_type' => 'Τύπος Ανυψωτήρα',
+				'weight' => 'Βάρος',
+				'year_warranty' => 'Εγγύηση (μήνες)',
+				'warranty' => 'Τύπος εγγύησης'
+			);
+			foreach ($chars_array as $key => $value) {
+
+				$prod_char = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+
+				if($value == 'Ρυθμιζόμενη Κλίση Πλάτης')
+				{
+					$chars_array[$key] = $prod_char;
+					$chars_array[$key] = str_replace("and#7506", "&deg", $chars_array['adjustable_back_slope']);
+				}
+				else	
+					$chars_array[$key] = isset($prod_char) ? $prod_char : '';
+			}
+		}
+		elseif ($category == 'ups'){
+
+			$chars_array = array(
+				'type' => 'Τύπος συσκευής',
+				'strength_va' => 'Παρεχόμενη ισχύς (VA)',
+				'strength_w' => 'Παρεχόμενη ισχύς (Watt)',
+				'waveform_output' => 'Waveform output',
+				'input_phase' => 'Είσοδος (φάση)',
+				'output_phase' => 'Έξοδος (φάση)',
+				'battery_endurance_full_load' => 'Αυτονομία σε full load (λεπτά)',
+				'battery_endurance_half_load' => 'Αυτονομία σε half load (λεπτά)',
+				'recharge_time'=> 'Χρόνος επαναφόρτισης',
+				'battery_type' => 'Μπαταρία',
+				'connection' => 'Σύνδεση',
+				'usb' => "",
+				'rack_mount' => 'Rack mount',
+				'form_factor' => "",
+				'dimensions' => 'Διαστάσεις (πλάτος x ύψος x βάθος, σε mm)',
+				'weight' => 'Βάρος (κιλά)',
+				'year_warranty' => 'Εγγύηση (μήνες)',
+				'warranty' => 'Τύπος εγγύησης'
+			);
+			$usb = $rack = false;
+			foreach ($chars_array as $key => $value) {
+
+				if($usb || $rack)
+					continue;
+
+				$prod_char = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+
+				if($value == 'Χρόνος επαναφόρτισης')
+				{
+					$time = str_replace(' hours', '', $prod_char);
+					$chars_array[$key] = $time;
+				}
+				elseif($value == 'Σύνδεση')
+				{
+					$usb = true;
+					if (strpos($prod_char, 'USB') !== false) {
+						$chars_array['usb']='ΝΑΙ';
+					}
+					else
+						$chars_array['usb']='ΟΧΙ';
+		
+					$chars_array[$key] = $prod_char;
+				}
+				elseif($value == 'Rack mount')
+				{
+					$rack = true;
+					$form_factor = $rack_mount = '';
+
+					if($prod_char == 'Yes')
+					{
+						$rack_mount = 'ΝΑΙ';
+						$form_factor = 'Rack';
+					}
+					elseif($prod_char == 'Yes (optional)')
+					{
+						$rack_mount = 'ΠΡΟΑΙΡΕΤΙΚΟ';
+						$form_factor = 'Tower';
+					}
+					else
+					{
+						$rack_mount = 'ΟΧΙ';
+						$form_factor = 'Tower';
+					}
+
+					$chars_array['form_factor'] = $form_factor;
+					$chars_array[$key] = $rack_mount;
+				}
+				else	
+					$chars_array[$key] = isset($prod_char) ? $prod_char : '';
+			}
+		}
+		return $chars_array;
+	}
+/*
     private function addProductChars($category, $product_code, $char_xml){
+		
 
     	$is_found = false;
 
@@ -3894,7 +4496,7 @@ class Live_model extends CI_Model {
 		else if ($category == 'routers'){
 
 			$chars_array = array(
-				'type' => "",
+				'type' => "Access Point",
 				'wireless' => "",
 				'line_type' => "",
 				'lan_ports' => "",
@@ -3902,6 +4504,9 @@ class Live_model extends CI_Model {
 				'supported_protocols' => "",
 				'vpn' => "",
 				'removable_antenna' => "",
+				'poe'=> "",
+				'outdoor'=> "",
+				'year_warranty'=> "",
 				'warranty' => ""
 			);
 
@@ -3946,16 +4551,25 @@ class Live_model extends CI_Model {
 						case 'Αποσπώμενη κεραία':
 							$chars_array['removable_antenna']=$chars_value;
 							break;
-						case 'Εγγύηση (μήνες)':
+						case 'poe':
+							$chars_array['POE']=$chars_value;
+							break;
+						case 'outdoor':
+							$chars_array['Εξωτερικού χώρου']=$chars_value;
+							break;
+						case 'year_warranty':
 							if($chars_value/12 >=1)
 							{
 								if($chars_value/12 == 1)
-									$chars_array['warranty'] = (string)($chars_value/12).' έτος';
+									$chars_array['Εγγύηση (μήνες)'] = (string)($chars_value/12).' έτος';
 								else
-									$chars_array['warranty'] = (string)($chars_value/12).' έτη';
+									$chars_array['Εγγύηση (μήνες)'] = (string)($chars_value/12).' έτη';
 							}
 							else
-								$chars_array['warranty'] = $chars_value;
+							$chars_array['Εγγύηση (μήνες)'] = $chars_value;
+							break;
+						case 'Τύπος εγγύησης':
+							$chars_array['warranty']=$chars_value;
 							break;
 						default :
 
@@ -5631,7 +6245,7 @@ class Live_model extends CI_Model {
 
 		/////////////
 
-    }
+	}*/
 
     private function updateProduct($table, $data, $product_number){
 

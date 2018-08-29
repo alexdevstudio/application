@@ -33,13 +33,14 @@ class Images_model extends CI_Model {
 
 		$target_path = '/var/www/vhosts/etd.gr/httpdocs/wp-content/uploads/'.$product_code.'.pdf';
 
-		if (!file_exists($target_path)) {
+		if (file_exists($target_path))
+			return 'https://etd.gr/wp-content/uploads/'.$product_code.'.pdf';
+		else
+		{
 			if (copy($src, $target_path))
 				return 'https://etd.gr/wp-content/uploads/'.$product_code.'.pdf';
 		}
-		else {
-			return 'https://etd.gr/wp-content/uploads/'.$product_code.'.pdf';
-		}
+
 		return false;		
 	}
 	
