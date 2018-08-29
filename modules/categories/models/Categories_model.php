@@ -439,6 +439,7 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					$shipping_class = 10650;
 					break;
 			case 'server_cpu':
+			case 'multiplugs':
 					$shipping_class = 10649;
 					break;
 			case 'server_controllers':

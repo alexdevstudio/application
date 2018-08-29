@@ -45,9 +45,9 @@ class Live_model extends CI_Model {
 				$char_att = (string) trim($chars->atribute[0]);
 				$char_val = (string) trim($chars->value[0]);
 
-				if ($char_val == 'Yes')
+				if ($char_val == 'Yes' || $char_val == 'YES' || $char_val == 'Ναι' || $char_val == 'NAI')
 					$char_val = 'ΝΑΙ';
-				else if ($char_val == 'No')
+				else if ($char_val == 'No' || $char_val == 'NO' || $char_val == 'Όχι' || $char_val == 'Οχι' || $char_val == 'ΟΧΙ')
 					$char_val = 'ΟΧΙ';
 				else if ($char_val == '-')
 					$char_val = '';
@@ -179,6 +179,10 @@ class Live_model extends CI_Model {
 					if($sc == 'Data Center UPS' || $sc == 'Line Interactive UPS' || $sc == 'On Line UPS'  || $sc == 'Standby UPS')
 					{
 						$c = 'ups';
+					}
+					elseif($sc == 'Surge Protectors' )
+					{
+						$c = 'multiplugs';
 					}
 					break;
 				case 'Printers':
@@ -3472,16 +3476,17 @@ class Live_model extends CI_Model {
 			else
 			{
 				$shipping_class = '';
-				if($c == "carrying_cases" || $c == "external_hard_drives" ||
-				 $c == "sata_hard_drives" || $c == "ssd" || $c == "speakers" ||
-				 $c == "power_bank" || $c == "keyboard_mouse"  || $c == "servers"  ||
-				 $c == "routers"  || $c == "switches"  || $c == "laptops"  || $c== "desktops" || $c == "tablets"  || $c == "smartphones" ||
-				 $c == "cables" || $c == "patch_panels" || $c == "racks" || $c =="optical_drives" || $c == "card_readers" || $c == "flash_drives" ||
-				 $c == "power_supplies" || $c == "projectors" || $c == "cases" || $c == "fans" || $c == "motherboards" || $c == "graphic_cards" || $c == "cpu" ||
-				 $c == "memories" || $c == "hoverboards" || $c == "printer_fusers" || $c == "printer_drums" || $c == "printer_belts" || 
-				 $c == "ups" || $c =="tv" || $c == "accessories" || $c == "cable_accessories" || $c == "cooling_pads" || $c == "powerlines" || 
-				 $c == "ip_phones" || $c == "server_controllers" || $c == "server_cpu" || $c == "server_hard_drives" || $c == "server_memories" || 
-				 $c == "server_power_supplies" || $c == 'nas' || $c == 'firewalls' || $c == 'gaming_chairs' || $c == 'ip_cameras'){
+				if($c == "accessories" || $c == "cable_accessories" || $c == "cables" || $c == "card_readers" || 
+				   $c == "carrying_cases" || $c == "cases" || $c == "cooling_pads" || $c == "cpu" || $c == "desktops" || 
+				   $c == "external_hard_drives" || $c == "fans" || $c == "firewalls" || $c == "flash_drives" || 
+				   $c == "gaming_chairs" || $c == "graphic_cards" || $c == "hoverboards" || $c == "ip_cameras" || 
+				   $c == "ip_phones" || $c == "keyboard_mouse" || $c == "laptops " || $c == "memories" || $c == "motherboards" || 
+				   $c == "multiplugs" || $c == "nas" || $c == "optical_drives" || $c == "patch_panels" || $c == "power_bank" || 
+				   $c == "power_supplies" || $c == "powerlines" || $c == "printer_belts" || $c == "printer_drums" || 
+				   $c == "printer_fusers" || $c == "projectors" || $c == "racks" || $c == "routers" || $c == "sata_hard_drives" || 
+				   $c == "server_controllers" || $c == "server_cpu" || $c == "server_hard_drives" || $c == "server_memories" || 
+				   $c == "server_power_supplies" || $c == "servers" || $c == "smartphones" || $c == "speakers" || $c == "ssd" || 
+				   $c == "switches" || $c == "tablets" || $c == "tv" || $c == "ups"){
 
 					$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
 					$volumetric_weight = Modules::run('categories/getWeight', $shipping_class);
@@ -3848,6 +3853,18 @@ class Live_model extends CI_Model {
 				'recharge_time' => "Χρόνος επαναφόρτισης ως το 90-100% (ώρες)",
 				'charging_output' => "Έξοδος φόρτισης",
 				'dimensions' => "Διαστάσεις (πλάτος x ύψος x βάθος, σε mm)",
+				'year_warranty' => 'Εγγύηση (μήνες)',
+				'warranty' => 'Τύπος εγγύησης'
+			);
+
+			foreach ($chars_array as $key => $value) {
+				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+			}
+		}
+		elseif ($category == 'multiplugs'){
+
+			$chars_array = array(
+				'plugs_no' => "Αριθμός θέσεων",
 				'year_warranty' => 'Εγγύηση (μήνες)',
 				'warranty' => 'Τύπος εγγύησης'
 			);
