@@ -150,6 +150,9 @@ class Live_model extends CI_Model {
 					{
 						$c = 'routers';
 					}
+					elseif($sc == 'Powerlines'){
+						$c = 'powerlines';
+					}
 					/*if($sc == 'Routers')
 					{
 						$c = 'routers';
@@ -368,7 +371,7 @@ class Live_model extends CI_Model {
 					{
 						$c = 'memories';
 					}
-          			$c = $cat;
+          			//$c = $cat;
 					break;
 				case 'Furniture':
 					if($sc == 'Gaming Chair')
@@ -384,7 +387,7 @@ class Live_model extends CI_Model {
 					break;
 			}
 
-			if(/*$c!=$cat*/ $c == 'routers'){
+			if($c!=$cat){
 
 				$availability = $this->makeAvailability((string) trim($product->availability), 'oktabit');
 
@@ -506,7 +509,7 @@ class Live_model extends CI_Model {
 		echo "Finnished Oktabit";
 		echo "<h3> NEW PRODUCTS </h3>";
 		foreach ($newProducts as $key => $value) {
-			echo $key.' -> '.$value;
+			echo $key.' -> '.$value.'<br>';
 		}
 
 		$log['log_result'] = $newProducts;
@@ -3511,12 +3514,6 @@ class Live_model extends CI_Model {
 
 			    	unset($categoryData['supplier_product_url']);
 				}
-				elseif ($c == 'ups'){
-					if ($supplier == 'oktabit' )
-					{
-						$categoryData['model'] = str_replace('UPS ', '',$product['title']);
-					}	
-				}
 
 				if($chars_array)
 				{
@@ -3525,6 +3522,15 @@ class Live_model extends CI_Model {
 			}
 			if($supplier == 'oktabit')
 			{
+				if ($c == 'ups'){
+					$categoryData['model'] = str_replace('UPS ', '',$product['title']);
+				}
+				elseif ($c == 'powerlines') {
+					$categoryData['model'] = str_replace(' Powerline', '',$product['title']);
+					$categoryData['model'] = str_replace(' Powerlin', '',$categoryData['model']);
+					$categoryData['model'] = str_replace(' POWERLINE', '',$categoryData['model']);
+					$categoryData['model'] = str_replace(' POWERLIN', '',$categoryData['model']);
+				}
 				if($c == 'ups' || $c == 'routers' || $c == 'gaming_chairs')
 				{
 					//Add PDF files
@@ -3535,7 +3541,7 @@ class Live_model extends CI_Model {
 				}
 				
 				// Make products not new items to parse immediately
-				if($c == 'speakers' || $c == 'gaming_chairs' || $c == 'ups' || $c == 'routers')
+				if($c == 'speakers' || $c == 'gaming_chairs' || $c == 'ups' || $c == 'routers' || $c == 'powerlines')
 					$categoryData['new_item'] = 0;
 			}
 
@@ -3818,7 +3824,7 @@ class Live_model extends CI_Model {
 
 	private function addProductChars($category, $product_code, $charsArray){
 
-
+		$chars_array = array();
 		if ($category == 'carrying_cases'){
 
 			$chars_array = array(
@@ -3845,6 +3851,26 @@ class Live_model extends CI_Model {
 
 			foreach ($chars_array as $key => $value) {
 				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+			}
+		}
+		elseif ($category == 'powerlines'){
+
+			$chars_array = array(
+				'wi-fi' => 'Ασύρματο',
+				'passthrough' => 'Passthrough φις',
+				'overline_speed' => 'Ταχύτητα (Mbps)',
+				'ethernet_ports' => 'Θύρες LAN',
+				'packaging' => 'Τεμάχια συσκευασίας',
+				'year_warranty' => 'Εγγύηση'
+			);
+	
+			foreach ($chars_array as $key => $value) {
+				$prod_char = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+
+				if($value == 'Ταχύτητα (Mbps)')
+					$chars_array[$key] = $prod_char.' Mbps';
+				else	
+					$chars_array[$key] = isset($prod_char) ? $prod_char : '';
 			}
 		}
 		elseif ($category == 'routers'){
