@@ -458,8 +458,12 @@ class Extract_model extends CI_Model {
                         $pn    =  $product['product_number'];
 
                         if($model=='')
-                            $model = ltrim($title, 'Smartphone ' );
-                            $model = ltrim($model, 'SMARTPHONE ' );
+                        {
+                            $model = str_replace('Smartphone ', '', $title);
+                            $model = str_replace('SMARTPHONE ', '', $title);
+                            //$model = ltrim($title, 'Smartphone ' );
+                        }
+                            //$model = ltrim($model, 'SMARTPHONE ' );
 
                          if($etd_title == '')
                              $etd_title = "$model $color ($pn)";

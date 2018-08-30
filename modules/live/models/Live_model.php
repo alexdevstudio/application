@@ -38,6 +38,7 @@ class Live_model extends CI_Model {
 		}else
 			die("XML from Oktabit can not be loaded.");
 
+			//Get Chars for product from $char_xml and save it in charsArray['product-code'] for later retrival
 			$charsArray = array();
 			foreach($char_xml->children() as $chars) {
 
@@ -62,6 +63,13 @@ class Live_model extends CI_Model {
 				}
 	
 				$charsArray[$char_prd][$char_att] = $char_val;
+			}
+
+			//Get Descriptions for product from $desc_xml and save it in charsArray['product-code']['desc'] for later retrival
+			foreach($desc_xml->children() as $perigrafes) {
+				$okt_desc_code = (string) trim($perigrafes->code);
+				$description = strip_tags((string) (trim($perigrafes->perigrafi)));
+				$charsArray[$okt_desc_code]['desc'] = $description;
 			}
 
 		$newProducts = array();
@@ -358,6 +366,10 @@ class Live_model extends CI_Model {
 							$sc = 'Accessory';
 						}
 					}
+					elseif($sc == 'Mobile Phones')
+					{
+						$c = 'smartphones';
+					}
 					else
 						$c = $cat;
 					break;
@@ -420,7 +432,9 @@ class Live_model extends CI_Model {
 				$product_url = "https://www.oktabit.gr/product_details.asp?productid=".$code;
 
 
-				// Get The Description
+				// Get The Description from $charsArray created in top of function
+				$description = isset($charsArray[$code]['desc']) ? $charsArray[$code]['desc'] : '';
+				/*
 				foreach($desc_xml->children() as $perigrafes) {
 					$okt_desc_code = (string) trim($perigrafes->code);
 
@@ -430,6 +444,7 @@ class Live_model extends CI_Model {
 						continue;
 					}
 				}
+				*/
 
 				// Get the characteristics
 				$chars_array = $this->addProductChars($c, $code, $charsArray);
@@ -3492,14 +3507,14 @@ class Live_model extends CI_Model {
 					$volumetric_weight = Modules::run('categories/getWeight', $shipping_class);
 				}
 				$categoryData = array(
-				'brand'=> $product['brand'],
-				'sku'=> $sku,
-				'product_number'=> $product['product_number'],
-				'title'=> $product['title'],
-				'description'=> strip_tags($product['description']),
-				'supplier_product_url'=> $product['product_url'],
-				'shipping_class' => $shipping_class,
-				'volumetric_weight' => $volumetric_weight
+					'brand'=> $product['brand'],
+					'sku'=> $sku,
+					'product_number'=> $product['product_number'],
+					'title'=> $product['title'],
+					'description'=> strip_tags($product['description']),
+					'supplier_product_url'=> $product['product_url'],
+					'shipping_class' => $shipping_class,
+					'volumetric_weight' => $volumetric_weight
 				);
 
 				if($c=='nas' || $c == "ip_phones")
@@ -3550,7 +3565,7 @@ class Live_model extends CI_Model {
 				
 				// Make products not new items to parse immediately
 				if($c == 'speakers' || $c == 'gaming_chairs' || $c == 'ups' || $c == 'routers' || $c == 'powerlines' || 
-				   $c == 'ip_cameras' || $c == 'multiplugs' )
+				   $c == 'ip_cameras' || $c == 'multiplugs' || $c == 'smartphones' )
 					$categoryData['new_item'] = 0;
 			}
 			
@@ -3935,6 +3950,107 @@ class Live_model extends CI_Model {
 
 			foreach ($chars_array as $key => $value) {
 				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+			}
+		}
+		elseif ($category == 'smartphones'){
+
+			$chars_array = array(
+				'type' => 'Τύπος',
+				'color' => 'Χρώμα',
+				'screen_size' => 'Διάσταση οθόνης',
+				'screen_resolution' => 'Ανάλυση οθόνης',
+				//'screen_type' => '',
+				'cpu' => 'Επεξεργαστής',
+				//'cores' => '',
+				'ram_memory' => 'Μνήμη συστήματος',
+				'internal_memory' => 'Αποθηκευτικός χώρος',
+				'card_slot' => 'Επέκταση μνήμης',
+				'dual_sim' => 'Dual SIM',
+				'primary_camera' => 'Κάμερα',
+				'secondary_camera' => 'Κάμερα (πίσω)',
+				'embedded_flash' => 'Flash',
+				'operating_system' => 'Λειτουργικό σύστημα',
+				'skroutz_operating_system' => '', 
+				'supported_networks' => '', ///////////////////////
+				'wifi' => '', 
+				'bluetooth' => '', 
+				'sensors' => 'Αισθητήρες',
+				'features' => 'I/O Ports',
+				'battery_capacity' => 'Μπαταρία',
+				'stand_by' => 'Χρόνος αναμονής',
+				'talking_hours' => 'Χρόνος ομιλίας',
+				'dimensions' => 'Διαστάσεις (πλάτος x ύψος x πάχος, σε mm)',
+				'weight' => 'Βάρος (γραμμάρια)',
+				'package' => 'Περιεχόμενα συσκευασίας',
+				'year_warranty' => 'Εγγύηση',
+				'warranty' => 'Τύπος εγγύησης'
+			);
+			foreach ($chars_array as $key => $value) {
+				if($key == 'skroutz_operating_system')
+				{
+					list($chars_array[$key]) = explode(' ', $chars_array['operating_system']);
+				}
+				elseif($key == 'supported_networks')
+				{
+					$LTE = isset($charsArray[strtoupper($product_code)]['LTE']) ? $charsArray[strtoupper($product_code)]['LTE'] : '';
+					$FourG = isset($charsArray[strtoupper($product_code)]['4G']) ? $charsArray[strtoupper($product_code)]['4G'] : '';
+					$GPS = isset($charsArray[strtoupper($product_code)]['GPS']) ? $charsArray[strtoupper($product_code)]['GPS'] : '';
+					$chars_array[$key] = '';
+					if ($LTE == 'YES' || $LTE == 'Yes' || $LTE == 'yes' || $LTE == 'ΝΑΙ')
+						$chars_array[$key] = 'LTE';
+
+					if ($FourG == 'YES' || $LTE == 'Yes' || $LTE == 'yes' || $LTE == 'ΝΑΙ')
+					{
+						if($chars_array[$key] == '')
+							$chars_array[$key] = '4G';
+						else
+							$chars_array[$key] .= ', 4G';
+					}
+					if($GPS != '')
+					{
+						if($chars_array[$key] == '')
+							$chars_array[$key] = $GPS;
+						else
+							$chars_array[$key] .= ', '.$GPS;
+					}				
+				}
+				elseif($key == 'wifi')
+				{
+					$chars_array[$key] = isset($charsArray[strtoupper($product_code)]['Δίκτυο']) ? $charsArray[strtoupper($product_code)]['Δίκτυο'] : '';
+					if (strpos($chars_array[$key], 'Wi-Fi') !== false)
+						$chars_array[$key] = 'ΝΑΙ';
+					else
+						$chars_array[$key] = 'ΟΧΙ';
+				}
+				elseif($key == 'bluetooth')
+				{
+					$chars_array[$key] = isset($charsArray[strtoupper($product_code)]['Δίκτυο']) ? $charsArray[strtoupper($product_code)]['Δίκτυο'] : '';
+					if (strpos($chars_array[$key], 'Bluetooth') !== false)
+						$chars_array[$key] = 'ΝΑΙ';
+					else
+						$chars_array[$key] = 'ΟΧΙ';
+				}
+				else
+					$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+
+				if($value == 'Ανάλυση οθόνης')
+					$chars_array[$key] = str_replace('and#215;','x',$chars_array[$key]);
+				elseif($value == 'Βάρος (γραμμάρια)')
+				{
+					if ($chars_array[$key] != '')
+						$chars_array[$key] /= 1000;
+				}
+				elseif($value == 'Διάσταση οθόνης')
+					$chars_array[$key] = str_replace('\"','',$chars_array[$key]);
+				elseif($value == 'Τύπος')
+					$chars_array[$key] = 'Smartphone';
+				elseif($value == 'Κάμερα' || $value == 'Κάμερα (πίσω)')
+				{
+					$chars_array[$key] = str_replace('.0','',$chars_array[$key]);
+					$chars_array[$key] = str_replace('MP',' MP',$chars_array[$key]);
+				}
+				elseif($value == 'I/O Ports')
+					$chars_array[$key] = str_replace('<br>',' ',$chars_array[$key]);
 			}
 		}
 		elseif ($category == 'switches'){
