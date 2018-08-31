@@ -108,7 +108,9 @@ class Live_model extends CI_Model {
 					if (strpos($sc, 'Notebooks up to') !== false)
 					{
 						$c = 'laptops';
-					}elseif($sc == 'Carrying Cases'){
+					}
+					elseif($sc == 'Carrying Cases')
+					{
 						$c = 'carrying_cases';
 					}
 					break;
@@ -116,8 +118,6 @@ class Live_model extends CI_Model {
 					if($sc == 'Projectors LCD')
 					{
 						$c = 'projectors';
-					}else{
-						$c = $cat;
 					}
 					break;
 				case 'Computers':
@@ -130,7 +130,7 @@ class Live_model extends CI_Model {
 					if($sc == 'Power Bank')
 					{
 						$c = 'power_bank';
-						$c = $cat;
+						//$c = $cat;
 					}
 					break;
 				case 'Monitors':
@@ -164,26 +164,12 @@ class Live_model extends CI_Model {
 					elseif($sc == 'IP Cameras'){
 						$c = 'ip_cameras';
 					}
-					/*if($sc == 'Routers')
-					{
-						$c = 'routers';
-            			$c = $cat;
-					}*/
 					elseif($sc == 'Switches'){
 						$c = 'switches';
-            			$c = $cat;
+            			//$c = $cat;
 					}
 					break;
 				case 'Power Protection':
-					/*if($brand != 'CYBERPOWER' && $brand != 'APC'){
-						$c = $cat;
-					}else{
-
-						if($sc == 'Data Center UPS' || $sc == 'Line Interactive UPS' || $sc == 'On Line UPS'  || $sc == 'Standby UPS')
-							{
-								$c = 'ups';
-							}
-					}*/
 					if($sc == 'Data Center UPS' || $sc == 'Line Interactive UPS' || $sc == 'On Line UPS'  || $sc == 'Standby UPS')
 					{
 						$c = 'ups';
@@ -230,11 +216,7 @@ class Live_model extends CI_Model {
 					}
 					break;
 				case 'Servers':
-					if($sc == 'Rackmount Systems' )
-					{
-						$c = 'servers';
-					}
-					elseif ($sc == 'Tower Systems' || $sc == 'Tower Systems BTO' )
+					if($sc == 'Rackmount Systems' || $sc == 'Tower Systems' || $sc == 'Tower Systems BTO' )
 					{
 						$c = 'servers';
 					}
@@ -272,14 +254,6 @@ class Live_model extends CI_Model {
 					}
 					break;
 				case 'Entertainment':
-					/*if($brand != 'LOGITECH'){
-						$c = $cat;
-					}else{
-						if($sc == 'Speakers' )
-						{
-							$c = 'speakers';
-						}
-					}*/
 					if($sc == 'Speakers' )
 					{
 						$c = 'speakers';
@@ -289,46 +263,45 @@ class Live_model extends CI_Model {
 					if($sc == 'External Hard Drives' )
 					{
 						$c = 'external_hard_drives';
-            			$c = $cat;
+            			//$c = $cat;
 					}
 					elseif($sc == 'SATA Hard Drives' )
 					{
 						$c = 'sata_hard_drives';
-            			$c = $cat;
-
+            			//$c = $cat;
 					}
 					elseif($sc == 'Solid State Drives' )
 					{
 						$c = 'ssd';
-           				$c = $cat;
+           				//$c = $cat;
 					}
 					elseif($sc == 'DVD-RW Drives' )
 					{
 						$c = 'optical_drives';
-            			$c = $cat;
+            			//$c = $cat;
 					}
 					elseif($sc == 'Card Reader' )
 					{
 						$c = 'card_readers';
-            			$c = $cat;
+            			//$c = $cat;
 					}
 					elseif($sc == 'USB Memory Sticks' )
 					{
 						$c = 'flash_drives';
-            			$c = $cat;
+            			//$c = $cat;
 					}
 					break;
 				case 'Cases-Peripherals':
 					if($brand != 'MICROSOFT' && $brand != 'LOGITECH'){
 						$c = $cat;
-					}else{
-
+					}
+					else
+					{
 						if($sc == 'Combo' || $sc == 'Keyboard' || $sc == 'Mouse')
 						{
 							$c = 'keyboard_mouse';
-
 						}
-						/*elseif($sc == 'Power Supplies')
+						elseif($sc == 'Power Supplies')
 						{
 							$c = 'power_supplies';
 						}
@@ -339,7 +312,7 @@ class Live_model extends CI_Model {
 						elseif($sc == 'PC Cases Options' && $B2b_sc == 'Συστήματα Ψύξης')
 						{
 							$c = 'fans';
-						}*/
+						}
           			}
 					break;
 				case 'Telephony':
@@ -397,7 +370,8 @@ class Live_model extends CI_Model {
 					{
 						$c = 'gaming_chairs';
 					}
-					else {
+					else 
+					{
 						$c = $cat;
 					}
 					break;
@@ -425,7 +399,6 @@ class Live_model extends CI_Model {
 				if($pn == '')
 					continue;
 				//$pn = ($pn == '') ? (string) trim($product->code): $pn;
-				$description = "";
 				$brand = (string) trim($product->brand);
 				$title = (string) trim($product->titlos);
 				$code = (string) trim($product->code);
