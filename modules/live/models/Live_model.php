@@ -3538,7 +3538,8 @@ class Live_model extends CI_Model {
 				
 				// Make products not new items to parse immediately
 				if($c == 'speakers' || $c == 'gaming_chairs' || $c == 'ups' || $c == 'routers' || $c == 'powerlines' || 
-				   $c == 'ip_cameras' || $c == 'multiplugs' || $c == 'smartphones' )
+				   $c == 'ip_cameras' || $c == 'multiplugs' || $c == 'smartphones' || $c == 'external_hard_drives' ||
+				   $c == 'ssd' )
 					$categoryData['new_item'] = 0;
 			}
 			
@@ -4072,7 +4073,14 @@ class Live_model extends CI_Model {
 				'warranty' => 'Τύπος εγγύησης'
 			);
 			foreach ($chars_array as $key => $value) {
-				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+
+				if($value == 'Βάρος (γραμμάρια)')
+				{
+					if ($chars_array[$key] != '')
+						$chars_array[$key] /= 1000;
+				}
+				else
+					$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
 			}		
 		}
 		elseif ($category == 'sata_hard_drives'){
