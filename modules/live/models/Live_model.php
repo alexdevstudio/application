@@ -539,12 +539,18 @@ class Live_model extends CI_Model {
 		);
 
 		foreach($xml->children() as $product) {
-			$type = '';
+			$type = $size = '';
 			$cat = (string) trim($product->Category);
 			$title = (string) trim($product->Item);
 			switch ($cat) {
 				case 'Routers':
+				case 'Wireless Routers':
 					$c = 'routers';
+					$type = 'Router';
+					break; 
+				case 'Wireless Access Points':
+					$c = 'routers';
+					$type = 'Access Point';
 					break;
 				case 'Mobile Battery/Power Bank':
 					$c = 'power_bank';
@@ -556,7 +562,14 @@ class Live_model extends CI_Model {
 					$c = 'desktops';
 					$type = 'Desktop';
 					break;
+				case 'All In One (BRANDED PC)':
+					$c = 'desktops';
+					$type = 'All-in-One';
+					break;
 				case 'Memory Modules':
+					$c = 'memories';
+					break;
+				case 'Special Memory Modules':
 					$c = 'memories';
 					break;
 				case 'Notebook Power and Batteries':
@@ -599,7 +612,7 @@ class Live_model extends CI_Model {
 					$c = 'monitors';
 					break;
 				/*case 'Plotters':
-					$c = 'Plotters';
+					$c = 'plotters';
 					break;*/
 				case 'Servers (HW)':
 					$c = 'servers';
@@ -624,6 +637,41 @@ class Live_model extends CI_Model {
 				case 'Barcode Scanners':
 					$c = 'barcode_scanners';
 					break;
+				case 'CPU':
+					$c = 'cpu';
+					break;
+				case 'Motherboards':
+					$c = 'motherboards';
+					break;
+				case 'VGA':
+					$c = 'graphic_cards';
+					break;
+				case 'Power Supplies':
+					$c = 'power_supplies';
+					break;
+				case 'Internal Hard Disk Drives 3.5"':
+					$c = 'sata_hard_drives';
+					$size = '3.5"';
+					break;
+				case 'Internal Hard Disk Drives for Portable':
+					$c = 'sata_hard_drives';
+					$size = '2.5"';
+					break;
+				case 'Cases':
+					$c = 'cases';
+					break;
+				case 'Desktop Set':
+					$c = 'keyboard_mouse';
+					$type = 'Set mouse/keyboard';
+					break;
+				case 'Keyboard':
+					$c = 'keyboard_mouse';
+					$type = 'Set mouse/keyboard';
+					break;
+				case 'Mouse':
+					$c = 'keyboard_mouse';
+					$type = 'Set mouse/keyboard';
+					break;
 				default:
 					$c = $cat;
 					break;
@@ -644,6 +692,19 @@ class Live_model extends CI_Model {
 				$title = (string) trim($product->Item);
 				if(strpos($title, 'ΕΞΑΡΤ') !== false)
 					continue;
+				elseif($c == 'cases')
+				{
+					if(strpos($title, 'Κουτί ') !== false)
+						$title = str_replace("Κουτί ", "", $title);
+					elseif(strpos($title, 'ΚΟΥΤΙ ') !== false)
+						$title = str_replace("ΚΟΥΤΙ ", "", $title);
+					elseif(strpos($title, 'Case ') !== false)
+						$title = str_replace("Case ", "", $title);
+					elseif(strpos($title, 'CASE ') !== false)
+						$title = str_replace("CASE ", "", $title);
+					else
+						continue;
+				}
 
 	    		$description = '';
 	    		$net_price = $product->Price;
@@ -713,6 +774,9 @@ class Live_model extends CI_Model {
 
 				if ($type != '')
 					$quest_product['type'] = $type;
+
+				if ($c == 'sata_hard_drives')
+					$quest_product['size'] = $size;
 
 				//Image cannot be parsed must import it manually
 				$imageUrl = '';
@@ -3515,6 +3579,12 @@ class Live_model extends CI_Model {
 				{
 					$categoryData = array_merge($categoryData, $chars_array);
 				}
+
+				if($supplier == 'quest' && $c == 'sata_hard_drives')
+				{
+					$categoryData['size'] = $product['size'];
+				}
+				
 			}
 			if($supplier == 'oktabit')
 			{
@@ -3543,7 +3613,7 @@ class Live_model extends CI_Model {
 					$categoryData['new_item'] = 0;
 			}
 			
-			if($supplier == 'braintrust' && $c != "laptops")
+			if($supplier == 'braintrust' && $c != "laptops" || $supplier == 'quest' )
 			{
 				$categoryData ['new_item'] = 1;
 			}
