@@ -797,7 +797,12 @@ class Live_model extends CI_Model {
 		}//end foreach
 
 		$this->sendImportedProductsByMail($newProducts,'Quest');
-		echo "Finnished updating Quest.";	
+		
+		echo "Finnished updating Quest.";
+		echo "<h3> NEW PRODUCTS </h3>";
+		foreach ($newProducts as $key => $value) {
+			echo $key.' -> '.$value.'<br>';
+		}
 
 		$log['log_result'] = $newProducts;
 		$this->MakeLogEntry($log);
