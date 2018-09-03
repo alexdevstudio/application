@@ -457,10 +457,12 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 			case 'gaming_chairs':
 					$shipping_class = $this->shippingByWeight((float)$data['weight']+10);
 					break;
+			case 'plotters':
+					$shipping_class = 9974;
+					break;
 			default:
 				return false;
 				break;
-
 			}
 		}
 
@@ -472,7 +474,6 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 
     public function shippingByWeight($vweight){
     	$vweight = (float) $vweight;
-
 
     	switch ($vweight) {
     		case 0.2:

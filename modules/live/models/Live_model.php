@@ -658,7 +658,28 @@ class Live_model extends CI_Model {
 					$size = '2.5"';
 					break;
 				case 'Cases':
-					$c = 'cases';
+					if(strpos($title, 'Κουτί ') !== false)
+					{
+						$title = str_replace("Κουτί ", "", $title);
+						$c = 'cases';
+					}
+					elseif(strpos($title, 'ΚΟΥΤΙ ') !== false)
+					{
+						$title = str_replace("ΚΟΥΤΙ ", "", $title);
+						$c = 'cases';
+					}
+					elseif(strpos($title, 'Case ') !== false)
+					{
+						$title = str_replace("Case ", "", $title);
+						$c = 'cases';
+					}
+					elseif(strpos($title, 'CASE ') !== false)
+					{
+						$title = str_replace("CASE ", "", $title);
+						$c = 'cases';
+					}
+					else
+						$c = $cat;
 					break;
 				case 'Desktop Set':
 					$c = 'keyboard_mouse';
@@ -671,6 +692,11 @@ class Live_model extends CI_Model {
 				case 'Mouse':
 					$c = 'keyboard_mouse';
 					$type = 'Set mouse/keyboard';
+					break;
+				case 'Plotters':
+					$c = 'plotters';
+					if (strpos($title, 'PLOTTER ') !== false)
+						$title = str_replace("PLOTTER ", "", $title);
 					break;
 				default:
 					$c = $cat;
@@ -692,19 +718,6 @@ class Live_model extends CI_Model {
 				$title = (string) trim($product->Item);
 				if(strpos($title, 'ΕΞΑΡΤ') !== false)
 					continue;
-				elseif($c == 'cases')
-				{
-					if(strpos($title, 'Κουτί ') !== false)
-						$title = str_replace("Κουτί ", "", $title);
-					elseif(strpos($title, 'ΚΟΥΤΙ ') !== false)
-						$title = str_replace("ΚΟΥΤΙ ", "", $title);
-					elseif(strpos($title, 'Case ') !== false)
-						$title = str_replace("Case ", "", $title);
-					elseif(strpos($title, 'CASE ') !== false)
-						$title = str_replace("CASE ", "", $title);
-					else
-						continue;
-				}
 
 	    		$description = '';
 	    		$net_price = $product->Price;
@@ -717,7 +730,7 @@ class Live_model extends CI_Model {
 	    		$code = (string) trim($product->Quest_Code);
 
 				$brand = $this->MakeQuestBrands($title, $cat);
-				if ($brand == 'APPLE' || ($brand == 'TOSHIBA' && $cat== 'Notebook') || $brand == 'BENQ' || $brand == 'Unknown' || $brand == '')
+				if ($brand == 'APPLE' || ($brand == 'TOSHIBA' && $cat == 'Notebook') || $brand == 'BENQ' || $brand == 'Unknown' || $brand == '')
 					continue;
 
 	    		//1. Live
@@ -3538,7 +3551,7 @@ class Live_model extends CI_Model {
 				   $c == "external_hard_drives" || $c == "fans" || $c == "firewalls" || $c == "flash_drives" || 
 				   $c == "gaming_chairs" || $c == "graphic_cards" || $c == "hoverboards" || $c == "ip_cameras" || 
 				   $c == "ip_phones" || $c == "keyboard_mouse" || $c == "laptops " || $c == "memories" || $c == "motherboards" || 
-				   $c == "multiplugs" || $c == "nas" || $c == "optical_drives" || $c == "patch_panels" || $c == "power_bank" || 
+				   $c == "multiplugs" || $c == "nas" || $c == "optical_drives" || $c == "patch_panels" || $c == 'plotters' || $c == "power_bank" || 
 				   $c == "power_supplies" || $c == "powerlines" || $c == "printer_belts" || $c == "printer_drums" || 
 				   $c == "printer_fusers" || $c == "projectors" || $c == "racks" || $c == "routers" || $c == "sata_hard_drives" || 
 				   $c == "server_controllers" || $c == "server_cpu" || $c == "server_hard_drives" || $c == "server_memories" || 
