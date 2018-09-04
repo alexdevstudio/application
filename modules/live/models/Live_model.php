@@ -3550,7 +3550,7 @@ class Live_model extends CI_Model {
 				   $c == "carrying_cases" || $c == "cases" || $c == "cooling_pads" || $c == "cpu" || $c == "desktops" || 
 				   $c == "external_hard_drives" || $c == "fans" || $c == "firewalls" || $c == "flash_drives" || 
 				   $c == "gaming_chairs" || $c == "graphic_cards" || $c == "hoverboards" || $c == "ip_cameras" || 
-				   $c == "ip_phones" || $c == "keyboard_mouse" || $c == "laptops " || $c == "memories" || $c == "motherboards" || 
+				   $c == "ip_phones" || $c == "keyboard_mouse" || $c == "laptops" || $c == "memories" || $c == "motherboards" || 
 				   $c == "multiplugs" || $c == "nas" || $c == "optical_drives" || $c == "patch_panels" || $c == 'plotters' || $c == "power_bank" || 
 				   $c == "power_supplies" || $c == "powerlines" || $c == "printer_belts" || $c == "printer_drums" || 
 				   $c == "printer_fusers" || $c == "projectors" || $c == "racks" || $c == "routers" || $c == "sata_hard_drives" || 
