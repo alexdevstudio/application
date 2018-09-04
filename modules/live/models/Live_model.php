@@ -3990,8 +3990,8 @@ class Live_model extends CI_Model {
 			foreach ($chars_array as $key => $value) {
 
 				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
-
-				if($value == 'Τύπος')
+				
+				if($key == 'type' && ($chars_array['type'] == 'Τύπος' || $chars_array['type'] == ''))
 					$chars_array[$key] = 'Access Point';
 			}
 		}
