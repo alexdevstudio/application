@@ -3546,18 +3546,6 @@ class Live_model extends CI_Model {
 			else
 			{ 
 				$shipping_class = '';
-<<<<<<< HEAD
-				if($c == "accessories" || $c == "cable_accessories" || $c == "cables" || $c == "card_readers" || 
-				   $c == "carrying_cases" || $c == "cases" || $c == "cooling_pads" || $c == "cpu" || $c == "desktops" || 
-				   $c == "external_hard_drives" || $c == "fans" || $c == "firewalls" || $c == "flash_drives" || 
-				   $c == "gaming_chairs" || $c == "graphic_cards" || $c == "hoverboards" || $c == "ip_cameras" || 
-				   $c == "ip_phones" || $c == "keyboard_mouse" || $c == "laptops" || $c == "memories" || $c == "motherboards" || 
-				   $c == "multiplugs" || $c == "nas" || $c == "optical_drives" || $c == "patch_panels" || $c == 'plotters' || $c == "power_bank" || 
-				   $c == "power_supplies" || $c == "powerlines" || $c == "printer_belts" || $c == "printer_drums" || 
-				   $c == "printer_fusers" || $c == "projectors" || $c == "racks" || $c == "routers" || $c == "sata_hard_drives" || 
-				   $c == "server_controllers" || $c == "server_cpu" || $c == "server_hard_drives" || $c == "server_memories" || 
-				   $c == "server_power_supplies" || $c == "servers" || $c == "smartphones" || $c == "speakers" || $c == "ssd" || 
-=======
 				if($c == "accessories" || $c == "cable_accessories" || $c == "cables" || $c == "card_readers" ||
 				   $c == "carrying_cases" || $c == "cases" || $c == "cooling_pads" || $c == "cpu" || $c == "desktops" ||
 				   $c == "external_hard_drives" || $c == "fans" || $c == "firewalls" || $c == "flash_drives" ||
@@ -3568,7 +3556,6 @@ class Live_model extends CI_Model {
 				   $c == "printer_fusers" || $c == "projectors" || $c == "racks" || $c == "routers" || $c == "sata_hard_drives" ||
 				   $c == "server_controllers" || $c == "server_cpu" || $c == "server_hard_drives" || $c == "server_memories" ||
 				   $c == "server_power_supplies" || $c == "servers" || $c == "smartphones" || $c == "speakers" || $c == "ssd" ||
->>>>>>> master
 				   $c == "switches" || $c == "tablets" || $c == "tv" || $c == "ups"){
 
 					$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
