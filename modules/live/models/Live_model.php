@@ -1320,10 +1320,20 @@ class Live_model extends CI_Model {
 					$c = 'carrying_cases';
 					break;
 				case 'Computers- / Computers- / All In One':
+					$c = 'desktops';
+					$sc = 'All-in-One';
+					break;
 				case 'Computers- / Computers- / Desktop':
+					$c = 'desktops';
+					$sc = 'Desktop';
+					break;
 				case 'Computers- / Computers- / Mini PC':
+					$c = 'desktops';
+					$sc = 'Mini PC';
+					break;
 				case 'Computers- / Computers- / Workstations':
 					$c = 'desktops';
+					$sc = 'Workstation';
 					break;
 				case 'Computers- / Computers- / Notebooks':
 					$c = 'laptops';
@@ -1529,7 +1539,7 @@ class Live_model extends CI_Model {
 						$log_product['dist_type'] = '';
 
 				}
-				else if($c == 'accessories' || $c == 'routers')
+				else if($c == 'accessories' || $c == 'desktops' || $c == 'routers')
 				{
 					$log_product['type'] = $sc;
 				}
