@@ -1112,7 +1112,7 @@ class Live_model extends CI_Model {
 			set_time_limit(50);
 			//Rename categories for ETD.gr
 
-			$dist_type='';
+			$dist_type = $sc = '';
 			$cat = (string) trim($product->categories1);
 
 			$c_array = explode(">", $cat);
@@ -1138,9 +1138,15 @@ class Live_model extends CI_Model {
 					$c='ip_pbx';
 					break;
 				case 'IP Phones':
-				case 'IP Video Phones':
-				case 'Conference':
 					$c='ip_phones';
+					$sc = 'IP Phones';
+					break;
+				case 'IP Video Phones':
+					$c='ip_phones';
+					$sc = 'IP Video Phones';
+					break;
+				case 'Conference':
+					$c='Conference';
 					break;
 				default:
 					$c =  $cat;
@@ -1223,6 +1229,9 @@ class Live_model extends CI_Model {
 				);
 
 				$chars_array=array();
+
+				if($sc != '')
+					$product_array['type'] = $sc;
 
 				$f = array();
 				$f[]=trim($product->image);
@@ -1353,9 +1362,14 @@ class Live_model extends CI_Model {
 					break;
 				case 'Networking- / Routing':
 					$c = 'routers';
+					$sc = 'Router';
 					break;
 				case 'Networking- / Switching':
 					$c = 'switches';
+					break;
+				case 'Networking- / Wireless':
+					$c = 'routers';
+					$sc = 'Access Point';
 					break;
 				case 'Peripherals- / Accessories- / Keyboards':
 				case 'Peripherals- / Accessories- / Mouse':
@@ -1515,7 +1529,7 @@ class Live_model extends CI_Model {
 						$log_product['dist_type'] = '';
 
 				}
-				else if($c == 'accessories')
+				else if($c == 'accessories' || $c == 'routers')
 				{
 					$log_product['type'] = $sc;
 				}
@@ -1542,6 +1556,10 @@ class Live_model extends CI_Model {
 		$this->sendImportedProductsByMail($newProducts, 'Logicom-Enet');
 
 		echo "Finnished updating Logicom-Enet.";
+		echo "<h3> NEW PRODUCTS </h3>";
+		foreach ($newProducts as $key => $value) {
+			echo $key.' -> '.$value.'<br>';
+		}
 
 		$log['log_result'] = $newProducts;
 		$this->MakeLogEntry($log);
