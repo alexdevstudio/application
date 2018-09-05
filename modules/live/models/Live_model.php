@@ -1383,19 +1383,35 @@ class Live_model extends CI_Model {
 				case 'Computers- / Components- / CPUs':
 					if($ManufacturerList == 'HPE- / Server Options- / CPUs')
 						$c='server_cpu';
+					elseif($ManufacturerList == 'INTEL- / Components- / CPUs')
+						$c='cpu';
 					break;
 				case 'Computers- / Components- / Internal Hard Drives':
 					if($ManufacturerList == 'HPE- / Server Options- / Internal Hard Drives')
 						$c='server_hard_drives';
+					elseif($ManufacturerList == 'HP- / Components- / Internal Hard Drives')
+						$c='sata_hard_drives';
 					break;
 				case 'Computers- / Components- / Memories Module':
 					if($ManufacturerList == 'HPE- / Server Options- / Memories Module')
 						$c='server_memories';
+					elseif($ManufacturerList == 'HYPERX- / Components- / Memories Module')
+						$c='memories';
+					elseif($ManufacturerList == 'KINGSTON- / Components- / Memories Module')
+						$c='memories';
+					elseif($ManufacturerList == 'HP- / Components- / Memories Module')
+						$c='memories';
 					break;
 				case 'Computers- / Servers- / Server / Rack Options':
 					$tmp_title = (string) trim($prd["Name"]);
 					if(strstr($tmp_title,'Power Supply'))
 						$c='server_power_supplies';
+					break;
+				case 'Computers- / Components- / Graphics Cards':
+					$c='graphic_cards';
+					break;
+				case 'Computers- / Components- / Solid State Drives':
+					$c='ssd';
 					break;
 				default:
 					$c = $cat;
