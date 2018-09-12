@@ -26,6 +26,19 @@ class Images_model extends CI_Model {
       return true;
 	}
 
+	public function checkIfImageExist($sku)
+	{
+		$this->db->select('*');
+        $this->db->from('images');
+		$this->db->where('item_sku', $sku);
+		$query = $this->db->get();
+
+        if($query->num_rows() > 0)
+			return false;
+		else
+			return true;
+	}
+
 	public function parsePdf($data){
 
 		$src = $data['src'];

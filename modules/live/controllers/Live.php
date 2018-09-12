@@ -264,6 +264,16 @@ http://etd.gr/xml/live/updateAvPraxis/delete/"sku"*/
 	 	$this->load->model('live_model');
 	 	$this->live_model->AddProductImages($product, $f, $supplier, $sku);
 	 }
+/*
+	 public function AddOktabitImages($sku){
+		$product = array();
+		$product['code'] = '256-50-TLWR902AC';
+		$product['brand'] = 'TP-LINK';
+		$product['product_number'] = 'TL-WR902AC';
+		$this->load->model('live_model');
+		$this->live_model->AddProductImages($product, 0, 'oktabit', $sku);
+	}
+*/
 }
 
 ?>

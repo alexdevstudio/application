@@ -3790,27 +3790,23 @@ class Live_model extends CI_Model {
 				$this->AddProductImages($product, $f, $supplier, $sku);
 			}
 		}
-		//if($sku = Modules::run('sku/checkSku',$skuArray)){
-		/*else
-		{
-			if($c == 'printers' || $c == 'multifunction_printers'){
-				$price = array('price'=>(float)$product['net_price']);
-				//print_r($price['price']);
-				$shipping_class  = Modules::run('categories/makeShippingClass',$price, $c, true);
-					//Must add volumetricWeight!!!
-				$this->db->set('shipping_class',$shipping_class);
-				$this->db->where('sku',$sku);
-				$this->db->update($c);
-			}
-			/*else if($c == 'memories') //Fix for updating image
+		/*
+		else {
+			if($supplier == 'oktabit') // For adding images if not exist
 			{
-				$mem_images = $this->AddProductImages($product, $f, $supplier, $sku);
+				$this->load->model('images/images_model');
+				
+				if($this->images_model->checkIfImageExist($sku))
+				{
+					$this->AddProductImages($product, $f, $supplier, $sku);
+				}
 			}
-    	}*/
+		}
+		*/
 
     	return $insert;
-    }
-
+	}
+	
 
     public function AddProductImages($product, $f, $supplier, $sku){
 

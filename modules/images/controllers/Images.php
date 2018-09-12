@@ -127,6 +127,11 @@ class Images extends MX_Controller {
 
 	}
 
+	public function checkIfImageExist($sku){
+		$this->load->model('images_model');
+		return $this->images_model->checkIfImageExist($sku);
+	}
+
 }
 
 ?>
