@@ -275,12 +275,14 @@ class Extract_model extends CI_Model {
                         $description = trim(strip_tags($product['description']));
                         $bonus = trim(strip_tags($product['bonus']));
 
-                        $vga = '';
+                        $vga = $product['graphics'];
                         $shared_graphics = trim(strip_tags($product['shared_graphics']));
 
                         if($shared_graphics != "ΝΑΙ" && $shared_graphics != "NAI" )
                         {
-                            $vga = '/' . trim(strip_tags($product['graphics'])) . ' ' . trim(strip_tags($product['graphics_memory'])) . ' ' . trim(strip_tags($product['graphics_memory_type']));
+                            $vga_ram = str_replace(' ','',trim(strip_tags($product['graphics_memory'])));
+                            $vga = '/' . trim(strip_tags($product['graphics'])) . ' ' . $vga_ram;
+                            //$vga = '/' . trim(strip_tags($product['graphics'])) . ' ' . trim(strip_tags($product['graphics_memory'])) . ' ' . trim(strip_tags($product['graphics_memory_type']));
                         }
 
                         if ($bonus != '')
@@ -294,6 +296,11 @@ class Extract_model extends CI_Model {
                             $color=" ";
                         else
                             $color=" $color ";
+
+                        if($skroutz_title == ''){
+                            $skroutz_title = $model.$color.$cpu.'/'.$ram.'/'.$disk.'/'.$vga.'/'.$os;
+
+                        }
 
 
                         if($etd_title == ''){
@@ -318,11 +325,6 @@ class Extract_model extends CI_Model {
                             $vga.$title_vga_ram.', '.
                             $os.', '.
                             $y_warranty.' ('.$pn.')';
-
-                        }
-
-                        if($skroutz_title == ''){
-                            $skroutz_title = $model.$color.$cpu.'/'.$ram.'/'.$disk. $vga.'/'.$os;
 
                         }
 
