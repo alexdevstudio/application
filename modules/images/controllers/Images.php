@@ -94,6 +94,7 @@ class Images extends MX_Controller {
 			$file_name = $product->row()->brand.'-'.$product->row()->product_number.'-'.$rand;
 			$file_name = str_replace(' ','_',$file_name);
 			$file_name = str_replace('.','_',$file_name);
+			$file_name = str_replace('/','-',$file_name);
 			$config["upload_path"] = "./images/".$sku;
 			$config["allowed_types"] = "jpg";
 
