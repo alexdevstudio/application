@@ -150,6 +150,7 @@ if($itemLive){
 	$partnernet = '';
 	$quest= '';
 	$netconnect = '';
+	$digital_sima = '';
 	$other = '';
 
 ?>
@@ -249,6 +250,9 @@ if($itemLive){
 											break;
 										case 'netconnect':
 	              		  					$netconnect = 'selected';
+												break;
+										case 'digital_sima':
+	              		  					$digital_sima = 'selected';
 	              		  					break;
 
 	              		  				default:
@@ -262,6 +266,7 @@ if($itemLive){
 	              		  	<option value="braintrust" <?= $braintrust ?>>Braintrust</option>
 	              		  	<option value="cpi" <?= $cpi ?>>CPI</option>
 							<option value="DDC" <?= $ddc ?>>DDC</option>
+							<option value="digital_sima" <?= $digital_sima ?>>Digital Sima</option>
 							<option value="logicom" <?= $logicom ?>>Logicom</option>
 							<option value="netconnect" <?= $netconnect ?>>Netconnect</option>
 							<option value="oktabit" <?= $oktabit ?>>Oktabit</option>
