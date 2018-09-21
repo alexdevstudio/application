@@ -571,7 +571,7 @@ class Extract_model extends CI_Model {
                             }
                             //if(($key == 'description' && $table == 'laptops') || ($key == 'description' && $table == 'monitors')|| ($key == 'description' && $table == 'printers') || $key == 'auto_descr' )// for insert the description without strip_tags
                             if(($key == 'description' && ($table == 'laptops' || $table == 'monitors' || $table == 'printers' || $table == 'desktops')) || $key == 'auto_descr')
-                            {  
+                            {
                                 $attr = $xml->createElement($key, trim(htmlspecialchars($value)));
                             }
                             else
@@ -685,7 +685,7 @@ class Extract_model extends CI_Model {
 
         }
 
-        public function priceTax($product) 
+        public function priceTax($product)
         {
            //  echo $category_rate;
              $net  = $product['net_price'];

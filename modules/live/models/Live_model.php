@@ -3588,7 +3588,7 @@ class Live_model extends CI_Model {
 				);
 			}
 			else
-			{ 
+			{
 				$shipping_class = '';
 				if($c == "accessories" || $c == "cable_accessories" || $c == "cables" || $c == "card_readers" ||
 				   $c == "carrying_cases" || $c == "cases" || $c == "cooling_pads" || $c == "cpu" || $c == "desktops" ||
@@ -3795,7 +3795,7 @@ class Live_model extends CI_Model {
 			if($supplier == 'oktabit') // For adding images if not exist
 			{
 				$this->load->model('images/images_model');
-				
+
 				if($this->images_model->checkIfImageExist($sku))
 				{
 					$this->AddProductImages($product, $f, $supplier, $sku);
@@ -3806,7 +3806,7 @@ class Live_model extends CI_Model {
 
     	return $insert;
 	}
-	
+
 
     public function AddProductImages($product, $f, $supplier, $sku){
 
@@ -4030,7 +4030,7 @@ class Live_model extends CI_Model {
 			foreach ($chars_array as $key => $value) {
 
 				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
-				
+
 				if($key == 'type' && ($chars_array['type'] == 'Τύπος' || $chars_array['type'] == ''))
 					$chars_array[$key] = 'Access Point';
 			}
