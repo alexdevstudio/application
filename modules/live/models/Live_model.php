@@ -3671,7 +3671,7 @@ class Live_model extends CI_Model {
 				// Make products not new items to parse immediately
 				if($c == 'speakers' || $c == 'gaming_chairs' || $c == 'ups' || $c == 'routers' || $c == 'powerlines' ||
 				   $c == 'ip_cameras' || $c == 'multiplugs' || $c == 'smartphones' || $c == 'external_hard_drives' ||
-				   $c == 'ssd' )
+				   $c == 'ssd' || $c == 'sata_hard_drives')
 					$categoryData['new_item'] = 0;
 			}
 
@@ -4071,8 +4071,8 @@ class Live_model extends CI_Model {
 				'internal_memory' => 'Αποθηκευτικός χώρος',
 				'card_slot' => 'Επέκταση μνήμης',
 				'dual_sim' => 'Dual SIM',
-				'primary_camera' => 'Κάμερα',
-				'secondary_camera' => 'Κάμερα (πίσω)',
+				'primary_camera' => 'Κάμερα (πίσω)',
+				'secondary_camera' => 'Κάμερα',
 				'embedded_flash' => 'Flash',
 				'operating_system' => 'Λειτουργικό σύστημα',
 				'skroutz_operating_system' => '',
@@ -4146,7 +4146,10 @@ class Live_model extends CI_Model {
 						$chars_array[$key] /= 1000;
 				}
 				elseif($value == 'Διάσταση οθόνης')
+				{
 					$chars_array[$key] = str_replace('\"','',$chars_array[$key]);
+					$chars_array[$key] = str_replace('\'\'','',$chars_array[$key]);					
+				}
 				elseif($value == 'Τύπος')
 					$chars_array[$key] = 'Smartphone';
 				elseif($value == 'Κάμερα' || $value == 'Κάμερα (πίσω)')
