@@ -74,7 +74,7 @@ class Categories extends MX_Controller {
     }
 
     public function fullCategoriesArray(){
-    	$array = array('accessories','cables','cable_accessories','card_readers','carrying_cases','cartridges','cases','cooling_pads','copiers','cpu',
+    	$array = array('accessories', 'barcode_scanners', 'barcode_printers', 'cables','cable_accessories','card_readers','carrying_cases','cartridges','cases','cooling_pads','copiers','cpu',
     		'desktops','docking_stations','external_hard_drives','fans','firewalls','flash_drives','gaming_chairs','graphic_cards','hoverboards','ip_phones',
             'ip_cameras','ip_cards','ip_gateways','ip_pbx', 'keyboard_mouse','laptops','memories','monitors','motherboards','multifunction_printers','multiplugs','nas',
     		'optical_drives','papers','patch_panels','plotters','powerlines','power_bank','power_supplies','printers','printer_drums','printer_fusers','printer_belts','projectors','racks',

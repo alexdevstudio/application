@@ -119,6 +119,10 @@ class Live_model extends CI_Model {
 					{
 						$c = 'projectors';
 					}
+					elseif($sc == 'Barcode Scanners')
+					{
+						$c = 'barcode_scanners';
+					}
 					break;
 				case 'Computers':
 					if($sc == 'Advanced PC' || $sc == 'All In One PC' || $sc == ' All In One PC BTO' || $sc == 'Business PC' || $sc == 'Workstations')
@@ -187,6 +191,9 @@ class Live_model extends CI_Model {
 					}
 					elseif($sc == 'Multifunction Printers'){
 						$c = 'multifunction_printers';
+					}
+					elseif($sc == 'POS Printers'){
+						$c = 'barcode_printers';
 					}
 					break;
 				case 'Software':
@@ -3590,7 +3597,7 @@ class Live_model extends CI_Model {
 			else
 			{
 				$shipping_class = '';
-				if($c == "accessories" || $c == "cable_accessories" || $c == "cables" || $c == "card_readers" ||
+				if($c == "accessories" || $c == "barcode_scanners" || $c == "barcode_printers" || $c == "cable_accessories" || $c == "cables" || $c == "card_readers" ||
 				   $c == "carrying_cases" || $c == "cases" || $c == "cooling_pads" || $c == "cpu" || $c == "desktops" ||
 				   $c == "external_hard_drives" || $c == "fans" || $c == "firewalls" || $c == "flash_drives" ||
 				   $c == "gaming_chairs" || $c == "graphic_cards" || $c == "hoverboards" || $c == "ip_cameras" ||
@@ -3671,7 +3678,7 @@ class Live_model extends CI_Model {
 				// Make products not new items to parse immediately
 				if($c == 'speakers' || $c == 'gaming_chairs' || $c == 'ups' || $c == 'routers' || $c == 'powerlines' ||
 				   $c == 'ip_cameras' || $c == 'multiplugs' || $c == 'smartphones' || $c == 'external_hard_drives' ||
-				   $c == 'ssd' || $c == 'sata_hard_drives')
+				   $c == 'ssd' || $c == 'sata_hard_drives'|| $c=='barcode_scanners')
 					$categoryData['new_item'] = 0;
 			}
 
@@ -3962,6 +3969,36 @@ class Live_model extends CI_Model {
 				'material' => 'Υλικό κατασκευής',
 				'colour' => 'Χρώμα',
 				'dimensions' => 'Διαστάσεις (πλάτος x ύψος x πάχος, σε mm)'
+			);
+			foreach ($chars_array as $key => $value) {
+				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+			}
+		}
+		elseif ($category == 'barcode_scanners'){
+
+			$chars_array = array(
+				'connectivity' => 'Σύνδεση',
+				'decode_capability' => 'Decode capability',
+				'wireless' => 'Wireless',
+				'weight' => 'Βάρος (γραμμάρια)',
+				'year_warranty' => 'Εγγύηση (μήνες)'
+			);
+			foreach ($chars_array as $key => $value) {
+				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+			}
+		}
+		elseif ($category == 'barcode_printers'){
+
+			$chars_array = array(
+				'print_technology' => 'Τεχνολογία εκτύπωσης',
+				'connectivity' => 'Σύνδεση',
+				'print_speed' => 'Ταχύτητα εκτύπωσης',
+				'paper_input_output' => 'Είσοδος / έξοδος  χαρτιού',
+				'auto_cut' => 'Αυτόματη κοπή',
+				'barcode_print' => 'Εκτύπωση barcode',
+				'label_print' => 'Εκτύπωση ετικέτας',
+				'psu' => 'Τροφοδοτικό',
+				'year_warranty' => 'Εγγύηση (μήνες)'
 			);
 			foreach ($chars_array as $key => $value) {
 				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
