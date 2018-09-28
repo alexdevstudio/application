@@ -262,20 +262,20 @@ if($itemLive){
 
 
 	              		  	?>
-	              		  	<option value="etd" <?= $etd ?>>ETD</option>
-	              		  	<option value="braintrust" <?= $braintrust ?>>Braintrust</option>
-	              		  	<option value="cpi" <?= $cpi ?>>CPI</option>
-							<option value="DDC" <?= $ddc ?>>DDC</option>
-							<option value="digital_sima" <?= $digital_sima ?>>Digital Sima</option>
-							<option value="logicom" <?= $logicom ?>>Logicom</option>
-							<option value="netconnect" <?= $netconnect ?>>Netconnect</option>
-							<option value="oktabit" <?= $oktabit ?>>Oktabit</option>
-							<option value="partnernet" <?= $partnernet ?>>PartnerNet</option>
-							<option value="quest" <?= $quest ?>>Quest</option>
-	              		  	<option value="westnet" <?= $westnet ?>>WestNet</option>
-	              		  	<option value="none" <?= $other ?>>Δεν υπάρχει σε κανέναν προμηθευτή</option>
+												<option value="etd" <?= $etd ?>>ETD</option>
+												<option value="braintrust" <?= $braintrust ?>>Braintrust</option>
+												<option value="cpi" <?= $cpi ?>>CPI</option>
+												<option value="DDC" <?= $ddc ?>>DDC</option>
+												<option value="digital_sima" <?= $digital_sima ?>>Digital Sima</option>
+												<option value="logicom" <?= $logicom ?>>Logicom</option>
+												<option value="netconnect" <?= $netconnect ?>>Netconnect</option>
+												<option value="oktabit" <?= $oktabit ?>>Oktabit</option>
+												<option value="partnernet" <?= $partnernet ?>>PartnerNet</option>
+												<option value="quest" <?= $quest ?>>Quest</option>
+												<option value="westnet" <?= $westnet ?>>WestNet</option>
+												<option value="none" <?= $other ?>>Δεν υπάρχει σε κανέναν προμηθευτή</option>
 
-	              		  </select>
+											</select>
 
 
 
@@ -319,11 +319,11 @@ if($itemLive){
 	<button type="submit" class="btn btn-block btn-info">Ενημέρωση του Eshop</button>
 
 </form>
-<br/>
+<hr style="border-top: 1px solid #ccc;">
 </div>
 		<!-- Delete Form -->
 		<div class="col-xs-12 ">
-	 		<form method="post" action="">
+	 		<form method="post" action="" onsubmit="return confirm('Το προϊόν θα διαγραφεί από το SITE και δεν θα ενημερώνεται στο εξής. Είστε σίγουροι;');">
 	 			<input class='form-control' type="hidden" name='product_number' value='<?= $pn; ?>'>
 	 			<input class='form-control' type="hidden" name='category' value='<?= $category; ?>'>
 	 			<input class='form-control' type="hidden" name='status' value='delete'>
@@ -331,11 +331,11 @@ if($itemLive){
 
 	 			<button type="submit" class="btn btn-block btn-danger">Aφαίρεση από STOCK</button>
 	 		</form>
+			<hr style="border-top: 1px solid #ccc;">
 		</div>
-
 		<!-- Total Removal Form -->
 		<div class="col-xs-12 ">
-			<br/>
+
 	 		<form method="post" action="" onsubmit="return confirm('Το προϊόν θα διαγραφεί από παντού. Είστε σίγουροι;');">
 	 			<input class='form-control' type="hidden" name='title' value='<?= $item->row()->title; ?>'>
 	 			<input class='form-control' type="hidden" name='product_number' value='<?= $pn; ?>'>
@@ -379,7 +379,7 @@ if($itemLive){
 					<label class="checkbox">
 						<input id="ShowOnFrontPage" type="checkbox" value="" <?= $ExistInFrontPage ?> onclick="updateFrontPage('<?php echo $sku?>','<?php echo $pn?>', '<?php echo $category?>')">Εμφάνιση στη Αρχική σελίδα
 					</label>
-					
+
 				</div>
 			</div>
 

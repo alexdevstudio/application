@@ -126,6 +126,7 @@ class Edit extends MX_Controller {
 				}
 				else if($post['status']=='add')
 				{
+					$status = $post['status'];
 					unset ($post['status']);
 
 					$currentAv = $post['availability'];
@@ -218,6 +219,11 @@ class Edit extends MX_Controller {
 							$post['status']='trash';
 						}
 
+						if($post['supplier'] == 'none')
+								$post['status'] ='trash';
+
+
+
 						$update = Modules::run('crud/update','live',$where,$post);
 						//updateWp($product, $table);
 					}else{
@@ -226,9 +232,14 @@ class Edit extends MX_Controller {
 
 					}
 
-					//For auto update the WP with update_wp
-					Modules::run('extract/allImport',$category,'one',0,$sku);
 
+										//For auto update the WP with update_wp
+					Modules::run('extract/allImport',$category,'one',0,$sku);
+					if($post['supplier'] == 'none'){
+						$update = Modules::run('crud/delete','live',$where);
+						Modules::run('crud/delete','etd_prices', ['sku' =>  $sku]);
+						Modules::run('crud/delete','installments', ['sku' =>  $sku]);
+					}
 					//Toggle skroutz parsing if the URL was set from before
 					if($post['supplier']=='etd'){
 						$this->skroutzParsingDeactivate($sku, true);
@@ -348,7 +359,7 @@ class Edit extends MX_Controller {
 
 					if($Deletion_from_skroutz_urls)
 						$DeletionMessage .=', Skroutz_urls';
-					
+
 					if($Deletion_from_skroutz_prices)
 						$DeletionMessage .=', Skroutz_prices';
 

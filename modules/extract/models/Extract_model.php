@@ -753,6 +753,17 @@ class Extract_model extends CI_Model {
 
 
 
+                        //Disable "Stock management" for deleted products
+
+                        if($product['status']=='trash'){
+                          $where = array('post_id'=>$post_id,'meta_key'=>'_manage_stock');
+                          $data = array('meta_value'=>'no');
+                          Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
+
+                          $where = array('post_id'=>$post_id,'meta_key'=>'_stock');
+                          $data = array('meta_value'=>'');
+                          Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
+                        }
 
                         if($product['status']=='publish'){
 
