@@ -224,6 +224,12 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 			case 'laptops':
 					$shipping_class= 10652;
 					break;
+			case 'barcode_scanners':
+					$shipping_class= 10649;
+					break;
+			case 'barcode_printers':
+					$shipping_class= 10069;
+					break;
 			case 'software':
 					$shipping_class= 10646;
 					break;
