@@ -388,7 +388,7 @@ if($itemLive){
 		<div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
               <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">Χαρακτηριστικά</a></li>
-              <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false">Σχετικά Προϊόντα</a></li>
+              <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false">Συνδυάστε το με…</a></li>
                <li class=""><a href="#tab_3" data-toggle="tab" aria-expanded="false">Φωτογραφίες</a></li>
             </ul>
             <div class="tab-content">
@@ -486,7 +486,7 @@ if($itemLive){
               	}
                ?>
                 <form  method='post' action="">
-		<label>Προϊόντα Παράλληλης Πώλησης <small style="font-weight:normal;color:#888">(με κόμμα)</small></label>
+		<label>Προϊόντα Παράλληλης Πώλησης (Συνδυάστε το με…) <small style="font-weight:normal;color:#888">(με κόμμα)</small></label>
 
                 <input type="text" name="cross_sells_products" class="form-control" value="<?= $cross_sells; ?>" placeholder="1315245, 1312558, 1316956" />
                 <br />
