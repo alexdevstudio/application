@@ -307,8 +307,16 @@ class Edit extends MX_Controller {
 					$products = str_replace(" ", "", $post['cross_sells_products']);
 
 					if(($cross_sells && $cross_sells->row()->products!=$products) || $products==''){
-						$where=array('sku'=>$sku);
+						$where = array('sku' => $sku);
 						Modules::run('crud/delete','cross_sells', $where);
+
+						//Get WP post id
+						$where = array('meta_value'=>$sku,"meta_key"=>"_sku");
+						$post_id = (int) Modules::run("crud/getWp","wp_postmeta", $where)->row()->post_id;
+
+						//Delete uppsells from WP
+						$where = array('post_id' => $post_id,"meta_key"=>"_upsell_ids");
+						Modules::run('crud/deleteWp',"wp_postmeta",  $where);
 
 					}
 
@@ -321,8 +329,29 @@ class Edit extends MX_Controller {
 
 					    Modules::run('crud/insert','cross_sells', $data);
 
-					}
+							$wp_ids = [];
+							$sku_arr = explode(',',$products);
+							array_unshift($sku_arr, $sku);
 
+							foreach ($sku_arr as $value) {
+								$where = array('meta_value'=>$value,"meta_key"=>"_sku");
+								$wp_ids[] = (int) Modules::run("crud/getWp","wp_postmeta", $where)->row()->post_id;
+							}
+
+							$post_id = $wp_ids[0];
+							$where = array('post_id'=>$wp_ids[0],'meta_key'=>'_upsell_ids');
+							array_shift($wp_ids);
+
+							if(Modules::run("crud/getWp","wp_postmeta", $where)){
+								$data = array('meta_value'=> serialize($wp_ids));
+							  Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
+							}else{
+								$data = ['post_id' => $post_id, 'meta_key' => '_upsell_ids', 'meta_value' => serialize($wp_ids)];
+								Modules::run("crud/insertWp","wp_postmeta", $data);
+							}
+
+
+					}
 					$update = true;
 
 
