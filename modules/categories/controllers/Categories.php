@@ -78,7 +78,7 @@ class Categories extends MX_Controller {
     		'desktops','docking_stations','external_hard_drives','fans','firewalls','flash_drives','gaming_chairs','graphic_cards','hoverboards','ip_phones',
             'ip_cameras','ip_cards','ip_gateways','ip_pbx', 'keyboard_mouse','laptops','memories','monitors','motherboards','multifunction_printers','multiplugs','nas',
     		'optical_drives','papers','patch_panels','plotters','powerlines','power_bank','power_supplies','printers','printer_drums','printer_fusers','printer_belts','projectors','racks',
-			'routers','sata_hard_drives','servers','server_controllers','server_cpu','server_hard_drives','server_memories','server_power_supplies',
+			'routers','sata_hard_drives','scanners','servers','server_controllers','server_cpu','server_hard_drives','server_memories','server_power_supplies',
 			'smartphones','software','speakers','ssd','switches','tablets','toners', 'tv', 'ups');
 
     	return $array;

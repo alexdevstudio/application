@@ -123,6 +123,14 @@ class Live_model extends CI_Model {
 					{
 						$c = 'barcode_scanners';
 					}
+					elseif($sc == 'A3 Scanners')
+					{
+						$c = 'scanners';
+					}
+					elseif($sc == 'A4 Scanners')
+					{
+						$c = 'scanners';
+					}
 					break;
 				case 'Computers':
 					if($sc == 'Advanced PC' || $sc == 'All In One PC' || $sc == ' All In One PC BTO' || $sc == 'Business PC' || $sc == 'Workstations')
@@ -3605,9 +3613,20 @@ class Live_model extends CI_Model {
 				   $c == "multiplugs" || $c == "nas" || $c == "optical_drives" || $c == "patch_panels" || $c == 'plotters' || $c == "power_bank" ||
 				   $c == "power_supplies" || $c == "powerlines" || $c == "printer_belts" || $c == "printer_drums" ||
 				   $c == "printer_fusers" || $c == "projectors" || $c == "racks" || $c == "routers" || $c == "sata_hard_drives" ||
-				   $c == "server_controllers" || $c == "server_cpu" || $c == "server_hard_drives" || $c == "server_memories" ||
+				   $c == "scanners" || $c == "server_controllers" || $c == "server_cpu" || $c == "server_hard_drives" || $c == "server_memories" ||
 				   $c == "server_power_supplies" || $c == "servers" || $c == "smartphones" || $c == "speakers" || $c == "ssd" ||
 				   $c == "switches" || $c == "tablets" || $c == "tv" || $c == "ups"){
+
+					// For Oktabit fixing the shipping class by weight or dimensions
+					if($cat == 'scanners')
+					{
+						$the_weight = (float) $data['Βάρος (κιλά)'];
+						$the_dimensions = (float) $data['Διαστάσεις (πλάτος x βάθος x ύψος, σε mm)'];
+						$v_weight_array = explode ('x', $the_dimensions);
+						$v_weight = (float) ($v_weight[0]+50)*($v_weight[1]+50)*($v_weight[2]+50)/5000000;
+
+						$chars_array['volumetric_weight'] = max($the_weight,$v_weight);
+					}
 
 					$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
 					$volumetric_weight = Modules::run('categories/getWeight', $shipping_class);
@@ -4002,6 +4021,34 @@ class Live_model extends CI_Model {
 			);
 			foreach ($chars_array as $key => $value) {
 				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+			}
+		}
+		elseif($category == 'scanners')
+		{
+			$chars_array = array(
+				'resolution' => 'Οπτική ανάλυση (DPI)',
+				'size' => 'Μέγεθος χαρτιού',
+				'adf' => 'Αυτόματη τροφοδοσία χαρτιού',
+				'speed' => 'Ταχύτητα',
+				'connectivity' => 'Σύνδεση',
+				'duplex' => 'Σάρωση διπλής όψης',
+				'dimensions' => 'Διαστάσεις (πλάτος x βάθος x ύψος, σε mm)',
+				'weight' => 'Βάρος (κιλά)',
+				'year_warranty' => 'Εγγύηση (μήνες)'
+			);
+			foreach ($chars_array as $key => $value) {
+
+				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+
+				if($value == 'Οπτική ανάλυση (DPI)')
+				{
+					$chars_array[$key] = str_replace('χ','x',$chars_array[$key]);
+					$chars_array[$key] = str_replace('*','x',$chars_array[$key]);
+				}
+				elseif($value  == 'Διαστάσεις (πλάτος x βάθος x ύψος, σε mm)')
+				{
+					$chars_array[$key] = str_replace('and#8206;','',$chars_array[$key]);
+				}
 			}
 		}
 		elseif ($category == 'power_bank'){
