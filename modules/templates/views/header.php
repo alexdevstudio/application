@@ -402,13 +402,13 @@
            <span>ΠΡΟΪΟΝΤΑ</span>
            <i class="fa fa-angle-left pull-right"></i>
          </a>
-         <ul class="treeview-menu" style="display:<?= ($this->uri->segment(1)=='categories' || $this->uri->segment(1)=='insert') ? 'block' : 'none' ?>">
+         <ul class="treeview-menu" style="display:<?= ($this->uri->segment(1)=='categories' || $this->uri->segment(1)=='insert' || $this->uri->segment(1)=='duplicates') ? 'block' : 'none' ?>">
            <li class="<?= ($this->uri->segment(1)=='categories') ? 'active' : '' ?>">
              <a href="<?php echo base_url();?>categories">
                <i class="fa fa-cubes"></i> <span>ΟΛΑ ΤΑ ΠΡΟΪΟΝΤΑ</span>
              </a>
            </li>
-           <li class="<?= ($this->uri->segment(1)=='insert') ? 'active' : '' ?>">
+           <li class="<?= ($this->uri->segment(1)=='insert' ) ? 'active' : '' ?>">
              <a href="<?php echo base_url();?>insert">
                <i class="fa fa-plus"></i> <span>ΝΕΟ ΠΡΟΪΟΝ</span>
              </a>
@@ -421,6 +421,11 @@
            <li class="<?= ($this->uri->segment(1)=='front_page_products') ? 'active' : '' ?>">
              <a href="<?php echo base_url('front_page_products');?>">
                <i class="fa fa-file-o"></i> <span>ΠΡΟΤΕΙΝΟΜΕΝΑ ΠΡΟΪΟΝΤΑ</span>
+             </a>
+           </li>
+           <li class="<?= ($this->uri->segment(1)=='duplicates') ? 'active' : '' ?>">
+             <a href="<?php echo base_url('duplicates');?>">
+               <i class="fa fa-files-o"></i> <span>ΔΙΠΛΑ ΠΡΟΪΟΝΤΑ</span>
              </a>
            </li>
          </ul>
