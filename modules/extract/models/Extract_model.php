@@ -757,11 +757,15 @@ class Extract_model extends CI_Model {
 
                         if($product['status']=='trash'){
                           $where = array('post_id'=>$post_id,'meta_key'=>'_manage_stock');
-                          $data = array('meta_value'=>'no');
+                          $data = array('meta_value' => 'no');
+                          Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
+
+                          $where = array('post_id'=>$post_id,'meta_key'=>'_stock_status');
+                          $data = array('meta_value' => 'instock');
                           Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
 
                           $where = array('post_id'=>$post_id,'meta_key'=>'_stock');
-                          $data = array('meta_value'=>'');
+                          $data = array('meta_value' => NULL);
                           Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
                         }
 

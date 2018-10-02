@@ -3618,14 +3618,15 @@ class Live_model extends CI_Model {
 				   $c == "switches" || $c == "tablets" || $c == "tv" || $c == "ups"){
 
 					// For Oktabit fixing the shipping class by weight or dimensions
-					if($cat == 'scanners')
+					if($c == 'scanners' && $supplier == 'oktabit')
 					{
-						$the_weight = (float) $data['Βάρος (κιλά)'];
-						$the_dimensions = (float) $data['Διαστάσεις (πλάτος x βάθος x ύψος, σε mm)'];
-						$v_weight_array = explode ('x', $the_dimensions);
-						$v_weight = (float) ($v_weight[0]+50)*($v_weight[1]+50)*($v_weight[2]+50)/5000000;
+						$the_weight = (float) $chars_array['weight']+1;
+						$v_weight_array = explode ('x', $chars_array['dimensions']);
+						$v_weight = (float) ($v_weight_array[0]+50)*($v_weight_array[1]+50)*($v_weight_array[2]+50)/5000000;
 
-						$chars_array['volumetric_weight'] = max($the_weight,$v_weight);
+						$max_weight = max($the_weight,$v_weight);
+						if($max_weight != '' && $max_weight > 0)
+							$chars_array['volumetric_weight'] = ceil($max_weight);
 					}
 
 					$shipping_class = Modules::run('categories/makeShippingClass', $chars_array, $c);
@@ -3697,7 +3698,7 @@ class Live_model extends CI_Model {
 				// Make products not new items to parse immediately
 				if($c == 'speakers' || $c == 'gaming_chairs' || $c == 'ups' || $c == 'routers' || $c == 'powerlines' ||
 				   $c == 'ip_cameras' || $c == 'multiplugs' || $c == 'smartphones' || $c == 'external_hard_drives' ||
-				   $c == 'ssd' || $c == 'sata_hard_drives'|| $c=='barcode_scanners')
+				   $c == 'ssd' || $c == 'sata_hard_drives' || $c == 'barcode_scanners' || $c == 'scanners')
 					$categoryData['new_item'] = 0;
 			}
 
@@ -4049,6 +4050,13 @@ class Live_model extends CI_Model {
 				{
 					$chars_array[$key] = str_replace('and#8206;','',$chars_array[$key]);
 				}
+				elseif($value  == 'Βάρος (κιλά)')
+				{
+					$chars_array[$key] = str_replace('kg','',$chars_array[$key]);
+					$chars_array[$key] = str_replace(',','.',$chars_array[$key]);
+					$chars_array[$key] = (float)$chars_array[$key];
+				}
+				
 			}
 		}
 		elseif ($category == 'power_bank'){
