@@ -4056,6 +4056,10 @@ class Live_model extends CI_Model {
 					$chars_array[$key] = str_replace(',','.',$chars_array[$key]);
 					$chars_array[$key] = (float)$chars_array[$key];
 				}
+				elseif($value  == 'Ταχύτητα')
+				{
+					$chars_array[$key] = str_replace('ppm','',$chars_array[$key]);
+				}
 				
 			}
 		}
