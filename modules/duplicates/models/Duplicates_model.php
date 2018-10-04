@@ -26,11 +26,11 @@ class Duplicates_model extends CI_Model {
         $this->db->where($where);
         $this->db->join('live', 'live.product_number = sku.product_number' );
         $product = $this->db->get('sku');
-        if( ! $product)
+        if( ! $product->result())
           $exist = false;
         else
           $pnArr[] = $product->row()->product_number;
-    }
+    }//13180812 1318081
 
       if( $exist ){
         //insert new dulicate
@@ -52,7 +52,9 @@ class Duplicates_model extends CI_Model {
 
         //For auto update the WP with update_wp
         Modules::run('extract/allImport',$product->row()->category,'one',0,$sku);
-
+        $FlashData['Message']= 'Επιτυχής καταχώρηση';
+        $FlashData['type'] = 'success';
+        $this->session->set_flashdata('flash_message', $FlashData);
 
         return true;
       }
