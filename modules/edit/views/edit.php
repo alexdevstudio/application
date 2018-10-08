@@ -322,7 +322,8 @@ if($itemLive){
 <hr style="border-top: 1px solid #ccc;">
 </div>
 		<!-- Delete Form -->
-		<div class="col-xs-12 ">
+		<!-- Commented because of new out of stock proccedure 8-10-2018 -->
+		<!-- <div class="col-xs-12 ">
 	 		<form method="post" action="" onsubmit="return confirm('Το προϊόν θα διαγραφεί από το SITE και δεν θα ενημερώνεται στο εξής. Είστε σίγουροι;');">
 	 			<input class='form-control' type="hidden" name='product_number' value='<?= $pn; ?>'>
 	 			<input class='form-control' type="hidden" name='category' value='<?= $category; ?>'>
@@ -332,7 +333,8 @@ if($itemLive){
 	 			<button type="submit" class="btn btn-block btn-danger">Aφαίρεση από STOCK</button>
 	 		</form>
 			<hr style="border-top: 1px solid #ccc;">
-		</div>
+		</div> -->
+
 		<!-- Total Removal Form -->
 		<div class="col-xs-12 ">
 
