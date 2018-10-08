@@ -192,16 +192,19 @@ class Live_model extends CI_Model {
 					}
 					break;
 				case 'Printers':
-					if($sc == 'Color Laser Printers' || $sc == 'Inkjet Printers' || $sc == 'B-W Laser Printers' )
+					if($sc == 'Color Laser Printers' || $sc == 'A3 Inkjet Printers' || $sc == 'A4 Inkjet Printers' || $sc == 'Inkjet Printers' || 
+					   $sc == 'B-W Laser Printers' || $sc == 'Dot Matrix Printers')
 					{
 						$c = 'printers';
-
 					}
-					elseif($sc == 'Multifunction Printers'){
+					elseif($sc == 'Multifunction Printers' || $sc == 'A3 Multifunction Printers' || $sc == 'A4 Multifunction Printers'){
 						$c = 'multifunction_printers';
 					}
 					elseif($sc == 'POS Printers'){
 						$c = 'barcode_printers';
+					}
+					elseif($sc == 'Large Format Printers'){
+						$c = 'plotters';
 					}
 					break;
 				case 'Software':
