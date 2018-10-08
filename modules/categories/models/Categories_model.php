@@ -469,6 +469,9 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 			case 'plotters':
 					$shipping_class = 9974;
 					break;
+			case 'video_conference':
+					$shipping_class = 10063;
+					break;
 			default:
 				return false;
 				break;

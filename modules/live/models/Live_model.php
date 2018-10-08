@@ -180,6 +180,9 @@ class Live_model extends CI_Model {
 						$c = 'switches';
             			//$c = $cat;
 					}
+					elseif($sc == 'Video Conference'){
+						$c = 'video_conference';
+					}
 					break;
 				case 'Power Protection':
 					if($sc == 'Data Center UPS' || $sc == 'Line Interactive UPS' || $sc == 'On Line UPS'  || $sc == 'Standby UPS')
@@ -3618,7 +3621,7 @@ class Live_model extends CI_Model {
 				   $c == "printer_fusers" || $c == "projectors" || $c == "racks" || $c == "routers" || $c == "sata_hard_drives" ||
 				   $c == "scanners" || $c == "server_controllers" || $c == "server_cpu" || $c == "server_hard_drives" || $c == "server_memories" ||
 				   $c == "server_power_supplies" || $c == "servers" || $c == "smartphones" || $c == "speakers" || $c == "ssd" ||
-				   $c == "switches" || $c == "tablets" || $c == "tv" || $c == "ups"){
+				   $c == "switches" || $c == "tablets" || $c == "tv" || $c == "ups" || $c == "video_conference"){
 
 					// For Oktabit fixing the shipping class by weight or dimensions
 					if($c == 'scanners' && $supplier == 'oktabit')
@@ -4314,6 +4317,22 @@ class Live_model extends CI_Model {
 				}
 				else
 					$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
+			}
+		}
+		elseif ($category == 'video_conference'){
+
+			$chars_array = array(
+				'type' => "Χωρητικότητα",
+				'video_standard_protocols' => "Video Standards & Protocols",
+				'people_video_resolution' => "People Video Resolution",
+				'content_video_resolution' => "Content Video Resolution",
+				'audio' => "Audio Standards",
+				'network' => "Network",
+				'security' => "Security",
+				'year_warranty' => 'Εγγύηση (μήνες)'
+			);
+			foreach ($chars_array as $key => $value) {
+				$chars_array[$key] = isset($charsArray[strtoupper($product_code)][$value]) ? $charsArray[strtoupper($product_code)][$value] : '';
 			}
 		}
 		elseif ($category == 'sata_hard_drives'){
