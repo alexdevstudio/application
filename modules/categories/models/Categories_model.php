@@ -369,6 +369,24 @@ public function makeShippingClass($data, $cat, $dynamic = null){
 					break;
 
 			case 'cables':
+					$length = (float) $data['length'];
+					if($length >= 300)
+						$shipping_class= 10065;
+					elseif($length >= 50)
+						$shipping_class= 10063;
+					elseif($length >= 40)
+						$shipping_class= 10652;
+					elseif($length >= 15)
+						$shipping_class= 10651;
+					elseif($length >= 5)
+						$shipping_class= 10650;
+					elseif($length >= 1)
+						$shipping_class= 10649;
+					elseif($length >= 0.25)
+						$shipping_class= 10648;
+					else
+						$shipping_class= 9974;
+					break;
 			case 'cable_accessories':
 					$shipping_class= 10646;
 					break;
