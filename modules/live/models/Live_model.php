@@ -182,6 +182,7 @@ class Live_model extends CI_Model {
 					}
 					elseif($sc == 'Video Conference'){
 						$c = 'video_conference';
+						$sc = '';
 					}
 					break;
 				case 'Power Protection':
@@ -278,6 +279,11 @@ class Live_model extends CI_Model {
 					if($sc == 'Speakers' )
 					{
 						$c = 'speakers';
+					}
+					elseif( $sc == 'Microphones' && $B2b_sc == 'Video Conference')
+					{
+						$c = 'video_conference';
+						$sc = 'Microphone';
 					}
 					break;
 				case 'Storage':
@@ -493,6 +499,10 @@ class Live_model extends CI_Model {
 						$okt_product['dist_type'] = 'ROK';
 				}
 				elseif($c == 'ip_phones')
+				{
+					$okt_product['type'] = $sc;
+				}
+				elseif($c == 'video_conference')
 				{
 					$okt_product['type'] = $sc;
 				}
