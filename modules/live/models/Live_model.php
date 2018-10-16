@@ -86,325 +86,338 @@ class Live_model extends CI_Model {
 
 		foreach($xml->children() as $product) {
 
-			set_time_limit(50);
+			set_time_limit(500);
 			//Rename categories for ETD.gr
-
-			$dist_type='';
+			$existed_product = false;
+			$pn = (string) trim($product->part_no);
 			$cat = (string) trim($product->category);
 			$sc = trim((string)$product->subcategory);
 			$B2b_sc = trim((string)$product->B2b_subcat);
 
 			$c = $cat;
+			$dist_type='';
 
-
-			$brand = (string) trim($product->brand);
-			if ($brand == 'VERO' || $brand == 'MAXBALL' || $brand == 'LEXMARK')
+			if ($pn !='')
 			{
-				$cat = '';
-			}
+				$existed_product = Modules::run("crud/get",'live',array('product_number' => $pn));
+				if($existed_product)
+				{
+					$c = $existed_product->row()->category;
+					$cat = '';
+				}
+				else{
 
-			switch ($cat) {
-				case 'Mobile Computers':
-					if (strpos($sc, 'Notebooks up to') !== false)
+					$brand = (string) trim($product->brand);
+					if ($brand == 'VERO' || $brand == 'MAXBALL' || $brand == 'LEXMARK')
 					{
-						$c = 'laptops';
+						$cat = '';
 					}
-					elseif($sc == 'Carrying Cases')
-					{
-						$c = 'carrying_cases';
-					}
-					break;
-				case 'Imaging':
-					if($sc == 'Projectors LCD')
-					{
-						$c = 'projectors';
-					}
-					elseif($sc == 'Barcode Scanners')
-					{
-						$c = 'barcode_scanners';
-					}
-					elseif($sc == 'A3 Scanners')
-					{
-						$c = 'scanners';
-					}
-					elseif($sc == 'A4 Scanners')
-					{
-						$c = 'scanners';
-					}
-					break;
-				case 'Computers':
-					if($sc == 'Advanced PC' || $sc == 'All In One PC' || $sc == ' All In One PC BTO' || $sc == 'Business PC' || $sc == 'Workstations')
-					{
-						$c = 'desktops';
-					}
-					break;
-				case 'Energy':
-					if($sc == 'Power Bank')
-					{
-						$c = 'power_bank';
-						//$c = $cat;
-					}
-					break;
-				case 'Monitors':
-					if($sc == 'LCD-TFT PC Monitors')
-					{
-						$c = 'monitors';
-					}
-					break;
-				case 'Networking':
-					//# The product type is set in addProductChars function as following
-					//# $chars_array = array('type' => "Access Point", for the access points
-					//# and dynamically from the $char_xml for the rest products.
-					if($sc == 'DSL Products' || $sc == 'Routers')
-					{
-						$c = 'routers';
-					}
-					elseif($sc == 'Wireless Products')
-					{
-						if($B2b_sc == 'Routers' || $B2b_sc == 'Access Points')
-						{
-							$c = 'routers';
-						}
-					}
-					elseif($sc == 'Wireless Products (D)')
-					{
-						$c = 'routers';
-					}
-					elseif($sc == 'Powerlines'){
-						$c = 'powerlines';
-					}
-					elseif($sc == 'IP Cameras'){
-						$c = 'ip_cameras';
-					}
-					elseif($sc == 'Switches'){
-						$c = 'switches';
-            			//$c = $cat;
-					}
-					elseif($sc == 'Video Conference'){
-						$c = 'video_conference';
-						$sc = '';
-					}
-					break;
-				case 'Power Protection':
-					if($sc == 'Data Center UPS' || $sc == 'Line Interactive UPS' || $sc == 'On Line UPS'  || $sc == 'Standby UPS')
-					{
-						$c = 'ups';
-					}
-					elseif($sc == 'Surge Protectors' )
-					{
-						$c = 'multiplugs';
-					}
-					break;
-				case 'Printers':
-					if($sc == 'Color Laser Printers' || $sc == 'A3 Inkjet Printers' || $sc == 'A4 Inkjet Printers' || $sc == 'Inkjet Printers' || 
-					   $sc == 'B-W Laser Printers' || $sc == 'Dot Matrix Printers')
-					{
-						$c = 'printers';
-					}
-					elseif($sc == 'Multifunction Printers' || $sc == 'A3 Multifunction Printers' || $sc == 'A4 Multifunction Printers'){
-						$c = 'multifunction_printers';
-					}
-					elseif($sc == 'POS Printers'){
-						$c = 'barcode_printers';
-					}
-					elseif($sc == 'Large Format Printers'){
-						$c = 'plotters';
-					}
-					break;
-				case 'Software':
-					if($sc == 'OEM ROK Server'){
-						$c = 'software';
-						$sc = 'Λογισμικό Server';
-					}
-					elseif($sc == 'Software Applications'){
-						$c = 'software';
-						$sc = 'Εφαρμογές γραφείου';
-					}
-					elseif($sc == 'Antivirus'){
-						$c = 'software';
-						$sc = 'Antivirus';
-					}
-					break;
-				case 'Software DSP':
-					$dist_type = 'DSP';
 
-					if($sc == 'DSP Licensing (CAL)' || $sc == 'DSP Server Software'){
-						$c = 'software';
-						$sc = 'Λογισμικό Server';
+					switch ($cat) {
+						case 'Mobile Computers':
+							if (strpos($sc, 'Notebooks up to') !== false)
+							{
+								$c = 'laptops';
+							}
+							elseif($sc == 'Carrying Cases')
+							{
+								$c = 'carrying_cases';
+							}
+							break;
+						case 'Imaging':
+							if($sc == 'Projectors LCD')
+							{
+								$c = 'projectors';
+							}
+							elseif($sc == 'Barcode Scanners')
+							{
+								$c = 'barcode_scanners';
+							}
+							elseif($sc == 'A3 Scanners')
+							{
+								$c = 'scanners';
+							}
+							elseif($sc == 'A4 Scanners')
+							{
+								$c = 'scanners';
+							}
+							break;
+						case 'Computers':
+							if($sc == 'Advanced PC' || $sc == 'All In One PC' || $sc == ' All In One PC BTO' || $sc == 'Business PC' || $sc == 'Workstations')
+							{
+								$c = 'desktops';
+							}
+							break;
+						case 'Energy':
+							if($sc == 'Power Bank')
+							{
+								$c = 'power_bank';
+								//$c = $cat;
+							}
+							break;
+						case 'Monitors':
+							if($sc == 'LCD-TFT PC Monitors')
+							{
+								$c = 'monitors';
+							}
+							break;
+						case 'Networking':
+							//# The product type is set in addProductChars function as following
+							//# $chars_array = array('type' => "Access Point", for the access points
+							//# and dynamically from the $char_xml for the rest products.
+							if($sc == 'DSL Products' || $sc == 'Routers')
+							{
+								$c = 'routers';
+							}
+							elseif($sc == 'Wireless Products')
+							{
+								if($B2b_sc == 'Routers' || $B2b_sc == 'Access Points')
+								{
+									$c = 'routers';
+								}
+							}
+							elseif($sc == 'Wireless Products (D)')
+							{
+								$c = 'routers';
+							}
+							elseif($sc == 'Powerlines'){
+								$c = 'powerlines';
+							}
+							elseif($sc == 'IP Cameras'){
+								$c = 'ip_cameras';
+							}
+							elseif($sc == 'Switches'){
+								$c = 'switches';
+								//$c = $cat;
+							}
+							elseif($sc == 'Video Conference'){
+								$c = 'video_conference';
+								$sc = '';
+							}
+							break;
+						case 'Power Protection':
+							if($sc == 'Data Center UPS' || $sc == 'Line Interactive UPS' || $sc == 'On Line UPS'  || $sc == 'Standby UPS')
+							{
+								$c = 'ups';
+							}
+							elseif($sc == 'Surge Protectors' )
+							{
+								$c = 'multiplugs';
+							}
+							break;
+						case 'Printers':
+							if($sc == 'Color Laser Printers' || $sc == 'A3 Inkjet Printers' || $sc == 'A4 Inkjet Printers' || $sc == 'Inkjet Printers' || 
+							$sc == 'B-W Laser Printers' || $sc == 'Dot Matrix Printers')
+							{
+								$c = 'printers';
+							}
+							elseif($sc == 'Multifunction Printers' || $sc == 'A3 Multifunction Printers' || $sc == 'A4 Multifunction Printers'){
+								$c = 'multifunction_printers';
+							}
+							elseif($sc == 'POS Printers'){
+								$c = 'barcode_printers';
+							}
+							elseif($sc == 'Large Format Printers'){
+								$c = 'plotters';
+							}
+							break;
+						case 'Software':
+							if($sc == 'OEM ROK Server'){
+								$c = 'software';
+								$sc = 'Λογισμικό Server';
+							}
+							elseif($sc == 'Software Applications'){
+								$c = 'software';
+								$sc = 'Εφαρμογές γραφείου';
+							}
+							elseif($sc == 'Antivirus'){
+								$c = 'software';
+								$sc = 'Antivirus';
+							}
+							break;
+						case 'Software DSP':
+							$dist_type = 'DSP';
+
+							if($sc == 'DSP Licensing (CAL)' || $sc == 'DSP Server Software'){
+								$c = 'software';
+								$sc = 'Λογισμικό Server';
+							}
+							elseif($sc == 'DSP Operating Systems'){
+								$c = 'software';
+								$sc = 'Λειτουργικά Συστήματα';
+							}
+							break;
+						case 'Servers':
+							if($sc == 'Rackmount Systems' || $sc == 'Tower Systems' || $sc == 'Tower Systems BTO' )
+							{
+								$c = 'servers';
+							}
+							elseif($sc == 'Server CPU' )
+							{
+								$c = 'server_cpu';
+							}
+							elseif($sc == 'Server Memory' )
+							{
+								$c = 'server_memories';
+							}
+							elseif($sc == 'Server Storage' )
+							{
+								$c = 'server_hard_drives';
+							}
+							elseif($sc == 'Storage Controlers' )
+							{
+								$c = 'server_controllers';
+							}
+							elseif($sc == 'Server Options' )
+							{
+								$tmp_title = (string) trim($product->titlos);
+								if(strstr ($tmp_title,'PSU'))
+								{
+									$c = 'server_power_supplies';
+								}
+								elseif(strstr ($tmp_title,'Memory'))
+								{
+									$c = 'server_memories';
+								}
+								elseif(strstr ($tmp_title,'RAID'))
+								{
+									$c = 'server_controllers';
+								}
+							}
+							break;
+						case 'Entertainment':
+							if($sc == 'Speakers' )
+							{
+								$c = 'speakers';
+							}
+							elseif( $sc == 'Microphones' && $B2b_sc == 'Video Conference')
+							{
+								$c = 'video_conference';
+								$sc = 'Microphone';
+							}
+							break;
+						case 'Storage':
+							if($sc == 'External Hard Drives' )
+							{
+								$c = 'external_hard_drives';
+								//$c = $cat;
+							}
+							elseif($sc == 'SATA Hard Drives' )
+							{
+								$c = 'sata_hard_drives';
+								//$c = $cat;
+							}
+							elseif($sc == 'Solid State Drives' )
+							{
+								$c = 'ssd';
+								//$c = $cat;
+							}
+							elseif($sc == 'DVD-RW Drives' )
+							{
+								$c = 'optical_drives';
+								//$c = $cat;
+							}
+							elseif($sc == 'Card Reader' )
+							{
+								$c = 'card_readers';
+								//$c = $cat;
+							}
+							elseif($sc == 'USB Memory Sticks' )
+							{
+								$c = 'flash_drives';
+								//$c = $cat;
+							}
+							break;
+						case 'Cases-Peripherals':
+						/*
+							if($brand != 'MICROSOFT' && $brand != 'LOGITECH'){
+								$c = $cat;
+							}
+							else*/
+							{
+								if($sc == 'Combo' || $sc == 'Keyboard' || $sc == 'Mouse')
+								{
+									$c = 'keyboard_mouse';
+								}
+								elseif($sc == 'Power Supplies')
+								{
+									$c = 'power_supplies';
+								}
+								elseif($sc == 'PC Cases')
+								{
+									$c = 'cases';
+								}
+								elseif($sc == 'PC Cases Options' && $B2b_sc == 'Συστήματα Ψύξης')
+								{
+									$c = 'fans';
+								}
+							}
+							break;
+						case 'Telephony':
+							if($brand == 'YEALINK')
+							{
+								if($sc == 'Phone Device DECT')
+								{
+									$c = 'ip_phones';
+									$sc = 'DECT Phone';
+								}
+								elseif($sc == 'Phone Device IP')
+								{
+									$c = 'ip_phones';
+									$sc = 'IP Phones';
+								}
+								elseif($sc == 'Voice Conference')
+								{
+									$c = 'ip_phones';
+									$sc = 'Conference';
+								}
+								elseif($sc == 'Accessories')
+								{
+									$c = 'ip_phones';
+									$sc = 'Accessory';
+								}
+							}
+							elseif($sc == 'Mobile Phones')
+							{
+								$c = 'smartphones';
+							}
+							else
+								$c = $cat;
+							break;
+						case 'Components':
+							if($sc == 'Motherboard for Intel')
+							{
+								$c = 'motherboards';
+							}
+							elseif($sc == 'VGA ATI' || $sc == 'VGA Nvidia')
+							{
+								$c = 'graphic_cards';
+							}
+							elseif($sc == 'CPU Intel')
+							{
+								$c = 'cpu';
+							}
+							elseif($sc == 'Memory Modules' )
+							{
+								$c = 'memories';
+							}
+							//$c = $cat;
+							break;
+						case 'Furniture':
+							if($sc == 'Gaming Chair')
+							{
+								$c = 'gaming_chairs';
+							}
+							else
+							{
+								$c = $cat;
+							}
+							break;
+						default:
+							$c = $cat;
+							break;
 					}
-					elseif($sc == 'DSP Operating Systems'){
-						$c = 'software';
-						$sc = 'Λειτουργικά Συστήματα';
-					}
-					break;
-				case 'Servers':
-					if($sc == 'Rackmount Systems' || $sc == 'Tower Systems' || $sc == 'Tower Systems BTO' )
-					{
-						$c = 'servers';
-					}
-					elseif($sc == 'Server CPU' )
-					{
-						$c = 'server_cpu';
-					}
-					elseif($sc == 'Server Memory' )
-					{
-						$c = 'server_memories';
-					}
-					elseif($sc == 'Server Storage' )
-					{
-						$c = 'server_hard_drives';
-					}
-					elseif($sc == 'Storage Controlers' )
-					{
-						$c = 'server_controllers';
-					}
-					elseif($sc == 'Server Options' )
-					{
-						$tmp_title = (string) trim($product->titlos);
-						if(strstr ($tmp_title,'PSU'))
-						{
-							$c = 'server_power_supplies';
-						}
-						elseif(strstr ($tmp_title,'Memory'))
-						{
-							$c = 'server_memories';
-						}
-						elseif(strstr ($tmp_title,'RAID'))
-						{
-							$c = 'server_controllers';
-						}
-					}
-					break;
-				case 'Entertainment':
-					if($sc == 'Speakers' )
-					{
-						$c = 'speakers';
-					}
-					elseif( $sc == 'Microphones' && $B2b_sc == 'Video Conference')
-					{
-						$c = 'video_conference';
-						$sc = 'Microphone';
-					}
-					break;
-				case 'Storage':
-					if($sc == 'External Hard Drives' )
-					{
-						$c = 'external_hard_drives';
-            			//$c = $cat;
-					}
-					elseif($sc == 'SATA Hard Drives' )
-					{
-						$c = 'sata_hard_drives';
-            			//$c = $cat;
-					}
-					elseif($sc == 'Solid State Drives' )
-					{
-						$c = 'ssd';
-           				//$c = $cat;
-					}
-					elseif($sc == 'DVD-RW Drives' )
-					{
-						$c = 'optical_drives';
-            			//$c = $cat;
-					}
-					elseif($sc == 'Card Reader' )
-					{
-						$c = 'card_readers';
-            			//$c = $cat;
-					}
-					elseif($sc == 'USB Memory Sticks' )
-					{
-						$c = 'flash_drives';
-            			//$c = $cat;
-					}
-					break;
-				case 'Cases-Peripherals':
-					if($brand != 'MICROSOFT' && $brand != 'LOGITECH'){
-						$c = $cat;
-					}
-					else
-					{
-						if($sc == 'Combo' || $sc == 'Keyboard' || $sc == 'Mouse')
-						{
-							$c = 'keyboard_mouse';
-						}
-						elseif($sc == 'Power Supplies')
-						{
-							$c = 'power_supplies';
-						}
-						elseif($sc == 'PC Cases')
-						{
-							$c = 'cases';
-						}
-						elseif($sc == 'PC Cases Options' && $B2b_sc == 'Συστήματα Ψύξης')
-						{
-							$c = 'fans';
-						}
-          			}
-					break;
-				case 'Telephony':
-					if($brand == 'YEALINK')
-					{
-						if($sc == 'Phone Device DECT')
-						{
-							$c = 'ip_phones';
-							$sc = 'DECT Phone';
-						}
-						elseif($sc == 'Phone Device IP')
-						{
-							$c = 'ip_phones';
-							$sc = 'IP Phones';
-						}
-						elseif($sc == 'Voice Conference')
-						{
-							$c = 'ip_phones';
-							$sc = 'Conference';
-						}
-						elseif($sc == 'Accessories')
-						{
-							$c = 'ip_phones';
-							$sc = 'Accessory';
-						}
-					}
-					elseif($sc == 'Mobile Phones')
-					{
-						$c = 'smartphones';
-					}
-					else
-						$c = $cat;
-					break;
-				case 'Components':
-					if($sc == 'Motherboard for Intel')
-					{
-						$c = 'motherboards';
-					}
-					elseif($sc == 'VGA ATI' || $sc == 'VGA Nvidia')
-					{
-						$c = 'graphic_cards';
-					}
-					elseif($sc == 'CPU Intel')
-					{
-						$c = 'cpu';
-					}
-					elseif($sc == 'Memory Modules' )
-					{
-						$c = 'memories';
-					}
-          			//$c = $cat;
-					break;
-				case 'Furniture':
-					if($sc == 'Gaming Chair')
-					{
-						$c = 'gaming_chairs';
-					}
-					else
-					{
-						$c = $cat;
-					}
-					break;
-				default:
-					$c = $cat;
-					break;
+				}
 			}
 
 			if($c!=$cat){
@@ -422,32 +435,36 @@ class Live_model extends CI_Model {
 				$net_price = (string) trim($net_price);
 
 				$recycle_tax = str_replace(",", ".", $product->anakykl);
-				$pn = (string) trim($product->part_no);
-				if($pn == '')
-					continue;
-				//$pn = ($pn == '') ? (string) trim($product->code): $pn;
-				$brand = (string) trim($product->brand);
-				$title = (string) trim($product->titlos);
-				$code = (string) trim($product->code);
-				$product_url = "https://www.oktabit.gr/product_details.asp?productid=".$code;
 
-
-				// Get The Description from $charsArray created in top of function
-				$description = isset($charsArray[$code]['desc']) ? $charsArray[$code]['desc'] : '';
-				/*
-				foreach($desc_xml->children() as $perigrafes) {
-					$okt_desc_code = (string) trim($perigrafes->code);
-
-					if($code == $okt_desc_code)
-					{
-						$description = strip_tags((string) (trim($perigrafes->perigrafi)));
+				if(!$existed_product)
+				{
+					$pn = (string) trim($product->part_no);
+					if($pn == '')
 						continue;
-					}
-				}
-				*/
+					//$pn = ($pn == '') ? (string) trim($product->code): $pn;
+					$brand = (string) trim($product->brand);
+					$title = (string) trim($product->titlos);
+					$code = (string) trim($product->code);
+					$product_url = "https://www.oktabit.gr/product_details.asp?productid=".$code;
 
-				// Get the characteristics
-				$chars_array = $this->addProductChars($c, $code, $charsArray);
+
+					// Get The Description from $charsArray created in top of function
+					$description = isset($charsArray[$code]['desc']) ? $charsArray[$code]['desc'] : '';
+					/*
+					foreach($desc_xml->children() as $perigrafes) {
+						$okt_desc_code = (string) trim($perigrafes->code);
+
+						if($code == $okt_desc_code)
+						{
+							$description = strip_tags((string) (trim($perigrafes->perigrafi)));
+							continue;
+						}
+					}
+					*/
+
+					// Get the characteristics
+					$chars_array = $this->addProductChars($c, $code, $charsArray);
+				}
 
 				//1. Live
 				$supplier = 'oktabit';
@@ -473,55 +490,58 @@ class Live_model extends CI_Model {
 					unset($live);
 				}
 
-				//Array for categories table
-
-				$okt_product = array(
-					'category' => $c,
-					'product_number' => $pn,
-					'description' => $description,
-					'brand' => $brand,
-					'title' => $title,
-					'product_url' => $product_url,
-					'code' => $code,
-					'net_price'=>$net_price
-				);
-
-				if ($c == 'software')
+				if(!$existed_product)
 				{
-					$okt_product['type'] = $sc;
-					$okt_product['dist_type'] = $dist_type;
-					$okt_product['shipping_class'] = 10646;
-					$okt_product['volumetric_weight'] = 0.2;
+					//Array for categories table
 
-					if (strstr ($title,'DSP'))
-						$okt_product['dist_type'] = 'DSP';
-					elseif(strstr ($title,'Reseller Option Kit') || strstr ($title,'ROK'))
-						$okt_product['dist_type'] = 'ROK';
-				}
-				elseif($c == 'ip_phones')
-				{
-					$okt_product['type'] = $sc;
-				}
-				elseif($c == 'video_conference')
-				{
-					$okt_product['type'] = $sc;
-				}
+					$okt_product = array(
+						'category' => $c,
+						'product_number' => $pn,
+						'description' => $description,
+						'brand' => $brand,
+						'title' => $title,
+						'product_url' => $product_url,
+						'code' => $code,
+						'net_price'=>$net_price
+					);
 
-				if ($c == 'memories' && $B2b_sc == 'Εξαρτήματα Servers')
-				{
-					$okt_product['description'] = 'Εξαρτήματα Servers';
-				}
+					if ($c == 'software')
+					{
+						$okt_product['type'] = $sc;
+						$okt_product['dist_type'] = $dist_type;
+						$okt_product['shipping_class'] = 10646;
+						$okt_product['volumetric_weight'] = 0.2;
 
-				//2. New products for charateristics tables that load Sku module
+						if (strstr ($title,'DSP'))
+							$okt_product['dist_type'] = 'DSP';
+						elseif(strstr ($title,'Reseller Option Kit') || strstr ($title,'ROK'))
+							$okt_product['dist_type'] = 'ROK';
+					}
+					elseif($c == 'ip_phones')
+					{
+						$okt_product['type'] = $sc;
+					}
+					elseif($c == 'video_conference')
+					{
+						$okt_product['type'] = $sc;
+					}
 
-				$insert = $this->addProduct ($okt_product, $chars_array, $f, $supplier);
+					if ($c == 'memories' && $B2b_sc == 'Εξαρτήματα Servers')
+					{
+						$okt_product['description'] = 'Εξαρτήματα Servers';
+					}
 
-				if ($insert)
-				{
-					if(isset ($newProducts[$c]))
-						$newProducts[$c] = $newProducts[$c]+1;
-					else
-						$newProducts[$c] = 1;
+					//2. New products for charateristics tables that load Sku module
+
+					$insert = $this->addProduct ($okt_product, $chars_array, $f, $supplier);
+
+					if ($insert)
+					{
+						if(isset ($newProducts[$c]))
+							$newProducts[$c] = $newProducts[$c]+1;
+						else
+							$newProducts[$c] = 1;
+					}
 				}
 
 			}//if $c!=$cat
