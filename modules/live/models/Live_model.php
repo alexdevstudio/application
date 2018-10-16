@@ -4845,23 +4845,24 @@ class Live_model extends CI_Model {
 */
 
 	    	switch ($availability) {
-	    		case '1':
+	    		case '1': // Άμεσα Διαθέσιμο
 	    			$av = 'Κατόπιν παραγγελίας σε 1-3 εργάσιμες';
 	    			break;
-	    		case '2':
+	    		case '2': // Περιορισμένη Διαθεσιμότητα
 	    			$av = 'Κατόπιν παραγγελίας σε 1-3 εργάσιμες';
 	    			break;
-	    		case '3':
-	    		case '4':
+	    		case '3': //
+	    		case '4': // Κατόπιν Επικοινωνίας,  Αναμένεται σε 4-7 ημέρες, Αναμένεται σε 8-15 ημέρες, Αναμένεται 3-4 εβδομάδες
 	    			$av = 'Αναμονή παραλαβής';
-	    			return false;
+	    			//return false;
 	    			break;
-	    		case '5':
+	    		case '5': // Κατόπιν Επικοινωνίας
 	    			$av = 'Κατόπιν παραγγελίας χωρίς διαθεσιμότητα';
-	    			return false;
+	    			//return false;
 	    			break;
-	    		case '6':
-	    			return false;
+	    		case '6': // Δεν είναι Διαθέσιμο
+				$av = 'Δεν είναι Διαθέσιμο';
+					//return false;
 	    			break;
 
 
