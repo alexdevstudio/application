@@ -4924,13 +4924,11 @@ class Live_model extends CI_Model {
     		switch ($availability) {
     			case 'Normal':
     			case 'Limited':
-
     				$av="Κατόπιν παραγγελίας σε 1-3 εργάσιμες";
-
     				break;
     			case 'PreOrder':
-    				//$av="Αναμονή παραλαβής";
-    				$av= false;
+    				$av="Αναμονή παραλαβής";
+    				//$av= false;
     				//return false;
     				break;
     			default:
