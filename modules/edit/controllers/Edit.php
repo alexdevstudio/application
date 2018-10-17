@@ -314,8 +314,8 @@ class Edit extends MX_Controller {
 						$where = array('meta_value'=>$sku,"meta_key"=>"_sku");
 						$post_id = (int) Modules::run("crud/getWp","wp_postmeta", $where)->row()->post_id;
 
-						//Delete uppsells from WP
-						$where = array('post_id' => $post_id,"meta_key"=>"_upsell_ids");
+						//Delete cross_sells from WP
+						$where = array('post_id' => $post_id,"meta_key"=>"_crosssell_ids");
 						Modules::run('crud/deleteWp',"wp_postmeta",  $where);
 
 					}
@@ -339,14 +339,14 @@ class Edit extends MX_Controller {
 							}
 
 							$post_id = $wp_ids[0];
-							$where = array('post_id'=>$wp_ids[0],'meta_key'=>'_upsell_ids');
+							$where = array('post_id'=>$wp_ids[0],'meta_key'=>'_crosssell_ids');
 							array_shift($wp_ids);
 
 							if(Modules::run("crud/getWp","wp_postmeta", $where)){
 								$data = array('meta_value'=> serialize($wp_ids));
 							  Modules::run("crud/updateWp","wp_postmeta",  $where, $data);
 							}else{
-								$data = ['post_id' => $post_id, 'meta_key' => '_upsell_ids', 'meta_value' => serialize($wp_ids)];
+								$data = ['post_id' => $post_id, 'meta_key' => '_crosssell_ids', 'meta_value' => serialize($wp_ids)];
 								Modules::run("crud/insertWp","wp_postmeta", $data);
 							}
 
