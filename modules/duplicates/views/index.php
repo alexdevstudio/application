@@ -32,10 +32,16 @@
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
+                        <div class="row">
+                            <div class="col-sm-6 text-green">SKU που θα μείνει</div>
+                            <div class="col-sm-6 text-red">SKU προς αφαίρεση</div>
+            
+                            <hr>
+                        </div>
                       <?php if ($duplicates['sku_in']): ?>
 
                         <?php for ($i=0; $i < count($duplicates['sku_in']->result()); $i++) : ?>
-                          <div class="row">
+                          <div class="row border-bt">
                             <div class="col-sm-6">
 
                               <?= $duplicates['sku_in']->result()[$i]->sku_in.'<br/>'.$duplicates['sku_in']->result()[$i]->product_number ?>
