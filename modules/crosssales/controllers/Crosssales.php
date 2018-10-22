@@ -39,6 +39,7 @@ class Crosssales extends MX_Controller {
 			{
 					$_POST['skus'] = str_replace(" ", "", $_POST['skus']);
 					$this->db->insert('cross_sells_similar', $_POST);
+					$this->pushCrosssales($_POST);
 					$FlashData['Message']= '<strong>Το φίλτρο προστέθηκε.</strong>';
 					$FlashData['type'] = 'success';
 			}
@@ -68,7 +69,21 @@ class Crosssales extends MX_Controller {
 	}
 
 
+	function pushCrosssales($arr){
+		$wpdb = $this->load->database('wordpress', TRUE);
+		$wpdb->select('wp_posts.*, post_meta.*, cross.*');
+		$wpdb->like('wp_posts.post_title', $arr['filter'], 'both');
+		$wpdb->where('wp_posts.post_type', 'product');
+		$wpdb->where('post_meta.meta_key', '_sku');
+		$wpdb->join('wp_postmeta as post_meta', 'wp_posts.ID = post_meta.post_id');
+		$wpdb->join('wp_postmeta as cross', 'wp_posts.ID = cross.post_id');
 
+		echo "<pre>";
+		 print_r($wpdb->get('wp_posts')->result());
+		echo "</pre>";
+		exit();
+
+	}
 
 
 
