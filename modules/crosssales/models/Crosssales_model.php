@@ -71,11 +71,14 @@ class Crosssales_model extends CI_Model {
                 $size = explode('.', $size);
         		$size = $size[0];
 
-        		if (strpos($row->size, $size) !== false) {
-    			    $same_size[] = $bag_sku;
-    			}/*else{
-                    $dif_size[] = $bag_sku;
-                }*/
+                if ($size != '')
+                {
+                    if (strpos($row->size, $size) !== false) {
+                        $same_size[] = $bag_sku;
+                    }/*else{
+                        $dif_size[] = $bag_sku;
+                    }*/
+                }
 
         	}
             

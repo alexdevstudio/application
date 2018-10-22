@@ -41,7 +41,7 @@ class Images extends MX_Controller {
 
 		$filename = './images/'.$sku;
 
-			if ( ! $this->is_dir_empty($filename)) {
+			if ($this->is_dir_empty($filename) != NULL) {
 			   $files = scandir ($filename);
 			   $firstFile =$files[2];// because [0] = "." [1] = ".."
 			   $src = $filename.'/'.$firstFile;

@@ -433,7 +433,7 @@
 
          <li class="">
            <?php
-            $Num_problematics = Modules::run("crud/problematic", array("volumetric_weight"=>'',"volumetric_weight"=>'0'), '', true);
+            $Num_problematics = Modules::run("crud/problematicWeight", array("volumetric_weight"=>'',"volumetric_weight"=>'0'), '', true);
            ?>
             <a href="<?php echo base_url();?>problematic">
               <i class="fa  fa-ban"></i> <span>ΠΡΟΒΛΗΜΑΤΙΚΑ</span>
