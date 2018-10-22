@@ -41,7 +41,7 @@ class Images extends MX_Controller {
 
 		$filename = './images/'.$sku;
 
-			if ($this->is_dir_empty($filename) != NULL) {
+			if (!$this->is_dir_empty($filename)) {
 			   $files = scandir ($filename);
 			   $firstFile =$files[2];// because [0] = "." [1] = ".."
 			   $src = $filename.'/'.$firstFile;
@@ -64,7 +64,7 @@ class Images extends MX_Controller {
 	}
 
 	function is_dir_empty($dir) {
-		if (!is_readable($dir)) return NULL; 
+		if (!is_readable($dir)) return false; 
 		return (count(scandir($dir)) == 2);
 	  }
 
