@@ -22,10 +22,11 @@
                 <div class="box-body">
                   <div class="form-group">
                     <label for="category" class="">Επιλογή κατηγορίας</label>
+
                     <select id="category" class="form-control" name="category">
                       <option value=''>Κατηγορίες</option>
                       <?php   foreach($tables as $table)  :  ?>
-                        <option value='<?= $table; ?>'><?= ucfirst($table); ?></option>
+                        <option value='<?= $table->woo_category_id; ?>'><?= ucfirst($table->category_name); ?></option>
                       <?php endforeach;  ?>
                     </select>
                   </div>
@@ -63,15 +64,17 @@
                               <th>Τμήμα τίτλου</th>
                               <th>SKUs</th>
                               <th><i class="fa fa-times "></i></th>
+                              <th>Ενημέρωση</th>
                             </tr>
                             </thead>
                             <tbody>
                               <?php foreach ($filters->result() as $filter): ?>
                                 <tr>
-                                  <td><?= ucfirst( $filter->category ) ?></td>
+                                  <td><?= ucfirst( $filter->category_name ) ?></td>
                                   <td><?= $filter->filter ?></td>
                                   <td><?= $filter->skus ?></td>
-                                  <td><a href="crosssales/delete/<?= $filter->id ?>"><i class="fa fa-times text-red"></i></a></td>
+                                  <td><a href="crosssales/delete/<?= $filter->cross_sells_similar_id ?>"><i class="fa fa-times text-red"></i></a></td>
+                                  <td><a href="#" class="btn btn-warning" onclick="alert('Η βάση διαγράφθηκε. Δεν υπάρχει δυνατότητα αποκατάστασης.')">Ενημέρωση</a></td>
                                 </tr>
                               <?php endforeach; ?>
 
