@@ -60,6 +60,7 @@
                             <table class="table table-striped" id="table">
                             <thead>
                             <tr>
+                              <th>#</th>
                               <th>Κατηγορία</th>
                               <th>Τμήμα τίτλου</th>
                               <th>SKUs</th>
@@ -70,6 +71,7 @@
                             <tbody>
                               <?php foreach ($filters->result() as $filter): ?>
                                 <tr>
+                                  <td><?= $filter->cross_sells_similar_id ?></td>
                                   <td><?= ucfirst( $filter->category_name ) ?></td>
                                   <td><?= $filter->filter ?></td>
                                   <td><?= $filter->skus ?></td>

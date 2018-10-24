@@ -33,37 +33,49 @@ class Crosssales extends MX_Controller {
 	private function cross_validation(){
 
 		$this->form_validation->set_rules('category', 'Κατηηγορία', 'required');
-		$this->form_validation->set_rules('filter', 'Τμήμα τίτλου', 'required');
-		$this->form_validation->set_rules('skus', 'SKU προϊόντων', 'required');
+		$this->form_validation->set_rules('filter', 'Τμήμα τίτλου', 'required|trim');
+		$this->form_validation->set_rules('skus', 'SKU προϊόντων', 'required|trim');
 
 		if ($this->form_validation->run())
-			{
-					$_POST['skus'] = str_replace(".", ",", $_POST['skus']);
-					$skuArr = explode(',',$_POST['skus']);
-					$skuArr2 = [];
-					foreach ($skuArr as $sku) {
-						$skuArr2[] = trim($sku);
-					}
-					$_POST['skus'] = implode(',',$skuArr2);
-					$_POST['created_at'] = date("Y-m-d H:i:s");
-					$this->db->insert('cross_sells_similar', $_POST);
-					$insert_id = $this->db->insert_id();
-					$affected_products = $this->pushCrosssales($_POST);
+		{
+			$this->db->like('filter',$_POST['filter'],'both');
+			$this->db->where('category',$_POST['category']);
+			$similarity_exist = $this->db->get('cross_sells_similar')->num_rows();
 
-					$this->db->where('cross_sells_similar_id', $insert_id);
-					$this->db->update('cross_sells_similar', ['affected_products' => $affected_products]);
+			if($similarity_exist < 1)
+			{ 
 
-					$FlashData['Message']= 'Το φίλτρο προστέθηκε. <strong>'.$affected_products.' '.($affected_products > 1 ? 'Προϊόντα ενημερώθηκαν' : 'Προϊόν ενημερώθηκε').'  στο site.</strong>';
-					$FlashData['type'] = 'success';
+				$_POST['skus'] = str_replace(".", ",", $_POST['skus']);
+				$skuArr = explode(',',$_POST['skus']);
+				$skuArr2 = [];
+				foreach ($skuArr as $sku) {
+					$skuArr2[] = trim($sku);
+				}
+				$_POST['skus'] = implode(',',$skuArr2);
+				$_POST['created_at'] = date("Y-m-d H:i:s");
+				$this->db->insert('cross_sells_similar', $_POST);
+				$insert_id = $this->db->insert_id();
+				$affected_products = 1;//$this->pushCrosssales($_POST);
+
+				$this->db->where('cross_sells_similar_id', $insert_id);
+				$this->db->update('cross_sells_similar', ['affected_products' => $affected_products]);
+
+				$FlashData['Message']= 'Το φίλτρο προστέθηκε. <strong>'.$affected_products.' '.($affected_products > 1 ? 'Προϊόντα ενημερώθηκαν' : 'Προϊόν ενημερώθηκε').'  στο site.</strong>';
+				$FlashData['type'] = 'success';
+			}
+			else{
+				$FlashData['Message']= 'Υπάρχει παρόμοιο φίλτρο.';
+				$FlashData['type'] = 'danger';
+			}
+		}
+
+		if( ! isset($FlashData))	{
+				$FlashData['Message']= validation_errors('<p class=""> - ', '</p>');
+				$FlashData['type'] = 'danger';
 			}
 
-			if( ! isset($FlashData))	{
-					$FlashData['Message']= validation_errors('<p class=""> - ', '</p>');
-					$FlashData['type'] = 'danger';
-				}
-
-				$this->session->set_flashdata('flash_message', $FlashData);
-				return true;
+			$this->session->set_flashdata('flash_message', $FlashData);
+			return true;
 	}
 
 	function delete($id){
@@ -95,13 +107,22 @@ class Crosssales extends MX_Controller {
 		$wpdb->like('wp_posts.post_title', $post['filter'], 'both');
 		$wpdb->where('wp_posts.post_type', 'product');
 		$wpdb->where('sku.meta_key', '_sku');
-	  $wpdb->where('category.term_taxonomy_id', $post['category']);
+	  	$wpdb->where('category.term_taxonomy_id', $post['category']);
 		$wpdb->join('wp_postmeta as sku', 'wp_posts.ID = sku.post_id');
 		$wpdb->join('wp_postmeta as cross', 'wp_posts.ID = cross.post_id and cross.meta_key = "_crosssell_ids"', 'left');
-	  $wpdb->join('wp_term_relationships as category', 'wp_posts.ID = category.object_id');
+	  	$wpdb->join('wp_term_relationships as category', 'wp_posts.ID = category.object_id');
 		$prods = $wpdb->get('wp_posts')->result();
 
+		// Get sku's from cross_sells table in array
+		$this->db->select('sku');
+		$existed_crosssels = $this->db->get('cross_sells')->result();
 
+		$existed_crosssels_array = [];
+		foreach ($existed_crosssels as $existed_crosssel) {
+			$existed_crosssels_array[] = $existed_crosssel->sku;
+		}
+
+	
 		//Step 2. Find ID's of submitted skus's
 
 		$wpdb->select('post_id');
@@ -118,9 +139,13 @@ class Crosssales extends MX_Controller {
 		//Prevent PHP eroors for George by Alex
 		if( ! $prods)
 			return;
-
+		
 		//Ster 3. Update/Insert crosssells
+		$counter = 0;
 		foreach ($prods as $prod) {
+			if(in_array($prod->sku, $existed_crosssels_array))
+				continue;
+
 			if( isset($prod->cross_ids) && $prod->cross_ids != '' ){
 				$data = ['meta_value' => $crossSer];
 				$wpdb->where('meta_id', $prod->meta_id);
@@ -133,10 +158,11 @@ class Crosssales extends MX_Controller {
 				];
 				$wpdb->insert('wp_postmeta', $data);
 			}
+			$counter++;
 
 		}
 
-		return count($prods);
+		return $counter;
 
 	}
 
