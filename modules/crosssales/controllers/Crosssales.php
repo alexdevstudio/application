@@ -55,7 +55,7 @@ class Crosssales extends MX_Controller {
 				$_POST['created_at'] = date("Y-m-d H:i:s");
 				$this->db->insert('cross_sells_similar', $_POST);
 				$insert_id = $this->db->insert_id();
-				$affected_products = 1;//$this->pushCrosssales($_POST);
+				$this->pushCrosssales($_POST); //$affected_products = 1; 
 
 				$this->db->where('cross_sells_similar_id', $insert_id);
 				$this->db->update('cross_sells_similar', ['affected_products' => $affected_products]);
