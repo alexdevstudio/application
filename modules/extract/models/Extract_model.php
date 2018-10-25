@@ -516,10 +516,20 @@ class Extract_model extends CI_Model {
 
                     $product['etd_title'] =  $etd_title;
                     $product['skroutz_title'] =  $skroutz_title;
+
+                    // Make cross sells first by specific in cross_sells table and if not exist then from cross_sells_similar table.
                     $cross_sells = $this->cross_sells($sku);
                     if($cross_sells){
                         $product['cross_sells'] = $cross_sells;
                     }
+                    else {
+                        # Must check cross sells in cross_sells_similar table.
+                         $cross_sells = $this->cross_sells_similar($product['title'], $product['category']);
+                         if($cross_sells)
+                             $product['cross_sells'] = $cross_sells;
+                    }
+
+
                     $product['skroutz_title'] =  $skroutz_title;
 
 
@@ -594,9 +604,6 @@ class Extract_model extends CI_Model {
 
                 $allProds = array_merge($allProds, $products);
 
-
-                //print_r($query->result_array());
-
                 $xml->FormatOutput = true;
                 $string_value = $xml->saveXML();
 
@@ -615,12 +622,6 @@ class Extract_model extends CI_Model {
                     echo "<a class='btn btn-md btn-success  btn-block text-center' href='".base_url()."/files/updates/".$table."_ALL_IMPORT.xml"."' download target='_blank'>Λήψη XML</a>";
                 }
                   //  return false;
-
-
-              /* print_r("<pre >");
-                print_r($products);
-              */
-
 
             }
 
@@ -681,8 +682,48 @@ class Extract_model extends CI_Model {
                 return $cross_sells->row()->products;
             }
             return;
+        }
 
+        private function cross_sells_similar($product_title, $product_category){
 
+            //Get Category id from categories table
+            $where = array('category_name' => $product_category);
+            $product_category_id = Modules::run('crud/get','categories', $where);
+            $product_category_id = $product_category_id->row()->woo_category_id;
+
+            $where = array('category' => $product_category_id);
+            if($cross_sells_similars = Modules::run('crud/get','cross_sells_similar', $where)){
+
+                $cross_sells_similars = $cross_sells_similars->result();
+                $cross_sells = [];
+
+                $product_title = strtoupper($product_title);
+
+                //Check double spaces twice to replace
+                $product_title = str_replace("  "," ",$product_title);
+                $product_title = str_replace("  "," ",$product_title);
+
+                foreach ($cross_sells_similars as $cross_sells_similar) {
+
+                    $length = strlen($cross_sells_similar->filter);
+                    //if(substr($product_title, 0, $length) ===  strtoupper($cross_sells_similar->filter))
+                    if(strpos($product_title, strtoupper($cross_sells_similar->filter))!== false)
+                    {
+                        $cross_sells[$length] = $cross_sells_similar->skus;
+                    }
+                }
+
+                if(count($cross_sells) > 0)
+                {
+                    ksort ($cross_sells);// sort array by key to find the last element in $cross_sells later
+                    
+                    
+                    return end($cross_sells);
+                }
+                else 
+                    return;
+            }
+            return;
         }
 
         public function priceTax($product)

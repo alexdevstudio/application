@@ -396,13 +396,13 @@
           </a>
 
         </li>
-        <li class="treeview  <?= ($this->uri->segment(1)=='categories' || $this->uri->segment(1)=='insert') ? 'menu-open' : '' ?>">
+        <li class="treeview  <?= ($this->uri->segment(1)=='categories' || $this->uri->segment(1)=='insert' || $this->uri->segment(1)=='featured_products' || $this->uri->segment(1)=='front_page_products' || $this->uri->segment(1)=='duplicates' || $this->uri->segment(1)=='crosssales') ? 'menu-open' : '' ?>">
          <a href="#">
            <i class="fa fa-shopping-cart"></i>
            <span>ΠΡΟΪΟΝΤΑ</span>
            <i class="fa fa-angle-left pull-right"></i>
          </a>
-         <ul class="treeview-menu" style="display:<?= ($this->uri->segment(1)=='categories' || $this->uri->segment(1)=='insert' || $this->uri->segment(1)=='duplicates') ? 'block' : 'none' ?>">
+         <ul class="treeview-menu" style="display:<?= ($this->uri->segment(1)=='categories' || $this->uri->segment(1)=='insert' || $this->uri->segment(1)=='featured_products' || $this->uri->segment(1)=='front_page_products' || $this->uri->segment(1)=='duplicates' || $this->uri->segment(1)=='crosssales') ? 'block' : 'none' ?>">
            <li class="<?= ($this->uri->segment(1)=='categories') ? 'active' : '' ?>">
              <a href="<?php echo base_url();?>categories">
                <i class="fa fa-cubes"></i> <span>ΟΛΑ ΤΑ ΠΡΟΪΟΝΤΑ</span>
@@ -428,6 +428,11 @@
                <i class="fa fa-files-o"></i> <span>ΔΙΠΛΑ ΠΡΟΪΟΝΤΑ</span>
              </a>
            </li>
+           <li class="<?= ($this->uri->segment(1)=='crosssales') ? 'active' : '' ?>">
+             <a href="<?php echo base_url('crosssales');?>">
+               <i class="fa fa fa-money"></i> <span>ΣΥΝΔΥΑΣΕ ΤΟ ΠΡΟΪΟΝΤΑ</span>
+             </a>
+           </li>
          </ul>
         </li>
 
@@ -440,41 +445,41 @@
               <small class="label pull-right bg-red"><?=$Num_problematics ?></small>
             </a>
          </li>
-          <li class="">
+          <li class="<?= ($this->uri->segment(1)=='descriptions') ? 'active' : '' ?>">
             <a href="<?php echo base_url();?>descriptions">
               <i class="fa  fa-bars"></i> <span>ΠΕΡΙΓΡΑΦΕΣ</span>
             </a>
          </li>
-         <li class="">
+         <li class="<?= ($this->uri->segment(1)=='msi_price') ? 'active' : '' ?>">
             <a href="<?php echo base_url();?>msi_price">
               <i class="fa fa-laptop"></i> <span>MSI ΤΙΜΕΣ</span>
             </a>
          </li>
-         <li class="">
+         <li class="<?= ($this->uri->segment(1)=='antikatavoles') ? 'active' : '' ?>">
             <a href="<?php echo base_url();?>antikatavoles">
               <i class="fa fa-calculator"></i> <span>ΑΝΤΙΚΑΤΑΒΟΛΕΣ</span>
             </a>
          </li>
 
 
-         <li class="treeview">
+         <li class="treeview <?= ($this->uri->segment(1)=='statistics' || $this->uri->segment(1)=='profit_rates' || $this->uri->segment(2)=='stock') ? 'menu-open' : '' ?>">
           <a href="#">
             <i class="fa fa-dashboard"></i>
             <span>ΕΜΠΟΡΙΚΗ ΔΙΑΧΕΙΡΙΣΗ</span>
             <i class="fa fa-angle-left pull-right"></i>
           </a>
-          <ul class="treeview-menu">
-            <li class="">
+          <ul class="treeview-menu" style="display:<?= ($this->uri->segment(1)=='statistics' || $this->uri->segment(1)=='profit_rates' || $this->uri->segment(2)=='stock') ? 'block' : 'none' ?>">
+            <li class="<?= ($this->uri->segment(1)=='statistics' && $this->uri->segment(2)!='stock') ? 'active' : '' ?>">
               <a href="<?php echo base_url('statistics');?>">
                 <i class="fa fa-bar-chart"></i> ΠΡΟΜΗΘΕΥΤΕΣ
               </a>
             </li>
-            <li class="">
+            <li class="<?= ($this->uri->segment(1)=='profit_rates') ? 'active' : '' ?>">
               <a href="<?php echo base_url('profit_rates');?>">
                 <i class="fa fa-calculator"></i> ΠΟΣΟΣΤΑ ΚΑΤΗΓΟΡΙΩΝ
               </a>
             </li>
-            <li class="">
+            <li class="<?= ($this->uri->segment(2)=='stock') ? 'active' : '' ?>">
               <a href="<?php echo base_url('statistics/stock');?>">
                 <i class="fa fa-balance-scale "></i> ΠΡΟΪΟΝΤΑ ΣΕ ΑΠΟΘΕΜΑ
               </a>
