@@ -210,7 +210,10 @@ public function volumeWeight($dimensions){
 
 public function makeShippingClass($data, $cat, $dynamic = null){
 
-	$vweight = (float) $data['volumetric_weight'];
+	if(isset($data['volumetric_weight']))
+		$vweight = (float) $data['volumetric_weight'];
+	else 
+		$vweight = 0;
 
 
 	if($vweight > 0 && $vweight!='')
