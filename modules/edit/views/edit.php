@@ -151,6 +151,7 @@ if($itemLive){
 	$quest= '';
 	$netconnect = '';
 	$digital_sima = '';
+	$telehermes = '';
 	$other = '';
 
 ?>
@@ -253,6 +254,9 @@ if($itemLive){
 												break;
 										case 'digital_sima':
 	              		  					$digital_sima = 'selected';
+												break;
+										case 'Telehermes':
+	              		  					$telehermes = 'selected';
 	              		  					break;
 
 	              		  				default:
@@ -272,6 +276,7 @@ if($itemLive){
 												<option value="oktabit" <?= $oktabit ?>>Oktabit</option>
 												<option value="partnernet" <?= $partnernet ?>>PartnerNet</option>
 												<option value="quest" <?= $quest ?>>Quest</option>
+												<option value="Telehermes" <?= $telehermes ?>>Telehermes</option>
 												<option value="westnet" <?= $westnet ?>>WestNet</option>
 												<option value="none" <?= $other ?>>Δεν υπάρχει σε κανέναν προμηθευτή</option>
 
