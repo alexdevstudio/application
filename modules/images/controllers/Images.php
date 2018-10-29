@@ -58,6 +58,9 @@ class Images extends MX_Controller {
 			   return $output;
 
 			} else {
+				if(!$html)
+					return '';
+					   
 			    $output ="<img  src='".base_url()."assets/images/no-image.png' />";
 			   return $output;
 			}
