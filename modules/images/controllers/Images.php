@@ -99,7 +99,15 @@ class Images extends MX_Controller {
 
 			$product = Modules::run('crud/get',$category, ['sku'=>$sku]);
 			$rand = rand(1,10000000);
-			$file_name = $product->row()->brand.'-'.$product->row()->product_number.'-'.$rand;
+
+			$image_exist = Modules::run('crud/get','images', ['item_sku'=>$sku]);
+
+			if(is_bool($image_exist))
+				$file_name = $product->row()->brand.'_'.$product->row()->product_number;
+			else
+				$file_name = $product->row()->brand.'_'.$product->row()->product_number.'-'.$rand;
+
+			
 			$file_name = str_replace(' ','_',$file_name);
 			$file_name = str_replace('.','_',$file_name);
 			$file_name = str_replace('/','-',$file_name);
